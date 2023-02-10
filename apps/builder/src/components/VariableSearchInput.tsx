@@ -174,7 +174,7 @@ export const VariableSearchInput = ({
             onChange={onInputChange}
             onFocus={onOpen}
             onKeyUp={handleKeyUp}
-            placeholder={inputProps.placeholder ?? 'Select a variable'}
+            placeholder={inputProps.placeholder ?? 'Selecione uma variável'}
             {...inputProps}
           />
         </PopoverAnchor>
@@ -236,13 +236,13 @@ export const VariableSearchInput = ({
                       <HStack>
                         <IconButton
                           icon={<EditIcon />}
-                          aria-label="Rename variable"
+                          aria-label="Renomear variável"
                           size="xs"
                           onClick={handleRenameVariableClick(item)}
                         />
                         <IconButton
                           icon={<TrashIcon />}
-                          aria-label="Remove variable"
+                          aria-label="Remover variável"
                           size="xs"
                           onClick={handleDeleteVariableClick(item)}
                         />

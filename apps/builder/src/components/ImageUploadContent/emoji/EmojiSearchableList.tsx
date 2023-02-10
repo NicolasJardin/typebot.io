@@ -12,14 +12,14 @@ import { useState, ChangeEvent, useEffect, useRef } from 'react'
 
 const emojiTags = emojiTagsData as Record<string, string[]>
 
-const people = emojis['Smileys & Emotion'].concat(emojis['People & Body'])
-const nature = emojis['Animals & Nature']
-const food = emojis['Food & Drink']
-const activities = emojis['Activities']
-const travel = emojis['Travel & Places']
-const objects = emojis['Objects']
-const symbols = emojis['Symbols']
-const flags = emojis['Flags']
+const people = emojis['Emoticons e Emoções'].concat(emojis['Pessoas e corpo'])
+const nature = emojis['Animais e natureza']
+const food = emojis['Comidas e bebidas']
+const activities = emojis['Atividades']
+const travel = emojis['Viagens e lugares']
+const objects = emojis['Objetos']
+const symbols = emojis['Simbolos']
+const flags = emojis['Bandeiras']
 
 export const EmojiSearchableList = ({
   onEmojiSelected,
@@ -93,7 +93,7 @@ export const EmojiSearchableList = ({
         {filteredPeople.length > 0 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              People
+              Pessoas
             </Text>
             <EmojiGrid emojis={filteredPeople} onEmojiClick={onEmojiSelected} />
           </Stack>
@@ -101,7 +101,7 @@ export const EmojiSearchableList = ({
         {filteredAnimals.length > 0 && totalDisplayedCategories >= 2 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Animals & Nature
+              Animais e natureza
             </Text>
             <EmojiGrid
               emojis={filteredAnimals}
@@ -112,7 +112,7 @@ export const EmojiSearchableList = ({
         {filteredFood.length > 0 && totalDisplayedCategories >= 3 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Food & Drink
+              Comidas e bebidas
             </Text>
             <EmojiGrid emojis={filteredFood} onEmojiClick={onEmojiSelected} />
           </Stack>
@@ -120,7 +120,7 @@ export const EmojiSearchableList = ({
         {filteredTravel.length > 0 && totalDisplayedCategories >= 4 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Travel & Places
+              Viagens e lugares
             </Text>
             <EmojiGrid emojis={filteredTravel} onEmojiClick={onEmojiSelected} />
           </Stack>
@@ -128,7 +128,7 @@ export const EmojiSearchableList = ({
         {filteredActivities.length > 0 && totalDisplayedCategories >= 5 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Activities
+              Atividades
             </Text>
             <EmojiGrid
               emojis={filteredActivities}
@@ -139,7 +139,7 @@ export const EmojiSearchableList = ({
         {filteredObjects.length > 0 && totalDisplayedCategories >= 6 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Objects
+              Objetos
             </Text>
             <EmojiGrid
               emojis={filteredObjects}
@@ -150,7 +150,7 @@ export const EmojiSearchableList = ({
         {filteredSymbols.length > 0 && totalDisplayedCategories >= 7 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Symbols
+              Simbolos
             </Text>
             <EmojiGrid
               emojis={filteredSymbols}
@@ -161,7 +161,7 @@ export const EmojiSearchableList = ({
         {filteredFlags.length > 0 && totalDisplayedCategories >= 8 && (
           <Stack>
             <Text fontSize="sm" pl="2">
-              Flags
+              Bandeiras
             </Text>
             <EmojiGrid emojis={filteredFlags} onEmojiClick={onEmojiSelected} />
           </Stack>

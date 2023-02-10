@@ -23,7 +23,7 @@ export const CopyButton = (props: CopyButtonProps) => {
       }}
       {...buttonProps}
     >
-      {!hasCopied ? 'Copy' : 'Copied'}
+      {!hasCopied ? 'Copiar' : 'Copiado'}
     </Button>
   )
 }

@@ -12,7 +12,7 @@ import { ChangePlanModal, LimitReached } from '@/features/billing'
 
 export const UnlockPlanAlertInfo = ({
   contentLabel,
-  buttonLabel = 'More info',
+  buttonLabel = 'Mais informações',
   type,
   ...props
 }: {

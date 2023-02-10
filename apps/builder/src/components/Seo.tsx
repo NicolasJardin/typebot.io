@@ -3,7 +3,7 @@ import Head from 'next/head'
 export const Seo = ({
   title,
   currentUrl = 'https://app.typebot.io',
-  description = 'Create and publish conversational forms that collect 4 times more answers and feel native to your product',
+  description = 'Crie e publique formulários de conversação que coletam 4 vezes mais respostas e parecem nativos do seu produto',
   imagePreviewUrl = 'https://app.typebot.io/site-preview.png',
 }: {
   title: string
