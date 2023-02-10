@@ -200,6 +200,14 @@ const clientSideActionSchema = z
           }),
         })
       )
+      .or(
+        z.object({
+          transfer: z.object({
+            departmentId: z.string(),
+            message: z.string(),
+          }),
+        })
+      )
   )
 
 export const chatReplySchema = z.object({
