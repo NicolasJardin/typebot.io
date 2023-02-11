@@ -140,7 +140,7 @@ export const ProPlanContent = ({
           fontWeight="semibold"
           style={{ marginTop: 0 }}
         >
-          Most popular
+          Mais popular
         </Tag>
       </Flex>
       <Stack justifyContent="space-between" h="full">

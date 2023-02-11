@@ -52,7 +52,7 @@ export const TextInput = (props: Props) => {
           onInput={handleInput}
           value={inputValue()}
           placeholder={
-            props.block.options?.labels?.placeholder ?? 'Type your answer...'
+            props.block.options?.labels?.placeholder ?? 'Digite sua resposta...'
           }
         />
       ) : (
@@ -61,7 +61,7 @@ export const TextInput = (props: Props) => {
           onInput={handleInput}
           value={inputValue()}
           placeholder={
-            props.block.options?.labels?.placeholder ?? 'Type your answer...'
+            props.block.options?.labels?.placeholder ?? 'Digite sua resposta...'
           }
         />
       )}

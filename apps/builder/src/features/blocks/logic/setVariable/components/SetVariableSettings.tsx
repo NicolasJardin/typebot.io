@@ -39,7 +39,7 @@ export const SetVariableSettings = ({ options, onOptionsChange }: Props) => {
             Valor:
           </FormLabel>
           <HStack>
-            <Text fontSize="sm">Text</Text>
+            <Text fontSize="sm">Texto</Text>
             <Switch
               size="sm"
               isChecked={options.isCode ?? false}

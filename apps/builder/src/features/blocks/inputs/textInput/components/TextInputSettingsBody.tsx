@@ -26,13 +26,13 @@ export const TextInputSettingsBody = ({
   return (
     <Stack spacing={4}>
       <SwitchWithLabel
-        label="Long text?"
+        label="Texto longo?"
         initialValue={options?.isLong ?? false}
         onCheckChange={handleLongChange}
       />
       <Stack>
         <FormLabel mb="0" htmlFor="placeholder">
-          espaço reservado:
+          Espaço reservado:
         </FormLabel>
         <Input
           id="placeholder"
