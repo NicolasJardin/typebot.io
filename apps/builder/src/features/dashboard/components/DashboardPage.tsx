@@ -40,7 +40,7 @@ export const DashboardPage = () => {
       <TypebotDndProvider>
         {isLoading ? (
           <VStack w="full" justifyContent="center" pt="10" spacing={6}>
-            <Text>You are being redirected...</Text>
+            <Text>Você está sendo redirecionado...</Text>
             <Spinner />
           </VStack>
         ) : (

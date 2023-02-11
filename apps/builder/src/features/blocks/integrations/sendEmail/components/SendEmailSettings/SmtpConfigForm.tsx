@@ -29,14 +29,14 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
     <Stack as="form" spacing={4}>
       <Input
         isRequired
-        label="From email"
+        label="Do email"
         defaultValue={config.from.email ?? ''}
         onChange={handleFromEmailChange}
         placeholder="notifications@provider.com"
         withVariableButton={false}
       />
       <Input
-        label="From name"
+        label="De nome"
         defaultValue={config.from.name ?? ''}
         onChange={handleFromNameChange}
         placeholder="John Smith"
@@ -52,7 +52,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
       />
       <Input
         isRequired
-        label="Username / Email"
+        label="Nome de usuário / e-mail"
         type="email"
         defaultValue={config.username ?? ''}
         onChange={handleUsernameChange}
@@ -61,20 +61,20 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
       />
       <Input
         isRequired
-        label="Password"
+        label="Senha"
         type="password"
         defaultValue={config.password ?? ''}
         onChange={handlePasswordChange}
         withVariableButton={false}
       />
       <SwitchWithLabel
-        label="Secure?"
+        label="Seguro?"
         initialValue={config.isTlsEnabled ?? false}
         onCheckChange={handleTlsCheck}
-        moreInfoContent="If enabled, the connection will use TLS when connecting to server. If disabled then TLS is used if server supports the STARTTLS extension. In most cases enable it if you are connecting to port 465. For port 587 or 25 keep it disabled."
+        moreInfoContent="Se ativado, a conexão usará TLS ao se conectar ao servidor. Se desativado, o TLS será usado se o servidor suportar a extensão STARTTLS. Na maioria dos casos, ative-o se estiver se conectando à porta 465. Para a porta 587 ou 25, mantenha-o desativado."
       />
       <FormControl as={HStack} justifyContent="space-between" isRequired>
-        <FormLabel mb="0">Port number:</FormLabel>
+        <FormLabel mb="0">Número da porta:</FormLabel>
         <SmartNumberInput
           placeholder="25"
           value={config.port}

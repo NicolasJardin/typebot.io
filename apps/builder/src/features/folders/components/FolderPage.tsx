@@ -16,7 +16,7 @@ export const FolderPage = () => {
     folderId: router.query.id?.toString(),
     onError: (error) => {
       showToast({
-        title: "Couldn't fetch folder content",
+        title: 'Não foi possível buscar o conteúdo da pasta',
         description: error.message,
       })
     },
@@ -24,7 +24,7 @@ export const FolderPage = () => {
 
   return (
     <Stack minH="100vh">
-      <Seo title="My typebots" />
+      <Seo title="Meus typebots" />
       <DashboardHeader />
       <TypebotDndProvider>
         {!folder ? (

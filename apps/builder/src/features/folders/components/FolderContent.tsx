@@ -61,7 +61,10 @@ export const FolderContent = ({ folder }: Props) => {
     workspaceId: workspace?.id,
     parentId: folder?.id,
     onError: (error) => {
-      showToast({ title: "Couldn't fetch folders", description: error.message })
+      showToast({
+        title: 'Não foi possível buscar as pastas',
+        description: error.message,
+      })
     },
   })
 
@@ -74,7 +77,7 @@ export const FolderContent = ({ folder }: Props) => {
     folderId: folder === null ? 'root' : folder.id,
     onError: (error) => {
       showToast({
-        title: "Couldn't fetch typebots",
+        title: 'Não foi possível obter os typebots',
         description: error.message,
       })
     },
@@ -98,7 +101,7 @@ export const FolderContent = ({ folder }: Props) => {
     setIsCreatingFolder(false)
     if (error)
       return showToast({
-        title: 'An error occured',
+        title: 'Um erro ocorreu',
         description: error.message,
       })
     if (newFolder) mutateFolders({ folders: [...folders, newFolder] })

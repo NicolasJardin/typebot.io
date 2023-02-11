@@ -25,10 +25,10 @@ export const BillingContent = () => {
         <HStack maxW="500px">
           <StripeClimateLogo />
           <Text fontSize="xs" color="gray.500">
-            Typebot is contributing 1% of your subscription to remove CO₂ from
-            the atmosphere.{' '}
+            Typebot está contribuindo com 1% de sua assinatura para remover CO₂
+            de a atmosfera.{' '}
             <TextLink href="https://climate.stripe.com/5VCRAq" isExternal>
-              More info.
+              Mais informações.
             </TextLink>
           </Text>
         </HStack>

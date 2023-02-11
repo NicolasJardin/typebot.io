@@ -66,17 +66,17 @@ const StandardInstructions = ({ publicId }: Pick<ModalProps, 'publicId'>) => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your shop dashboard in the <Tag>Themes</Tag> page, click on{' '}
-        <Tag>Actions {'>'} Edit code</Tag>
+        No painel da sua loja na página <Tag>Temas</Tag>, clique em{' '}
+        <Tag>Ações {'>'} Editar código</Tag>
       </ListItem>
       <ListItem>
-        In <Tag>Layout {'>'} theme.liquid</Tag> file, paste this code just
-        before the closing <Tag>head</Tag> tag:
+        No arquivo <Tag>Layout {'>'} theme.liquid</Tag>, cole este código apenas
+        antes da tag <Tag>head</Tag> de fechamento:
         <CodeEditor value={headCode} mt={2} lang="html" isReadOnly />
       </ListItem>
       <ListItem>
-        Then, you can place an element on which the typebot will go in any file
-        in the <Tag>body</Tag> tags. It needs to have the id{' '}
+        Então, você pode colocar um elemento no qual o typebot irá em qualquer
+        arquivo nas tags <Tag>body</Tag>. Ele precisa ter o id{' '}
         <Tag>typebot-container</Tag>:
         <StandardEmbedWindowSettings
           my={4}
@@ -99,12 +99,12 @@ const PopupInstructions = () => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your shop dashboard in the <Tag>Themes</Tag> page, click on{' '}
-        <Tag>Actions {'>'} Edit code</Tag>
+        No painel da sua loja na página <Tag>Temas</Tag>, clique em{' '}
+        <Tag>Ações {'>'} Editar código</Tag>
       </ListItem>
       <ListItem>
-        In <Tag>Layout {'>'} theme.liquid</Tag> file, paste this code just
-        before the closing <Tag>head</Tag> tag:
+        No arquivo <Tag>Layout {'>'} theme.liquid</Tag>, cole este código apenas
+        antes da tag <Tag>head</Tag> de fechamento:
         <PopupEmbedSettings
           my="4"
           onUpdateSettings={(settings) => setInputValue(settings.delay)}
@@ -129,12 +129,12 @@ const BubbleInstructions = () => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your shop dashboard in the <Tag>Themes</Tag> page, click on{' '}
-        <Tag>Actions {'>'} Edit code</Tag>
+        No painel da sua loja na página <Tag>Temas</Tag>, clique em{' '}
+        <Tag>Ações {'>'} Editar código</Tag>
       </ListItem>
       <ListItem>
-        In <Tag>Layout {'>'} theme.liquid</Tag> file, paste this code just
-        before the closing <Tag>head</Tag> tag:
+        No arquivo <Tag>Layout {'>'} theme.liquid</Tag>, cole este código apenas
+        antes da tag <Tag>head</Tag> de fechamento:
         <ChatEmbedSettings
           my="4"
           onUpdateSettings={(settings) => setInputValues({ ...settings })}

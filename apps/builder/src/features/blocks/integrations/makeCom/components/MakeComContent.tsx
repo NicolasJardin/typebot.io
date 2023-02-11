@@ -26,10 +26,10 @@ export const MakeComContent = ({ block }: Props) => {
   }, [block, typebot, updateWebhook, webhook])
 
   if (isNotDefined(webhook?.body))
-    return <Text color="gray.500">Configure...</Text>
+    return <Text color="gray.500">Configurar...</Text>
   return (
     <Text noOfLines={1} pr="6">
-      {webhook?.url ? 'Trigger scenario' : 'Disabled'}
+      {webhook?.url ? 'cenário de gatilho' : 'Desabilitado'}
     </Text>
   )
 }

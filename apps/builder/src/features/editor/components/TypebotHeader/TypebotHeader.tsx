@@ -98,7 +98,7 @@ export const TypebotHeader = () => {
           variant={router.pathname.includes('/edit') ? 'outline' : 'ghost'}
           size="sm"
         >
-          Flow
+          Fluxo
         </Button>
         <Button
           as={Link}
@@ -107,7 +107,7 @@ export const TypebotHeader = () => {
           variant={router.pathname.endsWith('theme') ? 'outline' : 'ghost'}
           size="sm"
         >
-          Theme
+          Tema
         </Button>
         <Button
           as={Link}
@@ -116,7 +116,7 @@ export const TypebotHeader = () => {
           variant={router.pathname.endsWith('settings') ? 'outline' : 'ghost'}
           size="sm"
         >
-          Settings
+          Configurações
         </Button>
         <Button
           as={Link}
@@ -125,7 +125,7 @@ export const TypebotHeader = () => {
           variant={router.pathname.endsWith('share') ? 'outline' : 'ghost'}
           size="sm"
         >
-          Share
+          Compartilhar
         </Button>
         {isDefined(publishedTypebot) && (
           <Button
@@ -135,7 +135,7 @@ export const TypebotHeader = () => {
             variant={router.pathname.includes('results') ? 'outline' : 'ghost'}
             size="sm"
           >
-            Results
+            Resultados
           </Button>
         )}
       </HStack>
@@ -187,7 +187,7 @@ export const TypebotHeader = () => {
                 display={['none', 'flex']}
                 icon={<UndoIcon />}
                 size="sm"
-                aria-label="Undo"
+                aria-label="Desfazer"
                 onClick={undo}
                 isDisabled={!canUndo}
               />
@@ -198,21 +198,21 @@ export const TypebotHeader = () => {
                 display={['none', 'flex']}
                 icon={<RedoIcon />}
                 size="sm"
-                aria-label="Redo"
+                aria-label="Refazer"
                 onClick={redo}
                 isDisabled={!canRedo}
               />
             </Tooltip>
           </HStack>
           <Button leftIcon={<BuoyIcon />} onClick={handleHelpClick} size="sm">
-            Help
+            Ajuda
           </Button>
         </HStack>
         {isSavingLoading && (
           <HStack>
             <Spinner speed="0.7s" size="sm" color="gray.400" />
             <Text fontSize="sm" color="gray.400">
-              Saving...
+              Salvando...
             </Text>
           </HStack>
         )}

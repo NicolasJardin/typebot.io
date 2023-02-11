@@ -23,12 +23,12 @@ export const CellWithValueStack = ({
         currentItem={item.column}
         onItemSelect={handleColumnSelect}
         items={columns}
-        placeholder="Select a column"
+        placeholder="Selecione uma coluna"
       />
       <Input
         defaultValue={item.value ?? ''}
         onChange={handleValueChange}
-        placeholder="Type a value..."
+        placeholder="Digite um valor..."
       />
     </Stack>
   )

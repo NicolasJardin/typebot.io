@@ -7,7 +7,7 @@ type Props = {
 
 export const ChatwootBlockNodeLabel = ({ block }: Props) =>
   block.options.websiteToken.length === 0 ? (
-    <Text color="gray.500">Configure...</Text>
+    <Text color="gray.500">Configurar...</Text>
   ) : (
-    <Text>Open Chatwoot</Text>
+    <Text>Abrir Chatwoot</Text>
   )

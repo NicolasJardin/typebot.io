@@ -37,7 +37,7 @@ const StandardInstructions = () => {
   return (
     <Stack spacing={4}>
       <Text>
-        Paste this anywhere in the <Tag>body</Tag>
+        Cole isso em qualquer lugar no <Tag>corpo</Tag>
       </Text>
       <StandardEmbedWindowSettings
         onUpdateWindowSettings={(settings) => setInputValues({ ...settings })}

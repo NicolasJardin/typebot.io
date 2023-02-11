@@ -55,7 +55,7 @@ export const ChangePlanForm = () => {
     refreshWorkspace()
     showToast({
       status: 'success',
-      description: `Workspace ${plan} plan successfully updated 🎉`,
+      description: `Plano de espaço de trabalho ${plan} atualizado com sucesso 🎉`,
     })
   }
 
@@ -87,9 +87,9 @@ export const ChangePlanForm = () => {
         />
       </HStack>
       <Text color="gray.500">
-        Need custom limits? Specific features?{' '}
+        Precisa de limites personalizados? Características específicas?{' '}
         <TextLink href={'https://typebot.io/enterprise-lead-form'} isExternal>
-          Let&apos;s chat!
+          Vamos conversar!
         </TextLink>
       </Text>
     </Stack>

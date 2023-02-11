@@ -21,20 +21,20 @@ export const TypebotLinkNode = ({ block }: Props) => {
     byId(block.options.groupId)
   )?.title
   if (!block.options.typebotId)
-    return <Text color="gray.500">Configure...</Text>
+    return <Text color="gray.500">Configurar...</Text>
   return (
     <Text>
-      Jump{' '}
+      Pular{' '}
       {blockTitle ? (
         <>
-          to <Tag>{blockTitle}</Tag>
+          para <Tag>{blockTitle}</Tag>
         </>
       ) : (
         <></>
       )}{' '}
       {!isCurrentTypebot ? (
         <>
-          in <Tag colorScheme="blue">{linkedTypebot?.name}</Tag>
+          em <Tag colorScheme="blue">{linkedTypebot?.name}</Tag>
         </>
       ) : (
         <></>

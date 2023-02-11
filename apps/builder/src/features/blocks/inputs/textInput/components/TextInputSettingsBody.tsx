@@ -32,7 +32,7 @@ export const TextInputSettingsBody = ({
       />
       <Stack>
         <FormLabel mb="0" htmlFor="placeholder">
-          Placeholder:
+          espaço reservado:
         </FormLabel>
         <Input
           id="placeholder"
@@ -42,7 +42,7 @@ export const TextInputSettingsBody = ({
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          Button label:
+          Rótulo do botão:
         </FormLabel>
         <Input
           id="button"
@@ -52,7 +52,7 @@ export const TextInputSettingsBody = ({
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
-          Save answer in a variable:
+          Salvar resposta em uma variável:
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options.variableId}

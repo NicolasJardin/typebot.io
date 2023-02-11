@@ -58,7 +58,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with GitHub
+          Continuar com o GitHub
         </Button>
       )}
       {providers?.google && (
@@ -72,7 +72,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with Google
+          Continuar com o Google
         </Button>
       )}
       {providers?.facebook && (
@@ -86,7 +86,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with Facebook
+          Continuar com o Facebook
         </Button>
       )}
       {providers?.gitlab && (
@@ -100,7 +100,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with {providers.gitlab.name}
+          Continuar com {providers.gitlab.name}
         </Button>
       )}
       {providers?.['azure-ad'] && (
@@ -114,7 +114,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with {providers['azure-ad'].name}
+          Continuar com {providers['azure-ad'].name}
         </Button>
       )}
       {providers?.['custom-oauth'] && (
@@ -126,7 +126,7 @@ export const SocialLoginButtons = ({ providers }: Props) => {
           }
           variant="outline"
         >
-          Continue with {providers['custom-oauth'].name}
+          Continuar com {providers['custom-oauth'].name}
         </Button>
       )}
     </Stack>

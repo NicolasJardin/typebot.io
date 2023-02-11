@@ -26,9 +26,11 @@ export const ChooseEmbedTypeList = ({
         <StandardEmbedSvg />
         <Stack>
           <Text fontSize="lg" fontWeight="semibold">
-            Standard
+            Padrão
           </Text>
-          <Text textColor="gray.500">Embed in a container on your site</Text>
+          <Text textColor="gray.500">
+            Incorpore em um contêiner em seu site
+          </Text>
         </Stack>
       </Stack>
       <Stack
@@ -49,7 +51,7 @@ export const ChooseEmbedTypeList = ({
             Popup
           </Text>
           <Text textColor="gray.500">
-            Embed in a popup window on top of your website
+            Incorpore em uma janela pop-up no topo do seu site
           </Text>
         </Stack>
       </Stack>
@@ -68,10 +70,10 @@ export const ChooseEmbedTypeList = ({
         <BubbleEmbedSvg />
         <Stack>
           <Text fontSize="lg" fontWeight="semibold">
-            Bubble
+            Bolhas
           </Text>
           <Text textColor="gray.500">
-            Embed in a chat bubble on the corner of your site
+            Incorpore em um balão de bate-papo no canto do seu site
           </Text>
         </Stack>
       </Stack>

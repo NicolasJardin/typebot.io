@@ -55,8 +55,8 @@ export const GettingStartedModal = () => {
                   1
                 </Flex>
                 <Text>
-                  The left side bar contains blocks that you can drag and drop
-                  to the board.
+                  A barra lateral esquerda contém blocos que você pode arrastar
+                  e soltar para o conselho.
                 </Text>
               </HStack>
               <HStack as={ListItem}>
@@ -74,8 +74,8 @@ export const GettingStartedModal = () => {
                   2
                 </Flex>
                 <Text>
-                  You can group blocks together by dropping them below or above
-                  each other
+                  Você pode agrupar blocos soltando-os abaixo ou acima uns aos
+                  outros
                 </Text>
               </HStack>
               <HStack as={ListItem}>
@@ -92,7 +92,7 @@ export const GettingStartedModal = () => {
                 >
                   3
                 </Flex>
-                <Text>Connect the groups together</Text>
+                <Text>Conecte os grupos juntos</Text>
               </HStack>
               <HStack as={ListItem}>
                 <Flex
@@ -109,19 +109,20 @@ export const GettingStartedModal = () => {
                   4
                 </Flex>
                 <Text>
-                  Preview your bot by clicking the preview button on the top
-                  right
+                  Visualize seu bot clicando no botão de visualização na parte
+                  superior direita
                 </Text>
               </HStack>
             </List>
           </Stack>
 
           <Text>
-            Feel free to use the bottom-right bubble to reach out if you have
-            any question. I usually answer within the next 24 hours. 😃
+            Sinta-se à vontade para usar o balão no canto inferior direito para
+            entrar em contato se tiver qualquer pergunta. Eu costumo responder
+            nas próximas 24 horas. 😃
           </Text>
           <Stack spacing={4}>
-            <Heading fontSize="xl">See it in action ({`<`} 5 minutes)</Heading>
+            <Heading fontSize="xl">Veja em ação ({`<`} 5 minutos)</Heading>
             <iframe
               width="100%"
               height="315"
@@ -135,7 +136,7 @@ export const GettingStartedModal = () => {
               <AccordionItem>
                 <AccordionButton>
                   <Box flex="1" textAlign="left">
-                    Other videos
+                    Outros vídeos
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>

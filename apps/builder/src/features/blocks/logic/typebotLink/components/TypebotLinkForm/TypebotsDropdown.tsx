@@ -37,19 +37,19 @@ export const TypebotsDropdown = ({
     if (id) onSelectTypebotId(id)
   }
 
-  if (isLoading) return <Input value="Loading..." isDisabled />
+  if (isLoading) return <Input value="Carregando..." isDisabled />
   if (!typebots || typebots.length === 0)
-    return <Input value="No typebots found" isDisabled />
+    return <Input value="Nenhum typebot encontrado" isDisabled />
   return (
     <HStack>
       <SearchableDropdown
         selectedItem={
-          typebotId === 'current' ? 'Current typebot' : currentTypebot?.name
+          typebotId === 'current' ? 'Typebot atual' : currentTypebot?.name
         }
         items={[
           {
-            label: 'Current typebot',
-            value: 'Current typebot',
+            label: 'Typebot atual',
+            value: 'Typebot atual',
           },
           ...(typebots ?? []).map((typebot) => ({
             value: typebot.name,
@@ -66,11 +66,11 @@ export const TypebotsDropdown = ({
           })),
         ]}
         onValueChange={handleTypebotSelect}
-        placeholder={'Select a typebot'}
+        placeholder={'Selecione um typebot'}
       />
       {currentTypebot?.id && (
         <IconButton
-          aria-label="Navigate to typebot"
+          aria-label="Navegue até o typebot"
           icon={<ExternalLinkIcon />}
           as={Link}
           href={`/typebots/${currentTypebot?.id}/edit?parentId=${query.typebotId}`}

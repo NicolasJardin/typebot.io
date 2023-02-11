@@ -238,7 +238,7 @@ const CollectVariableLabel = ({
   return (
     <HStack fontStyle="italic" spacing={1}>
       <Text fontSize="sm" color={textColor}>
-        Collects
+        Coleta
       </Text>
       <Tag bg="orange.400" color="white" size="sm">
         {variableName}

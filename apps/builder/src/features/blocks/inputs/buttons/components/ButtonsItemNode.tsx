@@ -20,7 +20,9 @@ type Props = {
 
 export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
   const { deleteItem, updateItem, createItem } = useTypebot()
-  const [itemValue, setItemValue] = useState(item.content ?? 'Click to edit')
+  const [itemValue, setItemValue] = useState(
+    item.content ?? 'Clique para editar'
+  )
   const editableRef = useRef<HTMLDivElement | null>(null)
 
   const handleInputSubmit = () => {
@@ -30,8 +32,13 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && itemValue === 'Click to edit') deleteItem(indices)
-    if (e.key === 'Enter' && itemValue !== '' && itemValue !== 'Click to edit')
+    if (e.key === 'Escape' && itemValue === 'Clique para editar')
+      deleteItem(indices)
+    if (
+      e.key === 'Enter' &&
+      itemValue !== '' &&
+      itemValue !== 'Clique para editar'
+    )
       handlePlusClick()
   }
 
@@ -57,7 +64,7 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
       >
         <EditablePreview
           w="full"
-          color={item.content !== 'Click to edit' ? 'inherit' : 'gray.500'}
+          color={item.content !== 'Clique para editar' ? 'inherit' : 'gray.500'}
           cursor="pointer"
         />
         <EditableInput />
@@ -73,7 +80,7 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
         unmountOnExit
       >
         <IconButton
-          aria-label="Add item"
+          aria-label="Adicionar item"
           icon={<PlusIcon />}
           size="xs"
           shadow="md"

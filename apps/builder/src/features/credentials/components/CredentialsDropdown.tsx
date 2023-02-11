@@ -43,7 +43,8 @@ export const CredentialsDropdown = ({
   })
   const [isDeleting, setIsDeleting] = useState<string>()
 
-  const defaultCredentialsLabel = defaultCredentialLabel ?? `Select an account`
+  const defaultCredentialsLabel =
+    defaultCredentialLabel ?? `Selecione uma conta`
 
   const credentialsList = useMemo(() => {
     return credentials.filter((credential) => credential.type === type)
@@ -135,7 +136,7 @@ export const CredentialsDropdown = ({
               {credentials.name}
               <IconButton
                 icon={<TrashIcon />}
-                aria-label="Remove credentials"
+                aria-label="Remover credenciais"
                 size="xs"
                 onClick={handleDeleteDomainClick(credentials.id)}
                 isLoading={isDeleting === credentials.id}
@@ -150,7 +151,7 @@ export const CredentialsDropdown = ({
             icon={<PlusIcon />}
             onClick={onCreateNewClick}
           >
-            Connect new
+            Conectar novo
           </MenuItem>
         </Stack>
       </MenuList>

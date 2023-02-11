@@ -26,10 +26,10 @@ export const MakeComSettings = ({ block }: Props) => {
       <Alert status={webhook?.url ? 'success' : 'info'} rounded="md">
         <AlertIcon />
         {webhook?.url ? (
-          <>Your scenario is correctly configured 🚀</>
+          <>Seu cenário está configurado corretamente 🚀</>
         ) : (
           <Stack>
-            <Text>Head up to Make.com to configure this block:</Text>
+            <Text>Vá até Make.com para configurar este bloco:</Text>
             <Button
               as={Link}
               href="https://www.make.com/en/integrations/typebot"

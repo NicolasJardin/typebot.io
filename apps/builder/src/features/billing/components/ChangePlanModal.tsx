@@ -12,11 +12,11 @@ import {
 import { ChangePlanForm } from './ChangePlanForm'
 
 export enum LimitReached {
-  BRAND = 'remove branding',
-  CUSTOM_DOMAIN = 'add custom domains',
-  FOLDER = 'create folders',
-  FILE_INPUT = 'use file input blocks',
-  ANALYTICS = 'unlock in-depth analytics',
+  BRAND = 'remover marca',
+  CUSTOM_DOMAIN = 'adicionar domínios personalizados',
+  FOLDER = 'criar pastas',
+  FILE_INPUT = 'usar blocos de entrada de arquivo',
+  ANALYTICS = 'desbloquear análises detalhadas',
 }
 
 type ChangePlanModalProps = {
@@ -36,9 +36,7 @@ export const ChangePlanModal = ({
       <ModalContent>
         <ModalBody as={Stack} spacing="6" pt="10">
           {type && (
-            <AlertInfo>
-              You need to upgrade your plan in order to {type}
-            </AlertInfo>
+            <AlertInfo>Você precisa atualizar seu plano para {type}</AlertInfo>
           )}
           <ChangePlanForm />
         </ModalBody>
@@ -46,7 +44,7 @@ export const ChangePlanModal = ({
         <ModalFooter>
           <HStack>
             <Button colorScheme="gray" onClick={onClose}>
-              Cancel
+              Cancelar
             </Button>
           </HStack>
         </ModalFooter>

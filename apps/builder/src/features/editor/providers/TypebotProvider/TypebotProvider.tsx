@@ -138,7 +138,7 @@ export const TypebotProvider = ({
     typebotIds: linkedTypebotIds,
     onError: (error) =>
       showToast({
-        title: 'Error while fetching linkedTypebots',
+        title: 'Erro ao buscar typebots conectados ',
         description: error.message,
       }),
   })

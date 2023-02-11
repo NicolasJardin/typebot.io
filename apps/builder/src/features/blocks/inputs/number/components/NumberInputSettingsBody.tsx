@@ -32,7 +32,7 @@ export const NumberInputSettingsBody = ({
     <Stack spacing={4}>
       <Stack>
         <FormLabel mb="0" htmlFor="placeholder">
-          Placeholder:
+          Espaço reservado :
         </FormLabel>
         <Input
           id="placeholder"
@@ -42,11 +42,11 @@ export const NumberInputSettingsBody = ({
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          Button label:
+          Rótulo do botão :
         </FormLabel>
         <Input
           id="button"
-          defaultValue={options?.labels?.button ?? 'Send'}
+          defaultValue={options?.labels?.button ?? 'Enviar'}
           onChange={handleButtonLabelChange}
         />
       </Stack>
@@ -72,7 +72,7 @@ export const NumberInputSettingsBody = ({
       </HStack>
       <HStack justifyContent="space-between">
         <FormLabel mb="0" htmlFor="step">
-          Step:
+          Passo:
         </FormLabel>
         <SmartNumberInput
           id="step"
@@ -82,7 +82,7 @@ export const NumberInputSettingsBody = ({
       </HStack>
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
-          Save answer in a variable:
+          Salvar resposta em uma variável:
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options.variableId}

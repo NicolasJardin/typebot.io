@@ -83,7 +83,7 @@ export const ConditionItemNode = ({ item, isMouseOver, indices }: Props) => {
         <Flex p={3} pos="relative" w="full" onClick={openPopover}>
           {item.content.comparisons.length === 0 ||
           comparisonIsEmpty(item.content.comparisons[0]) ? (
-            <Text color={'gray.500'}>Configure...</Text>
+            <Text color={'gray.500'}>Configurar...</Text>
           ) : (
             <Stack maxW="170px">
               {item.content.comparisons.map((comparison, idx) => {
@@ -128,7 +128,7 @@ export const ConditionItemNode = ({ item, isMouseOver, indices }: Props) => {
             unmountOnExit
           >
             <IconButton
-              aria-label="Add item"
+              aria-label="Adicionar Item"
               icon={<PlusIcon />}
               size="xs"
               shadow="md"

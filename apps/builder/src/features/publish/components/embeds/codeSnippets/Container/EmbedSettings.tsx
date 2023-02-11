@@ -52,7 +52,7 @@ export const StandardEmbedWindowSettings = ({
     <Stack {...props}>
       <Flex alignItems="center" justifyContent="space-between">
         <Heading fontSize="md" fontWeight="semibold" style={{ flexShrink: 0 }}>
-          Window settings
+          Configurações da janela
         </Heading>
         <FormControl
           display="flex"
@@ -61,7 +61,7 @@ export const StandardEmbedWindowSettings = ({
           justifyContent="flex-end"
         >
           <FormLabel htmlFor="fullscreen-option" mb="1">
-            Set to fullscreen?
+            Definir como tela cheia?
           </FormLabel>
           <Switch
             id="fullscreen-option"
@@ -74,7 +74,7 @@ export const StandardEmbedWindowSettings = ({
       {!fullscreen && (
         <>
           <Flex justify="space-between" align="center" mb="2">
-            <Text>Width</Text>
+            <Text>Largura</Text>
             <HStack>
               <Input
                 onChange={(e) =>
@@ -94,7 +94,7 @@ export const StandardEmbedWindowSettings = ({
             </HStack>
           </Flex>
           <Flex justify="space-between" align="center" mb="2">
-            <Text>Height</Text>
+            <Text>Altura</Text>
             <HStack>
               <Input
                 onChange={(e) =>

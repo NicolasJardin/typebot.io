@@ -26,10 +26,10 @@ export const ZapierSettings = ({ block }: Props) => {
       <Alert status={webhook?.url ? 'success' : 'info'} rounded="md">
         <AlertIcon />
         {webhook?.url ? (
-          <>Your zap is correctly configured 🚀</>
+          <>Seu zap está configurado corretamente 🚀</>
         ) : (
           <Stack>
-            <Text>Head up to Zapier to configure this block:</Text>
+            <Text>Vá até o Zapier para configurar este bloco:</Text>
             <Button
               as={Link}
               href="https://zapier.com/apps/typebot/integrations"

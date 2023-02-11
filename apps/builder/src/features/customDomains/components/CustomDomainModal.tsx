@@ -83,7 +83,7 @@ export const CustomDomainModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          <Heading size="md">Add a custom domain</Heading>
+          <Heading size="md">Adicionar um domínio personalizado</Heading>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -97,7 +97,8 @@ export const CustomDomainModal = ({
             {hostname.domain !== '' && (
               <>
                 <Text>
-                  Add the following record in your DNS provider to continue:
+                  Adicione o seguinte registro em seu provedor de DNS para
+                  continuar:
                 </Text>
                 {hostname.subdomain ? (
                   <HStack
@@ -108,15 +109,15 @@ export const CustomDomainModal = ({
                     spacing={8}
                   >
                     <Stack>
-                      <Text fontWeight="bold">Type</Text>
-                      <Text>CNAME</Text>
+                      <Text fontWeight="bold">Tipo</Text>
+                      <Text>CNOME</Text>
                     </Stack>
                     <Stack>
-                      <Text fontWeight="bold">Name</Text>
+                      <Text fontWeight="bold">Nome</Text>
                       <Text>{hostname.subdomain}</Text>
                     </Stack>
                     <Stack>
-                      <Text fontWeight="bold">Value</Text>
+                      <Text fontWeight="bold">Valor</Text>
                       <Text>
                         {
                           new URL(
@@ -135,22 +136,22 @@ export const CustomDomainModal = ({
                     spacing={8}
                   >
                     <Stack>
-                      <Text fontWeight="bold">Type</Text>
+                      <Text fontWeight="bold">Tipo</Text>
                       <Text>A</Text>
                     </Stack>
                     <Stack>
-                      <Text fontWeight="bold">Name</Text>
+                      <Text fontWeight="bold">Nome</Text>
                       <Text>@</Text>
                     </Stack>
                     <Stack>
-                      <Text fontWeight="bold">Value</Text>
+                      <Text fontWeight="bold">Valor</Text>
                       <Text>76.76.21.21</Text>
                     </Stack>
                   </HStack>
                 )}
                 <Alert rounded="md">
-                  Depending on your provider, it might take some time for the
-                  changes to apply
+                  Dependendo do seu provedor, pode levar algum tempo para o
+                  mudanças a serem aplicadas
                 </Alert>
               </>
             )}
@@ -158,7 +159,7 @@ export const CustomDomainModal = ({
         </ModalBody>
         <ModalFooter as={HStack}>
           <Tooltip
-            label="Domain is invalid"
+            label="O domínio é inválido"
             isDisabled={hostname.domain !== ''}
           >
             <span>
@@ -168,7 +169,7 @@ export const CustomDomainModal = ({
                 isLoading={isLoading}
                 colorScheme="blue"
               >
-                Save
+                Salvar
               </Button>
             </span>
           </Tooltip>

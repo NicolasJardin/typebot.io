@@ -14,22 +14,22 @@ export const SignInPage = ({ type }: Props) => {
 
   return (
     <VStack spacing={4} h="100vh" justifyContent="center">
-      <Seo title={type === 'signin' ? 'Sign In' : 'Register'} />
+      <Seo title={type === 'signin' ? 'Entrar' : 'Registrar'} />
       <Heading
         onClick={() => {
-          throw new Error('Sentry is working')
+          throw new Error('Sentinela está funcionando')
         }}
       >
-        {type === 'signin' ? 'Sign In' : 'Create an account'}
+        {type === 'signin' ? 'Entrar' : 'Crie a sua conta aqui'}
       </Heading>
       {type === 'signin' ? (
         <Text>
-          Don&apos;t have an account?{' '}
-          <TextLink href="/register">Sign up for free</TextLink>
+          Não tem uma conta ?{' '}
+          <TextLink href="/register">Inscreva-se gratuitamente</TextLink>
         </Text>
       ) : (
         <Text>
-          Already have an account? <TextLink href="/signin">Sign in</TextLink>
+          já tem uma conta? <TextLink href="/signin">Entrar</TextLink>
         </Text>
       )}
       <SignInForm defaultEmail={query.g?.toString()} />

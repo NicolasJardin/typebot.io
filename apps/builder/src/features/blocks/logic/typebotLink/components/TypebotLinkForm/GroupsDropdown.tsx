@@ -35,7 +35,7 @@ export const GroupsDropdown = ({
       selectedItem={currentGroup?.title}
       items={(groups ?? []).map((b) => b.title)}
       onValueChange={handleGroupSelect}
-      placeholder={'Select a block'}
+      placeholder={'Selecione um bloco'}
     />
   )
 }

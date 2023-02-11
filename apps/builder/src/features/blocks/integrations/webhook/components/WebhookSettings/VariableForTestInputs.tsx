@@ -26,7 +26,7 @@ export const VariableForTestInputs = ({
         />
       </FormControl>
       <FormControl>
-        <FormLabel htmlFor={'value' + item.id}>Test value:</FormLabel>
+        <FormLabel htmlFor={'value' + item.id}>valor de teste:</FormLabel>
         <Input
           id={'value' + item.id}
           defaultValue={item.value ?? ''}

@@ -37,22 +37,24 @@ export const WordpressModal = ({
         <ModalCloseButton />
         <ModalBody>
           {!isPublished && (
-            <AlertInfo mb="2">You need to publish your bot first.</AlertInfo>
+            <AlertInfo mb="2">
+              Você precisa publicar seu bot primeiro.
+            </AlertInfo>
           )}
           <OrderedList spacing={3}>
             <ListItem>
-              Install{' '}
+              Instalar{' '}
               <Link
                 href="https://wordpress.org/plugins/typebot/"
                 isExternal
                 color={useColorModeValue('blue.500', 'blue.300')}
               >
-                the official Typebot WordPress plugin
+                o plug-in oficial Typebot WordPress
                 <ExternalLinkIcon mx="2px" />
               </Link>
             </ListItem>
             <ListItem>
-              Copy your typebot URL
+              Copie a URL do seu typebot
               <InputGroup size="md" mt={2}>
                 <Input
                   pr="4.5rem"
@@ -70,7 +72,9 @@ export const WordpressModal = ({
                 </InputRightElement>
               </InputGroup>
             </ListItem>
-            <ListItem>Complete the setup in your Wordpress interface</ListItem>
+            <ListItem>
+              Conclua a configuração na interface do Wordpress
+            </ListItem>
           </OrderedList>
         </ModalBody>
         <ModalFooter />

@@ -26,7 +26,7 @@ export const BackButton = ({ id }: { id: string | null }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      Back
+      Voltar
     </Button>
   )
 }

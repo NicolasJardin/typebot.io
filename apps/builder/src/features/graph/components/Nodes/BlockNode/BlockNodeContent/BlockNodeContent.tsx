@@ -169,7 +169,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
       return <ChatwootBlockNodeLabel block={block} />
     }
     case 'start': {
-      return <Text>Start</Text>
+      return <Text>Início</Text>
     }
   }
 }

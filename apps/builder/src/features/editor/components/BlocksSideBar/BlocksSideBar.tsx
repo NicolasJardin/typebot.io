@@ -105,7 +105,7 @@ export const BlocksSideBar = () => {
           <Tooltip label={isLocked ? 'Unlock sidebar' : 'Lock sidebar'}>
             <IconButton
               icon={isLocked ? <LockedIcon /> : <UnlockedIcon />}
-              aria-label={isLocked ? 'Unlock' : 'Lock'}
+              aria-label={isLocked ? 'Desbloquear' : 'Bloquear'}
               size="sm"
               onClick={handleLockClick}
             />
@@ -114,7 +114,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Bubbles
+            Bolhas
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -141,7 +141,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Inputs
+            Entradas
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -153,7 +153,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Logic
+            Logica
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -190,7 +190,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Integrations
+            Integrações
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard

@@ -76,12 +76,12 @@ export const PublishButton = (props: ButtonProps) => {
         placement="bottom-end"
         label={
           <Stack>
-            <Text>There are non published changes.</Text>
+            <Text>Existem alterações não publicadas.</Text>
             <Text fontStyle="italic">
-              Published version from{' '}
+              Versão publicada de{' '}
               {publishedTypebot &&
                 timeSince(publishedTypebot.updatedAt.toString())}{' '}
-              ago
+              atrás
             </Text>
           </Stack>
         }
@@ -97,9 +97,9 @@ export const PublishButton = (props: ButtonProps) => {
         >
           {isPublished
             ? typebot?.isClosed
-              ? 'Closed'
-              : 'Published'
-            : 'Publish'}
+              ? 'Fechado'
+              : 'Publicado'
+            : 'Publicar'}
         </Button>
       </Tooltip>
 
@@ -110,27 +110,27 @@ export const PublishButton = (props: ButtonProps) => {
             colorScheme={'blue'}
             borderLeftRadius={0}
             icon={<ChevronLeftIcon transform="rotate(-90deg)" />}
-            aria-label="Show published typebot menu"
+            aria-label="Mostrar menu typebot publicado"
             size="sm"
             isDisabled={isPublishing || isSavingLoading}
           />
           <MenuList>
             {!isPublished && (
               <MenuItem onClick={restorePublishedTypebot}>
-                Restore published version
+                Restaurar versão publicada
               </MenuItem>
             )}
             {!typebot?.isClosed ? (
               <MenuItem onClick={closeTypebot} icon={<LockedIcon />}>
-                Close typebot to new responses
+                Feche o typebot para novas respostas
               </MenuItem>
             ) : (
               <MenuItem onClick={openTypebot} icon={<UnlockedIcon />}>
-                Reopen typebot to new responses
+                Reabrir typebot para novas respostas
               </MenuItem>
             )}
             <MenuItem onClick={unpublishTypebot} icon={<CloudOffIcon />}>
-              Unpublish typebot
+              Cancelar publicação do typebot
             </MenuItem>
           </MenuList>
         </Menu>

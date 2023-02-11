@@ -4,7 +4,7 @@ import { defaultButtonLabel } from './constants'
 import { InputBlockType } from './enums'
 
 export const defaultRatingInputOptions: RatingInputOptions = {
-  buttonType: 'Numbers',
+  buttonType: 'Números',
   length: 10,
   labels: { button: defaultButtonLabel },
   customIcon: { isEnabled: false },
@@ -12,7 +12,7 @@ export const defaultRatingInputOptions: RatingInputOptions = {
 
 export const ratingInputOptionsSchema = optionBaseSchema.and(
   z.object({
-    buttonType: z.literal('Icons').or(z.literal('Numbers')),
+    buttonType: z.literal('Icones').or(z.literal('Números')),
     length: z.number(),
     labels: z.object({
       left: z.string().optional(),

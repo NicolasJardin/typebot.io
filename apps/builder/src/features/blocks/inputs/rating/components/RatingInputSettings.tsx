@@ -18,7 +18,7 @@ export const RatingInputSettings = ({
   const handleLengthChange = (length: number) =>
     onOptionsChange({ ...options, length })
 
-  const handleTypeChange = (buttonType: 'Icons' | 'Numbers') =>
+  const handleTypeChange = (buttonType: 'Icones' | 'Números') =>
     onOptionsChange({ ...options, buttonType })
 
   const handleCustomIconCheck = (isEnabled: boolean) =>
@@ -49,7 +49,7 @@ export const RatingInputSettings = ({
     <Stack spacing={4}>
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          Maximum:
+          Máximo:
         </FormLabel>
         <DropdownList
           onItemSelect={handleLengthChange}
@@ -60,26 +60,26 @@ export const RatingInputSettings = ({
 
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          Type:
+          Tipo:
         </FormLabel>
         <DropdownList
           onItemSelect={handleTypeChange}
-          items={['Icons', 'Numbers']}
+          items={['Icones', 'Números']}
           currentItem={options.buttonType}
         />
       </Stack>
 
-      {options.buttonType === 'Icons' && (
+      {options.buttonType === 'Icones' && (
         <SwitchWithLabel
-          label="Custom icon?"
+          label="Ícone personalizado?"
           initialValue={options.customIcon.isEnabled}
           onCheckChange={handleCustomIconCheck}
         />
       )}
-      {options.buttonType === 'Icons' && options.customIcon.isEnabled && (
+      {options.buttonType === 'Icones' && options.customIcon.isEnabled && (
         <Stack>
           <FormLabel mb="0" htmlFor="svg">
-            Icon SVG:
+            Ícone SVG:
           </FormLabel>
           <Input
             id="svg"
@@ -91,35 +91,35 @@ export const RatingInputSettings = ({
       )}
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          {options.buttonType === 'Icons' ? '1' : '0'} label:
+          {options.buttonType === 'Icones' ? '1' : '0'} rótulo:
         </FormLabel>
         <Input
           id="button"
           defaultValue={options.labels.left}
           onChange={handleLeftLabelChange}
-          placeholder="Not likely at all"
+          placeholder="Não é nada provável"
         />
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          {options.length} label:
+          {options.length} rótulo:
         </FormLabel>
         <Input
           id="button"
           defaultValue={options.labels.right}
           onChange={handleRightLabelChange}
-          placeholder="Extremely likely"
+          placeholder="Extremamente provável"
         />
       </Stack>
       <SwitchWithLabel
-        label="One click submit"
-        moreInfoContent='If enabled, the answer will be submitted as soon as the user clicks on a rating instead of showing the "Send" button.'
+        label="Um clique para enviar"
+        moreInfoContent='Se habilitada, a resposta será enviada assim que o usuário clicar em uma avaliação ao invés de mostrar o botão "Enviar".'
         initialValue={options.isOneClickSubmitEnabled ?? false}
         onCheckChange={handleOneClickSubmitChange}
       />
       <Stack>
         <FormLabel mb="0" htmlFor="button">
-          Button label:
+          Rótulo do botão:
         </FormLabel>
         <Input
           id="button"
@@ -129,7 +129,7 @@ export const RatingInputSettings = ({
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
-          Save answer in a variable:
+          Salvar resposta em uma variável:
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options.variableId}

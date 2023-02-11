@@ -30,11 +30,11 @@ export const WebflowInstructions = ({ type }: WebflowInstructionsProps) => {
 const StandardInstructions = () => (
   <OrderedList spacing={2} mb={4}>
     <ListItem>
-      Press <Tag>A</Tag> to open the <Tag>Add elements</Tag> panel
+      Pressione <Tag>A</Tag> para abrir o painel <Tag>Adicionar elementos</Tag>
     </ListItem>
     <ListItem>
-      Add an <Tag>embed</Tag> element from the <Tag>components</Tag>
-      section and paste this code:
+      Adicione um elemento <Tag>embed</Tag> de <Tag>components</Tag>
+      seção e cole este código:
       <ContainerEmbedCode widthLabel="100%" heightLabel="100%" my={4} />
     </ListItem>
   </OrderedList>

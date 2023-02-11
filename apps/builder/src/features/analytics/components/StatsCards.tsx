@@ -10,11 +10,11 @@ import {
 import { Stats } from 'models'
 import React from 'react'
 
-const computeCompletionRate  = (
+const computeCompletionRate = (
   totalCompleted: number,
   totalStarts: number
 ): string => {
-  if (totalStarts === 0) return 'Not available'
+  if (totalStarts === 0) return 'Não disponível'
   return `${Math.round((totalCompleted / totalStarts) * 100)}%`
 }
 
@@ -27,7 +27,7 @@ export const StatsCards = ({
   return (
     <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" {...props}>
       <Stat bgColor={bg} p="4" rounded="md" boxShadow="md">
-        <StatLabel>Views</StatLabel>
+        <StatLabel>Visualizações</StatLabel>
         {stats ? (
           <StatNumber>{stats.totalViews}</StatNumber>
         ) : (
@@ -35,7 +35,7 @@ export const StatsCards = ({
         )}
       </Stat>
       <Stat bgColor={bg} p="4" rounded="md" boxShadow="md">
-        <StatLabel>Starts</StatLabel>
+        <StatLabel>Inicios</StatLabel>
         {stats ? (
           <StatNumber>{stats.totalStarts}</StatNumber>
         ) : (
@@ -43,7 +43,7 @@ export const StatsCards = ({
         )}
       </Stat>
       <Stat bgColor={bg} p="4" rounded="md" boxShadow="md">
-        <StatLabel>Completion rate</StatLabel>
+        <StatLabel>Taxa de realizaçao</StatLabel>
         {stats ? (
           <StatNumber>
             {computeCompletionRate(stats.totalCompleted, stats.totalStarts)}

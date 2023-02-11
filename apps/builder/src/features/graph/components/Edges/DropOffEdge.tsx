@@ -105,7 +105,7 @@ export const DropOffEdge = ({
         y={labelCoordinates.y + 80}
       >
         <Tooltip
-          label="Unlock Drop-off rate by upgrading to Pro plan"
+          label="Desbloqueie a taxa de devolução atualizando para o plano Pro"
           isDisabled={isWorkspaceProPlan}
         >
           <VStack
@@ -137,7 +137,7 @@ export const DropOffEdge = ({
                   NN
                 </Text>
               )}{' '}
-              users
+              usuários
             </Tag>
           </VStack>
         </Tooltip>

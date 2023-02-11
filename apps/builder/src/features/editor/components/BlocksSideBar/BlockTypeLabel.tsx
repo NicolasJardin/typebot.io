@@ -18,79 +18,79 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
 
   switch (type) {
     case 'start':
-      return <Text>Start</Text>
+      return <Text>Início</Text>
     case BubbleBlockType.TEXT:
     case InputBlockType.TEXT:
-      return <Text>Text</Text>
+      return <Text>Texto</Text>
     case BubbleBlockType.IMAGE:
-      return <Text>Image</Text>
+      return <Text>Imagem</Text>
     case BubbleBlockType.VIDEO:
       return <Text>Video</Text>
     case BubbleBlockType.EMBED:
       return (
-        <Tooltip label="Embed a pdf, an iframe, a website...">
-          <Text>Embed</Text>
+        <Tooltip label="Incorpore um pdf, um iframe, um site...">
+          <Text>Embutir</Text>
         </Tooltip>
       )
     case BubbleBlockType.AUDIO:
       return <Text>Audio</Text>
     case InputBlockType.NUMBER:
-      return <Text>Number</Text>
+      return <Text>Número</Text>
     case InputBlockType.EMAIL:
       return <Text>Email</Text>
     case InputBlockType.URL:
       return <Text>Website</Text>
     case InputBlockType.DATE:
-      return <Text>Date</Text>
+      return <Text>Data</Text>
     case InputBlockType.PHONE:
-      return <Text>Phone</Text>
+      return <Text>Telefone</Text>
     case InputBlockType.CHOICE:
-      return <Text>Button</Text>
+      return <Text>Botão</Text>
     case InputBlockType.PAYMENT:
-      return <Text>Payment</Text>
+      return <Text>Pagamento</Text>
     case InputBlockType.RATING:
-      return <Text>Rating</Text>
+      return <Text>Avaliação</Text>
     case InputBlockType.FILE:
       return (
         <Tooltip label="Upload Files">
           <HStack>
-            <Text>File</Text>
+            <Text>Arquivo</Text>
             {isFreePlan(workspace) && <LockTag plan={Plan.STARTER} />}
           </HStack>
         </Tooltip>
       )
     case LogicBlockType.SET_VARIABLE:
-      return <Text>Set variable</Text>
+      return <Text>Variável</Text>
     case LogicBlockType.CONDITION:
-      return <Text>Condition</Text>
+      return <Text>Condição</Text>
     case LogicBlockType.REDIRECT:
-      return <Text>Redirect</Text>
+      return <Text>Redirecionar</Text>
     case LogicBlockType.SCRIPT:
       return (
-        <Tooltip label="Run Javascript code">
+        <Tooltip label="Executar código Javascript">
           <Text>Script</Text>
         </Tooltip>
       )
     case LogicBlockType.TYPEBOT_LINK:
       return (
-        <Tooltip label="Link to another of your typebots">
+        <Tooltip label="Link para outro dos seus typebots">
           <Text>Typebot</Text>
         </Tooltip>
       )
     case LogicBlockType.WAIT:
-      return <Text>Wait</Text>
+      return <Text>Esperar</Text>
     case LogicBlockType.TRANSFER:
       return <Text>Transferência</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
       return (
-        <Tooltip label="Google Sheets">
-          <Text>Sheets</Text>
+        <Tooltip label="Planilhas Google">
+          <Text>Planilhas</Text>
         </Tooltip>
       )
     case IntegrationBlockType.GOOGLE_ANALYTICS:
       return (
         <Tooltip label="Google Analytics">
-          <Text>Analytics</Text>
+          <Text>Análise</Text>
         </Tooltip>
       )
     case IntegrationBlockType.WEBHOOK:

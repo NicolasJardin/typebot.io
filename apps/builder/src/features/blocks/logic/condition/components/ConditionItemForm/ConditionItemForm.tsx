@@ -30,7 +30,7 @@ export const ConditionItemForm = ({ itemContent, onItemChange }: Props) => {
           />
         </Flex>
       )}
-      addLabel="Add a comparison"
+      addLabel="Adicionar uma comparação"
     />
   )
 }

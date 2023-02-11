@@ -93,15 +93,15 @@ export const ProPlanContent = ({
     )
       return ''
     if (workspace?.plan === Plan.PRO) {
-      if (isCurrentPlan) return 'Your current plan'
+      if (isCurrentPlan) return 'Seu plano atual'
 
       if (
         selectedChatsLimitIndex !== initialChatsLimitIndex ||
         selectedStorageLimitIndex !== initialStorageLimitIndex
       )
-        return 'Update'
+        return 'Atualizar'
     }
-    return 'Upgrade'
+    return 'Melhorar'
   }
 
   const handlePayClick = async () => {
@@ -146,9 +146,9 @@ export const ProPlanContent = ({
       <Stack justifyContent="space-between" h="full">
         <Stack spacing="4" mt={2}>
           <Heading fontSize="2xl">
-            Upgrade to <chakra.span color="blue.400">Pro</chakra.span>
+            Melhorar para <chakra.span color="blue.400">Pro</chakra.span>
           </Heading>
-          <Text>For agencies & growing startups.</Text>
+          <Text>Para agências e startups em crescimento.</Text>
         </Stack>
         <Stack spacing="4">
           <Heading>
@@ -160,16 +160,16 @@ export const ProPlanContent = ({
               ) ?? NaN,
               currency
             )}
-            <chakra.span fontSize="md">/ month</chakra.span>
+            <chakra.span fontSize="md">/ mês</chakra.span>
           </Heading>
           <Text fontWeight="bold">
             <Tooltip
               label={
                 <FeaturesList
                   features={[
-                    'Branding removed',
-                    'File upload input block',
-                    'Create folders',
+                    'Marca removida',
+                    'Bloco de entrada de upload de arquivo',
+                    'Criar pastas',
                   ]}
                   spacing="0"
                 />
@@ -178,14 +178,14 @@ export const ProPlanContent = ({
               placement="top"
             >
               <chakra.span textDecoration="underline" cursor="pointer">
-                Everything in Starter
+                Tudo no Starter
               </chakra.span>
             </Tooltip>
-            , plus:
+            , extra:
           </Text>
           <FeaturesList
             features={[
-              '5 seats included',
+              '5 lugares incluídos',
               <HStack key="test">
                 <Text>
                   <Menu>
@@ -246,8 +246,9 @@ export const ProPlanContent = ({
                   chats/mo
                 </Text>
                 <MoreInfoTooltip>
-                  A chat is counted whenever a user starts a discussion. It is
-                  independant of the number of messages he sends and receives.
+                  Um bate-papo é contado sempre que um usuário inicia uma
+                  discussão. Isso é independente do número de mensagens que
+                  envia e recebe.
                 </MoreInfoTooltip>
               </HStack>,
               <HStack key="test">
@@ -322,13 +323,13 @@ export const ProPlanContent = ({
                   GB of storage
                 </Text>
                 <MoreInfoTooltip>
-                  You accumulate storage for every file that your user upload
-                  into your bot. If you delete the result, it will free up the
-                  space.
+                  Você acumula armazenamento para cada arquivo que seu usuário
+                  carrega em seu bot. Se você excluir o resultado, ele liberará
+                  o espaço.
                 </MoreInfoTooltip>
               </HStack>,
-              'Custom domains',
-              'In-depth analytics',
+              'Domínios personalizados',
+              'Análise aprofundada',
             ]}
           />
           <Button

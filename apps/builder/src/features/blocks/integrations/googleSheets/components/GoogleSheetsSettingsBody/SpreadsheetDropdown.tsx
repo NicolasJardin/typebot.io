@@ -29,9 +29,9 @@ export const SpreadsheetsDropdown = ({
   if (isLoading) return <Input value="Loading..." isDisabled />
   if (!spreadsheets || spreadsheets.length === 0)
     return (
-      <Tooltip label="No spreadsheets found, make sure you have at least one spreadsheet that contains a header row">
+      <Tooltip label="Nenhuma planilha encontrada, verifique se você tem pelo menos uma planilha que contém uma linha de cabeçalho">
         <span>
-          <Input value="No spreadsheets found" isDisabled />
+          <Input value="Nenhuma planilha encontrada" isDisabled />
         </span>
       </Tooltip>
     )
@@ -40,7 +40,7 @@ export const SpreadsheetsDropdown = ({
       selectedItem={currentSpreadsheet?.name}
       items={(spreadsheets ?? []).map((s) => s.name)}
       onValueChange={handleSpreadsheetSelect}
-      placeholder={'Search for spreadsheet'}
+      placeholder={'Pesquisar planilha'}
     />
   )
 }

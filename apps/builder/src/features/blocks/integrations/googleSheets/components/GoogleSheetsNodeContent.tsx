@@ -8,6 +8,6 @@ type Props = {
 
 export const GoogleSheetsNodeContent = ({ action }: Props) => (
   <Text color={action ? 'currentcolor' : 'gray.500'} noOfLines={1}>
-    {action ?? 'Configure...'}
+    {action ?? 'Configurar...'}
   </Text>
 )

@@ -52,7 +52,7 @@ export const DashboardHeader = () => {
             onClick={onOpen}
             isLoading={isNotDefined(workspace)}
           >
-            Settings & Members
+            Configurações e membros
           </Button>
           <WorkspaceDropdown
             currentWorkspace={workspace}

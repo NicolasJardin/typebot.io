@@ -35,17 +35,17 @@ export const GoogleSheetConnectModal = ({
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Connect Spreadsheets</ModalHeader>
+        <ModalHeader>Conectar planilhas</ModalHeader>
         <ModalCloseButton />
         <ModalBody as={Stack} spacing="6">
           <AlertInfo>
-            Typebot needs access to Google Drive in order to list all your
-            spreadsheets. It also needs access to your spreadsheets in order to
-            fetch or inject data in it.
+            O Typebot precisa acessar o Google Drive para listar todos os seus
+            planilhas. Ele também precisa acessar suas planilhas para buscar ou
+            injetar dados nele.
           </AlertInfo>
           <Text>
-            Make sure to check all the permissions so that the integration works
-            as expected:
+            Certifique-se de verificar todas as permissões para que a integração
+            funcione como esperado:
           </Text>
           <Image
             src="/images/google-spreadsheets-scopes.jpeg"
@@ -65,7 +65,7 @@ export const GoogleSheetConnectModal = ({
               )}
               mx="auto"
             >
-              Continue with Google
+              Continuar com o Google
             </Button>
           </Flex>
         </ModalBody>

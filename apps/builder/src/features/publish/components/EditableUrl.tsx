@@ -44,7 +44,7 @@ export const EditableUrl = ({
     >
       <HStack spacing={1}>
         <Text>{hostname}/</Text>
-        <Tooltip label="Edit">
+        <Tooltip label="Editar">
           <EditablePreview
             mx={1}
             borderWidth="1px"
@@ -71,7 +71,7 @@ const EditButton = (props: ButtonProps) => {
 
   return isEditing ? null : (
     <Button leftIcon={<EditIcon />} {...props} {...getEditButtonProps()}>
-      Edit
+      Editar
     </Button>
   )
 }

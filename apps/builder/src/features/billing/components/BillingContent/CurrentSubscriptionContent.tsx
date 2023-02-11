@@ -47,7 +47,7 @@ export const CurrentSubscriptionContent = ({
     <Stack spacing="4">
       <Heading fontSize="3xl">Subscription</Heading>
       <HStack data-testid="current-subscription">
-        <Text>Current workspace subscription: </Text>
+        <Text>Assinatura do espaço de trabalho atual: </Text>
         {isCancelling ? (
           <Spinner color="gray.500" size="xs" />
         ) : (
@@ -61,7 +61,7 @@ export const CurrentSubscriptionContent = ({
                 fontSize="sm"
                 onClick={cancelSubscription}
               >
-                Cancel my subscription
+                Cancelar minha assinatura
               </Link>
             )}
           </>
@@ -72,8 +72,8 @@ export const CurrentSubscriptionContent = ({
         <>
           <Stack spacing="4">
             <Text fontSize="sm">
-              Need to change payment method or billing information? Head over to
-              your billing portal:
+              Precisa alterar o método de pagamento ou as informações de
+              cobrança? Dirija-se a seu portal de cobrança:
             </Text>
             <Button
               as={Link}
@@ -81,7 +81,7 @@ export const CurrentSubscriptionContent = ({
               onClick={() => setIsRedirectingToBillingPortal(true)}
               isLoading={isRedirectingToBillingPortal}
             >
-              Billing Portal
+              Portal de cobrança
             </Button>
           </Stack>
         </>

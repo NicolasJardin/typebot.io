@@ -49,7 +49,7 @@ export const RowsFilterTableList = ({
           />
         </Flex>
       )}
-      addLabel="Add filter rule"
+      addLabel="Adicionar regra de filtro"
     />
   )
 }

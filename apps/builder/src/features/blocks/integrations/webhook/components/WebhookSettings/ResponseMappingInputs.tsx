@@ -17,20 +17,20 @@ export const DataVariableInputs = ({
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
       <FormControl>
-        <FormLabel htmlFor="name">Data:</FormLabel>
+        <FormLabel htmlFor="name">Dados:</FormLabel>
         <SearchableDropdown
           items={dataItems}
           value={item.bodyPath}
           onValueChange={handleBodyPathChange}
-          placeholder="Select the data"
+          placeholder="Selecione os dados"
           withVariableButton
         />
       </FormControl>
       <FormControl>
-        <FormLabel htmlFor="value">Set variable:</FormLabel>
+        <FormLabel htmlFor="value">Definir variável:</FormLabel>
         <VariableSearchInput
           onSelectVariable={handleVariableChange}
-          placeholder="Search for a variable"
+          placeholder="Pesquisar uma variável"
           initialVariableId={item.variableId}
         />
       </FormControl>

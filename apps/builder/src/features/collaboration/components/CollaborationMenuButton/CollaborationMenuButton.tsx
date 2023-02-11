@@ -18,11 +18,11 @@ export const CollaborationMenuButton = ({
     <Popover isLazy placement="bottom-end">
       <PopoverTrigger>
         <span>
-          <Tooltip label="Invite users to collaborate">
+          <Tooltip label="Convidar usuários para colaborar">
             <IconButton
               isLoading={isLoading}
               icon={<UsersIcon />}
-              aria-label="Show collaboration menu"
+              aria-label="Mostrar menu de colaboração"
               size="sm"
             />
           </Tooltip>

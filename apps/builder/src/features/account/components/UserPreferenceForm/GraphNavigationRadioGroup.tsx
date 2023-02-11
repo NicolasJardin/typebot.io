@@ -14,13 +14,14 @@ const graphNavigationData = [
     value: GraphNavigation.MOUSE,
     label: 'Mouse',
     description:
-      'Move by dragging the board and zoom in/out using the scroll wheel',
+      'Mova-se arrastando o quadro e aumente/diminua o zoom usando a roda de rolagem',
     icon: <MouseIcon boxSize="35px" />,
   },
   {
     value: GraphNavigation.TRACKPAD,
     label: 'Trackpad',
-    description: 'Move the board using 2 fingers and zoom in/out by pinching',
+    description:
+      'Mova o quadro usando 2 dedos e aumente/diminua o zoom apertando',
     icon: <LaptopIcon boxSize="35px" />,
   },
 ]

@@ -33,13 +33,13 @@ export const ScriptSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <SwitchWithLabel
-        label="Execute in parent window"
-        moreInfoContent="Execute the code in the parent window context (when the bot is embedded). If it isn't detected, the code will be executed in the current window context."
+        label="Executar na janela pai"
+        moreInfoContent="Execute o código no contexto da janela pai (quando o bot estiver incorporado). Se não for detectado, o código será executado no contexto da janela atual."
         initialValue={options.shouldExecuteInParentContext ?? false}
         onCheckChange={handleShouldExecuteInParentContextChange}
       />
       <Stack>
-        <Text>Code:</Text>
+        <Text>Código:</Text>
         <CodeEditor
           value={options.content ?? ''}
           lang="js"

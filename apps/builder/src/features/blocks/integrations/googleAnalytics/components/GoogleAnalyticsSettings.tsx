@@ -44,7 +44,7 @@ export const GoogleAnalyticsSettings = ({
     <Stack spacing={4}>
       <Stack>
         <FormLabel mb="0" htmlFor="tracking-id">
-          Tracking ID:
+          ID de rastreamento:
         </FormLabel>
         <Input
           id="tracking-id"
@@ -55,23 +55,23 @@ export const GoogleAnalyticsSettings = ({
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="category">
-          Event category:
+          Categoria do evento:
         </FormLabel>
         <Input
           id="category"
           defaultValue={options?.category ?? ''}
-          placeholder="Example: Typebot"
+          placeholder="Exemplo: Typebot"
           onChange={handleCategoryChange}
         />
       </Stack>
       <Stack>
         <FormLabel mb="0" htmlFor="action">
-          Event action:
+          Ação do evento:
         </FormLabel>
         <Input
           id="action"
           defaultValue={options?.action ?? ''}
-          placeholder="Example: Submit email"
+          placeholder="Exemplo: enviar e-mail"
           onChange={handleActionChange}
         />
       </Stack>
@@ -80,7 +80,7 @@ export const GoogleAnalyticsSettings = ({
           <h2>
             <AccordionButton>
               <Box flex="1" textAlign="left">
-                Advanced
+                Avançado
               </Box>
               <AccordionIcon />
             </AccordionButton>
@@ -88,23 +88,23 @@ export const GoogleAnalyticsSettings = ({
           <AccordionPanel pb={4} as={Stack} spacing="6">
             <Stack>
               <FormLabel mb="0" htmlFor="label">
-                Event label <Tag>Optional</Tag>:
+                Rótulo do evento <Tag>Opcional</Tag>:
               </FormLabel>
               <Input
                 id="label"
                 defaultValue={options?.label ?? ''}
-                placeholder="Example: Campaign Z"
+                placeholder="Exemplo: Campanha Z"
                 onChange={handleLabelChange}
               />
             </Stack>
             <Stack>
               <FormLabel mb="0" htmlFor="value">
-                Event value <Tag>Optional</Tag>:
+                Valor do evento <Tag>Opcional</Tag>:
               </FormLabel>
               <Input
                 id="value"
                 defaultValue={options?.value?.toString() ?? ''}
-                placeholder="Example: 0"
+                placeholder="Exemplo: 0"
                 onChange={handleValueChange}
               />
             </Stack>
