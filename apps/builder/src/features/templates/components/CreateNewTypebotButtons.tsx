@@ -73,7 +73,7 @@ export const CreateNewTypebotButtons = () => {
 
   return (
     <VStack maxW="600px" w="full" flex="1" pt="20" spacing={10}>
-      <Heading>Create a new typebot</Heading>
+      <Heading>Criar um novo typebot</Heading>
       <Stack w="full" spacing={6}>
         <Button
           variant="outline"
@@ -90,7 +90,7 @@ export const CreateNewTypebotButtons = () => {
           onClick={() => handleCreateSubmit()}
           isLoading={isLoading}
         >
-          Start from scratch
+          Começar do zero
         </Button>
 
         <ImportTypebotFromFileButton
@@ -108,7 +108,7 @@ export const CreateNewTypebotButtons = () => {
           isLoading={isLoading}
           onNewTypebot={handleCreateSubmit}
         >
-          Import a file
+          Importar um arquivo
         </ImportTypebotFromFileButton>
       </Stack>
       <TemplatesModal

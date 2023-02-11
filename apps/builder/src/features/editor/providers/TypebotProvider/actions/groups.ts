@@ -38,7 +38,7 @@ const groupsActions = (setTypebot: SetTypebot): GroupsActions => ({
         const newGroup: Group = {
           id,
           graphCoordinates,
-          title: `Group #${typebot.groups.length}`,
+          title: `Grupo #${typebot.groups.length}`,
           blocks: [],
         }
         typebot.groups.push(newGroup)
@@ -59,7 +59,7 @@ const groupsActions = (setTypebot: SetTypebot): GroupsActions => ({
         const id = cuid()
         const newGroup: Group = {
           ...group,
-          title: `${group.title} copy`,
+          title: `${group.title} Cópia`,
           id,
           blocks: group.blocks.map(duplicateBlockDraft(id)),
           graphCoordinates: {

@@ -38,12 +38,12 @@ export const parseNewTypebot = ({
   const startBlock: StartBlock = {
     groupId: startGroupId,
     id: startBlockId,
-    label: 'Start',
+    label: 'Início',
     type: 'start',
   }
   const startGroup: Group = {
     id: startGroupId,
-    title: 'Start',
+    title: 'Início',
     graphCoordinates: { x: 0, y: 0 },
     blocks: [startBlock],
   }

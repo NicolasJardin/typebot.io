@@ -138,7 +138,7 @@ export const TypebotProvider = ({
     typebotIds: linkedTypebotIds,
     onError: (error) =>
       showToast({
-        title: 'Erro ao buscar typebots conectados ',
+        title: 'Erro ao buscar typebots conectados',
         description: error.message,
       }),
   })
@@ -239,7 +239,10 @@ export const TypebotProvider = ({
   useEffect(() => {
     if (isLoading) return
     if (!typebot) {
-      showToast({ status: 'info', description: "Couldn't find typebot" })
+      showToast({
+        status: 'info',
+        description: 'Não foi possível encontrar o typebot',
+      })
       router.replace('/typebots')
       return
     }

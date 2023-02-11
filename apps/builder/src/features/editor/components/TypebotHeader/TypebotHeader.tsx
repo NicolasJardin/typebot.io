@@ -139,7 +139,11 @@ export const TypebotHeader = () => {
 
           <HStack>
             <Tooltip
-              label={isUndoShortcutTooltipOpen ? 'Changes reverted!' : 'Undo'}
+              label={
+                isUndoShortcutTooltipOpen
+                  ? 'Alterações revertidas!'
+                  : 'Desfazer'
+              }
               isOpen={isUndoShortcutTooltipOpen ? true : undefined}
               hasArrow={isUndoShortcutTooltipOpen}
             >
@@ -153,7 +157,7 @@ export const TypebotHeader = () => {
               />
             </Tooltip>
 
-            <Tooltip label="Redo">
+            <Tooltip label="Refazer">
               <IconButton
                 display={['none', 'flex']}
                 icon={<RedoIcon />}
@@ -183,7 +187,7 @@ export const TypebotHeader = () => {
             isLoading={isNotDefined(typebot)}
             size="sm"
           >
-            Preview
+            Pŕe-visualização
           </Button>
         )}
         <PublishButton size="sm" />

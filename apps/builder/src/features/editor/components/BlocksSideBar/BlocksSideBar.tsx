@@ -102,7 +102,11 @@ export const BlocksSideBar = () => {
         className="hide-scrollbar"
       >
         <Flex justifyContent="flex-end">
-          <Tooltip label={isLocked ? 'Unlock sidebar' : 'Lock sidebar'}>
+          <Tooltip
+            label={
+              isLocked ? 'Desbloquear barra lateral' : 'Bloquear barra lateral'
+            }
+          >
             <IconButton
               icon={isLocked ? <LockedIcon /> : <UnlockedIcon />}
               aria-label={isLocked ? 'Desbloquear' : 'Bloquear'}
@@ -153,7 +157,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Logica
+            Lógica
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
