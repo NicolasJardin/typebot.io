@@ -1,5 +1,4 @@
 export { DashboardPage } from './components/DashboardPage'
-export { DashboardHeader } from './components/DashboardHeader'
 export { parseNewTypebot } from './api/parseNewTypebot'
 export {
   createTypebotQuery,

@@ -1,7 +1,6 @@
 import { Seo } from '@/components/Seo'
-import { DashboardHeader } from '@/features/dashboard'
 import { useToast } from '@/hooks/useToast'
-import { Stack, Flex, Spinner } from '@chakra-ui/react'
+import { Flex, Spinner, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useFolder } from '../hooks/useFolder'
 import { TypebotDndProvider } from '../TypebotDndProvider'
@@ -25,7 +24,7 @@ export const FolderPage = () => {
   return (
     <Stack minH="100vh">
       <Seo title="Meus typebots" />
-      <DashboardHeader />
+
       <TypebotDndProvider>
         {!folder ? (
           <Flex flex="1">
