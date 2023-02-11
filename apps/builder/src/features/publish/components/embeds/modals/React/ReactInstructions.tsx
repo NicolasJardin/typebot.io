@@ -41,7 +41,7 @@ const StandardInstructions = () => {
       <StandardEmbedWindowSettings
         onUpdateWindowSettings={(settings) => setInputValues({ ...settings })}
       />
-      <Text>Insert the typebot container</Text>
+      <Text>Insira o contêiner typebot</Text>
       <StandardReactDiv {...inputValues} />
     </Stack>
   )

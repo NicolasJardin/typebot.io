@@ -42,7 +42,7 @@ export const ToolBar = ({ onVariablesButtonClick, ...props }: Props) => {
       {...props}
     >
       <IconButton
-        aria-label="Insert variable"
+        aria-label="Inserir variável"
         size="sm"
         onMouseDown={handleVariablesButtonMouseDown}
         icon={<UserIcon />}

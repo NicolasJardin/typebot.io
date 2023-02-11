@@ -14,7 +14,7 @@ export const ItemNodeContextMenu = ({ indices }: Props) => {
   return (
     <MenuList>
       <MenuItem icon={<TrashIcon />} onClick={handleDeleteClick}>
-        Delete
+        Deletar
       </MenuItem>
     </MenuList>
   )

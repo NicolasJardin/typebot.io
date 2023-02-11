@@ -49,7 +49,7 @@ export const FolderButton = ({
     const { error } = await deleteFolderQuery(folder.id)
     return error
       ? showToast({
-          title: "Couldn't delete the folder",
+          title: 'Não foi possível excluir a pasta',
           description: error.message,
         })
       : onFolderDeleted()
@@ -106,7 +106,7 @@ export const FolderButton = ({
               onOpen()
             }}
           >
-            Delete
+            Excluir
           </MenuItem>
         </MenuList>
       </Menu>
@@ -138,11 +138,12 @@ export const FolderButton = ({
         confirmButtonLabel={'Delete'}
         message={
           <Text>
-            Are you sure you want to delete <strong>{folder.name}</strong>{' '}
-            folder? (Everything inside will be move to your dashboard)
+            Tem certeza de que deseja excluir a pasta{' '}
+            <strong>{folder.name}</strong>? (Tudo dentro será movido para o seu
+            painel)
           </Text>
         }
-        title={`Delete ${folder.name}?`}
+        title={`Deletar ${folder.name}?`}
         onConfirm={onDeleteClick}
         confirmButtonColor="red"
       />

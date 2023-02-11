@@ -57,7 +57,7 @@ export const PlanTag = ({
           data-testid="free-plan-tag"
           {...props}
         >
-          Free
+          Grátis
         </Tag>
       )
     }

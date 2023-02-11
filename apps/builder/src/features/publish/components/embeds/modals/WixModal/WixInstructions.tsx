@@ -29,13 +29,13 @@ const StandardInstructions = () => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        In the Wix Website Editor:
+        No Editor de Site Wix:
         <Tag>
-          Add {'>'} Embed {'>'} Embed a Widget
+          Adicionar {'>'} Incorporar {'>'} Incorporar um Widget
         </Tag>
       </ListItem>
       <ListItem>
-        Click on <Tag>Enter code</Tag> and paste this code:
+        Clique em <Tag>Digite o código</Tag> e cole este código:
       </ListItem>
       <ContainerEmbedCode widthLabel="100%" heightLabel="100%" />
     </OrderedList>

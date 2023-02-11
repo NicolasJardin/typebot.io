@@ -37,7 +37,7 @@ const StandardInstructions = () => {
   return (
     <Stack spacing={4}>
       <Text>
-        Paste this anywhere in the <Tag>body</Tag>
+        Cole isso em qualquer lugar no <Tag>body</Tag>
       </Text>
       <StandardEmbedWindowSettings
         onUpdateWindowSettings={(settings) => setInputValues({ ...settings })}
@@ -53,7 +53,7 @@ const PopupInstructions = () => {
   return (
     <Stack spacing={4}>
       <Text>
-        Paste this anywhere in the <Tag>body</Tag>
+        Cole isso em qualquer lugar no <Tag>body</Tag>
       </Text>
       <PopupEmbedSettings
         mb={4}
@@ -78,7 +78,7 @@ const BubbleInstructions = () => {
   return (
     <Stack spacing={4}>
       <Text>
-        Paste this anywhere in the <Tag>body</Tag>
+        Cole isso em qualquer lugar no <Tag>body</Tag>
       </Text>
       <ChatEmbedSettings
         onUpdateSettings={(settings) => setInputValues({ ...settings })}

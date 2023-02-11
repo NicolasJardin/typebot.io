@@ -11,10 +11,10 @@ export const PaymentInputContent = ({ block }: Props) => {
     !block.options.credentialsId ||
     !block.options.currency
   )
-    return <Text color="gray.500">Configure...</Text>
+    return <Text color="gray.500">Configurar...</Text>
   return (
     <Text noOfLines={1} pr="6">
-      Collect {block.options.amount} {block.options.currency}
+      Coletar {block.options.amount} {block.options.currency}
     </Text>
   )
 }

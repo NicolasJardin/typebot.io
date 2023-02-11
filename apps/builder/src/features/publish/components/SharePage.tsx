@@ -59,7 +59,7 @@ export const SharePage = () => {
     if (!isCorrectlyFormatted) {
       showToast({
         description:
-          'Should contain only contain letters, numbers. Words can be separated by dashes.',
+          'Deve conter apenas letras, números. As palavras podem ser separadas por hífens.',
       })
       return false
     }
@@ -70,7 +70,7 @@ export const SharePage = () => {
     const isLongerThanAllowed = publicId.length >= 4
     if (!isLongerThanAllowed && isCloudProdInstance) {
       showToast({
-        description: 'Should be longer than 4 characters',
+        description: 'Deve ter mais de 4 caracteres',
       })
       return false
     }
@@ -79,7 +79,7 @@ export const SharePage = () => {
 
     const { data } = await isPublicDomainAvailableQuery(publicId)
     if (!data?.isAvailable) {
-      showToast({ description: 'ID is already taken' })
+      showToast({ description: 'ID já foi utilizado' })
       return false
     }
 
@@ -94,7 +94,7 @@ export const SharePage = () => {
         <Stack maxW="1000px" w="full" pt="10" spacing={10}>
           <Stack spacing={4} align="flex-start">
             <Heading fontSize="2xl" as="h1">
-              Your typebot link
+              O link do seu typebot
             </Heading>
             {typebot && (
               <EditableUrl
@@ -114,7 +114,7 @@ export const SharePage = () => {
                 />
                 <IconButton
                   icon={<TrashIcon />}
-                  aria-label="Remove custom domain"
+                  aria-label="Remover domínio personalizado"
                   size="xs"
                   onClick={() => handleCustomDomainChange(null)}
                 />
@@ -132,7 +132,7 @@ export const SharePage = () => {
                     colorScheme="gray"
                     limitReachedType={LimitReached.CUSTOM_DOMAIN}
                   >
-                    <Text mr="2">Add my domain</Text>{' '}
+                    <Text mr="2">Adicionar meu domínio</Text>{' '}
                     <LockTag plan={Plan.PRO} />
                   </UpgradeButton>
                 )}
@@ -142,7 +142,7 @@ export const SharePage = () => {
 
           <Stack spacing={4}>
             <Heading fontSize="2xl" as="h1">
-              Embed your typebot
+              Incorpore seu typebot
             </Heading>
             <Wrap spacing={7}>
               {integrationsList.map((IntegrationButton, idx) => (

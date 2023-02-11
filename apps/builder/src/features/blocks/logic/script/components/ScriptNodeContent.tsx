@@ -6,6 +6,6 @@ type Props = ScriptOptions
 
 export const ScriptNodeContent = ({ name, content }: Props) => (
   <Text color={content ? 'currentcolor' : 'gray.500'} noOfLines={1}>
-    {content ? `Run ${name}` : 'Configure...'}
+    {content ? `Executar ${name}` : 'Configurar...'}
   </Text>
 )

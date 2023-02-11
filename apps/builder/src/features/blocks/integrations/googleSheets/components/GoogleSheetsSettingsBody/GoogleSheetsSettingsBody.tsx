@@ -128,7 +128,7 @@ export const GoogleSheetsSettingsBody = ({
               currentItem={'action' in options ? options.action : undefined}
               onItemSelect={handleActionChange}
               items={Object.values(GoogleSheetsAction)}
-              placeholder="Select an operation"
+              placeholder="Selecione uma operação"
             />
           </>
         )}
@@ -196,24 +196,24 @@ const ActionOptions = ({
           initialItems={options.cellsToInsert}
           onItemsChange={handleInsertColumnsChange}
           Item={UpdatingCellItem}
-          addLabel="Add a value"
+          addLabel="Adicionar um valor"
         />
       )
     case GoogleSheetsAction.UPDATE_ROW:
       return (
         <Stack>
-          <Text>Row to select</Text>
+          <Text>Linha para selecionar</Text>
           <CellWithValueStack
             columns={sheet?.columns ?? []}
             item={options.referenceCell ?? { id: 'reference' }}
             onItemChange={handleReferenceCellChange}
           />
-          <Text>Cells to update</Text>
+          <Text>Células para atualizar</Text>
           <TableList<Cell>
             initialItems={options.cellsToUpsert}
             onItemsChange={handleUpsertColumnsChange}
             Item={UpdatingCellItem}
-            addLabel="Add a value"
+            addLabel="Adicionar um valor"
           />
         </Stack>
       )
@@ -222,7 +222,7 @@ const ActionOptions = ({
         <Stack>
           {options.referenceCell ? (
             <>
-              <Text>Row to select</Text>
+              <Text>Linha para selecionar</Text>
               <CellWithValueStack
                 columns={sheet?.columns ?? []}
                 item={options.referenceCell ?? { id: 'reference' }}
@@ -240,12 +240,12 @@ const ActionOptions = ({
             </>
           )}
 
-          <Text>Cells to extract</Text>
+          <Text>Células para extrair</Text>
           <TableList<ExtractingCell>
             initialItems={options.cellsToExtract}
             onItemsChange={handleExtractingCellsChange}
             Item={ExtractingCellItem}
-            addLabel="Add a value"
+            addLabel="Adicionar um valor"
           />
         </Stack>
       )

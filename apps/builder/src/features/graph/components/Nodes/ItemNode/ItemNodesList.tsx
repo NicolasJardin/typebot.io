@@ -208,7 +208,7 @@ const DefaultItemNode = ({ block }: { block: BlockWithItems }) => {
       cursor="not-allowed"
     >
       <Text color="gray.500">
-        {block.type === LogicBlockType.CONDITION ? 'Else' : 'Default'}
+        {block.type === LogicBlockType.CONDITION ? 'Senão' : 'Padrão'}
       </Text>
       <SourceEndpoint
         source={{
@@ -238,7 +238,7 @@ const CollectVariableLabel = ({
   return (
     <HStack fontStyle="italic" spacing={1}>
       <Text fontSize="sm" color={textColor}>
-        Collects
+        Coleta
       </Text>
       <Tag bg="orange.400" color="white" size="sm">
         {variableName}

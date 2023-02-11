@@ -50,14 +50,14 @@ export const ImageUploadContent = ({
           onClick={() => setCurrentTab('upload')}
           size="sm"
         >
-          Upload
+          Carregar
         </Button>
         <Button
           variant={currentTab === 'link' ? 'solid' : 'ghost'}
           onClick={() => setCurrentTab('link')}
           size="sm"
         >
-          Embed link
+          Incorporar link
         </Button>
         {isGiphyEnabled && (
           <Button
@@ -127,7 +127,7 @@ const UploadFileContent = ({
       includeFileName={includeFileName}
       colorScheme="blue"
     >
-      Choose an image
+      Escolha uma imagem
     </UploadButton>
   </Flex>
 )
@@ -138,7 +138,7 @@ const EmbedLinkContent = ({
 }: ContentProps & { defaultUrl?: string }) => (
   <Stack py="2">
     <Input
-      placeholder={'Paste the image link...'}
+      placeholder={'Cole o link da imagem...'}
       onChange={onNewUrl}
       defaultValue={defaultUrl ?? ''}
     />

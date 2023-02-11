@@ -231,7 +231,7 @@ const NonMemoizedDraggableGroupNode = ({
           )}
           <IconButton
             icon={<PlayIcon />}
-            aria-label={'Preview bot from this group'}
+            aria-label={'Visualizar bot deste grupo'}
             pos="absolute"
             right={2}
             top={0}

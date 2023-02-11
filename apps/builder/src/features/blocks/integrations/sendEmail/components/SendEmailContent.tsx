@@ -7,11 +7,11 @@ type Props = {
 
 export const SendEmailContent = ({ block }: Props) => {
   if (block.options.recipients.length === 0)
-    return <Text color="gray.500">Configure...</Text>
+    return <Text color="gray.500">Configurar...</Text>
   return (
     <Wrap noOfLines={2} pr="6">
       <WrapItem>
-        <Text>Send email to</Text>
+        <Text>Enviar um email a</Text>
       </WrapItem>
       {block.options.recipients.map((to) => (
         <WrapItem key={to}>

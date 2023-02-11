@@ -41,7 +41,7 @@ export const ChatEmbedSettings = ({
 
   const [inputValues, setInputValues] = useState({
     messageDelay: '0',
-    messageContent: 'I have a question for you!',
+    messageContent: 'Eu tenho uma pergunta para você!',
     avatarUrl: typebot?.theme.chat.hostAvatar?.url ?? user?.image ?? '',
   })
 
@@ -94,17 +94,17 @@ export const ChatEmbedSettings = ({
   return (
     <Stack {...props} spacing="4">
       <Heading fontSize="md" fontWeight="semibold">
-        Chat bubble settings
+        Configurações de balão de bate-papo
       </Heading>
       <Flex justify="space-between" align="center">
-        <Text>Button color</Text>
+        <Text>Cor do botao</Text>
         <ColorPicker
           initialColor={bubbleColor}
           onColorChange={setBubbleColor}
         />
       </Flex>
       <HStack justify="space-between">
-        <Text>Icon color</Text>
+        <Text>Cor do ícone</Text>
         <ColorPicker
           initialColor={bubbleIconColor}
           onColorChange={setIconBubbleColor}
@@ -112,7 +112,7 @@ export const ChatEmbedSettings = ({
       </HStack>
       <HStack justifyContent="space-between">
         <FormLabel htmlFor="custom-icon" mb="0" flexShrink={0}>
-          Custom button icon?
+          Ícone de botão personalizado?
         </FormLabel>
         <Switch
           id="custom-icon"
@@ -125,7 +125,7 @@ export const ChatEmbedSettings = ({
           <HStack pl="4">
             <Text>Url:</Text>
             <Input
-              placeholder={'Paste image link (.png, .svg)'}
+              placeholder={'Colar link da imagem (.png, .svg)'}
               value={customIconInputValue}
               onChange={(e) => setCustomIconInputValue(e.target.value)}
               minW="0"
@@ -141,7 +141,7 @@ export const ChatEmbedSettings = ({
           justifyContent="space-between"
         >
           <FormLabel htmlFor="fullscreen-option" mb="0">
-            Enable popup message?
+            Ativar mensagem pop-up?
           </FormLabel>
           <Switch
             id="fullscreen-option"
@@ -171,7 +171,7 @@ export const ChatEmbedSettings = ({
             </HStack>
           </Flex>
           <Flex justify="space-between" align="center" pl="4">
-            <Text>Appearance delay</Text>
+            <Text>Atraso na aparência</Text>
             <NumberInput
               onChange={(messageDelay) =>
                 setInputValues({
@@ -190,7 +190,7 @@ export const ChatEmbedSettings = ({
             </NumberInput>
           </Flex>
           <Flex justify="space-between" align="center" pl="4">
-            <Text>Avatar URL</Text>
+            <Text>URL do Avatar</Text>
             <Input
               type="text"
               onChange={(e) =>
@@ -200,11 +200,11 @@ export const ChatEmbedSettings = ({
                 })
               }
               value={inputValues.avatarUrl}
-              placeholder={'Paste image link (.png, .jpg)'}
+              placeholder={'Colar link da imagem (.png, .jpg)'}
             />
           </Flex>
           <Flex justify="space-between" align="center" pl="4">
-            <Text>Message content</Text>
+            <Text>Conteúdo da mensagem</Text>
             <Input
               type="text"
               onChange={(e) =>

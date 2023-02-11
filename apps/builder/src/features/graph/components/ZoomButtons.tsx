@@ -22,7 +22,7 @@ export const ZoomButtons = ({
   >
     <IconButton
       icon={<PlusIcon />}
-      aria-label={'Zoom in'}
+      aria-label={'Mais Zoom'}
       size="sm"
       onClick={onZoomIn}
       bgColor={useColorModeValue('white', undefined)}
@@ -30,7 +30,7 @@ export const ZoomButtons = ({
     />
     <IconButton
       icon={<MinusIcon />}
-      aria-label={'Zoom out'}
+      aria-label={'Reduzir o zoom'}
       size="sm"
       onClick={onZoomOut}
       bgColor={useColorModeValue('white', undefined)}

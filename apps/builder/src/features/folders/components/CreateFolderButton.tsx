@@ -27,7 +27,7 @@ export const CreateFolderButton = ({ isLoading, onClick }: Props) => {
       isLoading={isLoading}
     >
       <HStack>
-        <Text>Create a folder</Text>
+        <Text>Criar uma pasta</Text>
         {isFreePlan(workspace) && <LockTag plan={Plan.STARTER} />}
       </HStack>
       <ChangePlanModal

@@ -1,7 +1,6 @@
 import { Seo } from '@/components/Seo'
-import { DashboardHeader } from '@/features/dashboard'
 import { useToast } from '@/hooks/useToast'
-import { Stack, Flex, Spinner } from '@chakra-ui/react'
+import { Flex, Spinner, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useFolder } from '../hooks/useFolder'
 import { TypebotDndProvider } from '../TypebotDndProvider'
@@ -16,7 +15,7 @@ export const FolderPage = () => {
     folderId: router.query.id?.toString(),
     onError: (error) => {
       showToast({
-        title: "Couldn't fetch folder content",
+        title: 'Não foi possível buscar o conteúdo da pasta',
         description: error.message,
       })
     },
@@ -24,8 +23,8 @@ export const FolderPage = () => {
 
   return (
     <Stack minH="100vh">
-      <Seo title="My typebots" />
-      <DashboardHeader />
+      <Seo title="Meus typebots" />
+
       <TypebotDndProvider>
         {!folder ? (
           <Flex flex="1">

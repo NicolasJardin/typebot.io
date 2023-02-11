@@ -98,12 +98,12 @@ export const StripeConfigModal = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Connect Stripe account</ModalHeader>
+        <ModalHeader>Conectar conta Stripe</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack as="form" spacing={4}>
             <FormControl isRequired>
-              <FormLabel>Account name:</FormLabel>
+              <FormLabel>Nome da conta:</FormLabel>
               <Input
                 onChange={handleNameChange}
                 placeholder="Typebot"
@@ -112,9 +112,9 @@ export const StripeConfigModal = ({
             </FormControl>
             <Stack>
               <FormLabel>
-                Test keys:{' '}
+                Chaves de teste:{' '}
                 <MoreInfoTooltip>
-                  Will be used when previewing the bot.
+                  Serão usadas ao visualizar o bot.
                 </MoreInfoTooltip>
               </FormLabel>
               <HStack>
@@ -135,7 +135,7 @@ export const StripeConfigModal = ({
               </HStack>
             </Stack>
             <Stack>
-              <FormLabel>Live keys:</FormLabel>
+              <FormLabel>Chaves ativas:</FormLabel>
               <HStack>
                 <FormControl>
                   <Input
@@ -155,9 +155,9 @@ export const StripeConfigModal = ({
             </Stack>
 
             <Text>
-              (You can find your keys{' '}
+              (Você pode encontrar suas chaves{' '}
               <TextLink href="https://dashboard.stripe.com/apikeys" isExternal>
-                here
+                aqui
               </TextLink>
               )
             </Text>
@@ -175,7 +175,7 @@ export const StripeConfigModal = ({
             }
             isLoading={isCreating}
           >
-            Connect
+            Conectar
           </Button>
         </ModalFooter>
       </ModalContent>

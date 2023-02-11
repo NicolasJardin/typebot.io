@@ -17,7 +17,7 @@ export const UpgradeButton = ({ limitReachedType, ...props }: Props) => {
       isLoading={isNotDefined(workspace)}
       onClick={onOpen}
     >
-      {props.children ?? 'Upgrade'}
+      {props.children ?? 'Melhorar'}
       <ChangePlanModal
         isOpen={isOpen}
         onClose={onClose}

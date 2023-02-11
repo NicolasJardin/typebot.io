@@ -23,7 +23,7 @@ type Props<T> = {
 export const TableList = <T,>({
   initialItems,
   onItemsChange,
-  addLabel = 'Add',
+  addLabel = 'Adicionar',
   debounceTimeout,
   Item,
   ComponentBetweenItems,

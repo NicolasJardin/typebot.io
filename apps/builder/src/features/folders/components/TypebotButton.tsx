@@ -68,7 +68,7 @@ export const TypebotButton = ({
     const { error } = await deleteTypebotQuery(typebot.id)
     if (error)
       return showToast({
-        title: "Couldn't delete typebot",
+        title: 'Não foi possível deletar o typebot',
         description: error.message,
       })
     onTypebotUpdated()
@@ -78,14 +78,15 @@ export const TypebotButton = ({
     e.stopPropagation()
     const { data } = await getTypebotQuery(typebot.id)
     const typebotToDuplicate = data?.typebot
-    if (!typebotToDuplicate) return { error: new Error('Typebot not found') }
+    if (!typebotToDuplicate)
+      return { error: new Error('Typebot não encontrado') }
     const { data: createdTypebot, error } = await importTypebotQuery(
       data.typebot,
       workspace?.plan ?? Plan.FREE
     )
     if (error)
       return showToast({
-        title: "Couldn't duplicate typebot",
+        title: 'Não foi possível duplicar o typebot',
         description: error.message,
       })
     if (createdTypebot) router.push(`/typebots/${createdTypebot?.id}/edit`)
@@ -133,7 +134,7 @@ export const TypebotButton = ({
           top="27px"
           size="sm"
         >
-          Live
+          Ativo
         </Tag>
       )}
       {!isReadOnly && (
@@ -156,11 +157,13 @@ export const TypebotButton = ({
             aria-label={`Show ${typebot.name} menu`}
           >
             {typebot.publishedTypebotId && (
-              <MenuItem onClick={handleUnpublishClick}>Unpublish</MenuItem>
+              <MenuItem onClick={handleUnpublishClick}>
+                Cancelar publicação
+              </MenuItem>
             )}
-            <MenuItem onClick={handleDuplicateClick}>Duplicate</MenuItem>
+            <MenuItem onClick={handleDuplicateClick}>Duplicar</MenuItem>
             <MenuItem color="red" onClick={handleDeleteClick}>
-              Delete
+              Deletar
             </MenuItem>
           </MoreButton>
         </>
@@ -182,10 +185,9 @@ export const TypebotButton = ({
         <ConfirmModal
           message={
             <Text>
-              Are you sure you want to delete your Typebot &quot;{typebot.name}
-              &quot;.
+              Tem certeza de que deseja excluir seu Typebot {typebot.name}?
               <br />
-              All associated data will be lost.
+              Todos os dados associados serão perdidos.
             </Text>
           }
           confirmButtonLabel="Delete"

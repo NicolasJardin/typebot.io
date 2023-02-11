@@ -92,7 +92,7 @@ export const PreviewDrawer = () => {
 
       <VStack w="full" spacing={4}>
         <Flex justifyContent={'space-between'} w="full">
-          <Button onClick={handleRestartClick}>Restart</Button>
+          <Button onClick={handleRestartClick}>Reiniciar</Button>
           <CloseButton onClick={handleCloseClick} />
         </Flex>
 

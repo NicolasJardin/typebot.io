@@ -27,14 +27,14 @@ export const AudioBubbleForm = ({
           onClick={() => setCurrentTab('upload')}
           size="sm"
         >
-          Upload
+          Carregar
         </Button>
         <Button
           variant={currentTab === 'link' ? 'solid' : 'ghost'}
           onClick={() => setCurrentTab('link')}
           size="sm"
         >
-          Embed link
+          Incorporar link
         </Button>
       </HStack>
       <Stack p="2">
@@ -46,19 +46,19 @@ export const AudioBubbleForm = ({
               onFileUploaded={submit}
               colorScheme="blue"
             >
-              Choose a file
+              Escolha um arquivo
             </UploadButton>
           </Flex>
         )}
         {currentTab === 'link' && (
           <>
             <Input
-              placeholder="Paste the audio file link..."
+              placeholder="Cole o link do arquivo de áudio..."
               defaultValue={content.url ?? ''}
               onChange={submit}
             />
             <Text fontSize="sm" color="gray.400" textAlign="center">
-              Works with .MP3s and .WAVs
+              Funciona com .MP3s and .WAVs
             </Text>
           </>
         )}

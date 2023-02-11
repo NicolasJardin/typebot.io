@@ -165,7 +165,7 @@ const TextBubbleEditorContent = ({
         >
           <VariableSearchInput
             onSelectVariable={handleVariableSelected}
-            placeholder="Search for a variable"
+            placeholder="Pesquisar uma variável"
             autoFocus
           />
         </Flex>

@@ -87,7 +87,7 @@ export const CustomDomainsDropdown = ({
         {...props}
       >
         <Text noOfLines={1} overflowY="visible" h="20px">
-          {currentCustomDomain ?? 'Add my domain'}
+          {currentCustomDomain ?? 'Adicionar meu domínio'}
         </Text>
       </MenuButton>
       <MenuList maxW="500px" shadow="lg">
@@ -108,7 +108,7 @@ export const CustomDomainsDropdown = ({
               {customDomain.name}
               <IconButton
                 icon={<TrashIcon />}
-                aria-label="Remove domain"
+                aria-label="Remover domínio"
                 size="xs"
                 onClick={handleDeleteDomainClick(customDomain.name)}
                 isLoading={isDeleting === customDomain.name}
@@ -123,7 +123,7 @@ export const CustomDomainsDropdown = ({
             icon={<PlusIcon />}
             onClick={onOpen}
           >
-            Connect new
+            Conectar novo
           </MenuItem>
         </Stack>
       </MenuList>

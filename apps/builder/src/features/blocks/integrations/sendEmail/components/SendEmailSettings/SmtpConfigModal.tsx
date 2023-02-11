@@ -49,8 +49,9 @@ export const SmtpConfigModal = ({
       console.error(testSmtpError)
       setIsCreating(false)
       return showToast({
-        title: 'Invalid configuration',
-        description: "We couldn't send the test email with your configuration",
+        title: 'Configuração inválida',
+        description:
+          'Não foi possível enviar o e-mail de teste com sua configuração',
       })
     }
     const { data, error } = await createCredentialsQuery({
@@ -63,7 +64,7 @@ export const SmtpConfigModal = ({
     if (error)
       return showToast({ title: error.name, description: error.message })
     if (!data?.credentials)
-      return showToast({ description: "Credentials wasn't created" })
+      return showToast({ description: 'As credenciais não foram criadas' })
     onNewCredentials(data.credentials.id)
     onClose()
   }
@@ -71,7 +72,7 @@ export const SmtpConfigModal = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create SMTP config</ModalHeader>
+        <ModalHeader>Criar configuração de SMTP</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <SmtpConfigForm config={smtpConfig} onConfigChange={setSmtpConfig} />
@@ -90,7 +91,7 @@ export const SmtpConfigModal = ({
             }
             isLoading={isCreating}
           >
-            Create
+            Criar
           </Button>
         </ModalFooter>
       </ModalContent>

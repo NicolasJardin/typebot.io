@@ -29,7 +29,7 @@ export const GiphySearchForm = ({ onSubmit }: GiphySearchFormProps) => {
         <Input
           flex="1"
           autoFocus
-          placeholder="Search..."
+          placeholder="Pesquisar..."
           onChange={setInputValue}
           withVariableButton={false}
         />

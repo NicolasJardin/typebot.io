@@ -52,14 +52,14 @@ export const ConfirmModal = ({
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            {title ?? 'Are you sure?'}
+            {title ?? 'Você tem certeza?'}
           </AlertDialogHeader>
 
           <AlertDialogBody>{message}</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              Cancel
+              Cancelar
             </Button>
             <Button
               colorScheme={confirmButtonColor}

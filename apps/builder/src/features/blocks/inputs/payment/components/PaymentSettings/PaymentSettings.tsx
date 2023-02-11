@@ -87,7 +87,7 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
   return (
     <Stack spacing={4}>
       <Stack>
-        <Text>Provider:</Text>
+        <Text>Fornecedor:</Text>
         <DropdownList
           onItemSelect={handleProviderChange}
           items={Object.values(PaymentProvider)}
@@ -95,7 +95,7 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Stack>
-        <Text>Account:</Text>
+        <Text>Conta:</Text>
         <CredentialsDropdown
           type={CredentialsType.STRIPE}
           currentCredentialsId={options.credentialsId}
@@ -106,7 +106,7 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
       </Stack>
       <HStack>
         <Stack>
-          <Text>Price amount:</Text>
+          <Text>valor:</Text>
           <Input
             onChange={handleAmountChange}
             defaultValue={options.amount}
@@ -114,7 +114,7 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
           />
         </Stack>
         <Stack>
-          <Text>Currency:</Text>
+          <Text>Moeda:</Text>
           <Select
             placeholder="Select option"
             value={options.currency}
@@ -129,30 +129,30 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
         </Stack>
       </HStack>
       <Stack>
-        <Text>Button label:</Text>
+        <Text>Rótulo do botão:</Text>
         <Input
           onChange={handleButtonLabelChange}
           defaultValue={options.labels.button}
-          placeholder="Pay"
+          placeholder="Pagar"
         />
       </Stack>
       <Stack>
-        <Text>Success message:</Text>
+        <Text>Mensagem de sucesso:</Text>
         <Input
           onChange={handleSuccessLabelChange}
-          defaultValue={options.labels.success ?? 'Success'}
-          placeholder="Success"
+          defaultValue={options.labels.success ?? 'Successo'}
+          placeholder="Successo"
         />
       </Stack>
       <Accordion allowToggle>
         <AccordionItem>
           <AccordionButton justifyContent="space-between">
-            Additional information
+            Informações adicionais
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={4} as={Stack} spacing="6">
             <Stack>
-              <Text>Name:</Text>
+              <Text>Nome:</Text>
               <Input
                 defaultValue={options.additionalInformation?.name ?? ''}
                 onChange={handleNameChange}
@@ -168,7 +168,7 @@ export const PaymentSettings = ({ options, onOptionsChange }: Props) => {
               />
             </Stack>
             <Stack>
-              <Text>Phone number:</Text>
+              <Text>Número de telefone :</Text>
               <Input
                 defaultValue={options.additionalInformation?.phoneNumber ?? ''}
                 onChange={handlePhoneNumberChange}

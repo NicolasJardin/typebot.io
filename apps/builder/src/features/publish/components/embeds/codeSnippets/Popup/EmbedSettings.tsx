@@ -34,13 +34,13 @@ export const PopupEmbedSettings = ({
     <Stack {...props}>
       <Flex alignItems="center" justifyContent="space-between">
         <Heading fontSize="md" fontWeight="semibold">
-          Popup settings
+          Configurações de pop-up
         </Heading>
       </Flex>
 
       <Flex justify="space-between" align="center" mb="2">
         <HStack>
-          <p>Appearance delay</p>
+          <p>Atraso na aparência</p>
           <Switch
             isChecked={isEnabled}
             onChange={(e) => setIsEnabled(e.target.checked)}

@@ -24,12 +24,12 @@ export const RedirectSettings = ({ options, onOptionsChange }: Props) => {
         <Input
           id="tracking-id"
           defaultValue={options.url ?? ''}
-          placeholder="Type a URL..."
+          placeholder="Digite um URL..."
           onChange={handleUrlChange}
         />
       </Stack>
       <SwitchWithLabel
-        label="Open in new tab?"
+        label="Abrir em nova guia?"
         initialValue={options.isNewTab}
         onCheckChange={handleIsNewTabChange}
       />

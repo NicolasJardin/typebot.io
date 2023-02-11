@@ -110,7 +110,7 @@ export const VariableSearchInput = ({
   const handleRenameVariableClick =
     (variable: Variable) => (e: React.MouseEvent) => {
       e.stopPropagation()
-      const name = prompt('Rename variable', variable.name)
+      const name = prompt('Renomear variável', variable.name)
       if (!name) return
       updateVariable(variable.id, { name })
       setFilteredItems(
@@ -174,7 +174,7 @@ export const VariableSearchInput = ({
             onChange={onInputChange}
             onFocus={onOpen}
             onKeyUp={handleKeyUp}
-            placeholder={inputProps.placeholder ?? 'Select a variable'}
+            placeholder={inputProps.placeholder ?? 'Selecione uma variável'}
             {...inputProps}
           />
         </PopoverAnchor>
@@ -203,7 +203,7 @@ export const VariableSearchInput = ({
                 leftIcon={<PlusIcon />}
                 bgColor={keyboardFocusIndex === 0 ? bg : 'transparent'}
               >
-                Create
+                Criar
                 <Tag colorScheme="orange" ml="1">
                   {inputValue}
                 </Tag>
@@ -236,13 +236,13 @@ export const VariableSearchInput = ({
                       <HStack>
                         <IconButton
                           icon={<EditIcon />}
-                          aria-label="Rename variable"
+                          aria-label="Renomear variável"
                           size="xs"
                           onClick={handleRenameVariableClick(item)}
                         />
                         <IconButton
                           icon={<TrashIcon />}
-                          aria-label="Remove variable"
+                          aria-label="Remover variável"
                           size="xs"
                           onClick={handleDeleteVariableClick(item)}
                         />

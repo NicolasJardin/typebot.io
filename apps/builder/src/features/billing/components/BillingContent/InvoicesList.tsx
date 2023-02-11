@@ -30,7 +30,7 @@ export const InvoicesList = ({ workspace }: Props) => {
     <Stack spacing={6}>
       <Heading fontSize="3xl">Invoices</Heading>
       {invoices.length === 0 && !isLoading ? (
-        <Text>No invoices found for this workspace.</Text>
+        <Text>Nenhuma fatura encontrada para este espaço de trabalho.</Text>
       ) : (
         <TableContainer>
           <Table>
@@ -38,7 +38,7 @@ export const InvoicesList = ({ workspace }: Props) => {
               <Tr>
                 <Th w="0" />
                 <Th>#</Th>
-                <Th>Paid at</Th>
+                <Th>Pago em</Th>
                 <Th>Subtotal</Th>
                 <Th w="0" />
               </Tr>
@@ -60,7 +60,7 @@ export const InvoicesList = ({ workspace }: Props) => {
                       variant="outline"
                       href={invoice.url}
                       target="_blank"
-                      aria-label={'Download invoice'}
+                      aria-label={'Baixar fatura'}
                     />
                   </Td>
                 </Tr>

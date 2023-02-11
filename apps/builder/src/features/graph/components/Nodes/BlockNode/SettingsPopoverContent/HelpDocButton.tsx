@@ -25,7 +25,7 @@ export const HelpDocButton = ({ blockType }: HelpDocButtonProps) => {
       href={helpDocUrl}
       isExternal
     >
-      Help
+      Ajuda
     </Button>
   )
 }

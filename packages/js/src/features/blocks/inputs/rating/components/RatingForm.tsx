@@ -40,7 +40,7 @@ export const RatingForm = (props: Props) => {
           each={Array.from(
             Array(
               props.block.options.length +
-                (props.block.options.buttonType === 'Numbers' ? 1 : 0)
+                (props.block.options.buttonType === 'Números' ? 1 : 0)
             )
           )}
         >
@@ -49,7 +49,7 @@ export const RatingForm = (props: Props) => {
               {...props.block.options}
               rating={rating()}
               idx={
-                idx() + (props.block.options.buttonType === 'Numbers' ? 0 : 1)
+                idx() + (props.block.options.buttonType === 'Números' ? 0 : 1)
               }
               onClick={handleClick}
             />
@@ -82,7 +82,7 @@ type RatingButtonProps = {
 const RatingButton = (props: RatingButtonProps) => {
   return (
     <Switch>
-      <Match when={props.buttonType === 'Numbers'}>
+      <Match when={props.buttonType === 'Números'}>
         <button
           on:click={(e) => {
             e.preventDefault()
@@ -98,7 +98,7 @@ const RatingButton = (props: RatingButtonProps) => {
           {props.idx}
         </button>
       </Match>
-      <Match when={props.buttonType !== 'Numbers'}>
+      <Match when={props.buttonType !== 'Números'}>
         <div
           class={
             'flex justify-center items-center rating-icon-container cursor-pointer mr-2 mb-2 ' +

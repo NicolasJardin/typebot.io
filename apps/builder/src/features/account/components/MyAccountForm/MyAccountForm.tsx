@@ -41,7 +41,7 @@ export const MyAccountForm = () => {
             leftIcon={<UploadIcon />}
             onFileUploaded={handleFileUploaded}
           >
-            Change photo
+            Mudar foto
           </UploadButton>
           <Text color="gray.500" fontSize="sm">
             .jpg or.png, max 1MB
@@ -52,17 +52,17 @@ export const MyAccountForm = () => {
       <Input
         value={name}
         onChange={handleNameChange}
-        label="Name:"
+        label="Nome:"
         withVariableButton={false}
         debounceTimeout={0}
       />
-      <Tooltip label="Updating email is not available. Contact the support if you want to change it.">
+      <Tooltip label="A atualização do e-mail não está disponível. Entre em contato com o suporte se quiser alterá-lo.">
         <span>
           <Input
             type="email"
             value={email}
             onChange={handleEmailChange}
-            label="Email address:"
+            label="Endereço de email:"
             withVariableButton={false}
             debounceTimeout={0}
             isDisabled

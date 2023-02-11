@@ -1,27 +1,27 @@
+import { DownloadIcon, ToolIcon } from '@/components/icons'
+import { useUser } from '@/features/account'
+import { createTypebotQuery, importTypebotQuery } from '@/features/dashboard'
+import { useWorkspace } from '@/features/workspace'
+import { useToast } from '@/hooks/useToast'
 import {
-  VStack,
+  Button,
   Heading,
   Stack,
-  Button,
-  useDisclosure,
   useColorModeValue,
+  useDisclosure,
+  VStack,
 } from '@chakra-ui/react'
-import { ToolIcon, TemplateIcon, DownloadIcon } from '@/components/icons'
 import { Typebot } from 'models'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ImportTypebotFromFileButton } from './ImportTypebotFromFileButton'
 import { TemplatesModal } from './TemplatesModal'
-import { useWorkspace } from '@/features/workspace'
-import { useUser } from '@/features/account'
-import { useToast } from '@/hooks/useToast'
-import { createTypebotQuery, importTypebotQuery } from '@/features/dashboard'
 
 export const CreateNewTypebotButtons = () => {
   const { workspace } = useWorkspace()
   const { user } = useUser()
   const router = useRouter()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onClose } = useDisclosure()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -73,7 +73,7 @@ export const CreateNewTypebotButtons = () => {
 
   return (
     <VStack maxW="600px" w="full" flex="1" pt="20" spacing={10}>
-      <Heading>Create a new typebot</Heading>
+      <Heading>Criar um novo typebot</Heading>
       <Stack w="full" spacing={6}>
         <Button
           variant="outline"
@@ -90,25 +90,9 @@ export const CreateNewTypebotButtons = () => {
           onClick={() => handleCreateSubmit()}
           isLoading={isLoading}
         >
-          Start from scratch
+          Começar do zero
         </Button>
-        <Button
-          variant="outline"
-          w="full"
-          py="8"
-          fontSize="lg"
-          leftIcon={
-            <TemplateIcon
-              color={useColorModeValue('orange.500', 'orange.300')}
-              boxSize="25px"
-              mr="2"
-            />
-          }
-          onClick={onOpen}
-          isLoading={isLoading}
-        >
-          Start from a template
-        </Button>
+
         <ImportTypebotFromFileButton
           variant="outline"
           w="full"
@@ -124,7 +108,7 @@ export const CreateNewTypebotButtons = () => {
           isLoading={isLoading}
           onNewTypebot={handleCreateSubmit}
         >
-          Import a file
+          Importar um arquivo
         </ImportTypebotFromFileButton>
       </Stack>
       <TemplatesModal

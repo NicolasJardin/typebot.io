@@ -88,17 +88,17 @@ export const StarterPlanContent = ({
       selectedStorageLimitIndex === undefined
     )
       return ''
-    if (workspace?.plan === Plan.PRO) return 'Downgrade'
+    if (workspace?.plan === Plan.PRO) return 'Rebaixar'
     if (workspace?.plan === Plan.STARTER) {
-      if (isCurrentPlan) return 'Your current plan'
+      if (isCurrentPlan) return 'Seu plano atual'
 
       if (
         selectedChatsLimitIndex !== initialChatsLimitIndex ||
         selectedStorageLimitIndex !== initialStorageLimitIndex
       )
-        return 'Update'
+        return 'Atualizar'
     }
-    return 'Upgrade'
+    return 'Melhorar'
   }
 
   const handlePayClick = async () => {
@@ -119,9 +119,9 @@ export const StarterPlanContent = ({
     <Stack spacing={6} p="6" rounded="lg" borderWidth="1px" flex="1" h="full">
       <Stack spacing="4">
         <Heading fontSize="2xl">
-          Upgrade to <chakra.span color="orange.400">Starter</chakra.span>
+          Melhorar para <chakra.span color="orange.400">Starter</chakra.span>
         </Heading>
-        <Text>For individuals & small businesses.</Text>
+        <Text>Para indivíduos e pequenas empresas.</Text>
         <Heading>
           {formatPrice(
             computePrice(
@@ -131,11 +131,11 @@ export const StarterPlanContent = ({
             ) ?? NaN,
             currency
           )}
-          <chakra.span fontSize="md">/ month</chakra.span>
+          <chakra.span fontSize="md">/ mês</chakra.span>
         </Heading>
         <FeaturesList
           features={[
-            '2 seats included',
+            '2 lugares incluídos',
             <HStack key="test">
               <Text>
                 <Menu>
@@ -198,8 +198,9 @@ export const StarterPlanContent = ({
                 chats/mo
               </Text>
               <MoreInfoTooltip>
-                A chat is counted whenever a user starts a discussion. It is
-                independant of the number of messages he sends and receives.
+                Um bate-papo é contado sempre que um usuário inicia uma
+                discussão. Isso é independente do número de mensagens que envia
+                e recebe.
               </MoreInfoTooltip>
             </HStack>,
             <HStack key="test">
@@ -261,16 +262,17 @@ export const StarterPlanContent = ({
                     )}
                   </MenuList>
                 </Menu>{' '}
-                GB of storage
+                GB de armazenamento
               </Text>
               <MoreInfoTooltip>
-                You accumulate storage for every file that your user upload into
-                your bot. If you delete the result, it will free up the space.
+                Você acumula armazenamento para cada arquivo que seu usuário
+                carrega seu robô. Se você excluir o resultado, ele liberará
+                espaço.
               </MoreInfoTooltip>
             </HStack>,
-            'Branding removed',
-            'File upload input block',
-            'Create folders',
+            'Marca removida',
+            'Bloco de entrada de upload de arquivo',
+            'Criar pastas',
           ]}
         />
       </Stack>

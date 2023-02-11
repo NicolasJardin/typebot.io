@@ -33,7 +33,7 @@ export const ApiTokensList = ({ user }: Props) => {
   const { apiTokens, isLoading, mutate } = useApiTokens({
     userId: user.id,
     onError: (e) =>
-      showToast({ title: 'Failed to fetch tokens', description: e.message }),
+      showToast({ title: 'Falha ao buscar tokens', description: e.message }),
   })
   const {
     isOpen: isCreateOpen,
@@ -55,13 +55,13 @@ export const ApiTokensList = ({ user }: Props) => {
 
   return (
     <Stack spacing={4}>
-      <Heading fontSize="2xl">API tokens</Heading>
+      <Heading fontSize="2xl">Tokens de API</Heading>
       <Text>
-        These tokens allow other apps to control your whole account and
-        typebots. Be careful!
+        Esses tokens permitem que outros aplicativos controlem toda a sua conta
+        e typebots. Tome cuidado!
       </Text>
       <Flex justifyContent="flex-end">
-        <Button onClick={onCreateOpen}>Create</Button>
+        <Button onClick={onCreateOpen}>Criar</Button>
         <CreateTokenModal
           userId={user.id}
           isOpen={isCreateOpen}
@@ -74,8 +74,8 @@ export const ApiTokensList = ({ user }: Props) => {
         <Table>
           <Thead>
             <Tr>
-              <Th>Name</Th>
-              <Th w="130px">Created</Th>
+              <Th>Nome</Th>
+              <Th w="130px">Criado</Th>
               <Th w="0" />
             </Tr>
           </Thead>
@@ -91,7 +91,7 @@ export const ApiTokensList = ({ user }: Props) => {
                     variant="outline"
                     onClick={() => setDeletingId(token.id)}
                   >
-                    Delete
+                    Deletar
                   </Button>
                 </Td>
               </Tr>
@@ -119,11 +119,11 @@ export const ApiTokensList = ({ user }: Props) => {
         onClose={() => setDeletingId(undefined)}
         message={
           <Text>
-            The token <strong>{apiTokens?.find(byId(deletingId))?.name}</strong>{' '}
-            will be permanently deleted, are you sure you want to continue?
+            O token <strong>{apiTokens?.find(byId(deletingId))?.name}</strong>{' '}
+            será excluído permanentemente, tem certeza de que deseja continuar?
           </Text>
         }
-        confirmButtonLabel="Delete"
+        confirmButtonLabel="Deletar"
       />
     </Stack>
   )

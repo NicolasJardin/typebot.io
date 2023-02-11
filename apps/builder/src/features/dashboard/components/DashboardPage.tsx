@@ -1,13 +1,12 @@
 import { Seo } from '@/components/Seo'
 import { useUser } from '@/features/account'
 import { upgradePlanQuery } from '@/features/billing'
-import { TypebotDndProvider, FolderContent } from '@/features/folders'
+import { FolderContent, TypebotDndProvider } from '@/features/folders'
 import { useWorkspace } from '@/features/workspace'
-import { Stack, VStack, Spinner, Text } from '@chakra-ui/react'
+import { Spinner, Stack, Text, VStack } from '@chakra-ui/react'
 import { Plan } from 'db'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import { DashboardHeader } from './DashboardHeader'
+import { useEffect, useState } from 'react'
 
 export const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -36,11 +35,11 @@ export const DashboardPage = () => {
   return (
     <Stack minH="100vh">
       <Seo title={workspace?.name ?? 'My typebots'} />
-      <DashboardHeader />
+
       <TypebotDndProvider>
         {isLoading ? (
           <VStack w="full" justifyContent="center" pt="10" spacing={6}>
-            <Text>You are being redirected...</Text>
+            <Text>Você está sendo redirecionado...</Text>
             <Spinner />
           </VStack>
         ) : (

@@ -54,7 +54,9 @@ export const JavascriptModal = ({
         <ModalCloseButton />
         <ModalBody>
           {!isPublished && (
-            <AlertInfo mb="2">You need to publish your bot first.</AlertInfo>
+            <AlertInfo mb="2">
+              Você precisa publicar seu bot primeiro.
+            </AlertInfo>
           )}
           {!chosenEmbedType ? (
             <ChooseEmbedTypeList onSelectEmbedType={setChosenEmbedType} />

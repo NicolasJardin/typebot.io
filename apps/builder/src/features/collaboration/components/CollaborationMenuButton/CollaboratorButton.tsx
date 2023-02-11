@@ -98,7 +98,7 @@ export const CollaboratorIdentityContent = ({
       </Stack>
     </HStack>
     <HStack flexShrink={0}>
-      {isGuest && <Tag color="gray.400">Pending</Tag>}
+      {isGuest && <Tag color="gray.400">Pendente</Tag>}
       <Tag>{tag}</Tag>
     </HStack>
   </HStack>

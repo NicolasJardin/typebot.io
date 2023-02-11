@@ -36,22 +36,22 @@ export const AnnoucementModal = ({ isOpen, onClose }: Props) => {
     <Modal isOpen={isOpen} onClose={handleCloseClick} size="2xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>What&apos;s new in Typebot 2.0?</ModalHeader>
+        <ModalHeader>O que há de novo no Typebot 2.0?</ModalHeader>
         <ModalCloseButton />
         <ModalBody as={Stack} spacing="6" pb="10">
-          <Text>Typebo 2.0 has been launched February the 15th 🎉.</Text>
+          <Text>Typebot 2.0 foi lançado em 15 de fevereiro 🎉.</Text>
           <iframe
             width="620"
             height="315"
             src="https://www.youtube.com/embed/u8FZHvlYviw"
-            title="YouTube video player"
+            title="Leitor de vídeo do YouTube"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             style={{ borderRadius: '5px' }}
           />
           <Text>
-            Most questions are answered in this{' '}
+            A maioria das perguntas são respondidas neste{' '}
             <Link
               href="https://docs.typebot.io"
               color="blue.500"
@@ -59,8 +59,8 @@ export const AnnoucementModal = ({ isOpen, onClose }: Props) => {
             >
               FAQ
             </Link>
-            . If you have other questions, open up the bot on the bottom right
-            corner. 😃
+            . Se você tiver outras perguntas, abra o bot no canto inferior
+            direito canto. 😃
           </Text>
           <Text>Baptiste.</Text>
         </ModalBody>

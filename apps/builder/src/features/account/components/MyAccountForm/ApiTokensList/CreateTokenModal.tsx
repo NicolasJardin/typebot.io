@@ -50,14 +50,16 @@ export const CreateTokenModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {newTokenValue ? 'Token Created' : 'Create Token'}
+          {newTokenValue ? 'Token criado' : 'Criar Token'}
         </ModalHeader>
         <ModalCloseButton />
         {newTokenValue ? (
           <ModalBody as={Stack} spacing="4">
             <Text>
-              Please copy your token and store it in a safe place.{' '}
-              <strong>For security reasons we cannot show it again.</strong>
+              Copie seu token e guarde-o em um local seguro.{' '}
+              <strong>
+                Por motivos de segurança, não podemos mostrá-lo novamente.
+              </strong>
             </Text>
             <InputGroup size="md">
               <Input readOnly pr="4.5rem" value={newTokenValue} />
@@ -69,11 +71,11 @@ export const CreateTokenModal = ({
         ) : (
           <ModalBody as="form" onSubmit={createToken}>
             <Text mb="4">
-              Enter a unique name for your token to differentiate it from other
-              tokens.
+              Insira um nome exclusivo para seu token para diferenciá-lo de
+              outros tokens.
             </Text>
             <Input
-              placeholder="I.e. Zapier, Github, Make.com"
+              placeholder="Ex: Zapier, Github, Make.com"
               onChange={(e) => setName(e.target.value)}
             />
           </ModalBody>

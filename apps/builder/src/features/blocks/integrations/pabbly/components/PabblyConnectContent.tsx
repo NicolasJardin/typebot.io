@@ -29,7 +29,7 @@ export const PabblyConnectContent = ({ block }: Props) => {
     return <Text color="gray.500">Configure...</Text>
   return (
     <Text noOfLines={1} pr="6">
-      {webhook?.url ? 'Trigger scenario' : 'Disabled'}
+      {webhook?.url ? 'cenário de gatilho' : 'Desabilitado'}
     </Text>
   )
 }

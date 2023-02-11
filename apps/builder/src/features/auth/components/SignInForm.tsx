@@ -70,15 +70,15 @@ export const SignInForm = ({
     })
     if (response?.error) {
       showToast({
-        title: 'Unauthorized',
-        description: 'Sign ups are disabled.',
+        title: 'Não autorizado',
+        description: 'As inscrições estão desativadas.',
       })
     } else {
       setIsMagicLinkSent(true)
       showToast({
         status: 'success',
-        title: 'Success!',
-        description: 'Check your inbox to sign in',
+        title: 'Successo!',
+        description: 'Verifique sua caixa de entrada para entrar',
       })
     }
     setAuthLoading(false)
@@ -88,14 +88,14 @@ export const SignInForm = ({
   if (hasNoAuthProvider)
     return (
       <Text>
-        You need to{' '}
+        Você precisa{' '}
         <TextLink
           href="https://docs.typebot.io/self-hosting/configuration"
           isExternal
         >
-          configure at least one auth provider
+          configurar pelo menos um provedor de autenticação
         </TextLink>{' '}
-        (Email, Google, GitHub, Facebook or Azure AD).
+        (Email, Google, GitHub, Facebook ou Azure AD).
       </Text>
     )
   return (
@@ -103,7 +103,7 @@ export const SignInForm = ({
       <SocialLoginButtons providers={providers} />
       {providers?.email && (
         <>
-          <DividerWithText mt="6">Or with your email</DividerWithText>
+          <DividerWithText mt="6">Ou com seu e-mail</DividerWithText>
           <HStack as="form" onSubmit={handleEmailSubmit}>
             <Input
               name="email"
@@ -115,7 +115,7 @@ export const SignInForm = ({
               onChange={handleEmailChange}
             />
             <Tooltip
-              label="A sign in email was sent. Make sure to check your SPAM folder."
+              label="Um e-mail de login foi enviado. Certifique-se de verificar sua pasta de SPAM."
               isDisabled={!isMagicLinkSent}
             >
               <Button
@@ -125,7 +125,7 @@ export const SignInForm = ({
                 }
                 isDisabled={isMagicLinkSent}
               >
-                Submit
+                Enviar
               </Button>
             </Tooltip>
           </HStack>

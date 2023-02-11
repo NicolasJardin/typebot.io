@@ -50,7 +50,7 @@ export const CollaborationList = () => {
     typebotId: typebot?.id,
     onError: (e) =>
       showToast({
-        title: "Couldn't fetch collaborators",
+        title: 'Não foi possível buscar colaboradores',
         description: e.message,
       }),
   })
@@ -62,7 +62,7 @@ export const CollaborationList = () => {
     typebotId: typebot?.id,
     onError: (e) =>
       showToast({
-        title: "Couldn't fetch invitations",
+        title: 'Não foi possível buscar os convites',
         description: e.message,
       }),
   })
@@ -132,7 +132,7 @@ export const CollaborationList = () => {
     mutateCollaborators({ collaborators: collaborators ?? [] })
     if (error)
       return showToast({ title: error.name, description: error.message })
-    showToast({ status: 'success', title: 'Invitation sent! 📧' })
+    showToast({ status: 'success', title: 'Convite enviado! 📧' })
     setInvitationEmail('')
   }
 
@@ -171,7 +171,7 @@ export const CollaborationList = () => {
           <HStack minW={0}>
             <EmojiOrImageIcon icon={workspace.icon} />
             <Text fontSize="15px" noOfLines={1}>
-              Everyone at {workspace.name}
+              Todos em {workspace.name}
             </Text>
           </HStack>
           <Tag flexShrink={0}>

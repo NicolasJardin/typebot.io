@@ -108,7 +108,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
   return (
     <Stack spacing={4}>
       <Stack>
-        <Text>From: </Text>
+        <Text>De: </Text>
         <CredentialsDropdown
           type={CredentialsType.SMTP}
           currentCredentialsId={options.credentialsId}
@@ -121,7 +121,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Stack>
-        <Text>Reply to: </Text>
+        <Text>Responder a: </Text>
         <Input
           onChange={handleReplyToChange}
           defaultValue={options.replyTo}
@@ -129,7 +129,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Stack>
-        <Text>To: </Text>
+        <Text>Para: </Text>
         <Input
           onChange={handleToChange}
           defaultValue={options.recipients.join(', ')}
@@ -153,7 +153,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Stack>
-        <Text>Subject: </Text>
+        <Text>Assunto: </Text>
         <Input
           data-testid="subject-input"
           onChange={handleSubjectChange}
@@ -161,22 +161,22 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <SwitchWithLabel
-        label={'Custom content?'}
+        label={'Conteúdo personalizado?'}
         initialValue={options.isCustomBody ?? false}
         onCheckChange={handleIsCustomBodyChange}
       />
       {options.isCustomBody && (
         <Stack>
           <Flex justifyContent="space-between">
-            <Text>Content: </Text>
+            <Text>Conteúdo: </Text>
             <HStack>
-              <Text fontSize="sm">Text</Text>
+              <Text fontSize="sm">Texto</Text>
               <Switch
                 size="sm"
                 isChecked={options.isBodyCode ?? false}
                 onChange={handleIsBodyCodeChange}
               />
-              <Text fontSize="sm">Code</Text>
+              <Text fontSize="sm">Código</Text>
             </HStack>
           </Flex>
           {options.isBodyCode ? (
@@ -197,7 +197,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
       )}
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
-          Attachments:
+          Anexos:
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options.attachmentsVariableId}

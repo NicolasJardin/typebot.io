@@ -158,7 +158,7 @@ export const WebhookSettings = ({
         <Alert status={'info'} rounded="md">
           <AlertIcon />
           <Stack>
-            <Text>Head up to {provider.name} to configure this block:</Text>
+            <Text>Acesse {provider.name} para configurar este bloco:</Text>
             <Button as={Link} href={provider.url} isExternal colorScheme="blue">
               <Text mr="2">{provider.name}</Text> <ExternalLinkIcon />
             </Button>
@@ -166,21 +166,21 @@ export const WebhookSettings = ({
         </Alert>
       )}
       <Input
-        placeholder="Paste webhook URL..."
+        placeholder="Colar URL do webhook..."
         defaultValue={localWebhook.url ?? ''}
         onChange={handleUrlChange}
         debounceTimeout={0}
         withVariableButton={!provider}
       />
       <SwitchWithLabel
-        label="Advanced configuration"
+        label="Configuração avançada"
         initialValue={options.isAdvancedConfig ?? true}
         onCheckChange={handleAdvancedConfigChange}
       />
       {(options.isAdvancedConfig ?? true) && (
         <Stack>
           <HStack justify="space-between">
-            <Text>Method:</Text>
+            <Text>Método:</Text>
             <DropdownList<HttpMethod>
               currentItem={localWebhook.method as HttpMethod}
               onItemSelect={handleMethodChange}
@@ -190,7 +190,7 @@ export const WebhookSettings = ({
           <Accordion allowMultiple>
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
-                Query params
+                Parâmetros de consulta
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel py={4} as={Stack} spacing="6">
@@ -198,14 +198,14 @@ export const WebhookSettings = ({
                   initialItems={localWebhook.queryParams}
                   onItemsChange={handleQueryParamsChange}
                   Item={QueryParamsInputs}
-                  addLabel="Add a param"
+                  addLabel="Adicionar um parâmetro"
                   debounceTimeout={0}
                 />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
-                Headers
+                Cabeçalhos
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel py={4} as={Stack} spacing="6">
@@ -213,19 +213,19 @@ export const WebhookSettings = ({
                   initialItems={localWebhook.headers}
                   onItemsChange={handleHeadersChange}
                   Item={HeadersInputs}
-                  addLabel="Add a value"
+                  addLabel="Adicionar um valor"
                   debounceTimeout={0}
                 />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
-                Body
+                Corpo
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel py={4} as={Stack} spacing="6">
                 <SwitchWithLabel
-                  label="Custom body"
+                  label="Corpo personalizado"
                   initialValue={options.isCustomBody ?? true}
                   onCheckChange={handleBodyFormStateChange}
                 />
@@ -241,7 +241,7 @@ export const WebhookSettings = ({
             </AccordionItem>
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
-                Variable values for test
+                Valores variáveis para teste
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel py={4} as={Stack} spacing="6">
@@ -251,7 +251,7 @@ export const WebhookSettings = ({
                   }
                   onItemsChange={handleVariablesChange}
                   Item={VariableForTestInputs}
-                  addLabel="Add an entry"
+                  addLabel="Adicionar uma entrada"
                   debounceTimeout={0}
                 />
               </AccordionPanel>
@@ -266,7 +266,7 @@ export const WebhookSettings = ({
             colorScheme="blue"
             isLoading={isTestResponseLoading}
           >
-            Test the request
+            Teste a solicitação
           </Button>
         )}
         {testResponse && (
@@ -276,7 +276,7 @@ export const WebhookSettings = ({
           <Accordion allowMultiple>
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
-                Save in variables
+                Salvar em variáveis
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel py={4} as={Stack} spacing="6">
@@ -284,7 +284,7 @@ export const WebhookSettings = ({
                   initialItems={options.responseVariableMapping}
                   onItemsChange={handleResponseMappingChange}
                   Item={ResponseMappingInputs}
-                  addLabel="Add an entry"
+                  addLabel="Adicionar uma entrada"
                   debounceTimeout={0}
                 />
               </AccordionPanel>

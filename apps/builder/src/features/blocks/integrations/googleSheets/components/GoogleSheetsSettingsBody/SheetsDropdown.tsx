@@ -28,14 +28,14 @@ export const SheetsDropdown = ({
     if (isDefined(id)) onSelectSheetId(id)
   }
 
-  if (isLoading) return <Input value="Loading..." isDisabled />
+  if (isLoading) return <Input value="Carregando..." isDisabled />
   if (!sheets || sheets.length === 0)
     return (
       <HStack>
         <Input value="No sheets found" isDisabled />
         <MoreInfoTooltip>
-          Make sure your spreadsheet contains at least a sheet with a header
-          row.
+          Verifique se sua planilha contém pelo menos uma página com um
+          cabeçalho linha.
         </MoreInfoTooltip>
       </HStack>
     )
@@ -44,7 +44,7 @@ export const SheetsDropdown = ({
       selectedItem={currentSheet?.name}
       items={(sheets ?? []).map((s) => s.name)}
       onValueChange={handleSpreadsheetSelect}
-      placeholder={'Select the sheet'}
+      placeholder={'Selecione a folha'}
     />
   )
 }

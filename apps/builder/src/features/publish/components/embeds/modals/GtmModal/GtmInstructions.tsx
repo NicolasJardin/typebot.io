@@ -51,18 +51,18 @@ const StandardInstructions = ({ publicId }: Pick<ModalProps, 'publicId'>) => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your GTM account dashboard, click on <Tag>Add a new tag</Tag>
+        No painel da sua conta GTM, clique em <Tag>Adicionar uma nova tag</Tag>
       </ListItem>
       <ListItem>
-        Choose Custom <Tag>HTML tag</Tag> type
+        Escolha o tipo <Tag>Tag HTML</Tag> personalizado
       </ListItem>
       <ListItem>
-        Paste the code below:
+        Cole o código abaixo:
         <CodeEditor value={headCode} mt={2} isReadOnly lang="html" />
       </ListItem>
       <ListItem>
-        On your webpage, you need to have an element on which the typebot will
-        go. It needs to have the id <Tag>typebot-container</Tag>:
+        Em sua página web, você precisa ter um elemento no qual o typebot irá
+        ir. Ele precisa ter o id <Tag>typebot-container</Tag>:
         <StandardEmbedWindowSettings
           my={4}
           onUpdateWindowSettings={(sizes) =>
@@ -84,13 +84,13 @@ const PopupInstructions = () => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your GTM account dashboard, click on <Tag>Add a new tag</Tag>
+        No painel da sua conta GTM, clique em <Tag>Adicionar uma nova tag</Tag>
       </ListItem>
       <ListItem>
-        Choose Custom <Tag>HTML tag</Tag> type
+        Escolha o tipo <Tag>Tag HTML</Tag> personalizado
       </ListItem>
       <ListItem>
-        Paste the code below:
+        Cole o código abaixo:
         <PopupEmbedSettings
           my={4}
           onUpdateSettings={(settings) => setInputValue(settings.delay)}
@@ -115,13 +115,13 @@ const BubbleInstructions = () => {
   return (
     <OrderedList spacing={2} mb={4}>
       <ListItem>
-        On your GTM account dashboard, click on <Tag>Add a new tag</Tag>
+        No painel da sua conta GTM, clique em <Tag>Adicionar uma nova tag</Tag>
       </ListItem>
       <ListItem>
-        Choose Custom <Tag>HTML tag</Tag> type
+        Escolha o tipo <Tag>Tag HTML</Tag> personalizado
       </ListItem>
       <ListItem>
-        Paste the code below:
+        Cole o código abaixo:
         <ChatEmbedSettings
           onUpdateSettings={(settings) => setInputValues({ ...settings })}
         />

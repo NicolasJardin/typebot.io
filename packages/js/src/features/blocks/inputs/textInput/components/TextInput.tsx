@@ -52,7 +52,7 @@ export const TextInput = (props: Props) => {
           onInput={handleInput}
           value={inputValue()}
           placeholder={
-            props.block.options?.labels?.placeholder ?? 'Type your answer...'
+            props.block.options?.labels?.placeholder ?? 'Digite sua resposta...'
           }
         />
       ) : (
@@ -61,7 +61,7 @@ export const TextInput = (props: Props) => {
           onInput={handleInput}
           value={inputValue()}
           placeholder={
-            props.block.options?.labels?.placeholder ?? 'Type your answer...'
+            props.block.options?.labels?.placeholder ?? 'Digite sua resposta...'
           }
         />
       )}
@@ -71,7 +71,7 @@ export const TextInput = (props: Props) => {
         class="my-2 ml-2"
         on:click={submit}
       >
-        {props.block.options?.labels?.button ?? 'Send'}
+        {props.block.options?.labels?.button ?? 'Enviar'}
       </SendButton>
     </div>
   )

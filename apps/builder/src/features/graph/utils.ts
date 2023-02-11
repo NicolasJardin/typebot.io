@@ -38,6 +38,7 @@ import {
   LogicBlockType,
   defaultWaitOptions,
   defaultScriptOptions,
+  defaultTransferOptions,
 } from 'models'
 import {
   stubLength,
@@ -439,6 +440,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultWaitOptions
     case LogicBlockType.TYPEBOT_LINK:
       return {}
+    case LogicBlockType.TRANSFER:
+      return defaultTransferOptions
     case IntegrationBlockType.GOOGLE_SHEETS:
       return defaultGoogleSheetsOptions
     case IntegrationBlockType.GOOGLE_ANALYTICS:

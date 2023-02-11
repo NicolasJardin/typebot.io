@@ -25,7 +25,7 @@ export const SetVariableSettings = ({ options, onOptionsChange }: Props) => {
     <Stack spacing={4}>
       <Stack>
         <FormLabel mb="0" htmlFor="variable-search">
-          Search or create variable:
+          Pesquisar ou criar variável:
         </FormLabel>
         <VariableSearchInput
           onSelectVariable={handleVariableChange}
@@ -36,16 +36,16 @@ export const SetVariableSettings = ({ options, onOptionsChange }: Props) => {
       <Stack>
         <HStack justify="space-between">
           <FormLabel mb="0" htmlFor="expression">
-            Value:
+            Valor:
           </FormLabel>
           <HStack>
-            <Text fontSize="sm">Text</Text>
+            <Text fontSize="sm">Texto</Text>
             <Switch
               size="sm"
               isChecked={options.isCode ?? false}
               onChange={handleValueTypeChange}
             />
-            <Text fontSize="sm">Code</Text>
+            <Text fontSize="sm">Código</Text>
           </HStack>
         </HStack>
 

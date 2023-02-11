@@ -44,7 +44,7 @@ export const UsageContent = ({ workspace }: Props) => {
         <Flex justifyContent="space-between">
           <HStack>
             <Heading fontSize="xl" as="h3">
-              Chats
+              Bate-papos
             </Heading>
             {chatsPercentage >= 80 && (
               <Tooltip
@@ -53,12 +53,13 @@ export const UsageContent = ({ workspace }: Props) => {
                 p="3"
                 label={
                   <Text>
-                    Your typebots are popular! You will soon reach your
-                    plan&apos;s chats limit. 🚀
+                    Seus typebots são populares! Em breve você alcançará seu
+                    limite de chats de seu plano. 🚀
                     <br />
                     <br />
-                    Make sure to <strong>update your plan</strong> to increase
-                    this limit and continue chatting with your users.
+                    Certifique-se de <strong>atualizar seu plano</strong> para
+                    aumentar esse limite e continuar conversando com seus
+                    usuários.
                   </Text>
                 }
               >
@@ -68,7 +69,7 @@ export const UsageContent = ({ workspace }: Props) => {
               </Tooltip>
             )}
             <Text fontSize="sm" fontStyle="italic" color="gray.500">
-              (resets on 1st of every month)
+              (reinicia no dia 1º de cada mês)
             </Text>
           </HStack>
 
@@ -83,7 +84,7 @@ export const UsageContent = ({ workspace }: Props) => {
             <Text>
               /{' '}
               {workspaceChatsLimit === -1
-                ? 'Unlimited'
+                ? 'Ilimitado'
                 : parseNumberWithCommas(workspaceChatsLimit)}
             </Text>
           </HStack>
@@ -103,7 +104,7 @@ export const UsageContent = ({ workspace }: Props) => {
           <Flex justifyContent="space-between">
             <HStack>
               <Heading fontSize="xl" as="h3">
-                Storage
+                Armazenamento
               </Heading>
               {storagePercentage >= 80 && (
                 <Tooltip
@@ -112,13 +113,13 @@ export const UsageContent = ({ workspace }: Props) => {
                   p="3"
                   label={
                     <Text>
-                      Your typebots are popular! You will soon reach your
-                      plan&apos;s storage limit. 🚀
+                      Seus typebots são populares! Em breve você alcançará seu
+                      limite de armazenamento de seu plano. 🚀
                       <br />
                       <br />
-                      Make sure to <strong>update your plan</strong> in order to
-                      continue collecting uploaded files. You can also{' '}
-                      <strong>delete files</strong> to free up space.
+                      Certifique-se de <strong>atualizar seu plano</strong> para
+                      continuar coletando arquivos enviados. Você também pode{' '}
+                      <strong>excluir arquivos</strong> para liberar espaço.
                     </Text>
                   }
                 >
@@ -139,7 +140,7 @@ export const UsageContent = ({ workspace }: Props) => {
               <Text>
                 /{' '}
                 {workspaceStorageLimit === -1
-                  ? 'Unlimited'
+                  ? 'Ilimitado'
                   : `${workspaceStorageLimit} GB`}
               </Text>
             </HStack>

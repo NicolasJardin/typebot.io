@@ -5,17 +5,17 @@ import { blockBaseSchema } from '../baseSchemas'
 import { LogicBlockType } from './enums'
 
 export enum LogicalOperator {
-  OR = 'OR',
-  AND = 'AND',
+  OR = 'OU',
+  AND = 'E',
 }
 
 export enum ComparisonOperators {
-  EQUAL = 'Equal to',
-  NOT_EQUAL = 'Not equal',
-  CONTAINS = 'Contains',
-  GREATER = 'Greater than',
-  LESS = 'Less than',
-  IS_SET = 'Is set',
+  EQUAL = 'Igual a',
+  NOT_EQUAL = 'Não igual',
+  CONTAINS = 'Contém',
+  GREATER = 'Maior que',
+  LESS = 'Menor que',
+  IS_SET = 'Está definido',
 }
 
 const comparisonSchema = z.object({

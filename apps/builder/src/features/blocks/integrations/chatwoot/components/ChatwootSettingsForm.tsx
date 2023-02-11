@@ -34,12 +34,12 @@ export const ChatwootSettingsForm = ({ options, onOptionsChange }: Props) => {
         onChange={(websiteToken) =>
           onOptionsChange({ ...options, websiteToken })
         }
-        moreInfoTooltip="Can be found in Chatwoot under Settings > Inboxes > Settings > Configuration, in the code snippet."
+        moreInfoTooltip="Pode ser encontrado no Chatwoot em Configurações > Caixas de entrada > Configurações > Configuração, no trecho de código."
       />
       <Accordion allowMultiple>
         <AccordionItem>
           <AccordionButton justifyContent="space-between">
-            Set user details
+            Definir detalhes do usuário
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={4} as={Stack} spacing="4">
@@ -51,7 +51,7 @@ export const ChatwootSettingsForm = ({ options, onOptionsChange }: Props) => {
               }}
             />
             <Input
-              label="Name"
+              label="Nome"
               defaultValue={options.user?.name}
               onChange={(name: string) => {
                 onOptionsChange({
@@ -71,7 +71,7 @@ export const ChatwootSettingsForm = ({ options, onOptionsChange }: Props) => {
               }}
             />
             <Input
-              label="Avatar URL"
+              label="URL do avatar"
               defaultValue={options.user?.avatarUrl}
               onChange={(avatarUrl: string) => {
                 onOptionsChange({
@@ -81,7 +81,7 @@ export const ChatwootSettingsForm = ({ options, onOptionsChange }: Props) => {
               }}
             />
             <Input
-              label="Phone number"
+              label="Número de telefone"
               defaultValue={options.user?.phoneNumber}
               onChange={(phoneNumber: string) => {
                 onOptionsChange({

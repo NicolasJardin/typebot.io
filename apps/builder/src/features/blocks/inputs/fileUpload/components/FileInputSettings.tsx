@@ -39,18 +39,18 @@ export const FileInputSettings = ({ options, onOptionsChange }: Props) => {
   return (
     <Stack spacing={4}>
       <SwitchWithLabel
-        label="Required?"
+        label="Obrigatório?"
         initialValue={options.isRequired ?? true}
         onCheckChange={handleRequiredChange}
       />
       <SwitchWithLabel
-        label="Allow multiple files?"
+        label="Permitir vários arquivos?"
         initialValue={options.isMultipleAllowed}
         onCheckChange={handleMultipleFilesChange}
       />
       <Stack>
         <FormLabel mb="0" htmlFor="limit">
-          Size limit (MB):
+          Limite de tamanho (MB):
         </FormLabel>
         <SmartNumberInput
           id="limit"
@@ -59,7 +59,7 @@ export const FileInputSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Stack>
-        <FormLabel mb="0">Placeholder:</FormLabel>
+        <FormLabel mb="0">espaço reservado:</FormLabel>
         <CodeEditor
           lang="html"
           onChange={handlePlaceholderLabelChange}
@@ -69,26 +69,27 @@ export const FileInputSettings = ({ options, onOptionsChange }: Props) => {
         />
       </Stack>
       <Input
-        label="Button label:"
+        label="Rótulo do botão"
         defaultValue={options.labels.button}
         onChange={handleButtonLabelChange}
         withVariableButton={false}
       />
       <Input
-        label="Clear button label:"
+        label="Limpar rótulo do botão"
         defaultValue={options.labels.clear}
         onChange={updateClearButtonLabel}
         withVariableButton={false}
       />
       <Input
-        label="Skip button label:"
+        label="Ignorar rótulo do botão:"
         defaultValue={options.labels.skip}
         onChange={updateSkipButtonLabel}
         withVariableButton={false}
       />
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
-          Save upload URL{options.isMultipleAllowed ? 's' : ''} in a variable:
+          Salvar URL de upload{options.isMultipleAllowed ? 's' : ''} em uma
+          variavel
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options.variableId}
