@@ -8,6 +8,6 @@ type Props = {
 
 export const WaitNodeContent = ({ options: { secondsToWaitFor } }: Props) => (
   <Text color={secondsToWaitFor ? 'currentcolor' : 'gray.500'} noOfLines={1}>
-    {secondsToWaitFor ? `Espere por ${secondsToWaitFor}s` : 'Configurar...'}
+    {secondsToWaitFor ? `Digitando por ${secondsToWaitFor}s` : 'Configurar...'}
   </Text>
 )

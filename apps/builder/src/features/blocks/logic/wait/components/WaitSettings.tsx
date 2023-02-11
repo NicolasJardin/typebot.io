@@ -16,7 +16,7 @@ export const WaitSettings = ({ options, onOptionsChange }: Props) => {
   return (
     <Stack spacing={4}>
       <Input
-        label="Segundos para esperar:"
+        label="Segundos para digitar:"
         defaultValue={options.secondsToWaitFor}
         onChange={handleSecondsChange}
         placeholder="0"

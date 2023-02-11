@@ -78,7 +78,7 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
         </Tooltip>
       )
     case LogicBlockType.WAIT:
-      return <Text>Esperar</Text>
+      return <Text>Digitando</Text>
     case LogicBlockType.TRANSFER:
       return <Text>Transferência</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
