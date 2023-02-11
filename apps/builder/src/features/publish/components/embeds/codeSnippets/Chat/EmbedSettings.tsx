@@ -125,7 +125,7 @@ export const ChatEmbedSettings = ({
           <HStack pl="4">
             <Text>Url:</Text>
             <Input
-              placeholder={'Paste image link (.png, .svg)'}
+              placeholder={'Colar link da imagem (.png, .svg)'}
               value={customIconInputValue}
               onChange={(e) => setCustomIconInputValue(e.target.value)}
               minW="0"
@@ -200,11 +200,11 @@ export const ChatEmbedSettings = ({
                 })
               }
               value={inputValues.avatarUrl}
-              placeholder={'Paste image link (.png, .jpg)'}
+              placeholder={'Colar link da imagem (.png, .jpg)'}
             />
           </Flex>
           <Flex justify="space-between" align="center" pl="4">
-            <Text>Message content</Text>
+            <Text>Conteúdo da mensagem</Text>
             <Input
               type="text"
               onChange={(e) =>

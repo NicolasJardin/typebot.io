@@ -53,7 +53,7 @@ export const AudioBubbleForm = ({
         {currentTab === 'link' && (
           <>
             <Input
-              placeholder="Paste the audio file link..."
+              placeholder="Cole o link do arquivo de áudio..."
               defaultValue={content.url ?? ''}
               onChange={submit}
             />

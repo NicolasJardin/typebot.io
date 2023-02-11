@@ -71,7 +71,7 @@ export const TextInput = (props: Props) => {
         class="my-2 ml-2"
         on:click={submit}
       >
-        {props.block.options?.labels?.button ?? 'Send'}
+        {props.block.options?.labels?.button ?? 'Enviar'}
       </SendButton>
     </div>
   )

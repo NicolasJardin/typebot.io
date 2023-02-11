@@ -138,7 +138,7 @@ const EmbedLinkContent = ({
 }: ContentProps & { defaultUrl?: string }) => (
   <Stack py="2">
     <Input
-      placeholder={'Paste the image link...'}
+      placeholder={'Cole o link da imagem...'}
       onChange={onNewUrl}
       defaultValue={defaultUrl ?? ''}
     />

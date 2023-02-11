@@ -138,7 +138,7 @@ export const integrationsList = [
   (props: Pick<ModalProps, 'publicId' | 'isPublished'>) => (
     <EmbedButton
       logo={<OtherLogo height={100} width="70px" />}
-      label="Other"
+      label="Outro"
       Modal={JavascriptModal}
       {...props}
     />

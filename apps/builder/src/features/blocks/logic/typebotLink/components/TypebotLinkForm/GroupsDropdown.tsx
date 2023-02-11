@@ -27,9 +27,9 @@ export const GroupsDropdown = ({
     if (id) onGroupIdSelected(id)
   }
 
-  if (isLoading) return <Input value="Loading..." isDisabled />
+  if (isLoading) return <Input value="Carregando..." isDisabled />
   if (!groups || groups.length === 0)
-    return <Input value="No groups found" isDisabled />
+    return <Input value="Nenhum grupo encontrado" isDisabled />
   return (
     <SearchableDropdown
       selectedItem={currentGroup?.title}

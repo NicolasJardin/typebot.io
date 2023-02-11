@@ -135,7 +135,7 @@ export const StripeConfigModal = ({
               </HStack>
             </Stack>
             <Stack>
-              <FormLabel>Chaves ao vivo:</FormLabel>
+              <FormLabel>Chaves ativas:</FormLabel>
               <HStack>
                 <FormControl>
                   <Input

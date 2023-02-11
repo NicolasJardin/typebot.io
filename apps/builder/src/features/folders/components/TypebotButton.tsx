@@ -134,7 +134,7 @@ export const TypebotButton = ({
           top="27px"
           size="sm"
         >
-          Ao vivo
+          Ativo
         </Tag>
       )}
       {!isReadOnly && (

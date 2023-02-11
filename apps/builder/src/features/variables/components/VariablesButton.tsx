@@ -21,9 +21,9 @@ export const VariablesButton = ({ onSelectVariable, ...props }: Props) => {
     <Popover isLazy placement="bottom-end" gutter={0}>
       <PopoverTrigger>
         <Flex>
-          <Tooltip label="Insert a variable">
+          <Tooltip label="Insira uma variável">
             <IconButton
-              aria-label={'Insert a variable'}
+              aria-label={'Insira uma variável'}
               icon={<UserIcon />}
               pos="relative"
               {...props}
@@ -34,7 +34,7 @@ export const VariablesButton = ({ onSelectVariable, ...props }: Props) => {
       <PopoverContent w="full">
         <VariableSearchInput
           onSelectVariable={onSelectVariable}
-          placeholder="Search for a variable"
+          placeholder="Pesquisar uma variável"
           shadow="lg"
           autoFocus
         />

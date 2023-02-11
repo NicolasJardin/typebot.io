@@ -167,13 +167,13 @@ const comparisonIsEmpty = (comparison: Comparison) =>
 const parseComparisonOperatorSymbol = (operator: ComparisonOperators) => {
   switch (operator) {
     case ComparisonOperators.CONTAINS:
-      return 'contains'
+      return 'Contém'
     case ComparisonOperators.EQUAL:
       return '='
     case ComparisonOperators.GREATER:
       return '>'
     case ComparisonOperators.IS_SET:
-      return 'is set'
+      return 'Está definido'
     case ComparisonOperators.LESS:
       return '<'
     case ComparisonOperators.NOT_EQUAL:

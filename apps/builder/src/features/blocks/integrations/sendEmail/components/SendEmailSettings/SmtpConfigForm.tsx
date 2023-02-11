@@ -32,11 +32,11 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         label="Do email"
         defaultValue={config.from.email ?? ''}
         onChange={handleFromEmailChange}
-        placeholder="notifications@provider.com"
+        placeholder="notificações@provedor.com"
         withVariableButton={false}
       />
       <Input
-        label="De nome"
+        label="Do nome"
         defaultValue={config.from.name ?? ''}
         onChange={handleFromNameChange}
         placeholder="John Smith"
@@ -47,7 +47,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         label="Host"
         defaultValue={config.host ?? ''}
         onChange={handleHostChange}
-        placeholder="mail.provider.com"
+        placeholder="email.provedor.com"
         withVariableButton={false}
       />
       <Input
@@ -56,7 +56,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         type="email"
         defaultValue={config.username ?? ''}
         onChange={handleUsernameChange}
-        placeholder="user@provider.com"
+        placeholder="usuário@provedor.com"
         withVariableButton={false}
       />
       <Input

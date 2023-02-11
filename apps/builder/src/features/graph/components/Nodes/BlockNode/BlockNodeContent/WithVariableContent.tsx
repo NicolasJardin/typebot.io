@@ -16,7 +16,7 @@ export const WithVariableContent = ({ block }: Props) => {
 
   return (
     <Text>
-      Collect{' '}
+      Coletar{' '}
       <chakra.span
         bgColor="orange.400"
         color="white"
