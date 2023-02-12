@@ -52,6 +52,7 @@
     "@udecode/plate-ui-toolbar": "19.2.0",
     "@use-gesture/react": "^10.2.24",
     "aws-sdk": "2.1304.0",
+    "axios": "^1.3.2",
     "bot-engine": "workspace:*",
     "browser-image-compression": "2.0.0",
     "canvas-confetti": "1.6.0",
