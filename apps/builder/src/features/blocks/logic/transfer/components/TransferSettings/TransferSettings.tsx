@@ -1,5 +1,5 @@
 import { Input } from '@/components/inputs'
-import { trpc } from '@/lib/trpc'
+import { useToast } from '@/hooks/useToast'
 import {
   FormControl,
   FormLabel,
@@ -9,6 +9,8 @@ import {
 } from '@chakra-ui/react'
 import { TransferOptions } from 'models'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import useGetAttendants from '../../queries/useGetAttendants'
+import useGetDepartments from '../../queries/useGetDepartments'
 
 type TransferSettingsProps = {
   options: TransferOptions | undefined
@@ -19,6 +21,8 @@ export default function TransferSettings({
   options,
   onOptionsChange,
 }: TransferSettingsProps) {
+  const { showToast } = useToast()
+
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<
     string | undefined
   >(options?.departmentId)
@@ -28,10 +32,22 @@ export default function TransferSettings({
   >(options?.attendantId)
 
   const { data: departments, isFetching: isFetchingDepartments } =
-    trpc.transfer.getDepartments.useQuery()
+    useGetDepartments({
+      onError: () => {
+        showToast({
+          title: 'Não foi possível buscar os setores',
+        })
+      },
+    })
 
   const { data: attendants, isFetching: isFetchingAttendants } =
-    trpc.transfer.getAttendants.useQuery()
+    useGetAttendants({
+      onError: () => {
+        showToast({
+          title: 'Não foi possível buscar os atendentes',
+        })
+      },
+    })
 
   const handleDepartmentChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) =>

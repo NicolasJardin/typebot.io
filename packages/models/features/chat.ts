@@ -203,7 +203,8 @@ const clientSideActionSchema = z
       .or(
         z.object({
           transfer: z.object({
-            departmentId: z.string(),
+            departmentId: z.string().optional(),
+            attendantId: z.string().optional(),
             message: z.string(),
           }),
         })

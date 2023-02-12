@@ -12,20 +12,29 @@ export const executeTransfer = async (
 
   const parsedMessage = parseVariables(variables)(block.options?.message)
 
-  const departmentId = block.options?.attendantId || block.options?.departmentId
+  const getTransfer = () => {
+    if (block.options?.attendantId)
+      return {
+        attendantId: block.options?.attendantId,
+        message: parsedMessage,
+      }
+
+    return {
+      departmentId: block.options?.departmentId,
+      message: parsedMessage,
+    }
+  }
 
   return {
     outgoingEdgeId: block.outgoingEdgeId,
-    clientSideActions: departmentId
-      ? [
-          {
-            transfer: {
-              departmentId,
-              message: parsedMessage,
+    clientSideActions:
+      block.options?.attendantId || block.options?.departmentId
+        ? [
+            {
+              transfer: getTransfer(),
+              lastBubbleBlockId,
             },
-            lastBubbleBlockId,
-          },
-        ]
-      : undefined,
+          ]
+        : undefined,
   }
 }
