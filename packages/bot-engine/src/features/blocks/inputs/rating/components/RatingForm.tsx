@@ -35,14 +35,14 @@ export const RatingForm = ({ block, onSubmit }: Props) => {
         {Array.from(
           Array(
             block.options.length +
-              (block.options.buttonType === 'Numbers' ? 1 : 0)
+              (block.options.buttonType === 'Números' ? 1 : 0)
           )
         ).map((_, idx) => (
           <RatingButton
             {...block.options}
             key={idx}
             rating={rating}
-            idx={idx + (block.options.buttonType === 'Numbers' ? 0 : 1)}
+            idx={idx + (block.options.buttonType === 'Números' ? 0 : 1)}
             onClick={handleClick}
           />
         ))}
@@ -76,7 +76,7 @@ const RatingButton = ({
   idx: number
   onClick: (idx: number) => void
 }) => {
-  if (buttonType === 'Numbers')
+  if (buttonType === 'Números')
     return (
       <button
         onClick={(e) => {
