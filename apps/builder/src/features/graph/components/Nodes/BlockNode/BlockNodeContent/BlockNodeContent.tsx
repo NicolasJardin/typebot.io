@@ -39,6 +39,7 @@ import { AudioBubbleNode } from '@/features/blocks/bubbles/audio'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
 import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
+import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -128,6 +129,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.TRANSFER:
       return <TransferNodeContent />
+
+    case LogicBlockType.TAG:
+      return <TagNodeContent options={block.options} />
 
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />

@@ -69,7 +69,7 @@ export default function TransferSettings({
     [onOptionsChange, options]
   )
 
-  const handleSecondsChange = (message: string | undefined) => {
+  const handleMessageChange = (message: string | undefined) => {
     onOptionsChange({ ...options, message })
   }
 
@@ -118,7 +118,7 @@ export default function TransferSettings({
       <Input
         label="Mensagem de Transferência:"
         defaultValue={options?.message || ''}
-        onChange={handleSecondsChange}
+        onChange={handleMessageChange}
         placeholder="Digite sua mensagem"
       />
     </Stack>
