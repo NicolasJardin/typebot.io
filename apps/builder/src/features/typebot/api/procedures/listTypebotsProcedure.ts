@@ -25,6 +25,7 @@ export const listTypebotsProcedure = authenticatedProcedure
             name: true,
             icon: true,
             id: true,
+            publicId: true,
           })
           .and(z.object({ publishedTypebotId: z.string().optional() }))
       ),
@@ -65,8 +66,9 @@ export const listTypebotsProcedure = authenticatedProcedure
         publishedTypebot: { select: { id: true } },
         id: true,
         icon: true,
+        publicId: true,
       },
-    })) as (Pick<Typebot, 'name' | 'id' | 'icon'> & {
+    })) as (Pick<Typebot, 'name' | 'id' | 'icon' | 'publicId'> & {
       publishedTypebot: Pick<PublicTypebot, 'id'>
     })[]
 

@@ -216,21 +216,6 @@ export const BlocksSideBar = () => {
               type={IntegrationBlockType.EMAIL}
               onMouseDown={handleMouseDown}
             />
-
-            <BlockCard
-              type={IntegrationBlockType.ZAPIER}
-              onMouseDown={handleMouseDown}
-            />
-
-            <BlockCard
-              type={IntegrationBlockType.MAKE_COM}
-              onMouseDown={handleMouseDown}
-            />
-
-            <BlockCard
-              type={IntegrationBlockType.PABBLY_CONNECT}
-              onMouseDown={handleMouseDown}
-            />
           </SimpleGrid>
         </Stack>
 
