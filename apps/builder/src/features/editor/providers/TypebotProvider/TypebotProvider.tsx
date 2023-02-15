@@ -1,3 +1,22 @@
+import { saveWebhookQuery } from '@/features/blocks/integrations/webhook/queries/saveWebhookQuery'
+import {
+  createPublishedTypebotQuery,
+  deletePublishedTypebotQuery,
+  updatePublishedTypebotQuery,
+} from '@/features/publish/queries'
+import {
+  checkIfPublished,
+  checkIfTypebotsAreEqual,
+  parseDefaultPublicId,
+  parsePublicTypebotToTypebot,
+  parseTypebotToPublicTypebot,
+} from '@/features/publish/utils'
+import { useAutoSave } from '@/hooks/useAutoSave'
+import { useLinkedTypebots } from '@/hooks/useLinkedTypebots'
+import { useToast } from '@/hooks/useToast'
+import { useTypebotQuery } from '@/hooks/useTypebotQuery'
+import { preventUserFromRefreshing } from '@/utils/helpers'
+import { dequal } from 'dequal'
 import {
   LogicBlockType,
   PublicTypebot,
@@ -17,32 +36,14 @@ import {
   useState,
 } from 'react'
 import { isDefined, omit } from 'utils'
-import { edgesAction, EdgesActions } from './actions/edges'
-import { itemsAction, ItemsActions } from './actions/items'
-import { GroupsActions, groupsActions } from './actions/groups'
-import { blocksAction, BlocksActions } from './actions/blocks'
-import { variablesAction, VariablesActions } from './actions/variables'
-import { dequal } from 'dequal'
-import { useToast } from '@/hooks/useToast'
-import { useTypebotQuery } from '@/hooks/useTypebotQuery'
 import useUndo from '../../hooks/useUndo'
-import { useLinkedTypebots } from '@/hooks/useLinkedTypebots'
 import { updateTypebotQuery } from '../../queries/updateTypebotQuery'
-import { preventUserFromRefreshing } from '@/utils/helpers'
-import {
-  createPublishedTypebotQuery,
-  updatePublishedTypebotQuery,
-  deletePublishedTypebotQuery,
-} from '@/features/publish/queries'
-import { saveWebhookQuery } from '@/features/blocks/integrations/webhook/queries/saveWebhookQuery'
-import {
-  checkIfTypebotsAreEqual,
-  checkIfPublished,
-  parseTypebotToPublicTypebot,
-  parseDefaultPublicId,
-  parsePublicTypebotToTypebot,
-} from '@/features/publish/utils'
-import { useAutoSave } from '@/hooks/useAutoSave'
+import { blocksAction, BlocksActions } from './actions/blocks'
+import { edgesAction, EdgesActions } from './actions/edges'
+import { GroupsActions, groupsActions } from './actions/groups'
+import { itemsAction, ItemsActions } from './actions/items'
+import { TagsActions, tagsActions } from './actions/tags'
+import { variablesAction, VariablesActions } from './actions/variables'
 
 const autoSaveTimeout = 10000
 
@@ -88,7 +89,8 @@ const typebotContext = createContext<
     BlocksActions &
     ItemsActions &
     VariablesActions &
-    EdgesActions
+    EdgesActions &
+    TagsActions
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
 >({})
@@ -349,6 +351,7 @@ export const TypebotProvider = ({
         ...groupsActions(setLocalTypebot as SetTypebot),
         ...blocksAction(setLocalTypebot as SetTypebot),
         ...variablesAction(setLocalTypebot as SetTypebot),
+        ...tagsActions(setLocalTypebot as SetTypebot),
         ...edgesAction(setLocalTypebot as SetTypebot),
         ...itemsAction(setLocalTypebot as SetTypebot),
       }}

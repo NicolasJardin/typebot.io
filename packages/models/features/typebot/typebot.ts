@@ -5,6 +5,7 @@ import { themeSchema } from './theme'
 import { variableSchema } from './variable'
 import { Typebot as TypebotPrisma } from 'db'
 import { schemaForType } from '../utils'
+import { tagSchema } from './tag'
 
 export const groupSchema = z.object({
   id: z.string(),
@@ -47,6 +48,7 @@ export const typebotSchema = schemaForType<TypebotPrisma>()(
     groups: z.array(groupSchema),
     edges: z.array(edgeSchema),
     variables: z.array(variableSchema),
+    tags: z.array(tagSchema),
     theme: themeSchema,
     settings: settingsSchema,
     createdAt: z.date(),
