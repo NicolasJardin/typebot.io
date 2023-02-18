@@ -46,7 +46,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             ],
           },
           orderBy: { createdAt: 'desc' },
-          select: { name: true, id: true, groups: true, variables: true },
+          select: {
+            name: true,
+            id: true,
+            groups: true,
+            variables: true,
+            publicId: true,
+          },
         })
         return res.send({ typebots })
       }
