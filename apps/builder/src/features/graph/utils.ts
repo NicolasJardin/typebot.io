@@ -39,6 +39,7 @@ import {
   defaultWaitOptions,
   defaultScriptOptions,
   defaultTransferOptions,
+  defaultWaitForOptions,
 } from 'models'
 import {
   stubLength,
@@ -438,6 +439,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultScriptOptions
     case LogicBlockType.WAIT:
       return defaultWaitOptions
+    case LogicBlockType.WAIT_FOR:
+      return defaultWaitForOptions
     case LogicBlockType.TYPEBOT_LINK:
       return {}
     case LogicBlockType.TRANSFER:

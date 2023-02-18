@@ -186,6 +186,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={LogicBlockType.WAIT_FOR}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={LogicBlockType.TRANSFER}
               onMouseDown={handleMouseDown}
             />
