@@ -1,34 +1,32 @@
 import {
-  Button,
-  HStack,
-  IconButton,
-  Stack,
-  Tooltip,
-  Text,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  useDisclosure,
-  ButtonProps,
-} from '@chakra-ui/react'
-import {
   ChevronLeftIcon,
   CloudOffIcon,
   LockedIcon,
   UnlockedIcon,
 } from '@/components/icons'
+import { ChangePlanModal, isFreePlan, LimitReached } from '@/features/billing'
 import { useTypebot } from '@/features/editor'
 import { useWorkspace } from '@/features/workspace'
-import { InputBlockType } from 'models'
-import { useRouter } from 'next/router'
-import { isNotDefined } from 'utils'
-import { ChangePlanModal, isFreePlan, LimitReached } from '@/features/billing'
 import { timeSince } from '@/utils/helpers'
+import {
+  Button,
+  ButtonProps,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from '@chakra-ui/react'
+import { InputBlockType } from 'models'
+import { isNotDefined } from 'utils'
 
 export const PublishButton = (props: ButtonProps) => {
   const { workspace } = useWorkspace()
-  const { push, query } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
     isPublishing,
@@ -50,7 +48,6 @@ export const PublishButton = (props: ButtonProps) => {
   const handlePublishClick = () => {
     if (isFreePlan(workspace) && hasInputFile) return onOpen()
     publishTypebot()
-    if (!publishedTypebot) push(`/typebots/${query.typebotId}/share`)
   }
 
   const closeTypebot = async () => {
