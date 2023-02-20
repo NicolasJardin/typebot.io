@@ -49,7 +49,7 @@ import {
 } from './providers'
 import { roundCorners } from 'svg-round-corners'
 import { AnchorsPositionProps } from './components/Edges/Edge'
-import cuid from 'cuid'
+import { createId } from '@paralleldrive/cuid2'
 import {
   isBubbleBlockType,
   blockTypeHasOption,
@@ -360,7 +360,7 @@ export const parseNewBlock = (
   type: DraggableBlockType,
   groupId: string
 ): DraggableBlock => {
-  const id = cuid()
+  const id = createId()
   return {
     id,
     groupId,
@@ -369,7 +369,7 @@ export const parseNewBlock = (
     options: blockTypeHasOption(type)
       ? parseDefaultBlockOptions(type)
       : undefined,
-    webhookId: blockTypeHasWebhook(type) ? cuid() : undefined,
+    webhookId: blockTypeHasWebhook(type) ? createId() : undefined,
     items: blockTypeHasItems(type) ? parseDefaultItems(type, id) : undefined,
   } as DraggableBlock
 }
@@ -380,11 +380,11 @@ const parseDefaultItems = (
 ): Item[] => {
   switch (type) {
     case InputBlockType.CHOICE:
-      return [{ id: cuid(), blockId, type: ItemType.BUTTON }]
+      return [{ id: createId(), blockId, type: ItemType.BUTTON }]
     case LogicBlockType.CONDITION:
       return [
         {
-          id: cuid(),
+          id: createId(),
           blockId,
           type: ItemType.CONDITION,
           content: defaultConditionContent,

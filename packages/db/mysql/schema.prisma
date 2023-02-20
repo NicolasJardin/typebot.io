@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Account {
@@ -13,12 +14,12 @@ model Account {
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String?
-  access_token             String?
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String?
+  id_token                 String? @db.Text
   session_state            String?
   oauth_token_secret       String?
   oauth_token              String?
@@ -26,6 +27,7 @@ model Account {
   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -34,6 +36,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -41,10 +45,10 @@ model User {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @default(now()) @updatedAt
   lastActivityAt          DateTime                  @default(now())
-  name                    String?
+  name                    String?                   @db.VarChar(255)
   email                   String?                   @unique
   emailVerified           DateTime?
-  image                   String?
+  image                   String?                   @db.VarChar(1000)
   company                 String?
   onboardingCategories    Json
   graphNavigation         GraphNavigation?
@@ -63,14 +67,16 @@ model ApiToken {
   name      String
   ownerId   String
   owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
 }
 
 model Workspace {
   id                            String                @id @default(cuid())
   createdAt                     DateTime              @default(now())
   updatedAt                     DateTime              @default(now()) @updatedAt
-  name                          String
-  icon                          String?
+  name                          String                @db.VarChar(255)
+  icon                          String?               @db.VarChar(1000)
   plan                          Plan                  @default(FREE)
   stripeId                      String?               @unique
   credentials                   Credentials[]
@@ -101,6 +107,7 @@ model MemberInWorkspace {
   workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, workspaceId])
+  @@index([workspaceId])
 }
 
 model WorkspaceInvitation {
@@ -111,24 +118,30 @@ model WorkspaceInvitation {
   workspaceId String
   type        WorkspaceRole
   workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
 }
 
 model CustomDomain {
-  name        String    @id
+  name        String    @id @db.VarChar(255)
   createdAt   DateTime  @default(now())
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
 }
 
 model Credentials {
   id          String    @id @default(cuid())
   createdAt   DateTime  @default(now())
   workspaceId String
-  data        String
+  data        String    @db.Text
   name        String
   type        String
   iv          String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
 }
 
 model VerificationToken {
@@ -143,21 +156,24 @@ model DashboardFolder {
   id             String            @id @default(cuid())
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @default(now()) @updatedAt
-  name           String
+  name           String            @db.VarChar(255)
   parentFolderId String?
   workspaceId    String
-  parentFolder   DashboardFolder?  @relation("ParentChild", fields: [parentFolderId], references: [id])
+  parentFolder   DashboardFolder?  @relation("ParentChild", fields: [parentFolderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   workspace      Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   childrenFolder DashboardFolder[] @relation("ParentChild")
   typebots       Typebot[]
+
+  @@index([workspaceId])
+  @@index([parentFolderId])
 }
 
 model Typebot {
   id                      String                    @id @default(cuid())
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @default(now()) @updatedAt
-  icon                    String?
-  name                    String
+  icon                    String?                   @db.VarChar(1000)
+  name                    String                    @db.VarChar(255)
   folderId                String?
   groups                  Json
   variables               Json
@@ -179,6 +195,8 @@ model Typebot {
   isClosed                Boolean                   @default(false)
 
   @@index([workspaceId])
+  @@index([folderId])
+  @@index([isArchived, createdAt(sort: Desc)])
 }
 
 model Invitation {
@@ -190,6 +208,7 @@ model Invitation {
   typebot   Typebot           @relation(fields: [typebotId], references: [id], onDelete: Cascade)
 
   @@unique([email, typebotId])
+  @@index([typebotId])
 }
 
 model CollaboratorsOnTypebots {
@@ -202,6 +221,7 @@ model CollaboratorsOnTypebots {
   user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, typebotId])
+  @@index([typebotId])
 }
 
 model PublicTypebot {
@@ -230,7 +250,8 @@ model Result {
   answers     Answer[]
   logs        Log[]
 
-  @@index([typebotId])
+  @@index([typebotId, isArchived, hasStarted, createdAt(sort: Desc)])
+  @@index([typebotId, isArchived, isCompleted])
 }
 
 model Log {
@@ -238,8 +259,8 @@ model Log {
   createdAt   DateTime @default(now())
   resultId    String
   status      String
-  description String
-  details     String?
+  description String   @db.Text
+  details     String?  @db.Text
   result      Result   @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
   @@index([resultId])
@@ -251,12 +272,13 @@ model Answer {
   blockId     String
   groupId     String
   variableId  String?
-  content     String
+  content     String   @db.Text
   storageUsed Int?
   result      Result   @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
   @@unique([resultId, blockId, groupId])
   @@index([groupId])
+  @@index([storageUsed])
 }
 
 model Coupon {
@@ -269,13 +291,15 @@ model Webhook {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
-  url         String?
+  url         String?  @db.VarChar(2000)
   method      String
   queryParams Json
   headers     Json
-  body        String?
+  body        String?  @db.Text
   typebotId   String
   typebot     Typebot  @relation(fields: [typebotId], references: [id], onDelete: Cascade)
+
+  @@index([typebotId])
 }
 
 model ClaimableCustomPlan {

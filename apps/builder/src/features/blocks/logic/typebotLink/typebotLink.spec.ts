@@ -1,12 +1,12 @@
 import test, { expect } from '@playwright/test'
 import { typebotViewer } from 'utils/playwright/testHelpers'
 import { importTypebotInDatabase } from 'utils/playwright/databaseActions'
-import cuid from 'cuid'
+import { createId } from '@paralleldrive/cuid2'
 import { getTestAsset } from '@/test/utils/playwright'
 
 test('should be configurable', async ({ page }) => {
-  const typebotId = cuid()
-  const linkedTypebotId = cuid()
+  const typebotId = createId()
+  const linkedTypebotId = createId()
   await importTypebotInDatabase(
     getTestAsset('typebots/logic/linkTypebots/1.json'),
     { id: typebotId, name: 'My link typebot 1' }
@@ -53,7 +53,7 @@ test('should be configurable', async ({ page }) => {
   await page.waitForTimeout(1000)
   await page.click('input[value="My link typebot 2"]', { clickCount: 3 })
   await page.press('input[value="My link typebot 2"]', 'Backspace')
-  await page.click('button >> text=My link typebot 1')
+  await page.click('button >> text=Current typebot')
   await page.click('input[placeholder="Select a block"]', {
     clickCount: 3,
   })

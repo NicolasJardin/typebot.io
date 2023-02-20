@@ -28,6 +28,7 @@ export const platePlugins = createPlugins(
           url.startsWith('mailto:') ||
           url.startsWith('tel:') ||
           url.startsWith('sms:'),
+        forceSubmit: true,
       },
     }),
   ],

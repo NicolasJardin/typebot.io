@@ -18,13 +18,14 @@ import { toTitleCase } from 'utils'
 import { Session } from 'next-auth'
 import { Plan } from 'db'
 import { trpc } from '@/lib/trpc'
+import { NewVersionPopup } from '@/components/NewVersionPopup'
 
 const { ToastContainer, toast } = createStandaloneToast(customTheme)
 
 const App = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) => {
+}: AppProps<{ session?: Session }>) => {
   useRouterProgressBar()
   const { query, pathname, isReady } = useRouter()
 
@@ -47,6 +48,7 @@ const App = ({
   }, [isReady])
 
   const typebotId = query.typebotId?.toString()
+
   return (
     <>
       <ToastContainer />
@@ -58,12 +60,14 @@ const App = ({
                 <WorkspaceProvider typebotId={typebotId}>
                   <Component />
                   <SupportBubble />
+                  <NewVersionPopup />
                 </WorkspaceProvider>
               </TypebotProvider>
             ) : (
               <WorkspaceProvider>
                 <Component {...pageProps} />
                 <SupportBubble />
+                <NewVersionPopup />
               </WorkspaceProvider>
             )}
           </UserProvider>

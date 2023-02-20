@@ -1,4 +1,4 @@
-import cuid from 'cuid'
+import { createId } from '@paralleldrive/cuid2'
 import { produce } from 'immer'
 import { Group, DraggableBlock, DraggableBlockType, BlockIndices } from 'models'
 import { SetTypebot } from '../TypebotProvider'
@@ -6,6 +6,7 @@ import {
   deleteGroupDraft,
   createBlockDraft,
   duplicateBlockDraft,
+  WebhookCallBacks,
 } from './blocks'
 import { Coordinates } from '@/features/graph'
 
@@ -22,7 +23,10 @@ export type GroupsActions = {
   deleteGroup: (groupIndex: number) => void
 }
 
-const groupsActions = (setTypebot: SetTypebot): GroupsActions => ({
+const groupsActions = (
+  setTypebot: SetTypebot,
+  { onWebhookBlockCreated, onWebhookBlockDuplicated }: WebhookCallBacks
+): GroupsActions => ({
   createGroup: ({
     id,
     block,
@@ -42,7 +46,13 @@ const groupsActions = (setTypebot: SetTypebot): GroupsActions => ({
           blocks: [],
         }
         typebot.groups.push(newGroup)
-        createBlockDraft(typebot, block, newGroup.id, indices)
+        createBlockDraft(
+          typebot,
+          block,
+          newGroup.id,
+          indices,
+          onWebhookBlockCreated
+        )
       })
     ),
   updateGroup: (groupIndex: number, updates: Partial<Omit<Group, 'id'>>) =>
@@ -56,12 +66,14 @@ const groupsActions = (setTypebot: SetTypebot): GroupsActions => ({
     setTypebot((typebot) =>
       produce(typebot, (typebot) => {
         const group = typebot.groups[groupIndex]
-        const id = cuid()
+        const id = createId()
         const newGroup: Group = {
           ...group,
           title: `${group.title} Cópia`,
           id,
-          blocks: group.blocks.map(duplicateBlockDraft(id)),
+          blocks: group.blocks.map((block) =>
+            duplicateBlockDraft(id)(block, onWebhookBlockDuplicated)
+          ),
           graphCoordinates: {
             x: group.graphCoordinates.x + 200,
             y: group.graphCoordinates.y + 100,
