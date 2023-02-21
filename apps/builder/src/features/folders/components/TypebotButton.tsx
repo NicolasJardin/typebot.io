@@ -162,7 +162,7 @@ export const TypebotButton = ({
               </MenuItem>
             )}
             <MenuItem onClick={handleDuplicateClick}>Duplicar</MenuItem>
-            <MenuItem color="red" onClick={handleDeleteClick}>
+            <MenuItem color="red.400" onClick={handleDeleteClick}>
               Deletar
             </MenuItem>
           </MoreButton>

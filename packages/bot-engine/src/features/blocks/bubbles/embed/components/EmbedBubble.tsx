@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { EmbedBubbleBlock } from 'models'
 import { TypingBubble } from '../../../../../components/TypingBubble'
 import { parseVariables } from '@/features/variables'
@@ -15,11 +15,7 @@ export const EmbedBubble = ({ block, onTransitionEnd }: Props) => {
   const { typebot, isLoading } = useTypebot()
   const messageContainer = useRef<HTMLDivElement | null>(null)
   const [isTyping, setIsTyping] = useState(true)
-
-  const url = useMemo(
-    () => parseVariables(typebot.variables)(block.content?.url),
-    [block.content?.url, typebot.variables]
-  )
+  const [url] = useState(parseVariables(typebot.variables)(block.content?.url))
 
   const onTypingEnd = useCallback(() => {
     setIsTyping(false)
@@ -39,6 +35,12 @@ export const EmbedBubble = ({ block, onTransitionEnd }: Props) => {
       clearTimeout(timeout)
     }
   }, [isLoading, isTyping, onTypingEnd])
+
+  const height = block.content.height
+    ? typeof block.content.height === 'string'
+      ? parseVariables(typebot.variables)(block.content.height) + 'px'
+      : block.content.height
+    : '2rem'
 
   return (
     <div className="flex flex-col w-full" ref={messageContainer}>
@@ -65,7 +67,7 @@ export const EmbedBubble = ({ block, onTransitionEnd }: Props) => {
               (isTyping ? 'opacity-0' : 'opacity-100')
             }
             style={{
-              height: isTyping ? '2rem' : block.content.height,
+              height: isTyping ? '2rem' : height,
               borderRadius: '15px',
             }}
           />

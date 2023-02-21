@@ -1,13 +1,14 @@
 import { CollaborationType, Prisma } from 'db'
 import prisma from '@/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { canReadTypebots, canWriteTypebots } from '@/utils/api/dbRules'
 import { methodNotAllowed, notAuthenticated } from 'utils/api'
 import { getAuthenticatedUser } from '@/features/auth/api'
 import { archiveResults } from '@/features/results/api'
-import { typebotSchema } from 'models'
-import { captureEvent } from '@sentry/nextjs'
+import { Typebot } from 'models'
 import { omit } from 'utils'
+import { getTypebot } from '@/features/typebot/api/utils/getTypebot'
+import { isReadTypebotForbidden } from '@/features/typebot/api/utils/isReadTypebotForbidden'
+import { removeTypebotOldProperties } from '@/features/typebot/api/utils/removeTypebotOldProperties'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getAuthenticatedUser(req)
@@ -15,9 +16,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const typebotId = req.query.typebotId as string
   if (req.method === 'GET') {
-    const typebot = await prisma.typebot.findFirst({
+    const fullTypebot = await prisma.typebot.findFirst({
       where: {
-        ...canReadTypebots(typebotId, user),
+        id: typebotId,
         isArchived: { not: true },
       },
       include: {
@@ -26,14 +27,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         webhooks: true,
       },
     })
-    if (!typebot) return res.send({ typebot: null })
-    const { publishedTypebot, collaborators, webhooks, ...restOfTypebot } =
-      typebot
+    if (!fullTypebot || (await isReadTypebotForbidden(fullTypebot, user)))
+      return res.status(404).send({ typebot: null })
+
+    const { publishedTypebot, collaborators, webhooks, ...typebot } =
+      fullTypebot
     const isReadOnly =
       collaborators.find((c) => c.userId === user.id)?.type ===
       CollaborationType.READ
     return res.send({
-      typebot: restOfTypebot,
+      typebot: removeTypebotOldProperties(typebot),
       publishedTypebot,
       isReadOnly,
       webhooks,
@@ -41,74 +44,82 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === 'DELETE') {
-    const { success } = await archiveResults({
-      typebotId,
+    const typebot = (await getTypebot({
+      accessLevel: 'write',
       user,
+      typebotId,
+      select: {
+        groups: true,
+      },
+    })) as Pick<Typebot, 'groups'> | null
+    if (!typebot) return res.status(404).send({ typebot: null })
+    const { success } = await archiveResults({
+      typebot,
       resultsFilter: { typebotId },
     })
     if (!success) return res.status(500).send({ success: false })
     await prisma.publicTypebot.deleteMany({
-      where: { typebot: canWriteTypebots(typebotId, user) },
+      where: { typebotId },
     })
     const typebots = await prisma.typebot.updateMany({
-      where: canWriteTypebots(typebotId, user),
+      where: { id: typebotId },
       data: { isArchived: true, publicId: null },
     })
     return res.send({ typebots })
   }
+
   if (req.method === 'PUT') {
-    const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
-    const parser = typebotSchema.safeParse({
-      ...data,
-      updatedAt: new Date(data.updatedAt),
-      createdAt: new Date(data.createdAt),
+    const data = (
+      typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+    ) as Typebot
+
+    const typebot = await getTypebot({
+      accessLevel: 'write',
+      typebotId,
+      user,
+      select: {
+        updatedAt: true,
+      },
     })
-    if ('error' in parser) {
-      captureEvent({
-        message: 'Typebot schema validation failed',
-        extra: {
-          typebotId: data.id,
-          error: parser.error,
-        },
-      })
-    }
-    const existingTypebot = await prisma.typebot.findFirst({
-      where: canReadTypebots(typebotId, user),
-      select: { updatedAt: true },
-    })
+    if (!typebot) return res.status(404).send({ message: 'Typebot not found' })
+
     if (
-      existingTypebot &&
-      existingTypebot?.updatedAt > new Date(data.updatedAt)
+      (typebot.updatedAt as Date).getTime() > new Date(data.updatedAt).getTime()
     )
-      return res.send({ message: 'Found newer version of typebot in database' })
-    const typebots = await prisma.typebot.updateMany({
-      where: canWriteTypebots(typebotId, user),
-      data: removeOldProperties({
-        ...data,
-        theme: data.theme ?? undefined,
-        settings: data.settings ?? undefined,
-        resultsTablePreferences: data.resultsTablePreferences ?? undefined,
-      }) as Prisma.TypebotUpdateInput,
+      return res.send({
+        message: 'Found newer version of the typebot in database',
+      })
+
+    const updates = {
+      ...omit(data, 'id', 'createdAt', 'updatedAt'),
+      theme: data.theme ?? undefined,
+      settings: data.settings ?? undefined,
+      resultsTablePreferences: data.resultsTablePreferences ?? undefined,
+    } satisfies Prisma.TypebotUpdateInput
+
+    const updatedTypebot = await prisma.typebot.update({
+      where: { id: typebotId },
+      data: updates,
     })
-    return res.send({ typebots })
+
+    return res.send({ typebot: updatedTypebot })
   }
+
   if (req.method === 'PATCH') {
+    const typebot = await getTypebot({
+      accessLevel: 'write',
+      typebotId,
+      user,
+    })
+    if (!typebot) return res.status(404).send({ message: 'Typebot not found' })
     const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
-    const typebots = await prisma.typebot.updateMany({
-      where: canWriteTypebots(typebotId, user),
+    const updatedTypebot = await prisma.typebot.update({
+      where: { id: typebotId },
       data,
     })
-    return res.send({ typebots })
+    return res.send({ typebot: updatedTypebot })
   }
   return methodNotAllowed(res)
-}
-
-// TODO: Remove in a month
-const removeOldProperties = (data: unknown) => {
-  if (data && typeof data === 'object' && 'publishedTypebotId' in data) {
-    return omit(data, 'publishedTypebotId')
-  }
-  return data
 }
 
 export default handler

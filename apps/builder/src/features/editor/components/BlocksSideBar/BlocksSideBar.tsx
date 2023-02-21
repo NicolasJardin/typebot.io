@@ -191,6 +191,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={LogicBlockType.WAIT_FOR}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={LogicBlockType.TRANSFER}
               onMouseDown={handleMouseDown}
             />
@@ -219,21 +224,6 @@ export const BlocksSideBar = () => {
 
             <BlockCard
               type={IntegrationBlockType.EMAIL}
-              onMouseDown={handleMouseDown}
-            />
-
-            <BlockCard
-              type={IntegrationBlockType.ZAPIER}
-              onMouseDown={handleMouseDown}
-            />
-
-            <BlockCard
-              type={IntegrationBlockType.MAKE_COM}
-              onMouseDown={handleMouseDown}
-            />
-
-            <BlockCard
-              type={IntegrationBlockType.PABBLY_CONNECT}
               onMouseDown={handleMouseDown}
             />
           </SimpleGrid>

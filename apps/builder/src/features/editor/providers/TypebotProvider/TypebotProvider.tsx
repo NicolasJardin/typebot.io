@@ -1,4 +1,6 @@
-import { saveWebhookQuery } from '@/features/blocks/integrations/webhook/queries/saveWebhookQuery'
+import { createWebhookQuery } from '@/features/blocks/integrations/webhook/queries/createWebhookQuery'
+import { duplicateWebhookQuery } from '@/features/blocks/integrations/webhook/queries/duplicateWebhookQuery'
+import { updateWebhookQuery } from '@/features/blocks/integrations/webhook/queries/updateWebhookQuery'
 import {
   createPublishedTypebotQuery,
   deletePublishedTypebotQuery,
@@ -26,10 +28,12 @@ import {
   Typebot,
   Webhook,
 } from 'models'
+import { useSession } from 'next-auth/react'
 import { Router, useRouter } from 'next/router'
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -102,7 +106,8 @@ export const TypebotProvider = ({
   children: ReactNode
   typebotId: string
 }) => {
-  const router = useRouter()
+  const { status } = useSession()
+  const { push } = useRouter()
   const { showToast } = useToast()
 
   const { typebot, publishedTypebot, webhooks, isReadOnly, isLoading, mutate } =
@@ -123,16 +128,18 @@ export const TypebotProvider = ({
     },
   ] = useUndo<Typebot | undefined>(undefined)
 
-  const linkedTypebotIds = localTypebot?.groups
-    .flatMap((b) => b.blocks)
-    .reduce<string[]>(
-      (typebotIds, block) =>
-        block.type === LogicBlockType.TYPEBOT_LINK &&
-        isDefined(block.options.typebotId)
-          ? [...typebotIds, block.options.typebotId]
-          : typebotIds,
-      []
-    )
+  const linkedTypebotIds =
+    localTypebot?.groups
+      .flatMap((b) => b.blocks)
+      .reduce<string[]>(
+        (typebotIds, block) =>
+          block.type === LogicBlockType.TYPEBOT_LINK &&
+          isDefined(block.options.typebotId) &&
+          !typebotIds.includes(block.options.typebotId)
+            ? [...typebotIds, block.options.typebotId]
+            : typebotIds,
+        []
+      ) ?? []
 
   const { typebots: linkedTypebots } = useLinkedTypebots({
     workspaceId: localTypebot?.workspaceId ?? undefined,
@@ -151,8 +158,8 @@ export const TypebotProvider = ({
       setLocalTypebot({ ...typebot }, { updateDate: false })
       flush()
     } else if (
-      new Date(typebot.updatedAt) >
-      new Date(currentTypebotRef.current.updatedAt)
+      new Date(typebot.updatedAt).getTime() >
+      new Date(currentTypebotRef.current.updatedAt).getTime()
     ) {
       setLocalTypebot({ ...typebot })
     }
@@ -166,7 +173,11 @@ export const TypebotProvider = ({
     if (dequal(omit(typebot, 'updatedAt'), omit(typebotToSave, 'updatedAt')))
       return
     setIsSavingLoading(true)
-    const { error } = await updateTypebotQuery(typebotToSave.id, typebotToSave)
+    const { data, error } = await updateTypebotQuery(
+      typebotToSave.id,
+      typebotToSave
+    )
+    if (data?.typebot) setLocalTypebot({ ...data.typebot })
     setIsSavingLoading(false)
     if (error) {
       showToast({ title: error.name, description: error.message })
@@ -239,18 +250,18 @@ export const TypebotProvider = ({
   }, [localTypebot])
 
   useEffect(() => {
-    if (isLoading) return
+    if (status !== 'authenticated' || isLoading) return
     if (!typebot) {
       showToast({
         status: 'info',
         description: 'Não foi possível encontrar o typebot',
       })
-      router.replace('/typebots')
+      push('/typebots')
       return
     }
     setLocalTypebot({ ...typebot })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading])
+  }, [status, isLoading])
 
   const updateLocalTypebot = (updates: UpdateTypebotPayload) =>
     localTypebot && setLocalTypebot({ ...localTypebot, ...updates })
@@ -311,20 +322,61 @@ export const TypebotProvider = ({
     return saveTypebot()
   }
 
-  const updateWebhook = async (
-    webhookId: string,
-    updates: Partial<Webhook>
+  const updateWebhook = useCallback(
+    async (webhookId: string, updates: Partial<Webhook>) => {
+      if (!typebot) return
+      const { data } = await updateWebhookQuery({
+        typebotId: typebot.id,
+        webhookId,
+        data: updates,
+      })
+      if (data)
+        mutate({
+          typebot,
+          publishedTypebot,
+          webhooks: (webhooks ?? []).map((w) =>
+            w.id === webhookId ? data.webhook : w
+          ),
+        })
+    },
+    [mutate, publishedTypebot, typebot, webhooks]
+  )
+
+  const createWebhook = async (data: Partial<Webhook>) => {
+    if (!typebot) return
+    const response = await createWebhookQuery({
+      typebotId: typebot.id,
+      data,
+    })
+    if (!response.data?.webhook) return
+    mutate({
+      typebot,
+      publishedTypebot,
+      webhooks: (webhooks ?? []).concat(response.data?.webhook),
+    })
+  }
+
+  const duplicateWebhook = async (
+    existingWebhookId: string,
+    newWebhookId: string
   ) => {
     if (!typebot) return
-    const { data } = await saveWebhookQuery(webhookId, updates)
-    if (data)
-      mutate({
-        typebot,
-        publishedTypebot,
-        webhooks: (webhooks ?? []).map((w) =>
-          w.id === webhookId ? data.webhook : w
-        ),
-      })
+    const newWebhook = await duplicateWebhookQuery({
+      existingIds: {
+        typebotId: typebot.id,
+        webhookId: existingWebhookId,
+      },
+      newIds: {
+        typebotId: typebot.id,
+        webhookId: newWebhookId,
+      },
+    })
+    if (!newWebhook) return
+    mutate({
+      typebot,
+      publishedTypebot,
+      webhooks: (webhooks ?? []).concat(newWebhook),
+    })
   }
 
   return (
@@ -348,8 +400,14 @@ export const TypebotProvider = ({
         updateTypebot: updateLocalTypebot,
         restorePublishedTypebot,
         updateWebhook,
-        ...groupsActions(setLocalTypebot as SetTypebot),
-        ...blocksAction(setLocalTypebot as SetTypebot),
+        ...groupsActions(setLocalTypebot as SetTypebot, {
+          onWebhookBlockCreated: createWebhook,
+          onWebhookBlockDuplicated: duplicateWebhook,
+        }),
+        ...blocksAction(setLocalTypebot as SetTypebot, {
+          onWebhookBlockCreated: createWebhook,
+          onWebhookBlockDuplicated: duplicateWebhook,
+        }),
         ...variablesAction(setLocalTypebot as SetTypebot),
         ...tagsActions(setLocalTypebot as SetTypebot),
         ...edgesAction(setLocalTypebot as SetTypebot),

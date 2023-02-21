@@ -16,7 +16,6 @@ import {
   Block,
   BlockOptions,
   BlockWithOptions,
-  Webhook,
 } from 'models'
 import { useRef } from 'react'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
@@ -44,10 +43,10 @@ import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettin
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
 import TagSettings from '@/features/blocks/logic/tag/components/TagSettings'
+import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
 
 type Props = {
   block: BlockWithOptions
-  webhook?: Webhook
   onExpandClick: () => void
   onBlockChange: (updates: Partial<Block>) => void
 }
@@ -95,7 +94,6 @@ export const BlockSettings = ({
   onBlockChange,
 }: {
   block: BlockWithOptions
-  webhook?: Webhook
   onBlockChange: (block: Partial<Block>) => void
 }): JSX.Element => {
   const handleOptionsChange = (options: BlockOptions) => {
@@ -215,6 +213,14 @@ export const BlockSettings = ({
         />
       )
     }
+    case LogicBlockType.TRANSFER: {
+      return (
+        <TransferSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    }
     case LogicBlockType.WAIT: {
       return (
         <WaitSettings
@@ -224,14 +230,21 @@ export const BlockSettings = ({
       )
     }
 
-    case LogicBlockType.TAG: {
+    case LogicBlockType.TAG:
       return (
         <TagSettings
           options={block.options}
           onOptionsChange={handleOptionsChange}
         />
       )
-    }
+    case LogicBlockType.WAIT_FOR:
+      return (
+        <WaitForSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+
     case IntegrationBlockType.GOOGLE_SHEETS: {
       return (
         <GoogleSheetsSettingsBody
@@ -289,11 +302,4 @@ export const BlockSettings = ({
       )
     }
   }
-
-  return (
-    <TransferSettings
-      options={block.options}
-      onOptionsChange={handleOptionsChange}
-    />
-  )
 }

@@ -21,7 +21,7 @@ const nextConfig = withTM({
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN',
           },
         ],
       },
@@ -40,6 +40,7 @@ module.exports = process.env.NEXT_PUBLIC_SENTRY_DSN
         ...nextConfig,
         sentry: {
           hideSourceMaps: true,
+          widenClientFileUpload: true,
         },
       },
       sentryWebpackPluginOptions

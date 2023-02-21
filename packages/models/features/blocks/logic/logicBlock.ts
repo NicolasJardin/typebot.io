@@ -7,6 +7,7 @@ import { typebotLinkOptionsSchema, typebotLinkBlockSchema } from './typebotLink'
 import { waitBlockSchema, waitOptionsSchema } from './wait'
 import { transferBlockSchema, transferOptionsSchema } from './transfer'
 import { tagBlockSchema, tagOptionsSchema } from './tag'
+import { waitForBlockSchema, waitForOptionsSchema } from './waitFor'
 
 const logicBlockOptionsSchema = scriptOptionsSchema
   .or(redirectOptionsSchema)
@@ -15,6 +16,7 @@ const logicBlockOptionsSchema = scriptOptionsSchema
   .or(waitOptionsSchema)
   .or(transferOptionsSchema)
   .or(tagOptionsSchema)
+  .or(waitForOptionsSchema)
 
 export const logicBlockSchema = scriptBlockSchema
   .or(conditionBlockSchema)
@@ -24,6 +26,7 @@ export const logicBlockSchema = scriptBlockSchema
   .or(waitBlockSchema)
   .or(transferBlockSchema)
   .or(tagBlockSchema)
+  .or(waitForBlockSchema)
 
 export type LogicBlock = z.infer<typeof logicBlockSchema>
 export type LogicBlockOptions = z.infer<typeof logicBlockOptionsSchema>

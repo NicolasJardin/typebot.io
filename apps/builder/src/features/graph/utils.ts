@@ -1,9 +1,11 @@
+import { createId } from '@paralleldrive/cuid2'
 import {
   Block,
   BlockOptions,
   BlockWithOptionsType,
   BubbleBlockContent,
   BubbleBlockType,
+  defaultAudioBubbleContent,
   defaultChatwootOptions,
   defaultChoiceInputOptions,
   defaultConditionContent,
@@ -14,18 +16,22 @@ import {
   defaultGoogleAnalyticsOptions,
   defaultGoogleSheetsOptions,
   defaultImageBubbleContent,
-  defaultAudioBubbleContent,
   defaultNumberInputOptions,
   defaultPaymentInputOptions,
   defaultPhoneInputOptions,
   defaultRatingInputOptions,
   defaultRedirectOptions,
+  defaultScriptOptions,
   defaultSendEmailOptions,
   defaultSetVariablesOptions,
+  defaultTagOptions,
   defaultTextBubbleContent,
   defaultTextInputOptions,
+  defaultTransferOptions,
   defaultUrlInputOptions,
   defaultVideoBubbleContent,
+  defaultWaitForOptions,
+  defaultWaitOptions,
   defaultWebhookOptions,
   DraggableBlock,
   DraggableBlockType,
@@ -36,29 +42,24 @@ import {
   Item,
   ItemType,
   LogicBlockType,
-  defaultWaitOptions,
-  defaultScriptOptions,
-  defaultTransferOptions,
-  defaultTagOptions,
 } from 'models'
-import {
-  stubLength,
-  blockWidth,
-  blockAnchorsOffset,
-  Endpoint,
-  Coordinates,
-} from './providers'
 import { roundCorners } from 'svg-round-corners'
-import { AnchorsPositionProps } from './components/Edges/Edge'
-import cuid from 'cuid'
 import {
-  isBubbleBlockType,
+  blockTypeHasItems,
   blockTypeHasOption,
   blockTypeHasWebhook,
-  blockTypeHasItems,
+  isBubbleBlockType,
   isChoiceInput,
   isConditionBlock,
 } from 'utils'
+import { AnchorsPositionProps } from './components/Edges/Edge'
+import {
+  blockAnchorsOffset,
+  blockWidth,
+  Coordinates,
+  Endpoint,
+  stubLength,
+} from './providers'
 
 const roundSize = 20
 
@@ -361,7 +362,7 @@ export const parseNewBlock = (
   type: DraggableBlockType,
   groupId: string
 ): DraggableBlock => {
-  const id = cuid()
+  const id = createId()
   return {
     id,
     groupId,
@@ -370,7 +371,7 @@ export const parseNewBlock = (
     options: blockTypeHasOption(type)
       ? parseDefaultBlockOptions(type)
       : undefined,
-    webhookId: blockTypeHasWebhook(type) ? cuid() : undefined,
+    webhookId: blockTypeHasWebhook(type) ? createId() : undefined,
     items: blockTypeHasItems(type) ? parseDefaultItems(type, id) : undefined,
   } as DraggableBlock
 }
@@ -381,11 +382,11 @@ const parseDefaultItems = (
 ): Item[] => {
   switch (type) {
     case InputBlockType.CHOICE:
-      return [{ id: cuid(), blockId, type: ItemType.BUTTON }]
+      return [{ id: createId(), blockId, type: ItemType.BUTTON }]
     case LogicBlockType.CONDITION:
       return [
         {
-          id: cuid(),
+          id: createId(),
           blockId,
           type: ItemType.CONDITION,
           content: defaultConditionContent,
@@ -439,6 +440,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultScriptOptions
     case LogicBlockType.WAIT:
       return defaultWaitOptions
+    case LogicBlockType.WAIT_FOR:
+      return defaultWaitForOptions
     case LogicBlockType.TYPEBOT_LINK:
       return {}
     case LogicBlockType.TRANSFER:

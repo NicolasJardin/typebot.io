@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         name: true,
         publishedTypebot: { select: { id: true } },
         id: true,
+        publicId: true,
       },
     })
     return res.send({
@@ -20,6 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         id: typebot.id,
         name: typebot.name,
         publishedTypebotId: typebot.publishedTypebot?.id,
+        publicId: typebot.publicId,
       })),
     })
   }

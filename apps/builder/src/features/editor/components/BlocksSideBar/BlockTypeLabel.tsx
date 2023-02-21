@@ -80,7 +80,7 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
     case LogicBlockType.WAIT:
       return <Text>Digitando</Text>
     case LogicBlockType.TRANSFER:
-      return <Text>Transferência</Text>
+      return <Text>Transferir</Text>
     case LogicBlockType.TAG:
       return <Text>Add tag</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
@@ -108,4 +108,6 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
     case IntegrationBlockType.CHATWOOT:
       return <Text>Chatwoot</Text>
   }
+
+  return <Text>Aguardar</Text>
 }
