@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getAuthenticatedUser } from '@/features/auth/api'
 import { methodNotAllowed, notAuthenticated } from 'utils/api'
 
+// TODO: Delete
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getAuthenticatedUser(req)
   if (!user) return notAuthenticated(res)
@@ -15,7 +16,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       now.getMonth() + 1,
       1
     )
-    const totalChatsUsed = await prisma.$transaction(async (tx) => {
+    const [
+      totalChatsUsed,
+      {
+        _sum: { storageUsed: totalStorageUsed },
+      },
+    ] = await prisma.$transaction(async (tx) => {
       const typebots = await tx.typebot.findMany({
         where: {
           workspace: {
@@ -24,33 +30,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         },
       })
-      return tx.result.count({
-        where: {
-          typebotId: { in: typebots.map((typebot) => typebot.id) },
-          hasStarted: true,
-          createdAt: {
-            gte: firstDayOfMonth,
-            lt: firstDayOfNextMonth,
-          },
-        },
-      })
-    })
-    const {
-      _sum: { storageUsed: totalStorageUsed },
-    } = await prisma.answer.aggregate({
-      where: {
-        storageUsed: { gt: 0 },
-        result: {
-          typebot: {
-            workspace: {
-              id: workspaceId,
-              members: { some: { userId: user.id } },
+
+      return Promise.all([
+        prisma.result.count({
+          where: {
+            typebotId: { in: typebots.map((typebot) => typebot.id) },
+            hasStarted: true,
+            createdAt: {
+              gte: firstDayOfMonth,
+              lt: firstDayOfNextMonth,
             },
           },
-        },
-      },
-      _sum: { storageUsed: true },
+        }),
+        prisma.answer.aggregate({
+          where: {
+            storageUsed: { gt: 0 },
+            result: {
+              typebotId: { in: typebots.map((typebot) => typebot.id) },
+            },
+          },
+          _sum: { storageUsed: true },
+        }),
+      ])
     })
+
     return res.send({
       totalChatsUsed,
       totalStorageUsed,

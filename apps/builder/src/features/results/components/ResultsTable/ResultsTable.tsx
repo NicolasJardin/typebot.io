@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   chakra,
-  Flex,
   HStack,
   Stack,
   Text,
@@ -15,13 +14,12 @@ import { LoadingRows } from './LoadingRows'
 import {
   useReactTable,
   getCoreRowModel,
-  ColumnOrderState,
   ColumnDef,
+  Updater,
 } from '@tanstack/react-table'
-import { ColumnSettingsButton } from './ColumnsSettingsButton'
+import { TableSettingsButton } from './TableSettingsButton'
 import { useTypebot } from '@/features/editor'
-import { useDebounce } from 'use-debounce'
-import { ResultsActionButtons } from './ResultsActionButtons'
+import { SelectionToolbar } from './SelectionToolbar'
 import { Row } from './Row'
 import { HeaderRow } from './HeaderRow'
 import { CellValueType, TableData } from '../../types'
@@ -51,39 +49,55 @@ export const ResultsTable = ({
   const background = useColorModeValue('white', colors.gray[900])
   const { updateTypebot } = useTypebot()
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
-  const [columnsVisibility, setColumnsVisibility] = useState<
-    Record<string, boolean>
-  >(preferences?.columnsVisibility || {})
-  const [columnsWidth, setColumnsWidth] = useState<Record<string, number>>(
-    preferences?.columnsWidth || {}
-  )
-  const [debouncedColumnsWidth] = useDebounce(columnsWidth, 500)
-  const [columnsOrder, setColumnsOrder] = useState<ColumnOrderState>([
-    'select',
-    ...(preferences?.columnsOrder
-      ? resultHeader
-          .map((h) => h.id)
-          .sort(
-            (a, b) =>
-              preferences?.columnsOrder.indexOf(a) -
-              preferences?.columnsOrder.indexOf(b)
-          )
-      : resultHeader.map((h) => h.id)),
-    'logs',
-  ])
-
-  useEffect(() => {
-    updateTypebot({
-      resultsTablePreferences: {
-        columnsVisibility,
-        columnsOrder,
-        columnsWidth: debouncedColumnsWidth,
-      },
-    })
-  }, [columnsOrder, columnsVisibility, debouncedColumnsWidth, updateTypebot])
-
+  const [isTableScrolled, setIsTableScrolled] = useState(false)
   const bottomElement = useRef<HTMLDivElement | null>(null)
   const tableWrapper = useRef<HTMLDivElement | null>(null)
+
+  const {
+    columnsOrder,
+    columnsVisibility = {},
+    columnsWidth = {},
+  } = {
+    ...preferences,
+    columnsOrder: parseColumnOrder(preferences?.columnsOrder, resultHeader),
+  }
+
+  const changeColumnOrder = (newColumnOrder: string[]) => {
+    if (typeof newColumnOrder === 'function') return
+    updateTypebot({
+      resultsTablePreferences: {
+        columnsOrder: newColumnOrder,
+        columnsVisibility,
+        columnsWidth,
+      },
+    })
+  }
+
+  const changeColumnVisibility = (
+    newColumnVisibility: Record<string, boolean>
+  ) => {
+    if (typeof newColumnVisibility === 'function') return
+    updateTypebot({
+      resultsTablePreferences: {
+        columnsVisibility: newColumnVisibility,
+        columnsWidth,
+        columnsOrder,
+      },
+    })
+  }
+
+  const changeColumnSizing = (
+    newColumnSizing: Updater<Record<string, number>>
+  ) => {
+    if (typeof newColumnSizing === 'object') return
+    updateTypebot({
+      resultsTablePreferences: {
+        columnsWidth: newColumnSizing(columnsWidth),
+        columnsVisibility,
+        columnsOrder,
+      },
+    })
+  }
 
   const columns = React.useMemo<ColumnDef<TableData>[]>(
     () => [
@@ -160,9 +174,7 @@ export const ResultsTable = ({
     getRowId: (row) => row.id.plainText,
     columnResizeMode: 'onChange',
     onRowSelectionChange: setRowSelection,
-    onColumnVisibilityChange: setColumnsVisibility,
-    onColumnSizingChange: setColumnsWidth,
-    onColumnOrderChange: setColumnsOrder,
+    onColumnSizingChange: changeColumnSizing,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -174,6 +186,7 @@ export const ResultsTable = ({
     }
     const observer = new IntersectionObserver(handleObserver, options)
     if (bottomElement.current) observer.observe(bottomElement.current)
+
     return () => {
       observer.disconnect()
     }
@@ -186,28 +199,22 @@ export const ResultsTable = ({
   }
 
   return (
-    <Stack
-      maxW="1600px"
-      px="4"
-      overflow="scroll"
-      spacing={6}
-      ref={tableWrapper}
-    >
-      <Flex w="full" justifyContent="flex-end">
-        <ResultsActionButtons
+    <Stack maxW="1600px" px="4" overflowY="hidden" spacing={6}>
+      <HStack w="full" justifyContent="flex-end">
+        <SelectionToolbar
           selectedResultsId={Object.keys(rowSelection)}
           onClearSelection={() => setRowSelection({})}
-          mr="2"
         />
-        <ColumnSettingsButton
+        <TableSettingsButton
           resultHeader={resultHeader}
           columnVisibility={columnsVisibility}
-          setColumnVisibility={setColumnsVisibility}
+          setColumnVisibility={changeColumnVisibility}
           columnOrder={columnsOrder}
-          onColumnOrderChange={instance.setColumnOrder}
+          onColumnOrderChange={changeColumnOrder}
         />
-      </Flex>
+      </HStack>
       <Box
+        ref={tableWrapper}
         overflow="scroll"
         rounded="md"
         data-testid="results-table"
@@ -216,11 +223,18 @@ export const ResultsTable = ({
         backgroundRepeat="no-repeat"
         backgroundSize="30px 100%, 30px 100%, 15px 100%, 15px 100%"
         backgroundAttachment="local, local, scroll, scroll"
+        onScroll={(e) =>
+          setIsTableScrolled((e.target as HTMLElement).scrollTop > 0)
+        }
       >
         <chakra.table rounded="md">
           <thead>
             {instance.getHeaderGroups().map((headerGroup) => (
-              <HeaderRow key={headerGroup.id} headerGroup={headerGroup} />
+              <HeaderRow
+                key={headerGroup.id}
+                headerGroup={headerGroup}
+                isTableScrolled={isTableScrolled}
+              />
             ))}
           </thead>
 
@@ -251,3 +265,17 @@ export const ResultsTable = ({
     </Stack>
   )
 }
+
+const parseColumnOrder = (
+  existingOrder: string[] | undefined,
+  resultHeader: ResultHeaderCell[]
+) =>
+  existingOrder
+    ? [
+        ...existingOrder.slice(0, -1),
+        ...resultHeader
+          .filter((header) => !existingOrder.includes(header.id))
+          .map((h) => h.id),
+        'logs',
+      ]
+    : ['select', ...resultHeader.map((h) => h.id), 'logs']

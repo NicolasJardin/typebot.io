@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test'
-import cuid from 'cuid'
+import { createId } from '@paralleldrive/cuid2'
 import { parse } from 'papaparse'
 import { readFileSync } from 'fs'
 import { isDefined } from 'utils'
@@ -15,7 +15,7 @@ import { Plan } from 'db'
 const THREE_GIGABYTES = 3 * 1024 * 1024 * 1024
 
 test('should work as expected', async ({ page, browser }) => {
-  const typebotId = cuid()
+  const typebotId = createId()
   await importTypebotInDatabase(getTestAsset('typebots/fileUpload.json'), {
     id: typebotId,
     publicId: `${typebotId}-public`,
@@ -48,7 +48,7 @@ test('should work as expected', async ({ page, browser }) => {
   await page.click('[data-testid="checkbox"] >> nth=0')
   const [download] = await Promise.all([
     page.waitForEvent('download'),
-    page.locator('text="Export"').click(),
+    page.getByRole('button', { name: 'Export' }).click(),
   ])
   const downloadPath = await download.path()
   expect(downloadPath).toBeDefined()
@@ -71,16 +71,16 @@ test('should work as expected', async ({ page, browser }) => {
   await page2.goto(urls[0])
   await expect(page2.locator('pre')).toBeVisible()
 
+  page.getByRole('button', { name: 'Delete' }).click()
   await page.locator('button >> text="Delete"').click()
-  await page.locator('button >> text="Delete" >> nth=1').click()
   await expect(page.locator('text="api.json"')).toBeHidden()
   await page2.goto(urls[0])
   await expect(page2.locator('pre')).toBeHidden()
 })
 
 test.describe('Storage limit is reached', () => {
-  const typebotId = cuid()
-  const workspaceId = cuid()
+  const typebotId = createId()
+  const workspaceId = createId()
 
   test.beforeAll(async () => {
     await createWorkspaces([{ id: workspaceId, plan: Plan.STARTER }])

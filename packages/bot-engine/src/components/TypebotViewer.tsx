@@ -74,12 +74,14 @@ export const TypebotViewer = ({
     <Frame
       id="typebot-iframe"
       head={
-        <style>
-          {phoneSyle}
-          {styles}
-          {typebot.theme?.customCss}
-          {importantStyles}
-        </style>
+        <>
+          <style>
+            {phoneSyle}
+            {styles}
+          </style>
+          <style>{typebot.theme?.customCss}</style>
+          <style>{importantStyles}</style>
+        </>
       }
       name="Typebot viewer"
       style={{ width: '100%', height: '100%', border: 'none', ...style }}
@@ -89,7 +91,7 @@ export const TypebotViewer = ({
           dangerouslySetInnerHTML={{
             __html: `@import url('https://fonts.googleapis.com/css2?family=${
               typebot.theme.general.font ?? 'Open Sans'
-            }:wght@300;400;600&display=swap');`,
+            }:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');`,
           }}
         />
       )}

@@ -1,6 +1,6 @@
 import { Input, SmartNumberInput } from '@/components/inputs'
 import { SwitchWithLabel } from '@/components/SwitchWithLabel'
-import { FormControl, FormLabel, HStack, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { isDefined } from '@udecode/plate-common'
 import { SmtpCredentialsData } from 'models'
 import React from 'react'
@@ -73,14 +73,14 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         onCheckChange={handleTlsCheck}
         moreInfoContent="Se ativado, a conexão usará TLS ao se conectar ao servidor. Se desativado, o TLS será usado se o servidor suportar a extensão STARTTLS. Na maioria dos casos, ative-o se estiver se conectando à porta 465. Para a porta 587 ou 25, mantenha-o desativado."
       />
-      <FormControl as={HStack} justifyContent="space-between" isRequired>
-        <FormLabel mb="0">Número da porta:</FormLabel>
-        <SmartNumberInput
-          placeholder="25"
-          value={config.port}
-          onValueChange={handlePortNumberChange}
-        />
-      </FormControl>
+      <SmartNumberInput
+        isRequired
+        label="Número da porta:"
+        placeholder="25"
+        defaultValue={config.port}
+        onValueChange={handlePortNumberChange}
+        withVariableButton={false}
+      />
     </Stack>
   )
 }

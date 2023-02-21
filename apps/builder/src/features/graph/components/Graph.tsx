@@ -12,7 +12,7 @@ import { useTypebot } from '@/features/editor'
 import { DraggableBlockType, PublicTypebot, Typebot } from 'models'
 import { useDebounce } from 'use-debounce'
 import GraphElements from './GraphElements'
-import cuid from 'cuid'
+import { createId } from '@paralleldrive/cuid2'
 import { useUser } from '@/features/account'
 import { ZoomButtons } from './ZoomButtons'
 import { AnswersCount } from '@/features/analytics'
@@ -96,7 +96,7 @@ export const Graph = ({
       { x: e.clientX, y: e.clientY },
       graphPosition
     )
-    const id = cuid()
+    const id = createId()
     updateGroupCoordinates(id, coordinates)
     createGroup({
       id,
@@ -223,7 +223,12 @@ export const Graph = ({
   const zoomOut = () => zoom({ delta: -zoomButtonsScaleBlock })
 
   return (
-    <Flex ref={graphContainerRef} position="relative" {...props}>
+    <Flex
+      ref={graphContainerRef}
+      position="relative"
+      style={{ touchAction: 'none' }}
+      {...props}
+    >
       <ZoomButtons onZoomInClick={zoomIn} onZoomOutClick={zoomOut} />
       <Flex
         flex="1"

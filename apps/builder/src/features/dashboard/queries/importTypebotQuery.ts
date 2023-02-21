@@ -1,5 +1,5 @@
-import { duplicateWebhookQueries } from '@/features/blocks/integrations/webhook'
-import cuid from 'cuid'
+import { duplicateWebhookQuery } from '@/features/blocks/integrations/webhook'
+import { createId } from '@paralleldrive/cuid2'
 import { Plan, Prisma } from 'db'
 import {
   ChoiceInputBlock,
@@ -25,11 +25,13 @@ export const importTypebotQuery = async (typebot: Typebot, userPlan: Plan) => {
     .filter(isWebhookBlock)
   await Promise.all(
     webhookBlocks.map((s) =>
-      duplicateWebhookQueries(
-        newTypebot.id,
-        s.webhookId,
-        webhookIdsMapping.get(s.webhookId) as string
-      )
+      duplicateWebhookQuery({
+        existingIds: { typebotId: typebot.id, webhookId: s.webhookId },
+        newIds: {
+          typebotId: newTypebot.id,
+          webhookId: webhookIdsMapping.get(s.webhookId) as string,
+        },
+      })
     )
   )
   return { data, error }
@@ -50,7 +52,7 @@ const duplicateTypebot = (
       .filter(isWebhookBlock)
       .map((s) => ({ id: s.webhookId }))
   )
-  const id = cuid()
+  const id = createId()
   return {
     typebot: {
       ...typebot,
@@ -131,6 +133,6 @@ const duplicateTypebot = (
 
 const generateOldNewIdsMapping = (itemWithId: { id: string }[]) => {
   const idsMapping: Map<string, string> = new Map()
-  itemWithId.forEach((item) => idsMapping.set(item.id, cuid()))
+  itemWithId.forEach((item) => idsMapping.set(item.id, createId()))
   return idsMapping
 }

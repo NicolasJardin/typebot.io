@@ -13,7 +13,8 @@ import {
 } from 'models'
 import { NextApiRequest, NextApiResponse } from 'next'
 import got, { Method, Headers, HTTPError } from 'got'
-import { byId, omit, parseAnswers } from 'utils'
+import { byId, omit } from 'utils'
+import { parseAnswers } from 'utils/results'
 import { initMiddleware, methodNotAllowed, notFound } from 'utils/api'
 import { stringify } from 'qs'
 import Cors from 'cors'
@@ -142,6 +143,7 @@ export const executeWebhook =
       body: webhook.body,
       resultValues,
       groupId,
+      variables,
     })
     const { data: body, isJson } =
       bodyContent && webhook.method !== HttpMethod.GET
@@ -226,17 +228,22 @@ const getBodyContent =
     body,
     resultValues,
     groupId,
+    variables,
   }: {
     body?: string | null
     resultValues?: ResultValues
     groupId: string
+    variables: Variable[]
   }): Promise<string | undefined> => {
     if (!body) return
     return body === '{{state}}'
       ? JSON.stringify(
           resultValues
             ? parseAnswers(typebot, linkedTypebots)(resultValues)
-            : await parseSampleResult(typebot, linkedTypebots)(groupId)
+            : await parseSampleResult(typebot, linkedTypebots)(
+                groupId,
+                variables
+              )
         )
       : body
   }

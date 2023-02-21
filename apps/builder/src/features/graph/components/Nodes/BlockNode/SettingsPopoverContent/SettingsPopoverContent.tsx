@@ -16,7 +16,6 @@ import {
   Block,
   BlockOptions,
   BlockWithOptions,
-  Webhook,
 } from 'models'
 import { useRef } from 'react'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
@@ -47,7 +46,6 @@ import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForS
 
 type Props = {
   block: BlockWithOptions
-  webhook?: Webhook
   onExpandClick: () => void
   onBlockChange: (updates: Partial<Block>) => void
 }
@@ -95,7 +93,6 @@ export const BlockSettings = ({
   onBlockChange,
 }: {
   block: BlockWithOptions
-  webhook?: Webhook
   onBlockChange: (block: Partial<Block>) => void
 }): JSX.Element => {
   const handleOptionsChange = (options: BlockOptions) => {
