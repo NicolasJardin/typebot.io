@@ -212,6 +212,14 @@ export const BlockSettings = ({
         />
       )
     }
+    case LogicBlockType.TRANSFER: {
+      return (
+        <TransferSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    }
     case LogicBlockType.WAIT: {
       return (
         <WaitSettings
@@ -286,11 +294,4 @@ export const BlockSettings = ({
       )
     }
   }
-
-  return (
-    <TransferSettings
-      options={block.options}
-      onOptionsChange={handleOptionsChange}
-    />
-  )
 }

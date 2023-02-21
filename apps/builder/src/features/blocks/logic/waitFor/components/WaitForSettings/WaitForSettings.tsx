@@ -3,7 +3,7 @@ import { FormControl, FormLabel, Select, Stack } from '@chakra-ui/react'
 import add from 'date-fns/add'
 import set from 'date-fns/set'
 import { WaitForOptions, WaitForTypeEnum } from 'models'
-import { ChangeEvent, useCallback, useMemo } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 
 type Props = {
   options: WaitForOptions
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function WaitForSettings({ options, onOptionsChange }: Props) {
-  const until = useMemo(() => {
+  const getUntil = useCallback((options: WaitForOptions) => {
     let date = new Date()
 
     if (options.type === WaitForTypeEnum.DAY) {
@@ -37,17 +37,17 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
       })
     }
 
-    return date
-  }, [options])
+    return date.toString()
+  }, [])
 
   const handleNumberChange = useCallback(
     (number: string | undefined) =>
       onOptionsChange({
         ...options,
         number,
-        until,
+        until: getUntil({ ...options, number }),
       }),
-    [onOptionsChange, options, until]
+    [onOptionsChange, options, getUntil]
   )
 
   const handleTimeChange = useCallback(
@@ -55,9 +55,9 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
       onOptionsChange({
         ...options,
         time,
-        until,
+        until: getUntil({ ...options, time }),
       }),
-    [onOptionsChange, options, until]
+    [onOptionsChange, options, getUntil]
   )
 
   const handleTypeChange = useCallback(
@@ -65,9 +65,12 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
       onOptionsChange({
         ...options,
         type: e.target.value as WaitForTypeEnum,
-        until,
+        until: getUntil({
+          ...options,
+          type: e.target.value as WaitForTypeEnum,
+        }),
       }),
-    [onOptionsChange, options, until]
+    [onOptionsChange, options, getUntil]
   )
 
   return (

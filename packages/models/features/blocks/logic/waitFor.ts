@@ -12,7 +12,7 @@ export const waitForOptionsSchema = z.object({
   type: z
     .enum([WaitForTypeEnum.DAY, WaitForTypeEnum.HOUR])
     .default(WaitForTypeEnum.HOUR),
-  until: z.date().optional(),
+  until: z.string().optional(),
   time: z.string().optional(),
 })
 
