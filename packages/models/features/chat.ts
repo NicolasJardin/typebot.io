@@ -4,6 +4,7 @@ import {
   inputBlockSchema,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
+  WaitForTypeEnum,
 } from './blocks'
 import { publicTypebotSchema } from './publicTypebot'
 import { ChatSession as ChatSessionPrisma } from 'db'
@@ -210,6 +211,15 @@ const clientSideActionSchema = z
             departmentId: z.string().optional(),
             attendantId: z.string().optional(),
             message: z.string(),
+          }),
+        })
+      )
+      .or(
+        z.object({
+          waitFor: z.object({
+            number: z.number(),
+            type: z.enum([WaitForTypeEnum.DAY, WaitForTypeEnum.HOUR]),
+            until: z.date().optional(),
           }),
         })
       )

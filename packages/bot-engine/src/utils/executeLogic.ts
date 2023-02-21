@@ -32,5 +32,7 @@ export const executeLogic = async (
       return { nextEdgeId: await executeWait(block, context) }
     case LogicBlockType.TRANSFER:
       return { nextEdgeId: block.outgoingEdgeId }
+    case LogicBlockType.WAIT_FOR:
+      return { nextEdgeId: block.outgoingEdgeId }
   }
 }

@@ -7,6 +7,7 @@ import { LogicBlock, LogicBlockType, SessionState } from 'models'
 import { ExecuteLogicResponse } from '../../types'
 import { executeScript } from '@/features/blocks/logic/script/executeScript'
 import { executeTransfer } from '@/features/blocks/logic/transfer/api/utils/executeTransfer'
+import { executeWaitFor } from '@/features/blocks/logic/waitFor/api/executeWaitFor'
 
 export const executeLogic =
   (state: SessionState, lastBubbleBlockId?: string) =>
@@ -26,5 +27,7 @@ export const executeLogic =
         return executeWait(state, block, lastBubbleBlockId)
       case LogicBlockType.TRANSFER:
         return executeTransfer(state, block, lastBubbleBlockId)
+      case LogicBlockType.WAIT_FOR:
+        return executeWaitFor(state, block, lastBubbleBlockId)
     }
   }

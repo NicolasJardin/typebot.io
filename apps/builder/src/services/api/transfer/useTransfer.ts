@@ -1,16 +1,23 @@
 import { useCallback } from 'react'
-import axios from 'axios'
-import { Department } from '../interfaces/Department'
-import { Attendant } from '../interfaces/Attendant'
+import { instance } from '../base/instance'
+import { AttendantGetResponse } from './interfaces/AttendantGetResponse'
+import { DepartmentGetResponse } from './interfaces/DepartmentGetResponse'
 
 export default function useTransfer() {
   const getDepartments = useCallback(
-    async () => (await axios.get<Department[]>('/rota')).data,
+    async () =>
+      (await instance.get<DepartmentGetResponse[]>('ts-api/servicesector/list'))
+        .data,
     []
   )
 
   const getAttendants = useCallback(
-    async () => (await axios.get<Attendant[]>('/rota')).data,
+    async () =>
+      (
+        await instance.get<AttendantGetResponse[]>(
+          'attendantController/listOfDatatableAttendants'
+        )
+      ).data,
     []
   )
 

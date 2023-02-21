@@ -85,6 +85,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
       return <ScriptIcon {...props} />
     case LogicBlockType.WAIT:
       return <WaitIcon color={purple} {...props} />
+    case LogicBlockType.WAIT_FOR:
+      return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TRANSFER:
       return <CreditCardIcon color={purple} {...props} />
     case LogicBlockType.TYPEBOT_LINK:

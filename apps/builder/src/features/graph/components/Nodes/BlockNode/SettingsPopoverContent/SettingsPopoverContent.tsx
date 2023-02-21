@@ -42,6 +42,7 @@ import { HelpDocButton } from './HelpDocButton'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
+import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -211,9 +212,26 @@ export const BlockSettings = ({
         />
       )
     }
+    case LogicBlockType.TRANSFER: {
+      return (
+        <TransferSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    }
     case LogicBlockType.WAIT: {
       return (
         <WaitSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    }
+
+    case LogicBlockType.WAIT_FOR: {
+      return (
+        <WaitForSettings
           options={block.options}
           onOptionsChange={handleOptionsChange}
         />
@@ -276,11 +294,4 @@ export const BlockSettings = ({
       )
     }
   }
-
-  return (
-    <TransferSettings
-      options={block.options}
-      onOptionsChange={handleOptionsChange}
-    />
-  )
 }

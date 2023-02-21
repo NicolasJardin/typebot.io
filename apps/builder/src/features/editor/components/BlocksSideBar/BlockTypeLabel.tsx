@@ -106,4 +106,6 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
     case IntegrationBlockType.CHATWOOT:
       return <Text>Chatwoot</Text>
   }
+
+  return <Text>Aguardar</Text>
 }

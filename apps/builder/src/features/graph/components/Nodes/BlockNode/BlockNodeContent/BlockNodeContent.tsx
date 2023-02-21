@@ -39,6 +39,7 @@ import { AudioBubbleNode } from '@/features/blocks/bubbles/audio'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
 import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
+import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -122,9 +123,11 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
         />
       )
     }
-    case LogicBlockType.WAIT: {
+    case LogicBlockType.WAIT:
       return <WaitNodeContent options={block.options} />
-    }
+
+    case LogicBlockType.WAIT_FOR:
+      return <WaitForNodeContent options={block.options} />
 
     case LogicBlockType.TRANSFER:
       return <TransferNodeContent />
