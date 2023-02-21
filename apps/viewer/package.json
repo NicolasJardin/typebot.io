@@ -13,6 +13,9 @@
     "test:report": "pnpm playwright show-report"
   },
   "dependencies": {
+    "@babel/core": "7.20.12",
+    "@babel/preset-typescript": "^7.21.0",
+    "@paralleldrive/cuid2": "2.0.1",
     "@sentry/nextjs": "7.36.0",
     "@trpc/server": "10.9.0",
     "@typebot.io/js": "workspace:*",
@@ -20,7 +23,6 @@
     "aws-sdk": "2.1304.0",
     "bot-engine": "workspace:*",
     "cors": "2.8.5",
-    "@paralleldrive/cuid2": "2.0.1",
     "db": "workspace:*",
     "google-spreadsheet": "3.3.0",
     "got": "12.5.3",
