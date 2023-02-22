@@ -161,6 +161,7 @@ model Typebot {
   folderId                String?
   groups                  Json
   variables               Json
+  tags                    Json                      @default("[]")
   edges                   Json
   theme                   Json
   settings                Json
@@ -259,7 +260,6 @@ model Answer {
 
   @@unique([resultId, blockId, groupId])
   @@index([groupId])
-  @@index([storageUsed])
 }
 
 model Coupon {
