@@ -459,6 +459,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
     case IntegrationBlockType.CHATWOOT:
       return defaultChatwootOptions
   }
+
+  return {}
 }
 
 export const hasDefaultConnector = (block: Block) =>
