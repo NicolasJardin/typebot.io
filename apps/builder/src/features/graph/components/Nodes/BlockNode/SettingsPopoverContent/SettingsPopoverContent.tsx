@@ -17,7 +17,7 @@ import {
   BlockOptions,
   BlockWithOptions,
 } from 'models'
-import { useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
 import { EmailInputSettingsBody } from '@/features/blocks/inputs/emailInput'
 import { FileInputSettings } from '@/features/blocks/inputs/fileUpload'
@@ -237,6 +237,9 @@ export const BlockSettings = ({
         />
       )
     }
+    case LogicBlockType.END:
+      return <Fragment />
+
     case IntegrationBlockType.GOOGLE_SHEETS: {
       return (
         <GoogleSheetsSettingsBody

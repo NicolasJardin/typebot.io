@@ -7,4 +7,5 @@ export enum LogicBlockType {
   WAIT = 'Wait',
   TRANSFER = 'Transfer',
   WAIT_FOR = 'Wait for',
+  END = 'End',
 }

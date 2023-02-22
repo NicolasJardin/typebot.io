@@ -11,6 +11,7 @@ importers:
       mjml-react: ^2.0.8
       react: ^18.2.0
       react-dom: ^18.2.0
+      react-icons: ^4.7.1
       turbo: 1.8.1
       uglify-js: ^3.17.4
     dependencies:
@@ -18,6 +19,7 @@ importers:
       mjml-react: 2.0.8_7tbcn2mecc3yvuxakflodiks3m
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-icons: 4.7.1_react@18.2.0
       uglify-js: 3.17.4
     devDependencies:
       cross-env: 7.0.3
@@ -19125,6 +19127,14 @@ packages:
       hotkeys-js: 3.9.4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-inspector/6.0.1_react@18.2.0:
