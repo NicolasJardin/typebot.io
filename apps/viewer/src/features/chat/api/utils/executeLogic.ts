@@ -29,5 +29,7 @@ export const executeLogic =
         return executeTransfer(state, block, lastBubbleBlockId)
       case LogicBlockType.WAIT_FOR:
         return executeWaitFor(state, block, lastBubbleBlockId)
+      case LogicBlockType.TAG:
+        return { outgoingEdgeId: block.outgoingEdgeId }
     }
   }
