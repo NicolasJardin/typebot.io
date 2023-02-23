@@ -40,6 +40,7 @@ import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNod
 import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
 import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
+import EndNodeContent from '@/features/blocks/logic/end/components/EndNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -134,6 +135,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />
+
+    case LogicBlockType.END:
+      return <EndNodeContent />
 
     case IntegrationBlockType.GOOGLE_SHEETS: {
       return (

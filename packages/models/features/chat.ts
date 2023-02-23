@@ -223,6 +223,11 @@ const clientSideActionSchema = z
           }),
         })
       )
+      .or(
+        z.object({
+          end: z.boolean(),
+        })
+      )
   )
 
 export const chatReplySchema = z.object({

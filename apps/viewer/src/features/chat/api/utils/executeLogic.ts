@@ -1,13 +1,14 @@
 import { executeCondition } from '@/features/blocks/logic/condition/api'
+import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
 import { executeRedirect } from '@/features/blocks/logic/redirect/api'
+import { executeScript } from '@/features/blocks/logic/script/executeScript'
 import { executeSetVariable } from '@/features/blocks/logic/setVariable/api'
+import { executeTransfer } from '@/features/blocks/logic/transfer/api/utils/executeTransfer'
 import { executeTypebotLink } from '@/features/blocks/logic/typebotLink/api'
 import { executeWait } from '@/features/blocks/logic/wait/api/utils/executeWait'
+import { executeWaitFor } from '@/features/blocks/logic/waitFor/api/executeWaitFor'
 import { LogicBlock, LogicBlockType, SessionState } from 'models'
 import { ExecuteLogicResponse } from '../../types'
-import { executeScript } from '@/features/blocks/logic/script/executeScript'
-import { executeTransfer } from '@/features/blocks/logic/transfer/api/utils/executeTransfer'
-import { executeWaitFor } from '@/features/blocks/logic/waitFor/api/executeWaitFor'
 
 export const executeLogic =
   (state: SessionState, lastBubbleBlockId?: string) =>
@@ -29,5 +30,7 @@ export const executeLogic =
         return executeTransfer(state, block, lastBubbleBlockId)
       case LogicBlockType.WAIT_FOR:
         return executeWaitFor(state, block, lastBubbleBlockId)
+      case LogicBlockType.END:
+        return executeEnd(block, lastBubbleBlockId)
     }
   }

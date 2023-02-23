@@ -194,6 +194,11 @@ export const BlocksSideBar = () => {
               type={LogicBlockType.TRANSFER}
               onMouseDown={handleMouseDown}
             />
+
+            <BlockCard
+              type={LogicBlockType.END}
+              onMouseDown={handleMouseDown}
+            />
           </SimpleGrid>
         </Stack>
 
