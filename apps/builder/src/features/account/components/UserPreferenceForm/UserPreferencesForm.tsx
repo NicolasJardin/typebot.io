@@ -26,14 +26,14 @@ export const UserPreferencesForm = () => {
   return (
     <Stack spacing={12}>
       <Stack spacing={6}>
-        <Heading size="md">Editor Navigation</Heading>
+        <Heading size="md">Navegação do editor</Heading>
         <GraphNavigationRadioGroup
           defaultValue={user?.graphNavigation ?? GraphNavigation.TRACKPAD}
           onChange={changeGraphNavigation}
         />
       </Stack>
       <Stack spacing={6}>
-        <Heading size="md">Appearance</Heading>
+        <Heading size="md">Aparência</Heading>
         <AppearanceRadioGroup
           defaultValue={
             user?.preferredAppAppearance
