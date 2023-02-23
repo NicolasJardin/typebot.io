@@ -16,6 +16,7 @@ import {
   Block,
   BlockOptions,
   BlockWithOptions,
+  BubbleBlockType,
 } from 'models'
 import { Fragment, useRef } from 'react'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
@@ -43,6 +44,7 @@ import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettin
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
+import ButtonSettings from '@/features/blocks/bubbles/button/components/ButtonSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -100,6 +102,15 @@ export const BlockSettings = ({
   }
 
   switch (block.type) {
+    case BubbleBlockType.BUTTON:
+      return (
+        <></>
+        // <ButtonSettings
+        //   options={block.}
+        //   onOptionsChange={handleOptionsChange}
+        // />
+      )
+
     case InputBlockType.TEXT: {
       return (
         <TextInputSettingsBody

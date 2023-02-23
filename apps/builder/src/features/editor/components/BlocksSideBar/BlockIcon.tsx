@@ -38,6 +38,7 @@ import {
 } from 'models'
 import { BiShuffle } from 'react-icons/bi'
 import { BsDoorClosed } from 'react-icons/bs'
+import { FaRegHandPointUp } from 'react-icons/fa'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
@@ -55,7 +56,9 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
     case BubbleBlockType.EMBED:
       return <EmbedBubbleIcon color={blue} {...props} />
     case BubbleBlockType.AUDIO:
-      return <AudioBubbleIcon color={blue} {...props} />
+      return <EmbedBubbleIcon color={blue} {...props} />
+    case BubbleBlockType.BUTTON:
+      return <Icon as={FaRegHandPointUp} color={blue} {...props} />
     case InputBlockType.TEXT:
       return <TextInputIcon color={orange} {...props} />
     case InputBlockType.NUMBER:

@@ -41,6 +41,7 @@ import { ScriptNodeContent } from '@/features/blocks/logic/script/components/Scr
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
 import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
 import EndNodeContent from '@/features/blocks/logic/end/components/EndNodeContent'
+import ButtonNodeContent from '@/features/blocks/bubbles/button/components/ButtonNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -74,6 +75,8 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case BubbleBlockType.AUDIO: {
       return <AudioBubbleNode url={block.content.url} />
     }
+    case BubbleBlockType.BUTTON:
+      return <ButtonNodeContent />
     case InputBlockType.TEXT: {
       return (
         <TextInputNodeContent

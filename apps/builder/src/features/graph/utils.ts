@@ -59,6 +59,7 @@ import {
   isChoiceInput,
   isConditionBlock,
 } from 'utils'
+import { defaultButtonBubbleContent } from 'models/features/blocks/bubbles/button'
 
 const roundSize = 20
 
@@ -406,6 +407,8 @@ const parseDefaultContent = (type: BubbleBlockType): BubbleBlockContent => {
       return defaultEmbedBubbleContent
     case BubbleBlockType.AUDIO:
       return defaultAudioBubbleContent
+    case BubbleBlockType.BUTTON:
+      return defaultButtonBubbleContent
   }
 }
 
