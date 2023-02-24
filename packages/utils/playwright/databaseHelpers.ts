@@ -29,6 +29,7 @@ export const parseTestTypebot = (
   isArchived: false,
   isClosed: false,
   resultsTablePreferences: null,
+  tags: [{ id: 'tag1', name: 'tag1' }],
   variables: [{ id: 'var1', name: 'var1' }],
   ...partialTypebot,
   edges: [
@@ -67,6 +68,7 @@ export const parseTypebotToPublicTypebot = (
   theme: typebot.theme,
   settings: typebot.settings,
   variables: typebot.variables,
+  tags: typebot.tags,
   edges: typebot.edges,
 })
 

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { answerInputSchema, answerSchema } from './answer'
 import { InputBlockType } from './blocks'
 import { variableWithValueSchema } from './typebot/variable'
+import { tagSchema } from './typebot/tag'
 import { Result as ResultPrisma, Log as LogPrisma } from 'db'
 import { schemaForType } from './utils'
 
@@ -12,6 +13,7 @@ export const resultSchema = schemaForType<ResultPrisma>()(
     updatedAt: z.date(),
     typebotId: z.string(),
     variables: z.array(variableWithValueSchema),
+    tags: z.array(tagSchema),
     isCompleted: z.boolean(),
     hasStarted: z.boolean().nullable(),
     isArchived: z.boolean().nullable(),
