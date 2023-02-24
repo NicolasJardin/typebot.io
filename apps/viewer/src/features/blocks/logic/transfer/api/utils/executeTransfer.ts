@@ -7,20 +7,20 @@ export const executeTransfer = async (
   block: TransferBlock,
   lastBubbleBlockId?: string
 ): Promise<ExecuteLogicResponse> => {
-  if (!block.options?.departmentId && !block.options?.attendantId)
+  if (!block.options?.department.id && !block.options?.attendant.id)
     return { outgoingEdgeId: block.outgoingEdgeId }
 
   const parsedMessage = parseVariables(variables)(block.options?.message)
 
   const getTransfer = () => {
-    if (block.options?.attendantId)
+    if (block.options?.attendant.id)
       return {
-        attendantId: block.options?.attendantId,
+        attendantId: block.options?.attendant.id,
         message: parsedMessage,
       }
 
     return {
-      departmentId: block.options?.departmentId,
+      departmentId: block.options?.department.id,
       message: parsedMessage,
     }
   }
@@ -28,7 +28,7 @@ export const executeTransfer = async (
   return {
     outgoingEdgeId: block.outgoingEdgeId,
     clientSideActions:
-      block.options?.attendantId || block.options?.departmentId
+      block.options?.attendant.id || block.options?.department.id
         ? [
             {
               transfer: getTransfer(),

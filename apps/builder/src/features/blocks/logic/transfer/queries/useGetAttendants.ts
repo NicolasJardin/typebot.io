@@ -1,14 +1,24 @@
 import useTransferFormatter from '@/services/api/transfer/hooks/useTransferFormatter'
 import { Attendant } from '@/services/api/transfer/interfaces/Attendant'
-import useTransfer from '@/services/api/transfer/useTransfer'
+import { AttendantGetResponse } from '@/services/api/transfer/interfaces/AttendantGetResponse'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { sendRequest } from 'utils'
 
 type Data = Attendant[]
 type UseGetAttendantsOptions = UseQueryOptions<Data>
 
 export default function useGetAttendants(options?: UseGetAttendantsOptions) {
-  const { getAttendants } = useTransfer()
+  const getAttendants = useCallback(
+    async () =>
+      (
+        await sendRequest<AttendantGetResponse>({
+          url: `/api/whatsflow/attendants`,
+          method: 'GET',
+        })
+      ).data,
+    []
+  )
 
   const { formatAttendants } = useTransferFormatter()
 

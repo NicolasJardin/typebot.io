@@ -11,6 +11,7 @@ export const bubbleBlockContentSchema = textBubbleContentSchema
   .or(videoBubbleContentSchema)
   .or(embedBubbleContentSchema)
   .or(audioBubbleContentSchema)
+  .or(buttonOptionsSchema)
 
 export const bubbleBlockSchema = textBubbleBlockSchema
   .or(imageBubbleBlockSchema)

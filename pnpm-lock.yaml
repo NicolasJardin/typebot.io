@@ -91,6 +91,7 @@ importers:
       canvas-confetti: 1.6.0
       chakra-react-select: ^4.4.3
       codemirror: 6.0.1
+      cookies-next: ^2.1.1
       cuid: 3.0.0
       date-fns: ^2.29.3
       db: workspace:*
@@ -110,6 +111,7 @@ importers:
       immer: 9.0.19
       js-video-url-parser: 0.5.1
       jsonwebtoken: 9.0.0
+      jwt-decode: ^3.1.2
       micro: 10.0.1
       micro-cors: 0.1.1
       minio: 7.0.32
@@ -189,6 +191,7 @@ importers:
       canvas-confetti: 1.6.0
       chakra-react-select: 4.4.3_4osbpvrpiiexqthjrhzizxdeze
       codemirror: 6.0.1
+      cookies-next: 2.1.1
       cuid: 3.0.0
       date-fns: 2.29.3
       deep-object-diff: 1.1.9
@@ -204,6 +207,7 @@ importers:
       immer: 9.0.19
       js-video-url-parser: 0.5.1
       jsonwebtoken: 9.0.0
+      jwt-decode: 3.1.2
       micro: 10.0.1
       micro-cors: 0.1.1
       minio: 7.0.32
@@ -8057,6 +8061,10 @@ packages:
       '@types/node': 18.14.0
     dev: false
 
+  /@types/cookie/0.4.1:
+    resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
+    dev: false
+
   /@types/cors/2.8.13:
     resolution: {integrity: sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==}
     dependencies:
@@ -8249,6 +8257,10 @@ packages:
 
   /@types/ms/0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
+    dev: false
+
+  /@types/node/16.18.12:
+    resolution: {integrity: sha512-vzLe5NaNMjIE3mcddFVGlAXN1LEWueUsMsOJWaT6wWMJGyljHAWHznqfnKUQWGzu7TLPrGvWdNAsvQYW+C0xtw==}
     dev: false
 
   /@types/node/17.0.45:
@@ -10890,6 +10902,14 @@ packages:
 
   /cookiejar/2.1.4:
     resolution: {integrity: sha512-LDx6oHrK+PhzLKJU9j5S7/Y3jM/mUHvD/DeI1WQmJn652iPC5Y4TBzC9l+5OMOXlyTTA+SmVUPm0HQUwpD5Jqw==}
+    dev: false
+
+  /cookies-next/2.1.1:
+    resolution: {integrity: sha512-AZGZPdL1hU3jCjN2UMJTGhLOYzNUN9Gm+v8BdptYIHUdwz397Et1p+sZRfvAl8pKnnmMdX2Pk9xDRKCGBum6GA==}
+    dependencies:
+      '@types/cookie': 0.4.1
+      '@types/node': 16.18.12
+      cookie: 0.4.2
     dev: false
 
   /cookies/0.8.0:
@@ -15677,6 +15697,10 @@ packages:
     dependencies:
       jwa: 2.0.0
       safe-buffer: 5.2.1
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /kebab-case/1.0.2:
     resolution: {integrity: sha512-7n6wXq4gNgBELfDCpzKc+mRrZFs7D+wgfF5WRFLNAr4DA/qtr9Js8uOAVAfHhuLMfAcQ0pRKqbpjx+TcJVdE1Q==}
