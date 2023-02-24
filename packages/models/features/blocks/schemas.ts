@@ -1,6 +1,10 @@
 import { z } from 'zod'
 import { BubbleBlockType } from './bubbles/enums'
-import { BubbleBlock, bubbleBlockSchema } from './bubbles/schemas'
+import {
+  BubbleBlock,
+  bubbleBlockSchema,
+  BubbleOptions,
+} from './bubbles/schemas'
 import { ChoiceInputBlock } from './inputs/choice'
 import { InputBlockType } from './inputs/enums'
 import {
@@ -59,6 +63,7 @@ export type BlockOptions =
   | InputBlockOptions
   | LogicBlockOptions
   | IntegrationBlockOptions
+  | BubbleOptions
 
 export type BlockWithItems = ConditionBlock | ChoiceInputBlock
 

@@ -20,5 +20,8 @@ export const bubbleBlockSchema = textBubbleBlockSchema
   .or(audioBubbleBlockSchema)
   .or(buttonBlockSchema)
 
+export const bubbleBlockOptions = buttonOptionsSchema
+
 export type BubbleBlock = z.infer<typeof bubbleBlockSchema>
 export type BubbleBlockContent = z.infer<typeof bubbleBlockContentSchema>
+export type BubbleOptions = z.infer<typeof bubbleBlockOptions>

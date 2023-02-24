@@ -118,7 +118,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Bolhas
+            Enviar
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -150,7 +150,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Entradas
+            Receber
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard

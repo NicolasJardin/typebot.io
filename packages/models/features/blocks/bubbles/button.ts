@@ -10,7 +10,7 @@ export const buttonOptionsSchema = z.object({
 export const buttonBlockSchema = blockBaseSchema.and(
   z.object({
     type: z.enum([BubbleBlockType.BUTTON]),
-    content: buttonOptionsSchema,
+    options: buttonOptionsSchema,
   })
 )
 
