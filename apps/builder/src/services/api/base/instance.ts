@@ -9,9 +9,9 @@ const token =
   typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt).token : undefined
 
 export const instance = axios.create({
-  baseURL: 'https://app.whatsflow.com.br/v1/',
-  withCredentials: true,
+  baseURL: 'https://api.whatsflow.com.br/v1/',
   headers: {
     Authorization: token ? `Bearer ${token}` : undefined,
+    'Content-Type': 'application/json',
   },
 })

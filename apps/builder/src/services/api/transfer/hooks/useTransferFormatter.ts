@@ -6,24 +6,24 @@ import { DepartmentGetResponse } from '../interfaces/DepartmentGetResponse'
 
 export default function useTransferFormatter() {
   const formatDepartments = useCallback<
-    (response: DepartmentGetResponse[]) => Department[]
+    (response: DepartmentGetResponse | undefined) => Department[]
   >(
     (response) =>
-      response.map((data) => ({
+      response?.sectors.map((data) => ({
         id: data.uuid,
         name: data.sector,
-      })),
+      })) || [],
     []
   )
 
   const formatAttendants = useCallback<
-    (response: AttendantGetResponse[]) => Attendant[]
+    (response: AttendantGetResponse | undefined) => Attendant[]
   >(
     (response) =>
-      response.map((data) => ({
-        id: data.uuid,
-        name: data.nome,
-      })),
+      response?.attendants.map((data) => ({
+        id: data.user_uuid,
+        name: data.user_name,
+      })) || [],
     []
   )
 

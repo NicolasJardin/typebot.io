@@ -1,14 +1,24 @@
 import useTransferFormatter from '@/services/api/transfer/hooks/useTransferFormatter'
 import { Department } from '@/services/api/transfer/interfaces/Department'
-import useTransfer from '@/services/api/transfer/useTransfer'
+import { DepartmentGetResponse } from '@/services/api/transfer/interfaces/DepartmentGetResponse'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { sendRequest } from 'utils'
 
 type Data = Department[]
 type UseGetDepartmentsOptions = UseQueryOptions<Data>
 
 export default function useGetDepartments(options?: UseGetDepartmentsOptions) {
-  const { getDepartments } = useTransfer()
+  const getDepartments = useCallback(
+    async () =>
+      (
+        await sendRequest<DepartmentGetResponse>({
+          url: `/api/whatsflow/sectors`,
+          method: 'GET',
+        })
+      ).data,
+    []
+  )
 
   const { formatDepartments } = useTransferFormatter()
 
