@@ -104,11 +104,10 @@ export const BlockSettings = ({
   switch (block.type) {
     case BubbleBlockType.BUTTON:
       return (
-        <></>
-        // <ButtonSettings
-        //   options={block.}
-        //   onOptionsChange={handleOptionsChange}
-        // />
+        <ButtonSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
       )
 
     case InputBlockType.TEXT: {

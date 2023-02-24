@@ -118,6 +118,7 @@ export const blockTypeHasOption = (
   (Object.values(InputBlockType) as string[])
     .concat(Object.values(LogicBlockType))
     .concat(Object.values(IntegrationBlockType))
+    .concat([BubbleBlockType.BUTTON])
     .includes(type)
 
 export const blockTypeHasWebhook = (

@@ -76,7 +76,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
       return <AudioBubbleNode url={block.content.url} />
     }
     case BubbleBlockType.BUTTON:
-      return <ButtonNodeContent />
+      return <ButtonNodeContent options={block.options} />
     case InputBlockType.TEXT: {
       return (
         <TextInputNodeContent

@@ -11,7 +11,6 @@ export const bubbleBlockContentSchema = textBubbleContentSchema
   .or(videoBubbleContentSchema)
   .or(embedBubbleContentSchema)
   .or(audioBubbleContentSchema)
-  .or(buttonOptionsSchema)
 
 export const bubbleBlockSchema = textBubbleBlockSchema
   .or(imageBubbleBlockSchema)
@@ -20,5 +19,8 @@ export const bubbleBlockSchema = textBubbleBlockSchema
   .or(audioBubbleBlockSchema)
   .or(buttonBlockSchema)
 
+export const bubbleBlockOptions = buttonOptionsSchema
+
 export type BubbleBlock = z.infer<typeof bubbleBlockSchema>
 export type BubbleBlockContent = z.infer<typeof bubbleBlockContentSchema>
+export type BubbleOptions = z.infer<typeof bubbleBlockOptions>
