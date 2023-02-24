@@ -46,7 +46,6 @@ import { blocksAction, BlocksActions } from './actions/blocks'
 import { edgesAction, EdgesActions } from './actions/edges'
 import { GroupsActions, groupsActions } from './actions/groups'
 import { itemsAction, ItemsActions } from './actions/items'
-import { TagsActions, tagsActions } from './actions/tags'
 import { variablesAction, VariablesActions } from './actions/variables'
 
 const autoSaveTimeout = 10000
@@ -93,8 +92,7 @@ const typebotContext = createContext<
     BlocksActions &
     ItemsActions &
     VariablesActions &
-    EdgesActions &
-    TagsActions
+    EdgesActions
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
 >({})
@@ -409,7 +407,6 @@ export const TypebotProvider = ({
           onWebhookBlockDuplicated: duplicateWebhook,
         }),
         ...variablesAction(setLocalTypebot as SetTypebot),
-        ...tagsActions(setLocalTypebot as SetTypebot),
         ...edgesAction(setLocalTypebot as SetTypebot),
         ...itemsAction(setLocalTypebot as SetTypebot),
       }}

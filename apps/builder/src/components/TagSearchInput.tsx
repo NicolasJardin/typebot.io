@@ -1,26 +1,24 @@
+import { EditIcon, PlusIcon, TrashIcon } from '@/components/icons'
+import { useParentModal } from '@/features/graph/providers/ParentModalProvider'
+import { useOutsideClick } from '@/hooks/useOutsideClick'
 import {
-  useDisclosure,
-  Flex,
-  Popover,
-  Input,
-  PopoverContent,
   Button,
-  InputProps,
-  IconButton,
+  Flex,
   HStack,
-  useColorModeValue,
+  IconButton,
+  Input,
+  InputProps,
+  Popover,
   PopoverAnchor,
+  PopoverContent,
   Portal,
   Tag as TagComponent,
+  useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { EditIcon, PlusIcon, TrashIcon } from '@/components/icons'
-import { useTypebot } from '@/features/editor/providers/TypebotProvider/TypebotProvider'
 import cuid from 'cuid'
-import { Tag } from 'models'
-import React, { useState, useRef, ChangeEvent, useEffect } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { byId, isDefined, isNotDefined } from 'utils'
-import { useOutsideClick } from '@/hooks/useOutsideClick'
-import { useParentModal } from '@/features/graph/providers/ParentModalProvider'
 
 type Props = {
   initialTagId?: string
@@ -36,8 +34,6 @@ export const TagSearchInput = ({
 }: Props) => {
   const bg = useColorModeValue('gray.200', 'gray.700')
   const { onOpen, onClose, isOpen } = useDisclosure()
-  const { typebot, createTag, updateTag, deleteTag } = useTypebot()
-  const tags = typebot?.tags ?? []
   const [inputValue, setInputValue] = useState(
     tags.find(byId(initialTagId))?.name ?? ''
   )
