@@ -1,5 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import { TransferOptions } from 'models'
+import { useMemo } from 'react'
 
 type TransferNodeContentProps = {
   options: TransferOptions
@@ -8,5 +9,14 @@ type TransferNodeContentProps = {
 export default function TransferNodeContent({
   options,
 }: TransferNodeContentProps) {
-  return <Text color={'gray.500'}>Transferir</Text>
+  const name = useMemo(
+    () => options.attendant.name || options.department.name,
+    [options]
+  )
+
+  return (
+    <Text color={name ? '' : 'gray.500'}>
+      Transferir {name ? `para ${name}` : ''}
+    </Text>
+  )
 }

@@ -134,7 +134,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
       return <WaitForNodeContent options={block.options} />
 
     case LogicBlockType.TRANSFER:
-      return <TransferNodeContent />
+      return <TransferNodeContent options={block.options} />
 
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />
