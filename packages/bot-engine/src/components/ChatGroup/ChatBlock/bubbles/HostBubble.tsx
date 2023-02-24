@@ -28,4 +28,6 @@ export const HostBubble = ({ block, onTransitionEnd }: Props) => {
         />
       )
   }
+
+  return <></>
 }
