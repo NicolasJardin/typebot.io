@@ -49,7 +49,6 @@ export const parseNewTypebot = ({
   }
   return {
     folderId,
-    tags: [],
     name,
     workspaceId,
     groups: [startGroup],
