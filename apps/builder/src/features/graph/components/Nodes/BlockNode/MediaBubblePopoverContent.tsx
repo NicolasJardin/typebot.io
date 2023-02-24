@@ -84,4 +84,6 @@ export const MediaBubbleContent = ({
       )
     }
   }
+
+  return <></>
 }

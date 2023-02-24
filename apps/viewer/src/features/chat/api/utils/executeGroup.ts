@@ -2,6 +2,7 @@ import { deepParseVariable } from '@/features/variables'
 import {
   BubbleBlock,
   BubbleBlockType,
+  ButtonBlock,
   ChatReply,
   Group,
   InputBlock,
@@ -20,6 +21,7 @@ import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
 import { executeIntegration } from './executeIntegration'
 import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/api'
+import { executeBubble } from './executeBubble'
 
 export const executeGroup =
   (state: SessionState, currentReply?: ChatReply) =>
@@ -38,11 +40,12 @@ export const executeGroup =
     for (const block of group.blocks) {
       nextEdgeId = block.outgoingEdgeId
 
-      if (isBubbleBlock(block)) {
+      if (isBubbleBlock(block) && block.type !== BubbleBlockType.BUTTON) {
         messages.push(
           parseBubbleBlock(newSessionState.typebot.variables)(block)
         )
         lastBubbleBlockId = block.id
+
         continue
       }
 
@@ -66,11 +69,14 @@ export const executeGroup =
           clientSideActions,
           logs,
         }
-      const executionResponse = isLogicBlock(block)
-        ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
-        : isIntegrationBlock(block)
-        ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
-        : null
+      const executionResponse =
+        block.type === BubbleBlockType.BUTTON
+          ? await executeBubble(newSessionState, lastBubbleBlockId)(block)
+          : isLogicBlock(block)
+          ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
+          : isIntegrationBlock(block)
+          ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
+          : null
 
       if (!executionResponse) continue
       if (
@@ -131,7 +137,7 @@ const getPrefilledInputValue =
 
 const parseBubbleBlock =
   (variables: SessionState['typebot']['variables']) =>
-  (block: BubbleBlock): ChatReply['messages'][0] => {
+  (block: Exclude<BubbleBlock, ButtonBlock>): ChatReply['messages'][0] => {
     switch (block.type) {
       case BubbleBlockType.EMBED: {
         const message = deepParseVariable(variables)(block)

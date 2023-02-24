@@ -228,6 +228,14 @@ const clientSideActionSchema = z
           end: z.boolean(),
         })
       )
+      .or(
+        z.object({
+          button: z.object({
+            title: z.string(),
+            url: z.string(),
+          }),
+        })
+      )
   )
 
 export const chatReplySchema = z.object({
