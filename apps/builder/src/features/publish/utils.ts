@@ -17,7 +17,6 @@ export const parsePublicTypebotToTypebot = (
   settings: typebot.settings,
   theme: typebot.theme,
   variables: typebot.variables,
-  tags: typebot.tags,
   customDomain: existingTypebot.customDomain,
   createdAt: existingTypebot.createdAt,
   updatedAt: existingTypebot.updatedAt,
@@ -39,7 +38,6 @@ export const parseTypebotToPublicTypebot = (
   settings: typebot.settings,
   theme: typebot.theme,
   variables: typebot.variables,
-  tags: typebot.tags,
   createdAt: new Date(),
   updatedAt: new Date(),
 })

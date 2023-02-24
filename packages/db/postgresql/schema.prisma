@@ -161,7 +161,6 @@ model Typebot {
   folderId                String?
   groups                  Json
   variables               Json
-  tags                    Json                      @default("[]")
   edges                   Json
   theme                   Json
   settings                Json
@@ -213,7 +212,6 @@ model PublicTypebot {
   typebotId String   @unique
   groups    Json
   variables Json
-  tags      Json     @default("[]")
   edges     Json
   theme     Json
   settings  Json
@@ -226,7 +224,6 @@ model Result {
   updatedAt   DateTime @default(now()) @updatedAt
   typebotId   String
   variables   Json
-  tags        Json     @default("[]")
   isCompleted Boolean
   hasStarted  Boolean?
   isArchived  Boolean? @default(false)
@@ -262,6 +259,7 @@ model Answer {
 
   @@unique([resultId, blockId, groupId])
   @@index([groupId])
+  @@index([storageUsed])
 }
 
 model Coupon {
