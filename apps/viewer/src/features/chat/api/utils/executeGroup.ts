@@ -2,6 +2,7 @@ import { deepParseVariable } from '@/features/variables'
 import {
   BubbleBlock,
   BubbleBlockType,
+  ButtonBlock,
   ChatReply,
   Group,
   InputBlock,
@@ -136,12 +137,8 @@ const getPrefilledInputValue =
 
 const parseBubbleBlock =
   (variables: SessionState['typebot']['variables']) =>
-  (block: BubbleBlock): ChatReply['messages'][0] => {
+  (block: Exclude<BubbleBlock, ButtonBlock>): ChatReply['messages'][0] => {
     switch (block.type) {
-      case BubbleBlockType.BUTTON: {
-        return variables
-      }
-
       case BubbleBlockType.EMBED: {
         const message = deepParseVariable(variables)(block)
         return {
