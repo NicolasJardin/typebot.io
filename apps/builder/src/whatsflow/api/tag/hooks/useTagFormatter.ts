@@ -6,9 +6,9 @@ export default function useTagFormatter() {
   const format = useCallback<(response: TagGetResponse | undefined) => Tag[]>(
     (response) =>
       response?.tags.map((data) => ({
-        id: data.tagId,
-        name: data.tagName,
-        color: data.tagColor,
+        id: data.uuid,
+        name: data.title,
+        color: data.color,
       })) || [],
     []
   )

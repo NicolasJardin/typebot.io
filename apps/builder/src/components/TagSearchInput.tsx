@@ -1,43 +1,54 @@
-import { EditIcon, PlusIcon, TrashIcon } from '@/components/icons'
+import { PlusIcon } from '@/components/icons'
 import { useParentModal } from '@/features/graph/providers/ParentModalProvider'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
+import { Tag } from '@/whatsflow/api/tag/interfaces/domain/Tag'
+import useCreateTag from '@/whatsflow/api/tag/mutations/useCreateTag'
+import useGetTags from '@/whatsflow/api/tag/queries/useGetTags'
 import {
   Button,
   Flex,
-  HStack,
-  IconButton,
   Input,
+  InputGroup,
   InputProps,
+  InputRightElement,
   Popover,
   PopoverAnchor,
   PopoverContent,
   Portal,
+  Spinner,
   Tag as TagComponent,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import cuid from 'cuid'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { byId, isDefined, isNotDefined } from 'utils'
+import { TagOptions } from 'models'
+import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { isDefined, isNotDefined } from 'utils'
 
 type Props = {
-  initialTagId?: string
+  defaultTagName?: string
   autoFocus?: boolean
-  onSelectTag: (tag: Pick<Tag, 'id' | 'name'>) => void
+  onSelectTag: (tag: TagOptions) => void
 } & InputProps
 
 export const TagSearchInput = ({
-  initialTagId,
   onSelectTag,
   autoFocus,
+  defaultTagName,
   ...inputProps
 }: Props) => {
+  const { data, refetch, isFetching } = useGetTags()
+  const { mutateAsync: createTag } = useCreateTag({
+    onSuccess: () => {
+      refetch()
+    },
+  })
+
+  const tags = useMemo(() => data || [], [data])
+
   const bg = useColorModeValue('gray.200', 'gray.700')
   const { onOpen, onClose, isOpen } = useDisclosure()
-  const [inputValue, setInputValue] = useState(
-    tags.find(byId(initialTagId))?.name ?? ''
-  )
-  const [filteredItems, setFilteredItems] = useState<Tag[]>(tags ?? [])
+  const [inputValue, setInputValue] = useState(defaultTagName)
+  const [filteredItems, setFilteredItems] = useState<Tag[]>(tags)
   const [keyboardFocusIndex, setKeyboardFocusIndex] = useState<
     number | undefined
   >()
@@ -83,37 +94,17 @@ export const TagSearchInput = ({
 
   const handleCreateNewTagClick = () => {
     if (!inputValue || inputValue === '') return
-    const id = 'v' + cuid()
-    onSelectTag({ id, name: inputValue })
-    createTag({ id, name: inputValue })
+    onSelectTag({ name: inputValue })
+    createTag({ name: inputValue, color: '#808080' })
     inputRef.current?.blur()
     onClose()
   }
 
-  const handleDeleteTagClick = (tag: Tag) => (e: React.MouseEvent) => {
-    e.stopPropagation()
-    deleteTag(tag.id)
-    setFilteredItems(filteredItems.filter((item) => item.id !== tag.id))
-    if (tag.name === inputValue) {
-      setInputValue('')
-    }
-  }
-
-  const handleRenameTagClick = (tag: Tag) => (e: React.MouseEvent) => {
-    e.stopPropagation()
-    const name = prompt('Renomear tag', tag.name)
-    if (!name) return
-    updateTag(tag.id, { name })
-    setFilteredItems(
-      filteredItems.map((item) =>
-        item.id === tag.id ? { ...item, name } : item
-      )
-    )
-  }
-
   const isCreateTagButtonDisplayed =
     (inputValue?.length ?? 0) > 0 &&
-    isNotDefined(tags.find((v) => v.name === inputValue))
+    isNotDefined(
+      tags.find((v) => v.name.toLowerCase() === inputValue?.toLowerCase())
+    )
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && isDefined(keyboardFocusIndex)) {
@@ -148,6 +139,10 @@ export const TagSearchInput = ({
     return setKeyboardFocusIndex(undefined)
   }
 
+  useEffect(() => {
+    setFilteredItems(tags)
+  }, [tags])
+
   return (
     <Flex ref={dropdownRef} w="full">
       <Popover
@@ -158,16 +153,24 @@ export const TagSearchInput = ({
         offset={[0, 2]}
       >
         <PopoverAnchor>
-          <Input
-            data-testid="tags-input"
-            ref={inputRef}
-            value={inputValue}
-            onChange={onInputChange}
-            onFocus={onOpen}
-            onKeyUp={handleKeyUp}
-            placeholder={inputProps.placeholder ?? 'Selecione uma tag'}
-            {...inputProps}
-          />
+          <InputGroup>
+            <Input
+              data-testid="tags-input"
+              ref={inputRef}
+              value={inputValue}
+              onChange={onInputChange}
+              onFocus={onOpen}
+              onKeyUp={handleKeyUp}
+              placeholder={inputProps.placeholder ?? 'Selecione uma tag'}
+              {...inputProps}
+            />
+
+            {isFetching && (
+              <InputRightElement>
+                <Spinner speed="0.7s" size="sm" />
+              </InputRightElement>
+            )}
+          </InputGroup>
         </PopoverAnchor>
         <Portal containerRef={parentModalRef}>
           <PopoverContent
@@ -222,20 +225,6 @@ export const TagSearchInput = ({
                       }
                     >
                       {item.name}
-                      <HStack>
-                        <IconButton
-                          icon={<EditIcon />}
-                          aria-label="Renomear tag"
-                          size="xs"
-                          onClick={handleRenameTagClick(item)}
-                        />
-                        <IconButton
-                          icon={<TrashIcon />}
-                          aria-label="Remover tag"
-                          size="xs"
-                          onClick={handleDeleteTagClick(item)}
-                        />
-                      </HStack>
                     </Button>
                   )
                 })}

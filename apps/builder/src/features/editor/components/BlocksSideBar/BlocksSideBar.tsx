@@ -76,7 +76,7 @@ export const BlocksSideBar = () => {
 
   return (
     <Flex
-      w="360px"
+      w="370px"
       pos="absolute"
       left="0"
       h={`calc(100vh - ${headerHeight}px)`}

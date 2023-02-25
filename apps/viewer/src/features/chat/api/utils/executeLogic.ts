@@ -1,4 +1,5 @@
 import { executeCondition } from '@/features/blocks/logic/condition/api'
+import { executeCreateTag } from '@/features/blocks/logic/createTag/api/executeCreateTag'
 import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
 import { executeRedirect } from '@/features/blocks/logic/redirect/api'
 import { executeScript } from '@/features/blocks/logic/script/executeScript'
@@ -30,9 +31,8 @@ export const executeLogic =
         return executeTransfer(state, block, lastBubbleBlockId)
       case LogicBlockType.WAIT_FOR:
         return executeWaitFor(state, block, lastBubbleBlockId)
-      //TODO execute das tags
       case LogicBlockType.TAG:
-        return { outgoingEdgeId: block.outgoingEdgeId }
+        return executeCreateTag(block, lastBubbleBlockId)
       case LogicBlockType.END:
         return executeEnd(block, lastBubbleBlockId)
     }

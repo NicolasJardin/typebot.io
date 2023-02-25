@@ -1,8 +1,11 @@
 export interface TagGetResponse {
   status: string
   tags: {
-    tagId: string
-    tagName: string
-    tagColor: string
+    color: string
+    countContacts: number
+    createdAt: string
+    title: string
+    type: null
+    uuid: string
   }[]
 }

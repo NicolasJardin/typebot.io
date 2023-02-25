@@ -84,7 +84,7 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
     case LogicBlockType.TRANSFER:
       return <Text>Transferir</Text>
     case LogicBlockType.TAG:
-      return <Text>Add tag</Text>
+      return <Text>Criar tag</Text>
     case LogicBlockType.END:
       return <Text>Fim</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
