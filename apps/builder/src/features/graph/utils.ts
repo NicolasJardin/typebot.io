@@ -1,9 +1,11 @@
+import { createId } from '@paralleldrive/cuid2'
 import {
   Block,
   BlockOptions,
   BlockWithOptionsType,
   BubbleBlockContent,
   BubbleBlockType,
+  defaultAudioBubbleContent,
   defaultChatwootOptions,
   defaultChoiceInputOptions,
   defaultConditionContent,
@@ -14,18 +16,23 @@ import {
   defaultGoogleAnalyticsOptions,
   defaultGoogleSheetsOptions,
   defaultImageBubbleContent,
-  defaultAudioBubbleContent,
   defaultNumberInputOptions,
   defaultPaymentInputOptions,
   defaultPhoneInputOptions,
   defaultRatingInputOptions,
   defaultRedirectOptions,
+  defaultRemoveTagOptions,
+  defaultScriptOptions,
   defaultSendEmailOptions,
   defaultSetVariablesOptions,
+  defaultTagOptions,
   defaultTextBubbleContent,
   defaultTextInputOptions,
+  defaultTransferOptions,
   defaultUrlInputOptions,
   defaultVideoBubbleContent,
+  defaultWaitForOptions,
+  defaultWaitOptions,
   defaultWebhookOptions,
   DraggableBlock,
   DraggableBlockType,
@@ -36,30 +43,25 @@ import {
   Item,
   ItemType,
   LogicBlockType,
-  defaultWaitOptions,
-  defaultScriptOptions,
-  defaultTransferOptions,
-  defaultWaitForOptions,
 } from 'models'
-import {
-  stubLength,
-  blockWidth,
-  blockAnchorsOffset,
-  Endpoint,
-  Coordinates,
-} from './providers'
+import { defaultButtonBubbleContent } from 'models/features/blocks/bubbles/button'
 import { roundCorners } from 'svg-round-corners'
-import { AnchorsPositionProps } from './components/Edges/Edge'
-import { createId } from '@paralleldrive/cuid2'
 import {
-  isBubbleBlockType,
+  blockTypeHasItems,
   blockTypeHasOption,
   blockTypeHasWebhook,
-  blockTypeHasItems,
+  isBubbleBlockType,
   isChoiceInput,
   isConditionBlock,
 } from 'utils'
-import { defaultButtonBubbleContent } from 'models/features/blocks/bubbles/button'
+import { AnchorsPositionProps } from './components/Edges/Edge'
+import {
+  blockAnchorsOffset,
+  blockWidth,
+  Coordinates,
+  Endpoint,
+  stubLength,
+} from './providers'
 
 const roundSize = 20
 
@@ -448,6 +450,10 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return {}
     case LogicBlockType.TRANSFER:
       return defaultTransferOptions
+    case LogicBlockType.TAG:
+      return defaultTagOptions
+    case LogicBlockType.REMOVE_TAG:
+      return defaultRemoveTagOptions
     case IntegrationBlockType.GOOGLE_SHEETS:
       return defaultGoogleSheetsOptions
     case IntegrationBlockType.GOOGLE_ANALYTICS:

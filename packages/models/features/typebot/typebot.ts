@@ -1,10 +1,10 @@
+import { Typebot as TypebotPrisma } from 'db'
 import { z } from 'zod'
-import { settingsSchema } from './settings'
 import { blockSchema } from '../blocks'
+import { schemaForType } from '../utils'
+import { settingsSchema } from './settings'
 import { themeSchema } from './theme'
 import { variableSchema } from './variable'
-import { Typebot as TypebotPrisma } from 'db'
-import { schemaForType } from '../utils'
 
 export const groupSchema = z.object({
   id: z.string(),

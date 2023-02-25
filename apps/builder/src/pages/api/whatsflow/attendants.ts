@@ -1,6 +1,6 @@
-import { instance } from '@/services/api/base/instance'
-import { AuthJwt } from '@/services/api/base/interfaces/AuthJwt'
-import { AttendantGetResponse } from '@/services/api/transfer/interfaces/AttendantGetResponse'
+import { instance } from '@/whatsflow/api/base/instance'
+import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
+import { AttendantGetResponse } from '@/whatsflow/api/transfer/interfaces/AttendantGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
 

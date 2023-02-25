@@ -1,24 +1,6 @@
-import {
-  PopoverContent,
-  PopoverArrow,
-  PopoverBody,
-  useEventListener,
-  Portal,
-  IconButton,
-  HStack,
-  Stack,
-} from '@chakra-ui/react'
 import { ExpandIcon } from '@/components/icons'
-import {
-  InputBlockType,
-  IntegrationBlockType,
-  LogicBlockType,
-  Block,
-  BlockOptions,
-  BlockWithOptions,
-  BubbleBlockType,
-} from 'models'
-import { Fragment, useRef } from 'react'
+import ButtonSettings from '@/features/blocks/bubbles/button/components/ButtonSettings'
+import { ButtonsOptionsForm } from '@/features/blocks/inputs/buttons'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
 import { EmailInputSettingsBody } from '@/features/blocks/inputs/emailInput'
 import { FileInputSettings } from '@/features/blocks/inputs/fileUpload'
@@ -28,23 +10,43 @@ import { PhoneNumberSettingsBody } from '@/features/blocks/inputs/phone'
 import { RatingInputSettings } from '@/features/blocks/inputs/rating'
 import { TextInputSettingsBody } from '@/features/blocks/inputs/textInput'
 import { UrlInputSettingsBody } from '@/features/blocks/inputs/url'
+import { ChatwootSettingsForm } from '@/features/blocks/integrations/chatwoot'
 import { GoogleAnalyticsSettings } from '@/features/blocks/integrations/googleAnalytics'
 import { GoogleSheetsSettingsBody } from '@/features/blocks/integrations/googleSheets'
+import { MakeComSettings } from '@/features/blocks/integrations/makeCom'
 import { SendEmailSettings } from '@/features/blocks/integrations/sendEmail'
 import { WebhookSettings } from '@/features/blocks/integrations/webhook'
 import { ZapierSettings } from '@/features/blocks/integrations/zapier'
 import { RedirectSettings } from '@/features/blocks/logic/redirect'
-import { SetVariableSettings } from '@/features/blocks/logic/setVariable'
-import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink'
-import { ButtonsOptionsForm } from '@/features/blocks/inputs/buttons'
-import { ChatwootSettingsForm } from '@/features/blocks/integrations/chatwoot'
-import { MakeComSettings } from '@/features/blocks/integrations/makeCom'
-import { HelpDocButton } from './HelpDocButton'
-import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
+import RemoveTagSettings from '@/features/blocks/logic/removeTag/components/RemoveTagSettings'
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
+import { SetVariableSettings } from '@/features/blocks/logic/setVariable'
+import TagSettings from '@/features/blocks/logic/tag/components/TagSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
+import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink'
+import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
-import ButtonSettings from '@/features/blocks/bubbles/button/components/ButtonSettings'
+import {
+  HStack,
+  IconButton,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  Portal,
+  Stack,
+  useEventListener,
+} from '@chakra-ui/react'
+import {
+  Block,
+  BlockOptions,
+  BlockWithOptions,
+  BubbleBlockType,
+  InputBlockType,
+  IntegrationBlockType,
+  LogicBlockType,
+} from 'models'
+import { Fragment, useRef } from 'react'
+import { HelpDocButton } from './HelpDocButton'
 
 type Props = {
   block: BlockWithOptions
@@ -239,14 +241,29 @@ export const BlockSettings = ({
       )
     }
 
-    case LogicBlockType.WAIT_FOR: {
+    case LogicBlockType.TAG:
+      return (
+        <TagSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+
+    case LogicBlockType.REMOVE_TAG:
+      return (
+        <RemoveTagSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    case LogicBlockType.WAIT_FOR:
       return (
         <WaitForSettings
           options={block.options}
           onOptionsChange={handleOptionsChange}
         />
       )
-    }
+
     case LogicBlockType.END:
       return <Fragment />
 

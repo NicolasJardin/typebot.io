@@ -1,6 +1,6 @@
-import { instance } from '@/services/api/base/instance'
-import { AuthJwt } from '@/services/api/base/interfaces/AuthJwt'
-import { DepartmentGetResponse } from '@/services/api/transfer/interfaces/DepartmentGetResponse'
+import { instance } from '@/whatsflow/api/base/instance'
+import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
+import { DepartmentGetResponse } from '@/whatsflow/api/transfer/interfaces/DepartmentGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -21,7 +21,6 @@ export default async function handler(
         headers: jwtDecoded
           ? {
               Authorization: `Bearer ${jwtDecoded.token}`,
-              'Content-Type': 'application/json',
             }
           : undefined,
       })

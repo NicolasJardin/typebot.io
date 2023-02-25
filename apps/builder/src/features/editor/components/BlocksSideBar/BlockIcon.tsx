@@ -1,5 +1,4 @@
 import { FlagIcon } from '@/components/icons'
-import { AudioBubbleIcon } from '@/features/blocks/bubbles/audio'
 import { EmbedBubbleIcon } from '@/features/blocks/bubbles/embed'
 import { ImageBubbleIcon } from '@/features/blocks/bubbles/image'
 import { TextBubbleIcon } from '@/features/blocks/bubbles/textBubble'
@@ -36,6 +35,7 @@ import {
   IntegrationBlockType,
   LogicBlockType,
 } from 'models'
+import { AiOutlineDelete, AiOutlineTag } from 'react-icons/ai'
 import { BiShuffle } from 'react-icons/bi'
 import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
@@ -89,6 +89,10 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
       return <ScriptIcon {...props} />
     case LogicBlockType.WAIT:
       return <WaitIcon color={purple} {...props} />
+    case LogicBlockType.TAG:
+      return <Icon as={AiOutlineTag} color={purple} {...props} />
+    case LogicBlockType.REMOVE_TAG:
+      return <Icon as={AiOutlineDelete} color={purple} {...props} />
     case LogicBlockType.WAIT_FOR:
       return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TRANSFER:

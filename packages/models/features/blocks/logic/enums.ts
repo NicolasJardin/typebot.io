@@ -6,6 +6,8 @@ export enum LogicBlockType {
   TYPEBOT_LINK = 'Typebot link',
   WAIT = 'Wait',
   TRANSFER = 'Transfer',
+  TAG = 'Tag',
+  REMOVE_TAG = 'Remove tag',
   WAIT_FOR = 'Wait for',
   END = 'End',
 }
