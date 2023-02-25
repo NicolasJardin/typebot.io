@@ -14,17 +14,17 @@ import systemModeIllustration from 'public/images/system-mode.png'
 const appearanceData = [
   {
     value: 'light',
-    label: 'Light',
+    label: 'Claro',
     image: lightModeIllustration,
   },
   {
     value: 'dark',
-    label: 'Dark',
+    label: 'Escuro',
     image: darkModeIllustration,
   },
   {
     value: 'system',
-    label: 'System',
+    label: 'Sistema',
     image: systemModeIllustration,
   },
 ]

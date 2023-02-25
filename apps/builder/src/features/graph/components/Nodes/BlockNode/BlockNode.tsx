@@ -17,6 +17,7 @@ import {
   TextBubbleContent,
   TextBubbleBlock,
   LogicBlockType,
+  BubbleBlockType,
 } from 'models'
 import { isBubbleBlock, isTextBubbleBlock } from 'utils'
 import { BlockNodeContent } from './BlockNodeContent/BlockNodeContent'
@@ -266,9 +267,13 @@ export const BlockNode = ({
 }
 
 const hasSettingsPopover = (block: Block): block is BlockWithOptions =>
-  !isBubbleBlock(block) && block.type !== LogicBlockType.CONDITION
+  (!isBubbleBlock(block) || block.type === BubbleBlockType.BUTTON) &&
+  block.type !== LogicBlockType.CONDITION &&
+  block.type !== LogicBlockType.END
 
 const isMediaBubbleBlock = (
   block: Block
 ): block is Exclude<BubbleBlock, TextBubbleBlock> =>
-  isBubbleBlock(block) && !isTextBubbleBlock(block)
+  isBubbleBlock(block) &&
+  !isTextBubbleBlock(block) &&
+  block.type !== BubbleBlockType.BUTTON

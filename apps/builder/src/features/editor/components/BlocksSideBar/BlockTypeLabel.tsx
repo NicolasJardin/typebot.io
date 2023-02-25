@@ -34,6 +34,8 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
       )
     case BubbleBlockType.AUDIO:
       return <Text>Audio</Text>
+    case BubbleBlockType.BUTTON:
+      return <Text>Botão</Text>
     case InputBlockType.NUMBER:
       return <Text>Número</Text>
     case InputBlockType.EMAIL:
@@ -83,6 +85,8 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
       return <Text>Transferir</Text>
     case LogicBlockType.TAG:
       return <Text>Add tag</Text>
+    case LogicBlockType.END:
+      return <Text>Fim</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
       return (
         <Tooltip label="Planilhas Google">

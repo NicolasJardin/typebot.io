@@ -70,7 +70,7 @@ export const ChooseEmbedTypeList = ({
         <BubbleEmbedSvg />
         <Stack>
           <Text fontSize="lg" fontWeight="semibold">
-            Bolhas
+            Enviar
           </Text>
           <Text textColor="gray.500">
             Incorpore em um balão de bate-papo no canto do seu site

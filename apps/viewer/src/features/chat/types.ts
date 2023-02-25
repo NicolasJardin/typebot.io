@@ -11,3 +11,8 @@ export type ExecuteIntegrationResponse = {
   outgoingEdgeId: EdgeId | undefined
   newSessionState?: SessionState
 } & Pick<ChatReply, 'clientSideActions' | 'logs'>
+
+export type ExecuteBubbleResponse = {
+  outgoingEdgeId: EdgeId | undefined
+  newSessionState?: SessionState
+} & Pick<ChatReply, 'clientSideActions' | 'logs'>

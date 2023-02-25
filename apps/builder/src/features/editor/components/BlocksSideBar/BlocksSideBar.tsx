@@ -118,7 +118,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Bolhas
+            Enviar
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -140,12 +140,17 @@ export const BlocksSideBar = () => {
               type={BubbleBlockType.AUDIO}
               onMouseDown={handleMouseDown}
             />
+
+            <BlockCard
+              type={BubbleBlockType.BUTTON}
+              onMouseDown={handleMouseDown}
+            />
           </SimpleGrid>
         </Stack>
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Entradas
+            Receber
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -197,6 +202,11 @@ export const BlocksSideBar = () => {
 
             <BlockCard
               type={LogicBlockType.TRANSFER}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
+              type={LogicBlockType.END}
               onMouseDown={handleMouseDown}
             />
           </SimpleGrid>

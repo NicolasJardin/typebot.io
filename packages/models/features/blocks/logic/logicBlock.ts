@@ -8,6 +8,7 @@ import { waitBlockSchema, waitOptionsSchema } from './wait'
 import { transferBlockSchema, transferOptionsSchema } from './transfer'
 import { tagBlockSchema, tagOptionsSchema } from './tag'
 import { waitForBlockSchema, waitForOptionsSchema } from './waitFor'
+import { endBlockSchema } from './end'
 
 const logicBlockOptionsSchema = scriptOptionsSchema
   .or(redirectOptionsSchema)
@@ -27,6 +28,7 @@ export const logicBlockSchema = scriptBlockSchema
   .or(transferBlockSchema)
   .or(tagBlockSchema)
   .or(waitForBlockSchema)
+  .or(endBlockSchema)
 
 export type LogicBlock = z.infer<typeof logicBlockSchema>
 export type LogicBlockOptions = z.infer<typeof logicBlockOptionsSchema>

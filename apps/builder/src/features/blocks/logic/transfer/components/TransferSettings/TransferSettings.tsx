@@ -13,7 +13,7 @@ import useGetAttendants from '../../queries/useGetAttendants'
 import useGetDepartments from '../../queries/useGetDepartments'
 
 type TransferSettingsProps = {
-  options: TransferOptions | undefined
+  options: TransferOptions
   onOptionsChange: (options: TransferOptions) => void
 }
 
@@ -23,13 +23,13 @@ export default function TransferSettings({
 }: TransferSettingsProps) {
   const { showToast } = useToast()
 
-  const [selectedDepartmentId, setSelectedDepartmentId] = useState<
-    string | undefined
-  >(options?.departmentId)
+  const [selectedDepartment, setSelectedDepartment] = useState<
+    TransferOptions['department'] | undefined
+  >(options.department)
 
-  const [selectedAttendantId, setSelectedAttendantId] = useState<
-    string | undefined
-  >(options?.attendantId)
+  const [selectedAttendant, setSelectedAttendant] = useState<
+    TransferOptions['attendant'] | undefined
+  >(options?.attendant)
 
   const { data: departments, isFetching: isFetchingDepartments } =
     useGetDepartments({
@@ -49,22 +49,56 @@ export default function TransferSettings({
       },
     })
 
-  const handleDepartmentChange = useCallback(
+  const handleDepartmentIdChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) =>
       onOptionsChange({
         ...options,
-        departmentId: e.target.value,
-        attendantId: '',
+        department: {
+          ...options?.department,
+          id: e.target.value,
+        },
+        attendant: {
+          id: '',
+        },
       }),
     [onOptionsChange, options]
   )
 
-  const handleAttendantChange = useCallback(
+  const handleDepartmentNameChange = useCallback(
+    (name: string) =>
+      onOptionsChange({
+        ...options,
+        department: {
+          ...options?.department,
+          name,
+        },
+      }),
+    [onOptionsChange, options]
+  )
+
+  const handleAttendantIdChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) =>
       onOptionsChange({
         ...options,
-        attendantId: e.target.value,
-        departmentId: '',
+        attendant: {
+          ...options?.attendant,
+          id: e.target.value,
+        },
+        department: {
+          id: '',
+        },
+      }),
+    [onOptionsChange, options]
+  )
+
+  const handleAttendantNameChange = useCallback(
+    (name: string) =>
+      onOptionsChange({
+        ...options,
+        attendant: {
+          ...options?.attendant,
+          name,
+        },
       }),
     [onOptionsChange, options]
   )
@@ -74,12 +108,24 @@ export default function TransferSettings({
   }
 
   useEffect(() => {
-    setSelectedDepartmentId(options?.departmentId)
-  }, [options?.departmentId])
+    setSelectedDepartment(options?.department)
+
+    const departmentName = departments?.find(
+      ({ id }) => id === options.department.id
+    )?.name
+
+    if (departmentName) handleDepartmentNameChange(departmentName)
+  }, [options?.department, departments, handleDepartmentNameChange])
 
   useEffect(() => {
-    setSelectedAttendantId(options?.attendantId)
-  }, [options?.attendantId])
+    setSelectedAttendant(options?.attendant)
+
+    const attendantName = attendants?.find(
+      ({ id }) => id === options.attendant.id
+    )?.name
+
+    if (attendantName) handleAttendantNameChange(attendantName)
+  }, [options?.attendant, attendants, handleAttendantNameChange])
 
   return (
     <Stack spacing={4}>
@@ -87,8 +133,8 @@ export default function TransferSettings({
         <FormLabel>Setor:</FormLabel>
         <Select
           placeholder="Selecione um setor"
-          value={selectedDepartmentId}
-          onChange={handleDepartmentChange}
+          value={selectedDepartment?.id}
+          onChange={handleDepartmentIdChange}
           icon={isFetchingDepartments ? <Spinner speed="0.7s" /> : undefined}
         >
           {departments?.map((department) => (
@@ -103,8 +149,8 @@ export default function TransferSettings({
         <FormLabel>Atendente:</FormLabel>
         <Select
           placeholder="Selecione um atendente"
-          value={selectedAttendantId}
-          onChange={handleAttendantChange}
+          value={selectedAttendant?.id}
+          onChange={handleAttendantIdChange}
           icon={isFetchingAttendants ? <Spinner speed="0.7s" /> : undefined}
         >
           {attendants?.map((attendant) => (

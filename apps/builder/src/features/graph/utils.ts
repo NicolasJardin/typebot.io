@@ -43,6 +43,7 @@ import {
   ItemType,
   LogicBlockType,
 } from 'models'
+import { defaultButtonBubbleContent } from 'models/features/blocks/bubbles/button'
 import { roundCorners } from 'svg-round-corners'
 import {
   blockTypeHasItems,
@@ -407,6 +408,8 @@ const parseDefaultContent = (type: BubbleBlockType): BubbleBlockContent => {
       return defaultEmbedBubbleContent
     case BubbleBlockType.AUDIO:
       return defaultAudioBubbleContent
+    case BubbleBlockType.BUTTON:
+      return defaultButtonBubbleContent
   }
 }
 
@@ -462,6 +465,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
     case IntegrationBlockType.CHATWOOT:
       return defaultChatwootOptions
   }
+
+  return {}
 }
 
 export const hasDefaultConnector = (block: Block) =>

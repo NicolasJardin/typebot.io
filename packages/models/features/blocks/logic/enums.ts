@@ -8,4 +8,5 @@ export enum LogicBlockType {
   TRANSFER = 'Transfer',
   TAG = 'Tag',
   WAIT_FOR = 'Wait for',
+  END = 'End',
 }
