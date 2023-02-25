@@ -1,5 +1,7 @@
 import { Input } from '@/components/inputs'
 import { useToast } from '@/hooks/useToast'
+import useGetAttendants from '@/whatsflow/api/transfer/queries/useGetAttendants'
+import useGetDepartments from '@/whatsflow/api/transfer/queries/useGetDepartments'
 import {
   FormControl,
   FormLabel,
@@ -9,8 +11,6 @@ import {
 } from '@chakra-ui/react'
 import { TransferOptions } from 'models'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
-import useGetAttendants from '../../queries/useGetAttendants'
-import useGetDepartments from '../../queries/useGetDepartments'
 
 type TransferSettingsProps = {
   options: TransferOptions

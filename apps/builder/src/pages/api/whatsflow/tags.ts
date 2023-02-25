@@ -1,6 +1,6 @@
 import { instance } from '@/whatsflow/api/base/instance'
 import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
-import { DepartmentGetResponse } from '@/whatsflow/api/transfer/interfaces/DepartmentGetResponse'
+import { TagGetResponse } from '@/whatsflow/api/tag/interfaces/TagGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -12,9 +12,9 @@ export default async function handler(
 
   const jwtDecoded = authJwt ? jwt_decode<AuthJwt>(authJwt) : undefined
 
-  const getDepartments = async () =>
+  const getTags = async () =>
     (
-      await instance.get<DepartmentGetResponse>('find-all-sectors', {
+      await instance.get<TagGetResponse>('list-tags', {
         data: {
           companyUuid: jwtDecoded?.companyUuid,
         },
@@ -26,5 +26,5 @@ export default async function handler(
       })
     ).data
 
-  res.status(200).json(await getDepartments())
+  res.status(200).json(await getTags())
 }

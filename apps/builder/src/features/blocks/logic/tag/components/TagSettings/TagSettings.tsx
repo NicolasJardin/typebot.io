@@ -1,7 +1,6 @@
-import { TagSearchInput } from '@/components/TagSearchInput'
 import { useToast } from '@/hooks/useToast'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import { Tag, TagOptions } from 'models'
+import { TagOptions } from 'models'
 
 type TagSettingsProps = {
   options: TagOptions | undefined
@@ -14,19 +13,19 @@ export default function TagSettings({
 }: TagSettingsProps) {
   const { showToast } = useToast()
 
-  const handleVariableChange = (tag?: Tag) =>
-    onOptionsChange({ ...options, id: tag?.id })
+  // const handleVariableChange = (taxg?: any) =>
+  //   onOptionsChange({ ...options, id: tag?.id })
 
   return (
     <Stack spacing={4}>
       <FormControl>
         <FormLabel>Adicionar ou criar tag:</FormLabel>
 
-        <TagSearchInput
+        {/* <TagSearchInput
           onSelectTag={handleVariableChange}
           initialTagId={options?.id}
           id="variable-search"
-        />
+        /> */}
       </FormControl>
     </Stack>
   )
