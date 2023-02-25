@@ -1,12 +1,13 @@
 import { PlusIcon } from '@/components/icons'
 import { useParentModal } from '@/features/graph/providers/ParentModalProvider'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
-import { Tag } from '@/whatsflow/api/tag/interfaces/domain/Tag'
+import { Tag as TagType } from '@/whatsflow/api/tag/interfaces/domain/Tag'
 import useCreateTag from '@/whatsflow/api/tag/mutations/useCreateTag'
 import useGetTags from '@/whatsflow/api/tag/queries/useGetTags'
 import {
   Button,
   Flex,
+  HStack,
   Input,
   InputGroup,
   InputProps,
@@ -16,7 +17,9 @@ import {
   PopoverContent,
   Portal,
   Spinner,
+  Tag,
   Tag as TagComponent,
+  Text,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -47,8 +50,8 @@ export const TagSearchInput = ({
 
   const bg = useColorModeValue('gray.200', 'gray.700')
   const { onOpen, onClose, isOpen } = useDisclosure()
-  const [inputValue, setInputValue] = useState(defaultTagName)
-  const [filteredItems, setFilteredItems] = useState<Tag[]>(tags)
+  const [inputValue, setInputValue] = useState(defaultTagName || '')
+  const [filteredItems, setFilteredItems] = useState<TagType[]>(tags)
   const [keyboardFocusIndex, setKeyboardFocusIndex] = useState<
     number | undefined
   >()
@@ -84,7 +87,7 @@ export const TagSearchInput = ({
     ])
   }
 
-  const handleTagNameClick = (tag: Tag) => () => {
+  const handleTagNameClick = (tag: TagType) => () => {
     setInputValue(tag.name)
     onSelectTag(tag)
     setKeyboardFocusIndex(undefined)
@@ -224,7 +227,15 @@ export const TagSearchInput = ({
                         keyboardFocusIndex === indexInList ? bg : 'transparent'
                       }
                     >
-                      {item.name}
+                      <HStack>
+                        <Tag
+                          size="sm"
+                          style={{ background: item.color }}
+                          borderRadius="full"
+                        />
+
+                        <Text>{item.name}</Text>
+                      </HStack>
                     </Button>
                   )
                 })}

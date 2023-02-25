@@ -35,17 +35,19 @@ export default async function handler(
 
   if (req.method === 'POST') {
     const createTag = async () =>
-      await instance.post<TagCreateRequest, { status: string }>(
-        'create-tag',
-        {
-          companyUuid,
-          tagName: req.body.name,
-          tagColor: req.body.color,
-        },
-        {
-          headers,
-        }
-      )
+      (
+        await instance.post<TagCreateRequest>(
+          'create-tag',
+          {
+            companyUuid,
+            tagName: req.body.name,
+            tagColor: req.body.color,
+          },
+          {
+            headers,
+          }
+        )
+      ).data
 
     res.status(201).send(await createTag())
   }
