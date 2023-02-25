@@ -9,6 +9,7 @@ import { transferBlockSchema, transferOptionsSchema } from './transfer'
 import { tagBlockSchema, tagOptionsSchema } from './tag'
 import { waitForBlockSchema, waitForOptionsSchema } from './waitFor'
 import { endBlockSchema } from './end'
+import { removeTagBlockSchema, removeTagOptionsSchema } from './removeTag'
 
 const logicBlockOptionsSchema = scriptOptionsSchema
   .or(redirectOptionsSchema)
@@ -18,6 +19,7 @@ const logicBlockOptionsSchema = scriptOptionsSchema
   .or(transferOptionsSchema)
   .or(tagOptionsSchema)
   .or(waitForOptionsSchema)
+  .or(removeTagOptionsSchema)
 
 export const logicBlockSchema = scriptBlockSchema
   .or(conditionBlockSchema)
@@ -29,6 +31,7 @@ export const logicBlockSchema = scriptBlockSchema
   .or(tagBlockSchema)
   .or(waitForBlockSchema)
   .or(endBlockSchema)
+  .or(removeTagBlockSchema)
 
 export type LogicBlock = z.infer<typeof logicBlockSchema>
 export type LogicBlockOptions = z.infer<typeof logicBlockOptionsSchema>

@@ -97,7 +97,7 @@ export const TagSearchInput = ({
 
   const handleCreateNewTagClick = () => {
     if (!inputValue || inputValue === '') return
-    onSelectTag({ name: inputValue })
+    onSelectTag({ name: inputValue, color: '#808080' })
     createTag({ name: inputValue, color: '#808080' })
     inputRef.current?.blur()
     onClose()

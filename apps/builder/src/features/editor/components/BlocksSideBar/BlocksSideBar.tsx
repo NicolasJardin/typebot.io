@@ -1,14 +1,16 @@
+import { LockedIcon, UnlockedIcon } from '@/components/icons'
+import { useBlockDnd } from '@/features/graph'
 import {
-  Stack,
-  Text,
-  SimpleGrid,
-  useEventListener,
-  Portal,
+  Fade,
   Flex,
   IconButton,
+  Portal,
+  SimpleGrid,
+  Stack,
+  Text,
   Tooltip,
-  Fade,
   useColorModeValue,
+  useEventListener,
 } from '@chakra-ui/react'
 import {
   BubbleBlockType,
@@ -17,11 +19,9 @@ import {
   IntegrationBlockType,
   LogicBlockType,
 } from 'models'
-import { useBlockDnd } from '@/features/graph'
 import React, { useState } from 'react'
-import { BlockCard } from './BlockCard'
-import { LockedIcon, UnlockedIcon } from '@/components/icons'
 import { headerHeight } from '../../constants'
+import { BlockCard } from './BlockCard'
 import { BlockCardOverlay } from './BlockCardOverlay'
 
 export const BlocksSideBar = () => {
@@ -187,6 +187,11 @@ export const BlocksSideBar = () => {
 
             <BlockCard
               type={LogicBlockType.TAG}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
+              type={LogicBlockType.REMOVE_TAG}
               onMouseDown={handleMouseDown}
             />
 

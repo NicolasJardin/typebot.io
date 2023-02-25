@@ -243,6 +243,13 @@ const clientSideActionSchema = z
           }),
         })
       )
+      .or(
+        z.object({
+          removeTag: z.object({
+            name: z.string(),
+          }),
+        })
+      )
   )
 
 export const chatReplySchema = z.object({

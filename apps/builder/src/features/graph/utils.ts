@@ -21,6 +21,7 @@ import {
   defaultPhoneInputOptions,
   defaultRatingInputOptions,
   defaultRedirectOptions,
+  defaultRemoveTagOptions,
   defaultScriptOptions,
   defaultSendEmailOptions,
   defaultSetVariablesOptions,
@@ -451,6 +452,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultTransferOptions
     case LogicBlockType.TAG:
       return defaultTagOptions
+    case LogicBlockType.REMOVE_TAG:
+      return defaultRemoveTagOptions
     case IntegrationBlockType.GOOGLE_SHEETS:
       return defaultGoogleSheetsOptions
     case IntegrationBlockType.GOOGLE_ANALYTICS:

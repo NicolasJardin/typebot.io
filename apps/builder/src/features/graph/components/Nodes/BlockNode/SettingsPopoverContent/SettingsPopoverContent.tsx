@@ -18,6 +18,7 @@ import { SendEmailSettings } from '@/features/blocks/integrations/sendEmail'
 import { WebhookSettings } from '@/features/blocks/integrations/webhook'
 import { ZapierSettings } from '@/features/blocks/integrations/zapier'
 import { RedirectSettings } from '@/features/blocks/logic/redirect'
+import RemoveTagSettings from '@/features/blocks/logic/removeTag/components/RemoveTagSettings'
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
 import { SetVariableSettings } from '@/features/blocks/logic/setVariable'
 import TagSettings from '@/features/blocks/logic/tag/components/TagSettings'
@@ -243,6 +244,14 @@ export const BlockSettings = ({
     case LogicBlockType.TAG:
       return (
         <TagSettings
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+
+    case LogicBlockType.REMOVE_TAG:
+      return (
+        <RemoveTagSettings
           options={block.options}
           onOptionsChange={handleOptionsChange}
         />

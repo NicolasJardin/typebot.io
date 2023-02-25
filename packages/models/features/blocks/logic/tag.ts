@@ -3,7 +3,7 @@ import { blockBaseSchema } from '../baseSchemas'
 import { LogicBlockType } from './enums'
 
 export const tagOptionsSchema = z.object({
-  id: z.string().optional(),
+  color: z.string().optional(),
   name: z.string().optional(),
 })
 

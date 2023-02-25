@@ -1,48 +1,49 @@
+import { AudioBubbleNode } from '@/features/blocks/bubbles/audio'
+import ButtonNodeContent from '@/features/blocks/bubbles/button/components/ButtonNodeContent'
+import { EmbedBubbleContent } from '@/features/blocks/bubbles/embed'
+import { ImageBubbleContent } from '@/features/blocks/bubbles/image'
+import { TextBubbleContent } from '@/features/blocks/bubbles/textBubble'
+import { VideoBubbleContent } from '@/features/blocks/bubbles/video'
+import { DateNodeContent } from '@/features/blocks/inputs/date'
+import { EmailInputNodeContent } from '@/features/blocks/inputs/emailInput'
+import { FileInputContent } from '@/features/blocks/inputs/fileUpload'
+import { NumberNodeContent } from '@/features/blocks/inputs/number'
+import { PaymentInputContent } from '@/features/blocks/inputs/payment'
+import { PhoneNodeContent } from '@/features/blocks/inputs/phone'
+import { RatingInputContent } from '@/features/blocks/inputs/rating'
+import { TextInputNodeContent } from '@/features/blocks/inputs/textInput'
+import { UrlNodeContent } from '@/features/blocks/inputs/url'
+import { ChatwootBlockNodeLabel } from '@/features/blocks/integrations/chatwoot'
+import { GoogleAnalyticsNodeContent } from '@/features/blocks/integrations/googleAnalytics/components/GoogleAnalyticsNodeContent'
+import { GoogleSheetsNodeContent } from '@/features/blocks/integrations/googleSheets'
+import { MakeComContent } from '@/features/blocks/integrations/makeCom'
+import { PabblyConnectContent } from '@/features/blocks/integrations/pabbly'
+import { SendEmailContent } from '@/features/blocks/integrations/sendEmail'
+import { WebhookContent } from '@/features/blocks/integrations/webhook'
+import { ZapierContent } from '@/features/blocks/integrations/zapier'
+import EndNodeContent from '@/features/blocks/logic/end/components/EndNodeContent'
+import { RedirectNodeContent } from '@/features/blocks/logic/redirect'
+import RemoveTagNodeContent from '@/features/blocks/logic/removeTag/components/RemoveTagNodeContent'
+import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
+import { SetVariableContent } from '@/features/blocks/logic/setVariable'
+import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
+import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
+import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink'
+import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
+import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
 import { Text } from '@chakra-ui/react'
 import {
   Block,
-  StartBlock,
+  BlockIndices,
   BubbleBlockType,
   InputBlockType,
-  LogicBlockType,
   IntegrationBlockType,
-  BlockIndices,
+  LogicBlockType,
+  StartBlock,
 } from 'models'
+import { blockHasItems, isChoiceInput, isInputBlock } from 'utils'
 import { ItemNodesList } from '../../ItemNode'
-import { TextBubbleContent } from '@/features/blocks/bubbles/textBubble'
-import { ImageBubbleContent } from '@/features/blocks/bubbles/image'
-import { VideoBubbleContent } from '@/features/blocks/bubbles/video'
-import { EmbedBubbleContent } from '@/features/blocks/bubbles/embed'
-import { TextInputNodeContent } from '@/features/blocks/inputs/textInput'
-import { NumberNodeContent } from '@/features/blocks/inputs/number'
-import { EmailInputNodeContent } from '@/features/blocks/inputs/emailInput'
-import { UrlNodeContent } from '@/features/blocks/inputs/url'
-import { PhoneNodeContent } from '@/features/blocks/inputs/phone'
-import { DateNodeContent } from '@/features/blocks/inputs/date'
-import { SetVariableContent } from '@/features/blocks/logic/setVariable'
-import { WebhookContent } from '@/features/blocks/integrations/webhook'
-import { ChatwootBlockNodeLabel } from '@/features/blocks/integrations/chatwoot'
-import { RedirectNodeContent } from '@/features/blocks/logic/redirect'
-import { PabblyConnectContent } from '@/features/blocks/integrations/pabbly'
 import { WithVariableContent } from './WithVariableContent'
-import { PaymentInputContent } from '@/features/blocks/inputs/payment'
-import { RatingInputContent } from '@/features/blocks/inputs/rating'
-import { FileInputContent } from '@/features/blocks/inputs/fileUpload'
-import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink'
-import { GoogleSheetsNodeContent } from '@/features/blocks/integrations/googleSheets'
-import { GoogleAnalyticsNodeContent } from '@/features/blocks/integrations/googleAnalytics/components/GoogleAnalyticsNodeContent'
-import { ZapierContent } from '@/features/blocks/integrations/zapier'
-import { SendEmailContent } from '@/features/blocks/integrations/sendEmail'
-import { isInputBlock, isChoiceInput, blockHasItems } from 'utils'
-import { MakeComContent } from '@/features/blocks/integrations/makeCom'
-import { AudioBubbleNode } from '@/features/blocks/bubbles/audio'
-import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
-import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
-import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
-import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
-import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
-import EndNodeContent from '@/features/blocks/logic/end/components/EndNodeContent'
-import ButtonNodeContent from '@/features/blocks/bubbles/button/components/ButtonNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -139,6 +140,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.TAG:
       return <TagNodeContent options={block.options} />
+
+    case LogicBlockType.REMOVE_TAG:
+      return <RemoveTagNodeContent options={block.options} />
 
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />

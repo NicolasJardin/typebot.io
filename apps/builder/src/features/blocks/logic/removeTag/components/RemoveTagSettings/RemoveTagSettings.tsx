@@ -1,17 +1,17 @@
 import { TagSearchInput } from '@/components/TagSearchInput'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import { TagOptions } from 'models'
+import { RemoveTagOptions } from 'models'
 
-type TagSettingsProps = {
-  options: TagOptions | undefined
-  onOptionsChange: (options: TagOptions) => void
+type RemoveTagSettingsProps = {
+  options: RemoveTagOptions | undefined
+  onOptionsChange: (options: RemoveTagOptions) => void
 }
 
-export default function TagSettings({
+export default function RemoveTagSettings({
   options,
   onOptionsChange,
-}: TagSettingsProps) {
-  const handleTagChange = (tag: TagOptions) =>
+}: RemoveTagSettingsProps) {
+  const handleTagChange = (tag: RemoveTagOptions) =>
     onOptionsChange({
       color: tag.color || options?.color,
       name: tag.name || options?.name,
@@ -20,7 +20,7 @@ export default function TagSettings({
   return (
     <Stack spacing={4}>
       <FormControl>
-        <FormLabel>Adicionar ou criar tag:</FormLabel>
+        <FormLabel>Remover tag:</FormLabel>
 
         <TagSearchInput
           onSelectTag={handleTagChange}

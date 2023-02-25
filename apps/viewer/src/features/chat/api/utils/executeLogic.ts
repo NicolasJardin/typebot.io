@@ -2,6 +2,7 @@ import { executeCondition } from '@/features/blocks/logic/condition/api'
 import { executeCreateTag } from '@/features/blocks/logic/createTag/api/executeCreateTag'
 import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
 import { executeRedirect } from '@/features/blocks/logic/redirect/api'
+import { executeRemoveTag } from '@/features/blocks/logic/removeTag/api/executeRemoveTag'
 import { executeScript } from '@/features/blocks/logic/script/executeScript'
 import { executeSetVariable } from '@/features/blocks/logic/setVariable/api'
 import { executeTransfer } from '@/features/blocks/logic/transfer/api/utils/executeTransfer'
@@ -33,6 +34,8 @@ export const executeLogic =
         return executeWaitFor(state, block, lastBubbleBlockId)
       case LogicBlockType.TAG:
         return executeCreateTag(block, lastBubbleBlockId)
+      case LogicBlockType.REMOVE_TAG:
+        return executeRemoveTag(block, lastBubbleBlockId)
       case LogicBlockType.END:
         return executeEnd(block, lastBubbleBlockId)
     }

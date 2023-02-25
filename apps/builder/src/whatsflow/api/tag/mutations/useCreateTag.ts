@@ -6,7 +6,7 @@ import {
 import { useCallback } from 'react'
 import { sendRequest } from 'utils'
 
-type Data = { status: string } | undefined
+type Data = string | undefined
 type Variables = {
   color: string
   name: string
