@@ -10,7 +10,7 @@ export default function TransferNodeContent({
   options,
 }: TransferNodeContentProps) {
   const name = useMemo(
-    () => options.attendant.name || options.department.name,
+    () => options.attendant?.name || options.department?.name,
     [options]
   )
 
