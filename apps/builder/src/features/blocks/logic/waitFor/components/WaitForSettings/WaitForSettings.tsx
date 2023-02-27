@@ -26,6 +26,12 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
       })
     }
 
+    if (options.type === WaitForTypeEnum.MINUTE) {
+      date = add(new Date(), {
+        minutes: Number(options.number),
+      })
+    }
+
     const hours = options.time?.split(':')?.[0]
     const minutes = options.time?.split(':')?.[1]
 
@@ -73,6 +79,18 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
     [onOptionsChange, options, getUntil]
   )
 
+  const getMeasures = useCallback((type: WaitForTypeEnum) => {
+    switch (type) {
+      case WaitForTypeEnum.DAY:
+        return 'Dias'
+
+      case WaitForTypeEnum.HOUR:
+        return 'Horas'
+    }
+
+    return 'Minutos'
+  }, [])
+
   return (
     <Stack spacing={4}>
       <FormControl>
@@ -80,16 +98,14 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
         <Select value={options.type} onChange={handleTypeChange}>
           {Object.values(WaitForTypeEnum).map((type) => (
             <option key={type} value={type}>
-              {type === WaitForTypeEnum.DAY ? 'Dias' : 'Horas'}
+              {getMeasures(type)}
             </option>
           ))}
         </Select>
       </FormControl>
 
       <Input
-        label={`${
-          options.type === WaitForTypeEnum.HOUR ? 'Horas' : 'Dias'
-        } para aguardar`}
+        label={`${getMeasures(options.type)} para aguardar`}
         defaultValue={options.number}
         onChange={handleNumberChange}
         placeholder="0"

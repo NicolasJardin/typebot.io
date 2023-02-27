@@ -218,7 +218,11 @@ const clientSideActionSchema = z
         z.object({
           waitFor: z.object({
             number: z.number(),
-            type: z.enum([WaitForTypeEnum.DAY, WaitForTypeEnum.HOUR]),
+            type: z.enum([
+              WaitForTypeEnum.DAY,
+              WaitForTypeEnum.HOUR,
+              WaitForTypeEnum.MINUTE,
+            ]),
             until: z.date().optional(),
           }),
         })
