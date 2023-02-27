@@ -121,7 +121,7 @@ export default function TransferSettings({
     setSelectedAttendant(options?.attendant)
 
     const attendantName = attendants?.find(
-      ({ id }) => id === options.attendant.id
+      ({ id }) => id === options.attendant?.id
     )?.name
 
     if (attendantName) handleAttendantNameChange(attendantName)
@@ -139,7 +139,7 @@ export default function TransferSettings({
         >
           {departments?.map((department) => (
             <option key={department.id} value={department.id}>
-              {department.name}
+              {department?.name}
             </option>
           ))}
         </Select>
@@ -154,8 +154,8 @@ export default function TransferSettings({
           icon={isFetchingAttendants ? <Spinner speed="0.7s" /> : undefined}
         >
           {attendants?.map((attendant) => (
-            <option key={attendant.id} value={attendant.id}>
-              {attendant.name}
+            <option key={attendant?.id} value={attendant?.id}>
+              {attendant?.name}
             </option>
           ))}
         </Select>
