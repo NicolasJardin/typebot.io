@@ -142,6 +142,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={BubbleBlockType.FILE}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={BubbleBlockType.BUTTON}
               onMouseDown={handleMouseDown}
             />

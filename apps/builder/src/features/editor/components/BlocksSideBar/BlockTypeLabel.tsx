@@ -33,6 +33,8 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
       )
     case BubbleBlockType.AUDIO:
       return <Text>Audio</Text>
+    case BubbleBlockType.FILE:
+      return <Text>Arquivo</Text>
     case BubbleBlockType.BUTTON:
       return <Text>Botão</Text>
     case InputBlockType.NUMBER:

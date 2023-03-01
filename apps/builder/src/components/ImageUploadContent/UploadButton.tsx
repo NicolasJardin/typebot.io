@@ -1,11 +1,11 @@
 import { useToast } from '@/hooks/useToast'
 import { compressFile } from '@/utils/helpers'
 import { Button, ButtonProps, chakra } from '@chakra-ui/react'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 import { uploadFiles } from 'utils'
 
 type UploadButtonProps = {
-  fileType: 'image' | 'audio'
+  fileType: 'image' | 'audio' | 'file'
   filePath: string
   includeFileName?: boolean
   onFileUploaded: (url: string) => void
@@ -25,6 +25,7 @@ export const UploadButton = ({
     if (!e.target?.files) return
     setIsUploading(true)
     const file = e.target.files[0] as File | undefined
+
     if (!file)
       return showToast({ description: 'Could not read file.', status: 'error' })
     const urls = await uploadFiles({
@@ -35,9 +36,18 @@ export const UploadButton = ({
         },
       ],
     })
+
     if (urls.length && urls[0]) onFileUploaded(urls[0] + '?v=' + Date.now())
     setIsUploading(false)
   }
+
+  const filesToAccept = useMemo(() => {
+    if (fileType === 'image') return '.jpg, .jpeg, .png, .gif'
+
+    if (fileType === 'audio') return '.mp3, .wav'
+
+    return 'application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf'
+  }, [fileType])
 
   return (
     <>
@@ -47,7 +57,7 @@ export const UploadButton = ({
         id="file-input"
         display="none"
         onChange={handleInputChange}
-        accept={fileType === 'image' ? '.jpg, .jpeg, .png, .gif' : '.mp3, .wav'}
+        accept={filesToAccept}
       />
       <Button
         as="label"

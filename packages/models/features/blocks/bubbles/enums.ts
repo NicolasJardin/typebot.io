@@ -5,4 +5,5 @@ export enum BubbleBlockType {
   EMBED = 'embed',
   AUDIO = 'audio',
   BUTTON = 'button',
+  FILE = 'file',
 }

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { audioBubbleBlockSchema, audioBubbleContentSchema } from './audio'
 import { buttonBlockSchema, buttonOptionsSchema } from './button'
 import { embedBubbleContentSchema, embedBubbleBlockSchema } from './embed'
+import { fileBubbleBlockSchema, fileBubbleContentSchema } from './file'
 import { imageBubbleContentSchema, imageBubbleBlockSchema } from './image'
 import { textBubbleContentSchema, textBubbleBlockSchema } from './text'
 import { videoBubbleContentSchema, videoBubbleBlockSchema } from './video'
@@ -12,6 +13,7 @@ export const bubbleBlockContentSchema = textBubbleContentSchema
   .or(embedBubbleContentSchema)
   .or(audioBubbleContentSchema)
   .or(buttonOptionsSchema)
+  .or(fileBubbleContentSchema)
 
 export const bubbleBlockSchema = textBubbleBlockSchema
   .or(imageBubbleBlockSchema)
@@ -19,6 +21,7 @@ export const bubbleBlockSchema = textBubbleBlockSchema
   .or(embedBubbleBlockSchema)
   .or(audioBubbleBlockSchema)
   .or(buttonBlockSchema)
+  .or(fileBubbleBlockSchema)
 
 export const bubbleBlockOptions = buttonOptionsSchema
 

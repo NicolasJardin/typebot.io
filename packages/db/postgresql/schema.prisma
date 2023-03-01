@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://postgres:hollow0712@localhost:5432/typebot-io"
 }
 
 model Account {
@@ -259,7 +259,6 @@ model Answer {
 
   @@unique([resultId, blockId, groupId])
   @@index([groupId])
-  @@index([storageUsed])
 }
 
 model Coupon {
