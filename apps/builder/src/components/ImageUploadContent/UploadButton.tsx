@@ -5,7 +5,7 @@ import { ChangeEvent, useMemo, useState } from 'react'
 import { uploadFiles } from 'utils'
 
 type UploadButtonProps = {
-  fileType: 'image' | 'audio' | 'file'
+  fileType: 'image' | 'audio' | 'file' | 'video'
   filePath: string
   includeFileName?: boolean
   onFileUploaded: (url: string) => void
@@ -45,6 +45,8 @@ export const UploadButton = ({
     if (fileType === 'image') return '.jpg, .jpeg, .png, .gif'
 
     if (fileType === 'audio') return '.mp3, .wav'
+
+    if (fileType === 'video') return 'video/*'
 
     return 'application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf'
   }, [fileType])
