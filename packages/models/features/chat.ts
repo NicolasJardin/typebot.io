@@ -19,6 +19,7 @@ import {
   audioBubbleContentSchema,
   embedBubbleContentSchema,
 } from './blocks/bubbles'
+import { fileBubbleContentSchema } from './blocks/bubbles/file'
 
 const typebotInSessionStateSchema = publicTypebotSchema.pick({
   id: true,
@@ -83,6 +84,11 @@ const audioMessageSchema = z.object({
   content: audioBubbleContentSchema,
 })
 
+const fileMessageSchema = z.object({
+  type: z.enum([BubbleBlockType.FILE]),
+  content: fileBubbleContentSchema,
+})
+
 const embedMessageSchema = z.object({
   type: z.enum([BubbleBlockType.EMBED]),
   content: embedBubbleContentSchema
@@ -100,6 +106,7 @@ const chatMessageSchema = z
       .or(videoMessageSchema)
       .or(audioMessageSchema)
       .or(embedMessageSchema)
+      .or(fileMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

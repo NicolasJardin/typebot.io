@@ -1,6 +1,7 @@
 import { ImageUploadContent } from '@/components/ImageUploadContent'
 import { AudioBubbleForm } from '@/features/blocks/bubbles/audio/components/AudioBubbleForm'
 import { EmbedUploadContent } from '@/features/blocks/bubbles/embed'
+import FileBubbleForm from '@/features/blocks/bubbles/file/components/FileBubbleForm'
 import { VideoUploadContent } from '@/features/blocks/bubbles/video'
 import {
   Portal,
@@ -77,6 +78,16 @@ export const MediaBubbleContent = ({
     case BubbleBlockType.AUDIO: {
       return (
         <AudioBubbleForm
+          content={block.content}
+          fileUploadPath={`typebots/${typebotId}/blocks/${block.id}`}
+          onSubmit={onContentChange}
+        />
+      )
+    }
+
+    case BubbleBlockType.FILE: {
+      return (
+        <FileBubbleForm
           content={block.content}
           fileUploadPath={`typebots/${typebotId}/blocks/${block.id}`}
           onSubmit={onContentChange}

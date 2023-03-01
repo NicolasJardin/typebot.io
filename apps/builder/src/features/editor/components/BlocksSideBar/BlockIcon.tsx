@@ -39,6 +39,7 @@ import { AiOutlineDelete, AiOutlineTag } from 'react-icons/ai'
 import { BiShuffle } from 'react-icons/bi'
 import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
+import { TbFiles } from 'react-icons/tb'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
@@ -59,6 +60,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
       return <EmbedBubbleIcon color={blue} {...props} />
     case BubbleBlockType.BUTTON:
       return <Icon as={FaRegHandPointUp} color={blue} {...props} />
+    case BubbleBlockType.FILE:
+      return <Icon as={TbFiles} color={blue} {...props} />
     case InputBlockType.TEXT:
       return <TextInputIcon color={orange} {...props} />
     case InputBlockType.NUMBER:

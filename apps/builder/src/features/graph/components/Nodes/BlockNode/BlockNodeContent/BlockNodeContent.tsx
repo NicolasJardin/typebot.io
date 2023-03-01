@@ -1,6 +1,7 @@
 import { AudioBubbleNode } from '@/features/blocks/bubbles/audio'
 import ButtonNodeContent from '@/features/blocks/bubbles/button/components/ButtonNodeContent'
 import { EmbedBubbleContent } from '@/features/blocks/bubbles/embed'
+import FileNodeContent from '@/features/blocks/bubbles/file/components/FileNodeContent'
 import { ImageBubbleContent } from '@/features/blocks/bubbles/image'
 import { TextBubbleContent } from '@/features/blocks/bubbles/textBubble'
 import { VideoBubbleContent } from '@/features/blocks/bubbles/video'
@@ -79,6 +80,10 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     }
     case BubbleBlockType.BUTTON:
       return <ButtonNodeContent options={block.options} />
+
+    case BubbleBlockType.FILE:
+      return <FileNodeContent content={block.content} />
+
     case InputBlockType.TEXT: {
       return (
         <TextInputNodeContent

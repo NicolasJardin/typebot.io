@@ -45,6 +45,7 @@ import {
   LogicBlockType,
 } from 'models'
 import { defaultButtonBubbleContent } from 'models/features/blocks/bubbles/button'
+import { defaultFileBubbleContent } from 'models/features/blocks/bubbles/file'
 import { roundCorners } from 'svg-round-corners'
 import {
   blockTypeHasItems,
@@ -411,6 +412,8 @@ const parseDefaultContent = (type: BubbleBlockType): BubbleBlockContent => {
       return defaultAudioBubbleContent
     case BubbleBlockType.BUTTON:
       return defaultButtonBubbleContent
+    case BubbleBlockType.FILE:
+      return defaultFileBubbleContent
   }
 }
 
