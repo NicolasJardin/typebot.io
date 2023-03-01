@@ -1,3 +1,7 @@
+import { ContextMenu } from '@/components/ContextMenu'
+import { PlayIcon } from '@/components/icons'
+import { RightPanel, useEditor, useTypebot } from '@/features/editor'
+import { setMultipleRefs } from '@/utils/helpers'
 import {
   Editable,
   EditableInput,
@@ -6,23 +10,19 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { Group } from 'models'
+import { useDrag } from '@use-gesture/react'
+import { Group, LogicBlockType } from 'models'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { useDebounce } from 'use-debounce'
+import { isDefined, isNotDefined } from 'utils'
 import {
   Coordinates,
+  useBlockDnd,
   useGraph,
   useGroupsCoordinates,
-  useBlockDnd,
 } from '../../../providers'
 import { BlockNodesList } from '../BlockNode/BlockNodesList'
-import { isDefined, isNotDefined } from 'utils'
-import { useTypebot, RightPanel, useEditor } from '@/features/editor'
 import { GroupNodeContextMenu } from './GroupNodeContextMenu'
-import { PlayIcon } from '@/components/icons'
-import { useDebounce } from 'use-debounce'
-import { ContextMenu } from '@/components/ContextMenu'
-import { setMultipleRefs } from '@/utils/helpers'
-import { useDrag } from '@use-gesture/react'
 
 type Props = {
   group: Group
@@ -96,6 +96,9 @@ const NonMemoizedDraggableGroupNode = ({
       isNotDefined(previewingEdge.to.blockId))
   const isStartGroup =
     isDefined(group.blocks[0]) && group.blocks[0].type === 'start'
+
+  const isEndGroup =
+    isDefined(group.blocks[0]) && group.blocks[0].type === LogicBlockType.END
 
   const groupRef = useRef<HTMLDivElement | null>(null)
   const [debouncedGroupPosition] = useDebounce(currentCoordinates, 100)
@@ -209,7 +212,9 @@ const NonMemoizedDraggableGroupNode = ({
             onChange={setGroupTitle}
             onSubmit={handleTitleSubmit}
             fontWeight="semibold"
-            pointerEvents={isReadOnly || isStartGroup ? 'none' : 'auto'}
+            pointerEvents={
+              isReadOnly || isStartGroup || isEndGroup ? 'none' : 'auto'
+            }
             pr="8"
           >
             <EditablePreview
