@@ -20,7 +20,7 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
       return <Text>Início</Text>
     case BubbleBlockType.TEXT:
     case InputBlockType.TEXT:
-      return <Text>Texto</Text>
+      return <Text>Resposta</Text>
     case BubbleBlockType.IMAGE:
       return <Text>Imagem</Text>
     case BubbleBlockType.VIDEO:
