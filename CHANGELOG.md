@@ -1,5 +1,92 @@
 # Changelog
 
+<a name="2.11.0"></a>
+## 2.11.0 (2023-03-01)
+
+### Added
+
+- 👷‍♂️ Trigger docker deployment on new main tag [[1d1a254](https://github.com/baptisteArno/typebot.io/commit/1d1a25473b47292fcf2653ea95f54f6bfd83fd5b)]
+
+### Changed
+
+- ⚡ (editor) Improve edges responsiveness [[f8f98ad](https://github.com/baptisteArno/typebot.io/commit/f8f98adc1cc4359353339e279b6dedf2d7f6808d)]
+- ♻️ Better phone input props pass [[73ef12d](https://github.com/baptisteArno/typebot.io/commit/73ef12db7209a53b76dcaa91f5da22eaefb1242e)]
+- ♻️ Improve new version popup polling [[2fc78a5](https://github.com/baptisteArno/typebot.io/commit/2fc78a5b7d8c1cbe249dca911e97dae9d1c70a39)]
+- ♿ (viewer) Show error message for incompatible browsers [[edf0ecd](https://github.com/baptisteArno/typebot.io/commit/edf0ecd7125ed028e1b28342d6e693c0012a2fe8)]
+
+### Removed
+
+- 🔥 (viewer) Remove buttons input validation [[186b376](https://github.com/baptisteArno/typebot.io/commit/186b3760389c74b0451fc2430eba23ec9941553a)]
+
+### Fixed
+
+- 🐛 (webhook) Fix deep key parser dropdown [[8672dfe](https://github.com/baptisteArno/typebot.io/commit/8672dfe9d7ffc44b01058d6ef10c58922d182743)]
+- 🐛 (js) Improve bubbles callback reliability [[f6e128b](https://github.com/baptisteArno/typebot.io/commit/f6e128be37fe6b5039da1ae72a48ba34d9ac518e)]
+- 🚑 (editor) Fix block drag when dropping at same spot [[5024c1b](https://github.com/baptisteArno/typebot.io/commit/5024c1b22b3a31d3cc93a314200be3623e10facc)]
+- 🐛 (script) Execute client side actions before first bubbles [[d5b8a43](https://github.com/baptisteArno/typebot.io/commit/d5b8a43d3f78ec25616e018c413f7f5f0cf1862f)]
+- 🐛 (editor) Flush code editor value when closing [[d57fb47](https://github.com/baptisteArno/typebot.io/commit/d57fb4738d08910fae3605c4fea8dd28eda9913e)]
+- 🐛 Attempt to fix load crash on UC Browser [[5dd8755](https://github.com/baptisteArno/typebot.io/commit/5dd87554c32e340a66777adaa3ba29c4e083ec6e)]
+- 🐛 (wordpress) Fix admin critical bug and better lib import [[c889f30](https://github.com/baptisteArno/typebot.io/commit/c889f302f6a19ebcf4322011e1c8e668b7be114e)]
+- 🐛 (webhook) Test response was not updating [[67e1fd2](https://github.com/baptisteArno/typebot.io/commit/67e1fd2e14334c65763983c7e9c72b0922934de1)]
+
+### Miscellaneous
+
+- 📝 Add dynamic buttons section [[caf4086](https://github.com/baptisteArno/typebot.io/commit/caf4086dd827404f53bb229f344794e9bfeb47c3)]
+- 📝 Add API share instructions [[eaf8024](https://github.com/baptisteArno/typebot.io/commit/eaf8024c84ba9a4d9f58a162bebe171e6a8e3fc7)]
+- 🩹 (viewer) Add path where old engine is forced [[680e967](https://github.com/baptisteArno/typebot.io/commit/680e967a8cba838acaa3ea312874475ef3b448b9)]
+- 📝 (embed) Add new script embed instructions [[2b2b1c3](https://github.com/baptisteArno/typebot.io/commit/2b2b1c3d6d197df5b87a795d06e6f509ea162ab6)]
+- 🩹 (billing) Leave the email checkout field empty [[8034cee](https://github.com/baptisteArno/typebot.io/commit/8034ceeede003a571c78a8dc8c4335cf19afa7e1)]
+- 📝 (wordpress) Add litespeed localization issue instruction [[712daf7](https://github.com/baptisteArno/typebot.io/commit/712daf7ab3ab6ab6291975064f7d8b2881586813)]
+- 🛂 (billing) Enable tax id and billing address collection [[2e8f2d8](https://github.com/baptisteArno/typebot.io/commit/2e8f2d81c6f34b1ec32bebb28edbc993a755d734)]
+- 🩹 (sendEmail) Save error first in logs [[761e1c7](https://github.com/baptisteArno/typebot.io/commit/761e1c71844f4cc4a70147984d6155105b24c68b)]
+
+
+<a name="2.10.5"></a>
+## 2.10.5 (2023-02-23)
+
+### Added
+
+- ✨ (buttons) Allow dynamic buttons from variable [[2ff6991](https://github.com/baptisteArno/typebot.io/commit/2ff6991ca730b895ce86e07cd84f9b2e42ca0425)]
+- ✨ Add new user onboarding template [[00b6acc](https://github.com/baptisteArno/typebot.io/commit/00b6acca8e4fd14a6528413a0aaed58e2f805bde)]
+- ✨ (preview) Add preview runtime dropdown [[3967e5f](https://github.com/baptisteArno/typebot.io/commit/3967e5f1d0bddb122a4eec4e5815ab599228baf2)]
+- ✨ Introduce bot v2 in builder ([#328](https://github.com/baptisteArno/typebot.io/issues/328)) [[debdac1](https://github.com/baptisteArno/typebot.io/commit/debdac12ff238c2a083c020a9dc00173ba7fbad3)]
+
+### Changed
+
+- 🚸 (editor) Show toolbar on group click [[0619c60](https://github.com/baptisteArno/typebot.io/commit/0619c609704ee937e16dcbce4697910dea6f9aa7)]
+- ⬆️ Upgrade dependencies [[d2880cd](https://github.com/baptisteArno/typebot.io/commit/d2880cdf2dc44cd370d975c5dffb63121759d776)]
+- ⚡ Fix / improve results archive crash when too many [[cc9817b](https://github.com/baptisteArno/typebot.io/commit/cc9817b2e36474adbcb5201ce4e7f99d0dd2599d)]
+- ♻️ Fix eslint warnings [[be4c8e0](https://github.com/baptisteArno/typebot.io/commit/be4c8e0760046f4a50d3806760694a689f454812)]
+- 💄 Improve new version popup animation [[31711dc](https://github.com/baptisteArno/typebot.io/commit/31711dc24d79b3cc2e967234360e247258ffe3a4)]
+- 🚸 (editor) Make expanded settings window bigger [[a265143](https://github.com/baptisteArno/typebot.io/commit/a265143dc03dc65175f26659212b2fe2e36d4d89)]
+- 🚸 (bot) Show a popup when the redirect is blocked by browser [[b2d1235](https://github.com/baptisteArno/typebot.io/commit/b2d1235f1b48bda4642ed500e4bbff1be120e9cb)]
+
+### Fixed
+
+- 🐛 (buttons) Fix dynamic buttons edge not showing [[e1b7320](https://github.com/baptisteArno/typebot.io/commit/e1b7320f6f2c2e6ec72265cdf0b3c3df2e6eee79)]
+- 💚 Fix Vercel build due to unnecessary dev packages upload [[8462810](https://github.com/baptisteArno/typebot.io/commit/84628109d07103770f4631f6d689838ab42753f5)]
+- 🐛 (editor) Fix text bubble refocus carret position [[bc47cc4](https://github.com/baptisteArno/typebot.io/commit/bc47cc46c0b2b8382046399ab13bddf139736337)]
+- 🐛 (editor) Fix saving typebot after undoing changes [[671c2cb](https://github.com/baptisteArno/typebot.io/commit/671c2cb1011e47341cdb466ae67b20f32e36b759)]
+- 🐛 (settings) Fix typing emulation not working [[889e6a4](https://github.com/baptisteArno/typebot.io/commit/889e6a4f7e61614442bdd36ff568fbfc8a891138)]
+- 🐛 (setVariable) Avoid evaluate code if single variable [[6339f44](https://github.com/baptisteArno/typebot.io/commit/6339f442bf1ef693d87059e4181f09a02716038e)]
+- 💚 Don&#x27;t trigger docker deployment on new lib tags [[96f5e4d](https://github.com/baptisteArno/typebot.io/commit/96f5e4db9e20ff67e1ad16d222b9b70f9f2ade84)]
+- 🐛 Fix bot not proceeding when embedded [[bdf088b](https://github.com/baptisteArno/typebot.io/commit/bdf088bd9530e11e32cdd8153ea8098e11a1da8c)]
+- 🐛 (phone) Fix phone number parsing and default country [[4efe2c4](https://github.com/baptisteArno/typebot.io/commit/4efe2c48bb92d64b3fb7d7fd1ac9cf1368d76b76)]
+- 🐛 Correctly update prefilled variables [[d8194ff](https://github.com/baptisteArno/typebot.io/commit/d8194ff9987dc07a3c4643a19defc36fab98a2d2)]
+- 🐛 Fix bubble proper cleanup function [[541dcd2](https://github.com/baptisteArno/typebot.io/commit/541dcd2bb78f018ce24032813f3f5faf8b8cb85e)]
+- 🐛 Make sure variables are properly overwritten [[148315f](https://github.com/baptisteArno/typebot.io/commit/148315f6eeb552a68fd6daa2b967597e966c4327)]
+- 🐛 Fix variable buttons with new engine [[83ae57c](https://github.com/baptisteArno/typebot.io/commit/83ae57cf0c950159ccb5adeeb707bdb095afda61)]
+- 🐛 Use position fixed for bubble [[527dc8a](https://github.com/baptisteArno/typebot.io/commit/527dc8a5b11b198a5cbc605a60487c6b5e469025)]
+- 🐛 Improve bot libs mount in prod env [[907cad8](https://github.com/baptisteArno/typebot.io/commit/907cad805031e75161dd2dc83b1f962769208a84)]
+- 🐛 Fix bot libs mount behavior and prop types [[46bf25a](https://github.com/baptisteArno/typebot.io/commit/46bf25a5806dc763823bd3f896445977ce64b948)]
+- 🐛 (typebot) Attempt to fix updatedAt comparison with different timezones [[6c2df1a](https://github.com/baptisteArno/typebot.io/commit/6c2df1a474dbd0ec80ea9a6b8bd1ece792c3f4d1)]
+
+### Miscellaneous
+
+- 📝 Add appropriate docs for new @typebot.io libs [[a4e3f4b](https://github.com/baptisteArno/typebot.io/commit/a4e3f4bf9c072ba0af1be1d32b1f818c21f7c2c4)]
+- 🧑‍💻 Better Typebot import in vanilla JS sites [[ab43d80](https://github.com/baptisteArno/typebot.io/commit/ab43d809c36a2879d440eba5b3e318beb5f6b864)]
+
+
 <a name="2.10.4"></a>
 ## 2.10.4 (2023-02-19)
 

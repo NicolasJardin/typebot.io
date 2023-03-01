@@ -71,7 +71,7 @@ const sendEmail = async ({
 }: SendEmailOptions & {
   typebotId: string
   resultId?: string
-  fileUrls?: string
+  fileUrls?: string | string[]
 }) => {
   const { name: replyToName } = parseEmailRecipient(replyTo)
 
@@ -102,6 +102,7 @@ const sendEmail = async ({
       resultId,
       message: 'Email not sent',
       details: {
+        error: 'No email body found',
         transportConfig,
         recipients,
         subject,
@@ -121,7 +122,11 @@ const sendEmail = async ({
     to: recipients,
     replyTo,
     subject,
-    attachments: fileUrls?.split(', ').map((url) => ({ path: url })),
+    attachments: fileUrls
+      ? (typeof fileUrls === 'string' ? fileUrls.split(', ') : fileUrls).map(
+          (url) => ({ path: url })
+        )
+      : undefined,
     ...emailBody,
   }
   try {
@@ -142,12 +147,12 @@ const sendEmail = async ({
       resultId,
       message: 'Email not sent',
       details: {
+        error: err,
         transportConfig: {
           ...transportConfig,
           auth: { user: transportConfig.auth.user, pass: '******' },
         },
         email,
-        error: err,
       },
     })
   }

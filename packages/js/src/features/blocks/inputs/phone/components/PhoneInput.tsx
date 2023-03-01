@@ -2,19 +2,24 @@ import { ShortTextInput } from '@/components'
 import { SendButton } from '@/components/SendButton'
 import { InputSubmitContent } from '@/types'
 import { isMobile } from '@/utils/isMobileSignal'
-import type { PhoneNumberInputBlock } from 'models'
+import type { PhoneNumberInputOptions } from 'models'
 import { createSignal, For, onMount } from 'solid-js'
+import { isEmpty } from 'utils'
 import { phoneCountries } from 'utils/phoneCountries'
 
-type PhoneInputProps = {
-  block: PhoneNumberInputBlock
+type PhoneInputProps = Pick<
+  PhoneNumberInputOptions,
+  'labels' | 'defaultCountryCode'
+> & {
   defaultValue?: string
   onSubmit: (value: InputSubmitContent) => void
   hasGuestAvatar: boolean
 }
 
 export const PhoneInput = (props: PhoneInputProps) => {
-  const [selectedCountryCode, setSelectedCountryCode] = createSignal('INT')
+  const [selectedCountryCode, setSelectedCountryCode] = createSignal(
+    isEmpty(props.defaultCountryCode) ? 'INT' : props.defaultCountryCode
+  )
   const [inputValue, setInputValue] = createSignal(props.defaultValue ?? '')
   let inputRef: HTMLInputElement | undefined
 
@@ -32,7 +37,15 @@ export const PhoneInput = (props: PhoneInputProps) => {
     inputValue() !== '' && inputRef?.reportValidity()
 
   const submit = () => {
-    if (checkIfInputIsValid()) props.onSubmit({ value: inputValue() })
+    const selectedCountryDialCode = phoneCountries.find(
+      (country) => country.code === selectedCountryCode()
+    )?.dial_code
+    if (checkIfInputIsValid())
+      props.onSubmit({
+        value: inputValue().startsWith('+')
+          ? inputValue()
+          : `${selectedCountryDialCode ?? ''}${inputValue()}`,
+      })
   }
 
   const submitWhenEnter = (e: KeyboardEvent) => {
@@ -62,7 +75,7 @@ export const PhoneInput = (props: PhoneInputProps) => {
       <div class="flex flex-1">
         <select
           onChange={selectNewCountryCode}
-          class="w-12 pl-2 focus:outline-none"
+          class="w-12 pl-2 focus:outline-none rounded-lg typebot-country-select"
         >
           <option selected>
             {
@@ -88,9 +101,7 @@ export const PhoneInput = (props: PhoneInputProps) => {
           ref={inputRef}
           value={inputValue()}
           onInput={handleInput}
-          placeholder={
-            props.block.options.labels.placeholder ?? 'Your phone number...'
-          }
+          placeholder={props.labels.placeholder ?? 'Your phone number...'}
           autofocus={!isMobile()}
         />
       </div>
@@ -101,7 +112,7 @@ export const PhoneInput = (props: PhoneInputProps) => {
         class="my-2 ml-2"
         on:click={submit}
       >
-        {props.block.options?.labels?.button ?? 'Send'}
+        {props.labels?.button ?? 'Send'}
       </SendButton>
     </div>
   )

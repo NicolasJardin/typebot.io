@@ -57,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       typebot,
       resultsFilter: { typebotId },
     })
-    if (!success) return res.status(500).send({ success: false })
+    if (!success) return res.status(500).send({ success: false, error: '' })
     await prisma.publicTypebot.deleteMany({
       where: { typebotId },
     })
@@ -92,9 +92,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const updates = {
       ...omit(data, 'id', 'createdAt', 'updatedAt'),
+      version: '3',
       theme: data.theme ?? undefined,
       settings: data.settings ?? undefined,
       resultsTablePreferences: data.resultsTablePreferences ?? undefined,
+      groups: data.groups ?? [],
+      variables: data.variables ?? [],
+      edges: data.edges ?? [],
     } satisfies Prisma.TypebotUpdateInput
 
     const updatedTypebot = await prisma.typebot.update({

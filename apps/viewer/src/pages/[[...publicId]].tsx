@@ -3,13 +3,33 @@ import { ErrorPage } from '@/components/ErrorPage'
 import { NotFoundPage } from '@/components/NotFoundPage'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { env, getViewerUrl, isDefined, isNotDefined, omit } from 'utils'
-import { TypebotPage, TypebotPageProps } from '../components/TypebotPage'
 import prisma from '../lib/prisma'
+import { TypebotPageProps, TypebotPageV2 } from '@/components/TypebotPageV2'
+import { TypebotPageV3 } from '@/components/TypebotPageV3'
+
+// Browsers that doesn't support ES modules and/or web components
+const incompatibleBrowsers = [
+  {
+    name: 'UC Browser',
+    regex: /ucbrowser/i,
+  },
+  {
+    name: 'Internet Explorer',
+    regex: /msie|trident/i,
+  },
+  {
+    name: 'Opera Mini',
+    regex: /opera mini/i,
+  },
+]
 
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const isIE = /MSIE|Trident/.test(context.req.headers['user-agent'] ?? '')
+  const incompatibleBrowser =
+    incompatibleBrowsers.find((browser) =>
+      browser.regex.test(context.req.headers['user-agent'] ?? '')
+    )?.name ?? null
   const pathname = context.resolvedUrl.split('?')[0]
   const { host, forwardedHost } = getHost(context.req)
   try {
@@ -36,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (
     return {
       props: {
         publishedTypebot,
-        isIE,
+        incompatibleBrowser,
         url: `https://${forwardedHost ?? host}${pathname}`,
         customHeadCode:
           isDefined(headCode) && headCode !== '' ? headCode : null,
@@ -47,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (
   }
   return {
     props: {
-      isIE,
+      incompatibleBrowser,
       url: `https://${forwardedHost ?? host}${pathname}`,
     },
   }
@@ -76,7 +96,14 @@ const getTypebotFromCustomDomain = async (
   const publishedTypebot = await prisma.publicTypebot.findFirst({
     where: { typebot: { customDomain } },
     include: {
-      typebot: { select: { name: true, isClosed: true, isArchived: true } },
+      typebot: {
+        select: {
+          name: true,
+          isClosed: true,
+          isArchived: true,
+          publicId: true,
+        },
+      },
     },
   })
   if (isNotDefined(publishedTypebot)) return null
@@ -94,12 +121,38 @@ const getHost = (
   forwardedHost: req?.headers['x-forwarded-host'] as string | undefined,
 })
 
-const App = ({ publishedTypebot, ...props }: TypebotPageProps) => {
+const App = ({
+  publishedTypebot,
+  incompatibleBrowser,
+  ...props
+}: TypebotPageProps & { incompatibleBrowser: string | null }) => {
+  if (incompatibleBrowser)
+    return (
+      <ErrorPage
+        error={
+          new Error(
+            `Your web browser: ${incompatibleBrowser}, is not supported.`
+          )
+        }
+      />
+    )
   if (!publishedTypebot || publishedTypebot.typebot.isArchived)
     return <NotFoundPage />
   if (publishedTypebot.typebot.isClosed)
     return <ErrorPage error={new Error('This bot is now closed')} />
-  return <TypebotPage publishedTypebot={publishedTypebot} {...props} />
+  return publishedTypebot.version === '3' ? (
+    <TypebotPageV3
+      url={props.url}
+      typebot={{
+        name: publishedTypebot.typebot.name,
+        publicId: publishedTypebot.typebot.publicId,
+        settings: publishedTypebot.settings,
+        theme: publishedTypebot.theme,
+      }}
+    />
+  ) : (
+    <TypebotPageV2 publishedTypebot={publishedTypebot} {...props} />
+  )
 }
 
 export default App

@@ -162,6 +162,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
       </Stack>
       <SwitchWithLabel
         label={'Conteúdo personalizado?'}
+        moreInfoContent="Por padrão, o corpo do email será uma recapitulação do que foi coletado até agora. Você pode substituí-lo com esta opção."
         initialValue={options.isCustomBody ?? false}
         onCheckChange={handleIsCustomBodyChange}
       />
@@ -181,7 +182,7 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
           </Flex>
           {options.isBodyCode ? (
             <CodeEditor
-              value={options.body ?? ''}
+              defaultValue={options.body ?? ''}
               onChange={handleBodyChange}
               lang="html"
             />

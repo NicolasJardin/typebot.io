@@ -15,7 +15,7 @@ import { useTypebot } from '../providers/TypebotProvider'
 import { BlocksSideBar } from './BlocksSideBar'
 import { BoardMenuButton } from './BoardMenuButton'
 import { GettingStartedModal } from './GettingStartedModal'
-import { PreviewDrawer } from './PreviewDrawer'
+import { PreviewDrawer } from '@/features/preview/components/PreviewDrawer'
 import { TypebotHeader } from './TypebotHeader'
 
 export const EditorPage = () => {
@@ -44,7 +44,7 @@ export const EditorPage = () => {
               {!isReadOnly && <BlocksSideBar />}
               <GraphProvider isReadOnly={isReadOnly}>
                 <GroupsCoordinatesProvider groups={typebot.groups}>
-                  <Graph flex="1" typebot={typebot} />
+                  <Graph flex="1" typebot={typebot} key={typebot.id} />
                   <BoardMenuButton pos="absolute" right="40px" top="20px" />
                   <RightPanel />
                 </GroupsCoordinatesProvider>

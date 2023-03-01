@@ -1,9 +1,7 @@
 import {
   Flex,
-  HStack,
   Portal,
   Stack,
-  Tag,
   Text,
   useColorModeValue,
   useEventListener,
@@ -15,13 +13,7 @@ import {
   useGraph,
 } from '../../../providers'
 import { useTypebot } from '@/features/editor'
-import {
-  BlockIndices,
-  BlockWithItems,
-  LogicBlockType,
-  Item,
-  Variable,
-} from 'models'
+import { BlockIndices, BlockWithItems, LogicBlockType, Item } from 'models'
 import React, { useEffect, useRef, useState } from 'react'
 import { ItemNode } from './ItemNode'
 import { SourceEndpoint } from '../../Endpoints'
@@ -75,19 +67,14 @@ export const ItemNodesList = ({
     if (mouseOverBlock?.id !== block.id) {
       setExpandedPlaceholderIndex(undefined)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mouseOverBlock?.id, showPlaceholders])
+  }, [block.id, mouseOverBlock?.id, showPlaceholders])
 
   const handleMouseMoveOnBlock = (event: MouseEvent) => {
     if (!isDraggingOnCurrentBlock) return
     const index = computeNearestPlaceholderIndex(event.pageY, placeholderRefs)
     setExpandedPlaceholderIndex(index)
   }
-  useEventListener(
-    'mousemove',
-    handleMouseMoveOnBlock,
-    mouseOverBlock?.ref.current
-  )
+  useEventListener('mousemove', handleMouseMoveOnBlock, mouseOverBlock?.element)
 
   const handleMouseUpOnGroup = (e: MouseEvent) => {
     if (
@@ -107,14 +94,9 @@ export const ItemNodesList = ({
       itemIndex,
     })
   }
-  useEventListener(
-    'mouseup',
-    handleMouseUpOnGroup,
-    mouseOverBlock?.ref.current,
-    {
-      capture: true,
-    }
-  )
+  useEventListener('mouseup', handleMouseUpOnGroup, mouseOverBlock?.element, {
+    capture: true,
+  })
 
   const handleBlockMouseDown =
     (itemIndex: number) =>
@@ -137,17 +119,8 @@ export const ItemNodesList = ({
       elem && (placeholderRefs.current[idx] = elem)
     }
 
-  const collectedVariableId =
-    'options' in block && block.options && block.options.variableId
-
   return (
     <Stack flex={1} spacing={1} maxW="full" onClick={stopPropagating}>
-      {collectedVariableId && (
-        <CollectVariableLabel
-          variableId={collectedVariableId}
-          variables={typebot?.variables ?? []}
-        />
-      )}
       <PlaceholderNode
         isVisible={showPlaceholders}
         isExpanded={expandedPlaceholderIndex === 0}
@@ -219,30 +192,5 @@ const DefaultItemNode = ({ block }: { block: BlockWithItems }) => {
         right="-49px"
       />
     </Flex>
-  )
-}
-
-const CollectVariableLabel = ({
-  variableId,
-  variables,
-}: {
-  variableId: string
-  variables: Variable[]
-}) => {
-  const textColor = useColorModeValue('gray.600', 'gray.400')
-  const variableName = variables.find(
-    (variable) => variable.id === variableId
-  )?.name
-
-  if (!variableName) return null
-  return (
-    <HStack fontStyle="italic" spacing={1}>
-      <Text fontSize="sm" color={textColor}>
-        Coleta
-      </Text>
-      <Tag bg="orange.400" color="white" size="sm">
-        {variableName}
-      </Tag>
-    </HStack>
   )
 }

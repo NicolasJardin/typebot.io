@@ -335,7 +335,12 @@
                                                                             "type": "string"
                                                                           },
                                                                           "height": {
-                                                                            "type": "number"
+                                                                            "anyOf": [
+                                                                              {
+                                                                                "type": "number"
+                                                                              },
+                                                                              {}
+                                                                            ]
                                                                           }
                                                                         },
                                                                         "required": [
@@ -1086,6 +1091,9 @@
                                                                                     "type": "boolean"
                                                                                   },
                                                                                   "buttonLabel": {
+                                                                                    "type": "string"
+                                                                                  },
+                                                                                  "dynamicVariableId": {
                                                                                     "type": "string"
                                                                                   }
                                                                                 },
@@ -2907,10 +2915,13 @@
                                     "value": {
                                       "anyOf": [
                                         {
-                                          "not": {}
+                                          "type": "string"
                                         },
                                         {
-                                          "type": "string"
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
                                         }
                                       ],
                                       "nullable": true
@@ -3386,19 +3397,26 @@
                                     ]
                                   },
                                   "content": {
-                                    "type": "object",
-                                    "properties": {
-                                      "url": {
-                                        "type": "string"
+                                    "allOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "additionalProperties": false
                                       },
-                                      "height": {
-                                        "type": "number"
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "height": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "additionalProperties": false
                                       }
-                                    },
-                                    "required": [
-                                      "height"
-                                    ],
-                                    "additionalProperties": false
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -4095,6 +4113,9 @@
                                                         },
                                                         "buttonLabel": {
                                                           "type": "string"
+                                                        },
+                                                        "dynamicVariableId": {
+                                                          "type": "string"
                                                         }
                                                       },
                                                       "required": [
@@ -4515,9 +4536,6 @@
                                                         "value": {
                                                           "anyOf": [
                                                             {
-                                                              "not": {}
-                                                            },
-                                                            {
                                                               "anyOf": [
                                                                 {
                                                                   "anyOf": [
@@ -4533,6 +4551,12 @@
                                                                   "type": "boolean"
                                                                 }
                                                               ]
+                                                            },
+                                                            {
+                                                              "type": "array",
+                                                              "items": {
+                                                                "type": "string"
+                                                              }
                                                             }
                                                           ],
                                                           "nullable": true
@@ -4606,9 +4630,6 @@
                                                         "value": {
                                                           "anyOf": [
                                                             {
-                                                              "not": {}
-                                                            },
-                                                            {
                                                               "anyOf": [
                                                                 {
                                                                   "anyOf": [
@@ -4624,6 +4645,12 @@
                                                                   "type": "boolean"
                                                                 }
                                                               ]
+                                                            },
+                                                            {
+                                                              "type": "array",
+                                                              "items": {
+                                                                "type": "string"
+                                                              }
                                                             }
                                                           ],
                                                           "nullable": true

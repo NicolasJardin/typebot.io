@@ -27,14 +27,9 @@ import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
 import {
-  HStack,
-  IconButton,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  Portal,
-  Stack,
-  useEventListener,
+  HStack, IconButton, PopoverArrow,
+  PopoverBody, PopoverContent, Portal, Stack,
+  useColorModeValue, useEventListener
 } from '@chakra-ui/react'
 import {
   Block,
@@ -43,7 +38,7 @@ import {
   BubbleBlockType,
   InputBlockType,
   IntegrationBlockType,
-  LogicBlockType,
+  LogicBlockType
 } from 'models'
 import { Fragment, useRef } from 'react'
 import { HelpDocButton } from './HelpDocButton'
@@ -55,6 +50,7 @@ type Props = {
 }
 
 export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
+  const arrowColor = useColorModeValue('white', 'gray.800')
   const ref = useRef<HTMLDivElement | null>(null)
   const handleMouseDown = (e: React.MouseEvent) => e.stopPropagation()
 
@@ -65,7 +61,7 @@ export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
   return (
     <Portal>
       <PopoverContent onMouseDown={handleMouseDown} pos="relative">
-        <PopoverArrow />
+        <PopoverArrow bgColor={arrowColor} />
         <PopoverBody
           pt="3"
           pb="6"
