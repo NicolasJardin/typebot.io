@@ -476,4 +476,6 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
 }
 
 export const hasDefaultConnector = (block: Block) =>
-  !isChoiceInput(block) && !isConditionBlock(block)
+  !isChoiceInput(block) &&
+  !isConditionBlock(block) &&
+  block.type !== LogicBlockType.END

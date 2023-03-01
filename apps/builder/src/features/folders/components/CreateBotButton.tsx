@@ -39,7 +39,7 @@ export const CreateBotButton = ({
           textAlign="center"
           mt="6"
         >
-          Criar um typebot
+          Criar um fluxo
         </Text>
       </VStack>
     </Button>

@@ -1,6 +1,12 @@
 import { createId } from '@paralleldrive/cuid2'
 import { produce } from 'immer'
-import { Group, DraggableBlock, DraggableBlockType, BlockIndices } from 'models'
+import {
+  Group,
+  DraggableBlock,
+  DraggableBlockType,
+  BlockIndices,
+  LogicBlockType,
+} from 'models'
 import { SetTypebot } from '../TypebotProvider'
 import {
   deleteGroupDraft,
@@ -42,7 +48,10 @@ const groupsActions = (
         const newGroup: Group = {
           id,
           graphCoordinates,
-          title: `Grupo #${typebot.groups.length}`,
+          title:
+            block === LogicBlockType.END
+              ? 'Fim'
+              : `Grupo #${typebot.groups.length}`,
           blocks: [],
         }
         typebot.groups.push(newGroup)

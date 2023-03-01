@@ -42,8 +42,8 @@ const getHelpDocUrl = (blockType: BlockWithOptions['type']): string | null => {
       return 'https://docs.typebot.io/editor/blocks/logic/script'
     case LogicBlockType.WAIT:
       return 'https://docs.typebot.io/editor/blocks/logic/wait'
-    case InputBlockType.TEXT:
-      return 'https://docs.typebot.io/editor/blocks/inputs/text'
+    // case InputBlockType.TEXT:
+    //   return 'https://docs.typebot.io/editor/blocks/inputs/text'
     case InputBlockType.NUMBER:
       return 'https://docs.typebot.io/editor/blocks/inputs/number'
     case InputBlockType.EMAIL:
