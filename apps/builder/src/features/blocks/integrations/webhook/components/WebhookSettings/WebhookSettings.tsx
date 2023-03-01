@@ -223,7 +223,7 @@ export const WebhookSettings = ({
                 />
                 {(options.isCustomBody ?? true) && (
                   <CodeEditor
-                    value={localWebhook.body ?? ''}
+                    defaultValue={localWebhook.body ?? ''}
                     lang="json"
                     onChange={handleBodyChange}
                     debounceTimeout={0}

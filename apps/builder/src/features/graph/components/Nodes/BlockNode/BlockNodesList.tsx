@@ -55,8 +55,7 @@ export const BlockNodesList = ({
 
   useEffect(() => {
     if (mouseOverGroup?.id !== groupId) setExpandedPlaceholderIndex(undefined)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mouseOverGroup?.id])
+  }, [groupId, mouseOverGroup?.id])
 
   const handleMouseMoveGlobal = (event: MouseEvent) => {
     if (!draggedBlock || draggedBlock.groupId !== groupId) return
@@ -96,15 +95,18 @@ export const BlockNodesList = ({
   const handleBlockMouseDown =
     (blockIndex: number) =>
     (
-      { absolute, relative }: { absolute: Coordinates; relative: Coordinates },
+      { relative, absolute }: { absolute: Coordinates; relative: Coordinates },
       block: DraggableBlock
     ) => {
       if (isReadOnly) return
       placeholderRefs.current.splice(blockIndex + 1, 1)
-      detachBlockFromGroup({ groupIndex, blockIndex })
-      setPosition(absolute)
       setMousePositionInElement(relative)
+      setPosition({
+        x: absolute.x - relative.x,
+        y: absolute.y - relative.y,
+      })
       setDraggedBlock(block)
+      detachBlockFromGroup({ groupIndex, blockIndex })
     }
 
   const handlePushElementRef =
@@ -114,14 +116,10 @@ export const BlockNodesList = ({
 
   useEventListener('mousemove', handleMouseMoveGlobal)
   useEventListener('mousemove', handleMouseMoveOnGroup, groupRef.current)
-  useEventListener(
-    'mouseup',
-    handleMouseUpOnGroup,
-    mouseOverGroup?.ref.current,
-    {
-      capture: true,
-    }
-  )
+  useEventListener('mouseup', handleMouseUpOnGroup, mouseOverGroup?.element, {
+    capture: true,
+  })
+
   return (
     <Stack
       spacing={1}

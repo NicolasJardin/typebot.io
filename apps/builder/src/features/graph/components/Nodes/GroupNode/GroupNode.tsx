@@ -1,12 +1,12 @@
 import { ContextMenu } from '@/components/ContextMenu'
-import { PlayIcon } from '@/components/icons'
 import { RightPanel, useEditor, useTypebot } from '@/features/editor'
+import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { setMultipleRefs } from '@/utils/helpers'
 import {
   Editable,
   EditableInput,
   EditablePreview,
-  IconButton,
+  SlideFade,
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react'
@@ -22,6 +22,7 @@ import {
   useGroupsCoordinates,
 } from '../../../providers'
 import { BlockNodesList } from '../BlockNode/BlockNodesList'
+import { GroupFocusToolbar } from './GroupFocusToolbar'
 import { GroupNodeContextMenu } from './GroupNodeContextMenu'
 
 type Props = {
@@ -61,12 +62,11 @@ const NonMemoizedDraggableGroupNode = ({
     connectingIds,
     setConnectingIds,
     previewingEdge,
+    previewingBlock,
     isReadOnly,
-    focusedGroupId,
-    setFocusedGroupId,
     graphPosition,
   } = useGraph()
-  const { typebot, updateGroup } = useTypebot()
+  const { typebot, updateGroup, deleteGroup, duplicateGroup } = useTypebot()
   const { setMouseOverGroup, mouseOverGroup } = useBlockDnd()
   const { setRightPanel, setStartPreviewAtGroup } = useEditor()
 
@@ -76,6 +76,28 @@ const NonMemoizedDraggableGroupNode = ({
     group.graphCoordinates
   )
   const [groupTitle, setGroupTitle] = useState(group.title)
+
+  const isPreviewing =
+    previewingBlock?.groupId === group.id ||
+    previewingEdge?.from.groupId === group.id ||
+    (previewingEdge?.to.groupId === group.id &&
+      isNotDefined(previewingEdge.to.blockId))
+
+  const isStartGroup =
+    isDefined(group.blocks[0]) && group.blocks[0].type === 'start'
+
+  const isEndGroup =
+    isDefined(group.blocks[0]) && group.blocks[0].type === LogicBlockType.END
+
+  const groupRef = useRef<HTMLDivElement | null>(null)
+  const [debouncedGroupPosition] = useDebounce(currentCoordinates, 100)
+  const [isFocused, setIsFocused] = useState(false)
+
+  useOutsideClick({
+    handler: () => setIsFocused(false),
+    ref: groupRef,
+    capture: true,
+  })
 
   // When the group is moved from external action (e.g. undo/redo), update the current coordinates
   useEffect(() => {
@@ -89,19 +111,6 @@ const NonMemoizedDraggableGroupNode = ({
   useEffect(() => {
     setGroupTitle(group.title)
   }, [group.title])
-
-  const isPreviewing =
-    previewingEdge?.from.groupId === group.id ||
-    (previewingEdge?.to.groupId === group.id &&
-      isNotDefined(previewingEdge.to.blockId))
-  const isStartGroup =
-    isDefined(group.blocks[0]) && group.blocks[0].type === 'start'
-
-  const isEndGroup =
-    isDefined(group.blocks[0]) && group.blocks[0].type === LogicBlockType.END
-
-  const groupRef = useRef<HTMLDivElement | null>(null)
-  const [debouncedGroupPosition] = useDebounce(currentCoordinates, 100)
   useEffect(() => {
     if (!currentCoordinates || isReadOnly) return
     if (
@@ -125,8 +134,8 @@ const NonMemoizedDraggableGroupNode = ({
 
   const handleMouseEnter = () => {
     if (isReadOnly) return
-    if (mouseOverGroup?.id !== group.id && !isStartGroup)
-      setMouseOverGroup({ id: group.id, ref: groupRef })
+    if (mouseOverGroup?.id !== group.id && !isStartGroup && groupRef.current)
+      setMouseOverGroup({ id: group.id, element: groupRef.current })
     if (connectingIds)
       setConnectingIds({ ...connectingIds, target: { groupId: group.id } })
   }
@@ -148,7 +157,7 @@ const NonMemoizedDraggableGroupNode = ({
       if ((target as HTMLElement).classList.contains('prevent-group-drag'))
         return
       if (first) {
-        setFocusedGroupId(group.id)
+        setIsFocused(true)
         setIsMouseDown(true)
       }
       if (last) {
@@ -179,6 +188,7 @@ const NonMemoizedDraggableGroupNode = ({
       {(ref, isContextMenuOpened) => (
         <Stack
           ref={setMultipleRefs([ref, groupRef])}
+          id={`group-${group.id}`}
           data-testid="group"
           p="4"
           rounded="xl"
@@ -187,7 +197,7 @@ const NonMemoizedDraggableGroupNode = ({
             isConnecting || isContextMenuOpened || isPreviewing ? '2px' : '1px'
           }
           borderColor={
-            isConnecting || isContextMenuOpened || isPreviewing
+            isConnecting || isContextMenuOpened || isPreviewing || isFocused
               ? previewingBorderColor
               : borderColor
           }
@@ -205,7 +215,7 @@ const NonMemoizedDraggableGroupNode = ({
           cursor={isMouseDown ? 'grabbing' : 'pointer'}
           shadow="md"
           _hover={{ shadow: 'lg' }}
-          zIndex={focusedGroupId === group.id ? 10 : 1}
+          zIndex={isFocused ? 10 : 1}
         >
           <Editable
             value={groupTitle}
@@ -235,16 +245,26 @@ const NonMemoizedDraggableGroupNode = ({
               isStartGroup={isStartGroup}
             />
           )}
-          <IconButton
-            icon={<PlayIcon />}
-            aria-label={'Visualizar bot deste grupo'}
-            pos="absolute"
-            right={2}
-            top={0}
-            size="sm"
-            variant="outline"
-            onClick={startPreviewAtThisGroup}
-          />
+          {!isReadOnly && (
+            <SlideFade
+              in={isFocused}
+              style={{
+                position: 'absolute',
+                top: '-50px',
+                right: 0,
+              }}
+              unmountOnExit
+            >
+              <GroupFocusToolbar
+                onPlayClick={startPreviewAtThisGroup}
+                onDuplicateClick={() => {
+                  setIsFocused(false)
+                  duplicateGroup(groupIndex)
+                }}
+                onDeleteClick={() => deleteGroup(groupIndex)}
+              />
+            </SlideFade>
+          )}
         </Stack>
       )}
     </ContextMenu>

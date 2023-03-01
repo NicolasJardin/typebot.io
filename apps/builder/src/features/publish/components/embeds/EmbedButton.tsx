@@ -1,4 +1,11 @@
-import { Button, useDisclosure, VStack, WrapItem, Text } from '@chakra-ui/react'
+import {
+  Button,
+  useDisclosure,
+  VStack,
+  WrapItem,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react'
 import {
   WordpressLogo,
   ShopifyLogo,
@@ -23,6 +30,11 @@ import {
   IframeModal,
   WixModal,
 } from './modals'
+import { OtherModal } from './modals/OtherModal'
+import { ScriptIcon } from '@/features/blocks/logic/script'
+import { ScriptModal } from './modals/Script/ScriptModal'
+import { CodeIcon } from '@/components/icons'
+import { ApiModal } from './modals/ApiModal'
 
 export type ModalProps = {
   publicId: string
@@ -113,6 +125,14 @@ export const integrationsList = [
   ),
   (props: Pick<ModalProps, 'publicId' | 'isPublished'>) => (
     <EmbedButton
+      logo={<CodeIcon height={100} width="60px" />}
+      label="API"
+      Modal={ApiModal}
+      {...props}
+    />
+  ),
+  (props: Pick<ModalProps, 'publicId' | 'isPublished'>) => (
+    <EmbedButton
       logo={<NotionLogo height={100} width="60px" />}
       label="Notion"
       Modal={NotionModal}
@@ -129,6 +149,20 @@ export const integrationsList = [
   ),
   (props: Pick<ModalProps, 'publicId' | 'isPublished'>) => (
     <EmbedButton
+      logo={
+        <ScriptIcon
+          height={100}
+          width="70px"
+          color={useColorModeValue('gray.800', 'gray.300')}
+        />
+      }
+      label="Script"
+      Modal={ScriptModal}
+      {...props}
+    />
+  ),
+  (props: Pick<ModalProps, 'publicId' | 'isPublished'>) => (
+    <EmbedButton
       logo={<IframeLogo height={100} width="70px" />}
       label="Iframe"
       Modal={IframeModal}
@@ -139,7 +173,7 @@ export const integrationsList = [
     <EmbedButton
       logo={<OtherLogo height={100} width="70px" />}
       label="Outro"
-      Modal={JavascriptModal}
+      Modal={OtherModal}
       {...props}
     />
   ),

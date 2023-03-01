@@ -11,13 +11,15 @@ You can get the standard HTML and Javascript code by clicking on the "HTML & Jav
 There, you can change the container dimensions. Here is a code example:
 
 ```html
-<script src="https://unpkg.com/typebot-js@2.2"></script>
-<div id="typebot-container" style="width: 100%; height: 600px;"></div>
-<script>
-  Typebot.initContainer('typebot-container', {
-    url: 'https://viewer.typebot.io/my-typebot',
+<script type="module">
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0.9/dist/web.js'
+
+  Typebot.initStandard({
+    typebot: 'my-typebot',
   })
 </script>
+
+<typebot-standard style="width: 100%; height: 600px; "></typebot-standard>
 ```
 
 This code is creating a container with a 100% width (will match parent width) and 600px height.
@@ -29,11 +31,13 @@ You can get the popup HTML and Javascript code by clicking on the "HTML & Javasc
 Here is an example:
 
 ```html
-<script src="https://unpkg.com/typebot-js@2.2"></script>
-<script>
+<script type="module">
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0.9/dist/web.js'
+
   Typebot.initPopup({
-    url: 'https://viewer.typebot.io/my-typebot',
-    delay: 3000,
+    typebot: 'my-typebot',
+    apiHost: 'http://localhost:3001',
+    autoShowDelay: 3000,
   })
 </script>
 ```
@@ -69,33 +73,37 @@ You can get the bubble HTML and Javascript code by clicking on the "HTML & Javas
 Here is an example:
 
 ```html
-<script src="https://unpkg.com/typebot-js@2.2"></script>
-<script>
-  var typebotCommands = Typebot.initPopup({
-    url: 'https://viewer.typebot.io/my-typebot',
-    delay: 3000,
+<script type="module">
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0.9/dist/web.js'
+
+  Typebot.initBubble({
+    typebot: 'my-typebot',
+    previewMessage: {
+      message: 'I have a question for you!',
+      autoShowDelay: 5000,
+      avatarUrl: 'https://avatars.githubusercontent.com/u/16015833?v=4',
+    },
+    theme: {
+      button: { backgroundColor: '#0042DA', iconColor: '#FFFFFF' },
+      previewMessage: { backgroundColor: '#ffffff', textColor: 'black' },
+      chatWindow: { backgroundColor: '#ffffff' },
+    },
   })
 </script>
 ```
 
-This code will automatically trigger the popup window after 3 seconds.
+This code will show the bubble and let a preview message appear after 5 seconds.
 
 ### Open or close the preview message
 
 You can use these commands:
 
 ```js
-Typebot.showMessage()
+Typebot.showPreviewMessage()
 ```
 
 ```js
-Typebot.hideMessage()
-```
-
-You can bind this command on a button element, for example:
-
-```html
-<button onclick="Typebot.showMessage()">Open message</button>
+Typebot.hidePreviewMessage()
 ```
 
 ### Open or close the typebot
@@ -122,12 +130,12 @@ You can bind these commands on a button element, for example:
 
 ## Additional configuration
 
-You can add hidden variable values in your embed code by adding the `hiddenVariables` option. Here is an example:
+You can prefill the bot variable values in your embed code by adding the `prefilledVariables` option. Here is an example:
 
 ```js
-Typebot.initContainer('typebot-container', {
-  url: 'https://viewer.typebot.io/my-typebot',
-  hiddenVariables: {
+Typebot.initStandard({
+  typebot: 'my-typebot',
+  prefilledVariables: {
     'Current URL': 'https://my-site/account',
     'User name': 'John Doe',
   },

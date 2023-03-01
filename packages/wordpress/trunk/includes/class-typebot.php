@@ -42,7 +42,6 @@ class Typebot
 	private function define_admin_hooks()
 	{
 		$plugin_admin = new Typebot_Admin($this->get_version());
-		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'my_admin_menu');
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_typebot_settings');
 	}
@@ -50,7 +49,7 @@ class Typebot
 	private function define_public_hooks()
 	{
 		$plugin_public = new Typebot_Public($this->get_plugin_name(), $this->get_version());
-		$this->loader->add_action('wp_head', $plugin_public, 'add_head_code');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'add_head_code');
 		$this->loader->add_shortcode('typebot', $plugin_public, 'add_typebot_container');
 	}
 

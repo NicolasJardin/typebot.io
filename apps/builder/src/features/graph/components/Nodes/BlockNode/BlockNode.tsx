@@ -5,7 +5,6 @@ import {
   PopoverTrigger,
   useColorModeValue,
   useDisclosure,
-  useEventListener,
 } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import {
@@ -19,7 +18,7 @@ import {
   LogicBlockType,
   BubbleBlockType,
 } from 'models'
-import { isBubbleBlock, isTextBubbleBlock } from 'utils'
+import { isBubbleBlock, isDefined, isTextBubbleBlock } from 'utils'
 import { BlockNodeContent } from './BlockNodeContent/BlockNodeContent'
 import { BlockIcon, useTypebot } from '@/features/editor'
 import { SettingsPopoverContent } from './SettingsPopoverContent'
@@ -31,7 +30,6 @@ import { BlockSettings } from './SettingsPopoverContent/SettingsPopoverContent'
 import { TargetEndpoint } from '../../Endpoints'
 import { MediaBubblePopoverContent } from './MediaBubblePopoverContent'
 import { ContextMenu } from '@/components/ContextMenu'
-import { setMultipleRefs } from '@/utils/helpers'
 import { TextBubbleEditor } from '@/features/blocks/bubbles/textBubble'
 import {
   NodePosition,
@@ -41,6 +39,7 @@ import {
   ParentModalProvider,
 } from '../../../providers'
 import { hasDefaultConnector } from '../../../utils'
+import { setMultipleRefs } from '@/utils/helpers'
 
 export const BlockNode = ({
   block,
@@ -65,6 +64,7 @@ export const BlockNode = ({
     setFocusedGroupId,
     previewingEdge,
     isReadOnly,
+    previewingBlock,
   } = useGraph()
   const { mouseOverBlock, setMouseOverBlock } = useBlockDnd()
   const { typebot, updateBlock } = useTypebot()
@@ -77,12 +77,16 @@ export const BlockNode = ({
   )
   const blockRef = useRef<HTMLDivElement | null>(null)
 
-  const isPreviewing = isConnecting || previewingEdge?.to.blockId === block.id
+  const isPreviewing =
+    isConnecting ||
+    previewingEdge?.to.blockId === block.id ||
+    previewingBlock?.id === block.id
 
   const onDrag = (position: NodePosition) => {
     if (block.type === 'start' || !onMouseDown) return
     onMouseDown(position, block)
   }
+
   useDragDistance({
     ref: blockRef,
     onDrag,
@@ -97,8 +101,7 @@ export const BlockNode = ({
 
   useEffect(() => {
     if (query.blockId?.toString() === block.id) setOpenedBlockId(block.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, [block.id, query, setOpenedBlockId])
 
   useEffect(() => {
     setIsConnecting(
@@ -114,8 +117,8 @@ export const BlockNode = ({
 
   const handleMouseEnter = () => {
     if (isReadOnly) return
-    if (mouseOverBlock?.id !== block.id)
-      setMouseOverBlock({ id: block.id, ref: blockRef })
+    if (mouseOverBlock?.id !== block.id && blockRef.current)
+      setMouseOverBlock({ id: block.id, element: blockRef.current })
     if (connectingIds)
       setConnectingIds({
         ...connectingIds,
@@ -158,10 +161,23 @@ export const BlockNode = ({
 
   useEffect(() => {
     setIsPopoverOpened(openedBlockId === block.id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openedBlockId])
+  }, [block.id, openedBlockId])
 
-  useEventListener('pointerdown', (e) => e.stopPropagation(), blockRef.current)
+  useEffect(() => {
+    if (!blockRef.current) return
+    const blockElement = blockRef.current
+    blockElement.addEventListener('pointerdown', (e) => e.stopPropagation())
+
+    return () => {
+      blockElement.removeEventListener('pointerdown', (e) =>
+        e.stopPropagation()
+      )
+    }
+  }, [])
+
+  const hasIcomingEdge = typebot?.edges.some((edge) => {
+    return edge.to.blockId === block.id
+  })
 
   return isEditing && isTextBubbleBlock(block) ? (
     <TextBubbleEditor
@@ -216,12 +232,15 @@ export const BlockNode = ({
                   data-testid={`${block.id}-icon`}
                 />
                 <BlockNodeContent block={block} indices={indices} />
-                <TargetEndpoint
-                  pos="absolute"
-                  left="-34px"
-                  top="16px"
-                  blockId={block.id}
-                />
+                {(hasIcomingEdge || isDefined(connectingIds)) && (
+                  <TargetEndpoint
+                    pos="absolute"
+                    left="-34px"
+                    top="16px"
+                    blockId={block.id}
+                    groupId={block.groupId}
+                  />
+                )}
                 {isConnectable && hasDefaultConnector(block) && (
                   <SourceEndpoint
                     source={{

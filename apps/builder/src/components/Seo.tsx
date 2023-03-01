@@ -20,9 +20,6 @@ export const Seo = ({
       <meta property="og:title" content={title} />
       <meta property="twitter:title" content={title} />
 
-      <meta property="twitter:url" content={currentUrl} />
-      <meta property="og:url" content={currentUrl} />
-
       <meta name="description" content={description} />
       <meta property="twitter:description" content={description} />
       <meta property="og:description" content={description} />

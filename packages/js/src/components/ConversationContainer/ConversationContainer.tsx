@@ -1,8 +1,8 @@
 import type { ChatReply, Theme } from 'models'
-import { createEffect, createSignal, For, Show } from 'solid-js'
+import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { sendMessageQuery } from '@/queries/sendMessageQuery'
 import { ChatChunk } from './ChatChunk'
-import { BotContext, InitialChatReply } from '@/types'
+import { BotContext, InitialChatReply, OutgoingLog } from '@/types'
 import { isNotDefined } from 'utils'
 import { executeClientSideAction } from '@/utils/executeClientSideActions'
 import { LoadingChunk } from './LoadingChunk'
@@ -38,7 +38,7 @@ type Props = {
   onNewInputBlock?: (ids: { id: string; groupId: string }) => void
   onAnswer?: (answer: { message: string; blockId: string }) => void
   onEnd?: () => void
-  onNewLogs?: (logs: ChatReply['logs']) => void
+  onNewLogs?: (logs: OutgoingLog[]) => void
 }
 
 export const ConversationContainer = (props: Props) => {
@@ -60,6 +60,21 @@ export const ConversationContainer = (props: Props) => {
   const [isSending, setIsSending] = createSignal(false)
   const [blockedPopupUrl, setBlockedPopupUrl] = createSignal<string>()
 
+  onMount(() => {
+    ;(async () => {
+      const initialChunk = chatChunks()[0]
+      if (initialChunk.clientSideActions) {
+        const actionsBeforeFirstBubble = initialChunk.clientSideActions.filter(
+          (action) => isNotDefined(action.lastBubbleBlockId)
+        )
+        for (const action of actionsBeforeFirstBubble) {
+          const response = await executeClientSideAction(action)
+          if (response) setBlockedPopupUrl(response.blockedPopupUrl)
+        }
+      }
+    })()
+  })
+
   createEffect(() => {
     setTheme(
       parseDynamicTheme(props.initialChatReply.typebot.theme, dynamicTheme())
@@ -67,7 +82,7 @@ export const ConversationContainer = (props: Props) => {
   })
 
   const sendMessage = async (message: string | undefined) => {
-    const currentBlockId = chatChunks().at(-1)?.input?.id
+    const currentBlockId = [...chatChunks()].pop()?.input?.id
     if (currentBlockId && props.onAnswer && message)
       props.onAnswer({ message, blockId: currentBlockId })
     const longRequest = setTimeout(() => {
@@ -89,6 +104,15 @@ export const ConversationContainer = (props: Props) => {
         groupId: data.input.groupId,
       })
     }
+    if (data.clientSideActions) {
+      const actionsBeforeFirstBubble = data.clientSideActions.filter((action) =>
+        isNotDefined(action.lastBubbleBlockId)
+      )
+      for (const action of actionsBeforeFirstBubble) {
+        const response = await executeClientSideAction(action)
+        if (response) setBlockedPopupUrl(response.blockedPopupUrl)
+      }
+    }
     setChatChunks((displayedChunks) => [
       ...displayedChunks,
       {
@@ -107,24 +131,15 @@ export const ConversationContainer = (props: Props) => {
   }
 
   const handleAllBubblesDisplayed = async () => {
-    const lastChunk = chatChunks().at(-1)
+    const lastChunk = [...chatChunks()].pop()
     if (!lastChunk) return
-    if (lastChunk.clientSideActions) {
-      const actionsToExecute = lastChunk.clientSideActions.filter((action) =>
-        isNotDefined(action.lastBubbleBlockId)
-      )
-      for (const action of actionsToExecute) {
-        const response = await executeClientSideAction(action)
-        if (response) setBlockedPopupUrl(response.blockedPopupUrl)
-      }
-    }
     if (isNotDefined(lastChunk.input)) {
       props.onEnd?.()
     }
   }
 
   const handleNewBubbleDisplayed = async (blockId: string) => {
-    const lastChunk = chatChunks().at(-1)
+    const lastChunk = [...chatChunks()].pop()
     if (!lastChunk) return
     if (lastChunk.clientSideActions) {
       const actionsToExecute = lastChunk.clientSideActions.filter(

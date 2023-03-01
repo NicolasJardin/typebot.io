@@ -10,11 +10,13 @@ import {
   ModalBody,
   OrderedList,
   ListItem,
-  Tag,
+  Code,
   InputGroup,
   Input,
   InputRightElement,
   ModalFooter,
+  Text,
+  Stack,
 } from '@chakra-ui/react'
 import { env, getViewerUrl } from 'utils'
 import { ModalProps } from '../EmbedButton'
@@ -39,28 +41,30 @@ export const NotionModal = ({
               Você precisa publicar seu bot primeiro.
             </AlertInfo>
           )}
-          <OrderedList spacing={3}>
+          <OrderedList spacing={4}>
             <ListItem>
-              Digite <Tag>/embed</Tag>
+              Type <Code>/embed</Code>
             </ListItem>
             <ListItem>
-              Cole o URL do seu typebot
-              <InputGroup size="md" mt={2}>
-                <Input
-                  pr="4.5rem"
-                  type={'text'}
-                  defaultValue={`${
-                    env('VIEWER_INTERNAL_URL') ?? getViewerUrl()
-                  }/${publicId}`}
-                />
-                <InputRightElement width="4.5rem">
-                  <CopyButton
-                    textToCopy={`${
+              <Stack>
+                <Text>Cole o URL do seu typebot</Text>
+                <InputGroup size="sm">
+                  <Input
+                    type={'text'}
+                    defaultValue={`${
                       env('VIEWER_INTERNAL_URL') ?? getViewerUrl()
                     }/${publicId}`}
                   />
-                </InputRightElement>
-              </InputGroup>
+                  <InputRightElement width="60px">
+                    <CopyButton
+                      size="sm"
+                      textToCopy={`${
+                        env('VIEWER_INTERNAL_URL') ?? getViewerUrl()
+                      }/${publicId}`}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+              </Stack>
             </ListItem>
           </OrderedList>
         </ModalBody>

@@ -39,10 +39,11 @@ export const Popup = (props: PopupProps) => {
 
   const [isBotOpened, setIsBotOpened] = createSignal(
     // eslint-disable-next-line solid/reactivity
-    popupProps.isOpen ?? popupProps.defaultOpen ?? false
+    popupProps.isOpen ?? false
   )
 
   onMount(() => {
+    if (popupProps.defaultOpen) openBot()
     window.addEventListener('message', processIncomingEvent)
     const autoShowDelay = popupProps.autoShowDelay
     if (isDefined(autoShowDelay)) {
@@ -59,6 +60,14 @@ export const Popup = (props: PopupProps) => {
   createEffect(() => {
     if (isNotDefined(props.isOpen) || props.isOpen === isBotOpened()) return
     toggleBot()
+  })
+
+  createEffect(() => {
+    if (!props.prefilledVariables) return
+    setPrefilledVariables((existingPrefilledVariables) => ({
+      ...existingPrefilledVariables,
+      ...props.prefilledVariables,
+    }))
   })
 
   const stopPropagation = (event: MouseEvent) => {

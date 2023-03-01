@@ -20,12 +20,14 @@ import {
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
 import { InputBlockType } from 'models'
 import { isNotDefined } from 'utils'
 
 export const PublishButton = (props: ButtonProps) => {
+  const warningTextColor = useColorModeValue('red.300', 'red.600')
   const { workspace } = useWorkspace()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -68,12 +70,18 @@ export const PublishButton = (props: ButtonProps) => {
         type={LimitReached.FILE_INPUT}
       />
       <Tooltip
-        borderRadius="md"
-        hasArrow
         placement="bottom-end"
         label={
           <Stack>
-            <Text>Existem alterações não publicadas.</Text>
+            {!publishedTypebot?.version ? (
+              <Text color={warningTextColor} fontWeight="semibold">
+                Isso implantará seu bot com um mecanismo atualizado. Tenha
+                certeza de teste-o corretamente no modo de visualização antes de
+                publicar.
+              </Text>
+            ) : (
+              <Text>Existem alterações não publicadas.</Text>
+            )}
             <Text fontStyle="italic">
               Versão publicada de{' '}
               {publishedTypebot &&

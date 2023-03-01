@@ -1,4 +1,11 @@
-import { createSignal, onMount, Show, splitProps, onCleanup } from 'solid-js'
+import {
+  createSignal,
+  onMount,
+  Show,
+  splitProps,
+  onCleanup,
+  createEffect,
+} from 'solid-js'
 import styles from '../../../assets/index.css'
 import { CommandData } from '../../commands'
 import { BubbleButton } from './BubbleButton'
@@ -50,6 +57,14 @@ export const Bubble = (props: BubbleProps) => {
 
   onCleanup(() => {
     window.removeEventListener('message', processIncomingEvent)
+  })
+
+  createEffect(() => {
+    if (!props.prefilledVariables) return
+    setPrefilledVariables((existingPrefilledVariables) => ({
+      ...existingPrefilledVariables,
+      ...props.prefilledVariables,
+    }))
   })
 
   const processIncomingEvent = (event: MessageEvent<CommandData>) => {
@@ -125,9 +140,10 @@ export const Bubble = (props: BubbleProps) => {
           transform: isBotOpened() ? 'scale3d(1, 1, 1)' : 'scale3d(0, 0, 1)',
           'box-shadow': 'rgb(0 0 0 / 16%) 0px 5px 40px',
           'background-color': bubbleProps.theme?.chatWindow?.backgroundColor,
+          'z-index': 42424242,
         }}
         class={
-          'absolute bottom-20 sm:right-4 rounded-lg w-full sm:w-[400px] max-h-[704px] ' +
+          'fixed bottom-20 sm:right-4 rounded-lg w-full sm:w-[400px] max-h-[704px] ' +
           (isBotOpened() ? 'opacity-1' : 'opacity-0 pointer-events-none')
         }
       >

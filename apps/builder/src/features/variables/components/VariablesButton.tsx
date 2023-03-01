@@ -46,7 +46,7 @@ export const VariablesButton = ({ onSelectVariable, ...props }: Props) => {
         <VariableSearchInput
           onSelectVariable={(variable) => {
             onClose()
-            onSelectVariable(variable)
+            if (variable) onSelectVariable(variable)
           }}
           placeholder="Pesquisar uma variável"
           shadow="lg"

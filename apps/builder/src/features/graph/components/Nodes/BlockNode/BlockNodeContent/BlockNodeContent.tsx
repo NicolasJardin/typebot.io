@@ -5,6 +5,7 @@ import FileNodeContent from '@/features/blocks/bubbles/file/components/FileNodeC
 import { ImageBubbleContent } from '@/features/blocks/bubbles/image'
 import { TextBubbleContent } from '@/features/blocks/bubbles/textBubble'
 import { VideoBubbleContent } from '@/features/blocks/bubbles/video'
+import { ButtonsBlockNode } from '@/features/blocks/inputs/buttons/components/ButtonsBlockNode'
 import { DateNodeContent } from '@/features/blocks/inputs/date'
 import { EmailInputNodeContent } from '@/features/blocks/inputs/emailInput'
 import { FileInputContent } from '@/features/blocks/inputs/fileUpload'
@@ -42,7 +43,7 @@ import {
   LogicBlockType,
   StartBlock,
 } from 'models'
-import { blockHasItems, isChoiceInput, isInputBlock } from 'utils'
+import { isChoiceInput, isInputBlock } from 'utils'
 import { ItemNodesList } from '../../ItemNode'
 import { WithVariableContent } from './WithVariableContent'
 
@@ -51,9 +52,6 @@ type Props = {
   indices: BlockIndices
 }
 export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
-  if (blockHasItems(block))
-    return <ItemNodesList block={block} indices={indices} />
-
   if (
     isInputBlock(block) &&
     !isChoiceInput(block) &&
@@ -105,6 +103,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case InputBlockType.URL: {
       return <UrlNodeContent placeholder={block.options.labels.placeholder} />
     }
+    case InputBlockType.CHOICE: {
+      return <ButtonsBlockNode block={block} indices={indices} />
+    }
     case InputBlockType.PHONE: {
       return <PhoneNodeContent placeholder={block.options.labels.placeholder} />
     }
@@ -155,6 +156,8 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case LogicBlockType.END:
       return <EndNodeContent />
 
+    case LogicBlockType.CONDITION:
+      return <ItemNodesList block={block} indices={indices} />
     case IntegrationBlockType.GOOGLE_SHEETS: {
       return (
         <GoogleSheetsNodeContent

@@ -2,6 +2,7 @@ import { EditableEmojiOrImageIcon } from '@/components/EditableEmojiOrImageIcon'
 import { ChevronLeftIcon, RedoIcon, UndoIcon } from '@/components/icons'
 import { PublishButton } from '@/features/publish'
 import { useUndoShortcut } from '@/hooks/useUndoShortcut'
+import { isCloudProdInstance } from '@/utils/helpers'
 import {
   Button,
   Flex,
@@ -12,6 +13,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { open as openSupportBubble } from '@typebot.io/js'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -59,6 +61,12 @@ export const TypebotHeader = () => {
     hideUndoShortcutTooltipLater()
     undo()
   })
+
+  const handleHelpClick = () => {
+    isCloudProdInstance
+      ? openSupportBubble()
+      : window.open('https://docs.typebot.io', '_blank')
+  }
 
   return (
     <Flex

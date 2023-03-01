@@ -2,7 +2,6 @@ import { Group, Edge, IdMap, Source, Block, Target } from 'models'
 import {
   createContext,
   Dispatch,
-  MutableRefObject,
   ReactNode,
   SetStateAction,
   useContext,
@@ -53,26 +52,22 @@ export type ConnectingIds = {
   target?: Target
 }
 
-type BlockId = string
-type ButtonId = string
-export type Endpoint = {
-  id: BlockId | ButtonId
-  ref: MutableRefObject<HTMLDivElement | null>
-}
-
 export type GroupsCoordinates = IdMap<Coordinates>
+
+type PreviewingBlock = {
+  id: string
+  groupId: string
+}
 
 const graphContext = createContext<{
   graphPosition: Position
   setGraphPosition: Dispatch<SetStateAction<Position>>
   connectingIds: ConnectingIds | null
   setConnectingIds: Dispatch<SetStateAction<ConnectingIds | null>>
+  previewingBlock?: PreviewingBlock
+  setPreviewingBlock: Dispatch<SetStateAction<PreviewingBlock | undefined>>
   previewingEdge?: Edge
   setPreviewingEdge: Dispatch<SetStateAction<Edge | undefined>>
-  sourceEndpoints: IdMap<Endpoint>
-  addSourceEndpoint: (endpoint: Endpoint) => void
-  targetEndpoints: IdMap<Endpoint>
-  addTargetEndpoint: (endpoint: Endpoint) => void
   openedBlockId?: string
   setOpenedBlockId: Dispatch<SetStateAction<string | undefined>>
   openedItemId?: string
@@ -99,25 +94,10 @@ export const GraphProvider = ({
   )
   const [connectingIds, setConnectingIds] = useState<ConnectingIds | null>(null)
   const [previewingEdge, setPreviewingEdge] = useState<Edge>()
-  const [sourceEndpoints, setSourceEndpoints] = useState<IdMap<Endpoint>>({})
-  const [targetEndpoints, setTargetEndpoints] = useState<IdMap<Endpoint>>({})
+  const [previewingBlock, setPreviewingBlock] = useState<PreviewingBlock>()
   const [openedBlockId, setOpenedBlockId] = useState<string>()
   const [openedItemId, setOpenedItemId] = useState<string>()
   const [focusedGroupId, setFocusedGroupId] = useState<string>()
-
-  const addSourceEndpoint = (endpoint: Endpoint) => {
-    setSourceEndpoints((endpoints) => ({
-      ...endpoints,
-      [endpoint.id]: endpoint,
-    }))
-  }
-
-  const addTargetEndpoint = (endpoint: Endpoint) => {
-    setTargetEndpoints((endpoints) => ({
-      ...endpoints,
-      [endpoint.id]: endpoint,
-    }))
-  }
 
   return (
     <graphContext.Provider
@@ -128,10 +108,6 @@ export const GraphProvider = ({
         setConnectingIds,
         previewingEdge,
         setPreviewingEdge,
-        sourceEndpoints,
-        targetEndpoints,
-        addSourceEndpoint,
-        addTargetEndpoint,
         openedBlockId,
         setOpenedBlockId,
         openedItemId,
@@ -139,6 +115,8 @@ export const GraphProvider = ({
         isReadOnly,
         focusedGroupId,
         setFocusedGroupId,
+        setPreviewingBlock,
+        previewingBlock,
       }}
     >
       {children}

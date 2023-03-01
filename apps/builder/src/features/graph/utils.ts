@@ -36,8 +36,6 @@ import {
   defaultWebhookOptions,
   DraggableBlock,
   DraggableBlockType,
-  Edge,
-  IdMap,
   InputBlockType,
   IntegrationBlockType,
   Item,
@@ -54,13 +52,13 @@ import {
   isBubbleBlockType,
   isChoiceInput,
   isConditionBlock,
+  isDefined,
 } from 'utils'
 import { AnchorsPositionProps } from './components/Edges/Edge'
 import {
   blockAnchorsOffset,
   blockWidth,
   Coordinates,
-  Endpoint,
   stubLength,
 } from './providers'
 
@@ -335,32 +333,6 @@ export const computeEdgePathToMouse = ({
   ).path
 }
 
-export const getEndpointTopOffset = ({
-  endpoints,
-  graphOffsetY,
-  endpointId,
-  graphScale,
-}: {
-  endpoints: IdMap<Endpoint>
-  graphOffsetY: number
-  endpointId?: string
-  graphScale: number
-}): number | undefined => {
-  if (!endpointId) return
-  const endpointRef = endpoints[endpointId]?.ref
-  if (!endpointRef?.current) return
-  const endpointHeight = 20 * graphScale
-  return (
-    (endpointRef.current.getBoundingClientRect().y +
-      endpointHeight / 2 -
-      graphOffsetY) /
-    graphScale
-  )
-}
-
-export const getSourceEndpointId = (edge?: Edge) =>
-  edge?.from.itemId ?? edge?.from.blockId
-
 export const parseNewBlock = (
   type: DraggableBlockType,
   groupId: string
@@ -476,6 +448,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
 }
 
 export const hasDefaultConnector = (block: Block) =>
-  !isChoiceInput(block) &&
-  !isConditionBlock(block) &&
-  block.type !== LogicBlockType.END
+  (!isChoiceInput(block) &&
+    !isConditionBlock(block) &&
+    block.type !== LogicBlockType.END) ||
+  (block.type === InputBlockType.CHOICE &&
+    isDefined(block.options.dynamicVariableId))

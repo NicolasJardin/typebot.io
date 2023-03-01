@@ -9,17 +9,18 @@ import {
   ModalContent,
   ModalOverlay,
   Stack,
+  Tag,
+  Text,
   Tooltip,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@/components/icons'
-import { TypebotViewer } from 'bot-engine'
+import { Standard } from '@typebot.io/react'
 import { Typebot } from 'models'
 import React, { useCallback, useEffect, useState } from 'react'
-import { getViewerUrl, sendRequest } from 'utils'
 import { templates } from '../data'
 import { TemplateProps } from '../types'
 import { useToast } from '@/hooks/useToast'
-import { parseTypebotToPublicTypebot } from '@/features/publish'
+import { sendRequest } from 'utils'
 
 type Props = {
   isOpen: boolean
@@ -68,18 +69,20 @@ export const TemplatesModal = ({ isOpen, onClose, onTypebotChoose }: Props) => {
     >
       <ModalOverlay />
       <ModalContent h="85vh">
-        <ModalBody as={HStack} p="0" spacing="0">
+        <ModalBody h="full" as={HStack} p="0" spacing="0">
           <Stack w="full" h="full" spacing="4">
             <Heading pl="10" pt="4" fontSize="2xl">
               {selectedTemplate.emoji}{' '}
               <chakra.span ml="2">{selectedTemplate.name}</chakra.span>
             </Heading>
             {typebot && (
-              <TypebotViewer
-                apiHost={getViewerUrl()}
-                typebot={parseTypebotToPublicTypebot(typebot)}
+              <Standard
                 key={typebot.id}
-                style={{ borderRadius: '0.25rem' }}
+                typebot={typebot}
+                style={{
+                  borderRadius: '0.25rem',
+                  backgroundColor: '#fff',
+                }}
               />
             )}
           </Stack>
@@ -119,10 +122,18 @@ export const TemplatesModal = ({ isOpen, onClose, onTypebotChoose }: Props) => {
                         }
                         isDisabled={template.isComingSoon}
                       >
-                        {template.emoji}{' '}
-                        <chakra.span minW="200px" textAlign="left" ml="3">
-                          {template.name}
-                        </chakra.span>
+                        <HStack justifyContent="space-between" w="full">
+                          <HStack>
+                            <Text>{template.emoji}</Text>
+                            <Text>{template.name}</Text>
+                          </HStack>
+
+                          {template.isNew && (
+                            <Tag colorScheme="orange" size="sm">
+                              New
+                            </Tag>
+                          )}
+                        </HStack>
                       </Button>
                     </span>
                   </Tooltip>
