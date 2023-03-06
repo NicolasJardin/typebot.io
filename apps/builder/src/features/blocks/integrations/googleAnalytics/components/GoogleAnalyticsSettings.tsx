@@ -1,4 +1,4 @@
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import {
   Accordion,
   AccordionButton,
@@ -11,7 +11,6 @@ import {
   Tag,
 } from '@chakra-ui/react'
 import { GoogleAnalyticsOptions } from 'models'
-import React from 'react'
 
 type Props = {
   options?: GoogleAnalyticsOptions
@@ -42,39 +41,24 @@ export const GoogleAnalyticsSettings = ({
 
   return (
     <Stack spacing={4}>
-      <Stack>
-        <FormLabel mb="0" htmlFor="tracking-id">
-          ID de rastreamento:
-        </FormLabel>
-        <Input
-          id="tracking-id"
-          defaultValue={options?.trackingId ?? ''}
-          placeholder="G-123456..."
-          onChange={handleTrackingIdChange}
-        />
-      </Stack>
-      <Stack>
-        <FormLabel mb="0" htmlFor="category">
-          Categoria do evento:
-        </FormLabel>
-        <Input
-          id="category"
-          defaultValue={options?.category ?? ''}
-          placeholder="Exemplo: Typebot"
-          onChange={handleCategoryChange}
-        />
-      </Stack>
-      <Stack>
-        <FormLabel mb="0" htmlFor="action">
-          Ação do evento:
-        </FormLabel>
-        <Input
-          id="action"
-          defaultValue={options?.action ?? ''}
-          placeholder="Exemplo: enviar e-mail"
-          onChange={handleActionChange}
-        />
-      </Stack>
+      <TextInput
+        label="ID de rastreamento:"
+        defaultValue={options?.trackingId ?? ''}
+        placeholder="G-123456..."
+        onChange={handleTrackingIdChange}
+      />
+      <TextInput
+        label="Categoria do evento:"
+        defaultValue={options?.category ?? ''}
+        placeholder="Examplo: Typebot"
+        onChange={handleCategoryChange}
+      />
+      <TextInput
+        label="Ação do evento:"
+        defaultValue={options?.action ?? ''}
+        placeholder="Examplo: enviar email"
+        onChange={handleActionChange}
+      />
       <Accordion allowToggle>
         <AccordionItem>
           <h2>
@@ -86,28 +70,28 @@ export const GoogleAnalyticsSettings = ({
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} as={Stack} spacing="6">
-            <Stack>
-              <FormLabel mb="0" htmlFor="label">
-                Rótulo do evento <Tag>Opcional</Tag>:
-              </FormLabel>
-              <Input
-                id="label"
-                defaultValue={options?.label ?? ''}
-                placeholder="Exemplo: Campanha Z"
-                onChange={handleLabelChange}
-              />
-            </Stack>
-            <Stack>
-              <FormLabel mb="0" htmlFor="value">
-                Valor do evento <Tag>Opcional</Tag>:
-              </FormLabel>
-              <Input
-                id="value"
-                defaultValue={options?.value?.toString() ?? ''}
-                placeholder="Exemplo: 0"
-                onChange={handleValueChange}
-              />
-            </Stack>
+            <TextInput
+              label={
+                <>
+                  Rótulo do evento <Tag>Opcional</Tag>:
+                </>
+              }
+              defaultValue={options?.label ?? ''}
+              placeholder="Examplo: Campanha Z"
+              onChange={handleLabelChange}
+            />
+            <TextInput
+              label={
+                <>
+                  <FormLabel mb="0" htmlFor="value">
+                    Valor do evento <Tag>Opcional</Tag>:
+                  </FormLabel>
+                </>
+              }
+              defaultValue={options?.value?.toString() ?? ''}
+              placeholder="Examplo: 0"
+              onChange={handleValueChange}
+            />
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

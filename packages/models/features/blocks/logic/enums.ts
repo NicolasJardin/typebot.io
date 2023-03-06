@@ -10,4 +10,5 @@ export enum LogicBlockType {
   REMOVE_TAG = 'Remove tag',
   WAIT_FOR = 'Wait for',
   END = 'End',
+  JUMP = 'Jump',
 }

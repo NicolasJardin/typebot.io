@@ -1,6 +1,6 @@
 import { ExpandIcon } from '@/components/icons'
 import ButtonSettings from '@/features/blocks/bubbles/button/components/ButtonSettings'
-import { ButtonsOptionsForm } from '@/features/blocks/inputs/buttons'
+import { ButtonsBlockSettings } from '@/features/blocks/inputs/buttons'
 import { DateInputSettingsBody } from '@/features/blocks/inputs/date'
 import { EmailInputSettingsBody } from '@/features/blocks/inputs/emailInput'
 import { FileInputSettings } from '@/features/blocks/inputs/fileUpload'
@@ -14,9 +14,11 @@ import { ChatwootSettingsForm } from '@/features/blocks/integrations/chatwoot'
 import { GoogleAnalyticsSettings } from '@/features/blocks/integrations/googleAnalytics'
 import { GoogleSheetsSettingsBody } from '@/features/blocks/integrations/googleSheets'
 import { MakeComSettings } from '@/features/blocks/integrations/makeCom'
+import { PabblyConnectSettings } from '@/features/blocks/integrations/pabbly/components/PabblyConnectSettings'
 import { SendEmailSettings } from '@/features/blocks/integrations/sendEmail'
 import { WebhookSettings } from '@/features/blocks/integrations/webhook'
 import { ZapierSettings } from '@/features/blocks/integrations/zapier'
+import { JumpSettings } from '@/features/blocks/logic/jump/components/JumpSettings'
 import { RedirectSettings } from '@/features/blocks/logic/redirect'
 import RemoveTagSettings from '@/features/blocks/logic/removeTag/components/RemoveTagSettings'
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
@@ -27,9 +29,15 @@ import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
 import {
-  HStack, IconButton, PopoverArrow,
-  PopoverBody, PopoverContent, Portal, Stack,
-  useColorModeValue, useEventListener
+  HStack,
+  IconButton,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  Portal,
+  Stack,
+  useColorModeValue,
+  useEventListener,
 } from '@chakra-ui/react'
 import {
   Block,
@@ -38,7 +46,7 @@ import {
   BubbleBlockType,
   InputBlockType,
   IntegrationBlockType,
-  LogicBlockType
+  LogicBlockType,
 } from 'models'
 import { Fragment, useRef } from 'react'
 import { HelpDocButton } from './HelpDocButton'
@@ -158,7 +166,7 @@ export const BlockSettings = ({
     }
     case InputBlockType.CHOICE: {
       return (
-        <ButtonsOptionsForm
+        <ButtonsBlockSettings
           options={block.options}
           onOptionsChange={handleOptionsChange}
         />
@@ -245,6 +253,15 @@ export const BlockSettings = ({
         />
       )
 
+    case LogicBlockType.JUMP:
+      return (
+        <JumpSettings
+          groupId={block.groupId}
+          options={block.options}
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+
     case LogicBlockType.REMOVE_TAG:
       return (
         <RemoveTagSettings
@@ -281,20 +298,20 @@ export const BlockSettings = ({
       )
     }
     case IntegrationBlockType.ZAPIER: {
-      return <ZapierSettings block={block} />
+      return (
+        <ZapierSettings block={block} onOptionsChange={handleOptionsChange} />
+      )
     }
     case IntegrationBlockType.MAKE_COM: {
-      return <MakeComSettings block={block} />
+      return (
+        <MakeComSettings block={block} onOptionsChange={handleOptionsChange} />
+      )
     }
     case IntegrationBlockType.PABBLY_CONNECT: {
       return (
-        <WebhookSettings
+        <PabblyConnectSettings
           block={block}
           onOptionsChange={handleOptionsChange}
-          provider={{
-            name: 'Pabbly Connect',
-            url: 'https://www.pabbly.com/connect/integrations/typebot/',
-          }}
         />
       )
     }

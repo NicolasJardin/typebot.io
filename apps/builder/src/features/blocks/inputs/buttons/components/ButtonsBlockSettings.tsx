@@ -1,20 +1,17 @@
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
-import { SwitchWithLabel } from '@/components/SwitchWithLabel'
-import { VariableSearchInput } from '@/components/VariableSearchInput'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
+import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { ChoiceInputOptions, Variable } from 'models'
 import React from 'react'
 
-type ButtonsOptionsFormProps = {
+type Props = {
   options?: ChoiceInputOptions
   onOptionsChange: (options: ChoiceInputOptions) => void
 }
 
-export const ButtonsOptionsForm = ({
-  options,
-  onOptionsChange,
-}: ButtonsOptionsFormProps) => {
+export const ButtonsBlockSettings = ({ options, onOptionsChange }: Props) => {
   const handleIsMultipleChange = (isMultipleChoice: boolean) =>
     options && onOptionsChange({ ...options, isMultipleChoice })
   const handleButtonLabelChange = (buttonLabel: string) =>
@@ -32,16 +29,11 @@ export const ButtonsOptionsForm = ({
         onCheckChange={handleIsMultipleChange}
       />
       {options?.isMultipleChoice && (
-        <Stack>
-          <FormLabel mb="0" htmlFor="button">
-            Rótulo do botão:
-          </FormLabel>
-          <Input
-            id="button"
-            defaultValue={options?.buttonLabel ?? 'Enviar'}
-            onChange={handleButtonLabelChange}
-          />
-        </Stack>
+        <TextInput
+          label="Rótulo do botão:"
+          defaultValue={options?.buttonLabel ?? 'Enviar'}
+          onChange={handleButtonLabelChange}
+        />
       )}
       <FormControl>
         <FormLabel>

@@ -12,6 +12,7 @@ import {
   PopoverAnchor,
   Portal,
   Tag,
+  Text,
 } from '@chakra-ui/react'
 import { EditIcon, PlusIcon, TrashIcon } from '@/components/icons'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider/TypebotProvider'
@@ -36,7 +37,7 @@ export const VariableSearchInput = ({
   autoFocus,
   ...inputProps
 }: Props) => {
-  const bg = useColorModeValue('gray.200', 'gray.700')
+  const focusedItemBgColor = useColorModeValue('gray.200', 'gray.700')
   const { onOpen, onClose, isOpen } = useDisclosure()
   const { typebot, createVariable, deleteVariable, updateVariable } =
     useTypebot()
@@ -63,9 +64,7 @@ export const VariableSearchInput = ({
 
   useEffect(() => {
     if (autoFocus) onOpen()
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [autoFocus, onOpen])
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -206,11 +205,15 @@ export const VariableSearchInput = ({
                 variant="ghost"
                 justifyContent="flex-start"
                 leftIcon={<PlusIcon />}
-                bgColor={keyboardFocusIndex === 0 ? bg : 'transparent'}
+                bgColor={
+                  keyboardFocusIndex === 0 ? focusedItemBgColor : 'transparent'
+                }
               >
                 Criar
                 <Tag colorScheme="orange" ml="1">
-                  {inputValue}
+                  <Text noOfLines={0} display="block">
+                    {inputValue}
+                  </Text>
                 </Tag>
               </Button>
             )}
@@ -234,10 +237,16 @@ export const VariableSearchInput = ({
                       variant="ghost"
                       justifyContent="space-between"
                       bgColor={
-                        keyboardFocusIndex === indexInList ? bg : 'transparent'
+                        keyboardFocusIndex === indexInList
+                          ? focusedItemBgColor
+                          : 'transparent'
                       }
+                      transition="none"
                     >
-                      {item.name}
+                      <Text noOfLines={0} display="block" pr="2">
+                        {item.name}
+                      </Text>
+
                       <HStack>
                         <IconButton
                           icon={<EditIcon />}

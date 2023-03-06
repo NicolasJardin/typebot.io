@@ -24,6 +24,7 @@ import { SendEmailContent } from '@/features/blocks/integrations/sendEmail'
 import { WebhookContent } from '@/features/blocks/integrations/webhook'
 import { ZapierContent } from '@/features/blocks/integrations/zapier'
 import EndNodeContent from '@/features/blocks/logic/end/components/EndNodeContent'
+import { JumpNodeBody } from '@/features/blocks/logic/jump/components/JumpNodeBody'
 import { RedirectNodeContent } from '@/features/blocks/logic/redirect'
 import RemoveTagNodeContent from '@/features/blocks/logic/removeTag/components/RemoveTagNodeContent'
 import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
@@ -149,6 +150,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.REMOVE_TAG:
       return <RemoveTagNodeContent options={block.options} />
+
+    case LogicBlockType.JUMP:
+      return <JumpNodeBody options={block.options} />
 
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />

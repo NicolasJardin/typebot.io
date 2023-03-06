@@ -22,6 +22,7 @@ import { SendEmailIcon } from '@/features/blocks/integrations/sendEmail'
 import { WebhookIcon } from '@/features/blocks/integrations/webhook'
 import { ZapierLogo } from '@/features/blocks/integrations/zapier'
 import { ConditionIcon } from '@/features/blocks/logic/condition'
+import { JumpIcon } from '@/features/blocks/logic/jump/components/JumpIcon'
 import { RedirectIcon } from '@/features/blocks/logic/redirect'
 import { ScriptIcon } from '@/features/blocks/logic/script/components/ScriptIcon'
 import { SetVariableIcon } from '@/features/blocks/logic/setVariable'
@@ -43,7 +44,7 @@ import { TbFiles } from 'react-icons/tb'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
-export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
+export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
   const blue = useColorModeValue('blue.500', 'blue.300')
   const orange = useColorModeValue('orange.500', 'orange.300')
   const purple = useColorModeValue('purple.500', 'purple.300')
@@ -100,6 +101,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps) => {
       return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TRANSFER:
       return <Icon as={BiShuffle} color={purple} {...props} />
+    case LogicBlockType.JUMP:
+      return <JumpIcon color={purple} {...props} />
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkIcon color={purple} {...props} />
     case LogicBlockType.END:
