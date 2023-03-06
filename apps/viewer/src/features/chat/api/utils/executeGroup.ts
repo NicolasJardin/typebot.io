@@ -25,7 +25,11 @@ import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
 
 export const executeGroup =
-  (state: SessionState, currentReply?: ChatReply) =>
+  (
+    state: SessionState,
+    currentReply?: ChatReply,
+    currentLastBubbleId?: string
+  ) =>
   async (
     group: Group
   ): Promise<ChatReply & { newSessionState: SessionState }> => {
@@ -34,7 +38,7 @@ export const executeGroup =
       currentReply?.clientSideActions
     let logs: ChatReply['logs'] = currentReply?.logs
     let nextEdgeId = null
-    let lastBubbleBlockId: string | undefined
+    let lastBubbleBlockId: string | undefined = currentLastBubbleId
 
     let newSessionState = state
 
@@ -103,11 +107,15 @@ export const executeGroup =
       return { messages, newSessionState, clientSideActions, logs }
     }
 
-    return executeGroup(newSessionState, {
-      messages,
-      clientSideActions,
-      logs,
-    })(nextGroup.group)
+    return executeGroup(
+      newSessionState,
+      {
+        messages,
+        clientSideActions,
+        logs,
+      },
+      lastBubbleBlockId
+    )(nextGroup.group)
   }
 
 const computeRuntimeOptions =

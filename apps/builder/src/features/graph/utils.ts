@@ -421,6 +421,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultWaitOptions
     case LogicBlockType.WAIT_FOR:
       return defaultWaitForOptions
+    case LogicBlockType.JUMP:
+      return {}
     case LogicBlockType.TYPEBOT_LINK:
       return {}
     case LogicBlockType.TRANSFER:

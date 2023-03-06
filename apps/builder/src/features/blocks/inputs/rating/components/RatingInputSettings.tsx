@@ -2,9 +2,9 @@ import { FormLabel, Stack } from '@chakra-ui/react'
 import { DropdownList } from '@/components/DropdownList'
 import { RatingInputOptions, Variable } from 'models'
 import React from 'react'
-import { SwitchWithLabel } from '@/components/SwitchWithLabel'
-import { Input } from '@/components/inputs'
-import { VariableSearchInput } from '@/components/VariableSearchInput'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
+import { TextInput } from '@/components/inputs'
+import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 
 type RatingInputSettingsProps = {
   options: RatingInputOptions
@@ -77,56 +77,38 @@ export const RatingInputSettings = ({
         />
       )}
       {options.buttonType === 'Icones' && options.customIcon.isEnabled && (
-        <Stack>
-          <FormLabel mb="0" htmlFor="svg">
-            Ícone SVG:
-          </FormLabel>
-          <Input
-            id="svg"
-            defaultValue={options.customIcon.svg}
-            onChange={handleIconSvgChange}
-            placeholder="<svg>...</svg>"
-          />
-        </Stack>
+        <TextInput
+          label="Icone SVG:"
+          defaultValue={options.customIcon.svg}
+          onChange={handleIconSvgChange}
+          placeholder="<svg>...</svg>"
+        />
       )}
-      <Stack>
-        <FormLabel mb="0" htmlFor="button">
-          {options.buttonType === 'Icones' ? '1' : '0'} rótulo:
-        </FormLabel>
-        <Input
-          id="button"
-          defaultValue={options.labels.left}
-          onChange={handleLeftLabelChange}
-          placeholder="Não é nada provável"
-        />
-      </Stack>
-      <Stack>
-        <FormLabel mb="0" htmlFor="button">
-          {options.length} rótulo:
-        </FormLabel>
-        <Input
-          id="button"
-          defaultValue={options.labels.right}
-          onChange={handleRightLabelChange}
-          placeholder="Extremamente provável"
-        />
-      </Stack>
+      <TextInput
+        label={`${options.buttonType === 'Icones' ? '1' : '0'} label:`}
+        defaultValue={options.labels.left}
+        onChange={handleLeftLabelChange}
+        placeholder="Não é nada provável"
+      />
+      <TextInput
+        label={`${options.length} label:`}
+        defaultValue={options.labels.right}
+        onChange={handleRightLabelChange}
+        placeholder="Extremely likely"
+      />
       <SwitchWithLabel
         label="Um clique para enviar"
         moreInfoContent='Se habilitada, a resposta será enviada assim que o usuário clicar em uma avaliação ao invés de mostrar o botão "Enviar".'
         initialValue={options.isOneClickSubmitEnabled ?? false}
         onCheckChange={handleOneClickSubmitChange}
       />
-      <Stack>
-        <FormLabel mb="0" htmlFor="button">
-          Rótulo do botão:
-        </FormLabel>
-        <Input
-          id="button"
+      {!options.isOneClickSubmitEnabled && (
+        <TextInput
+          label="Rótulo do botão:"
           defaultValue={options.labels.button}
           onChange={handleButtonLabelChange}
         />
-      </Stack>
+      )}
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
           Salvar resposta em uma variável:

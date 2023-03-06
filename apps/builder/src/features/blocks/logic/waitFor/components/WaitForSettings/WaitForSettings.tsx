@@ -1,4 +1,4 @@
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import { FormControl, FormLabel, Select, Stack } from '@chakra-ui/react'
 import add from 'date-fns/add'
 import set from 'date-fns/set'
@@ -104,7 +104,7 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
         </Select>
       </FormControl>
 
-      <Input
+      <TextInput
         label={`${getMeasures(options.type)} para aguardar`}
         defaultValue={options.number}
         onChange={handleNumberChange}
@@ -112,7 +112,7 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
       />
 
       {options.type === WaitForTypeEnum.DAY && (
-        <Input
+        <TextInput
           label="Horário para enviar mensagem:"
           defaultValue={options.time}
           onChange={handleTimeChange}

@@ -1,21 +1,21 @@
+import { Textarea, TextInput } from '@/components/inputs'
+import { CodeEditor } from '@/components/inputs/CodeEditor'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
+import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
+import { CredentialsDropdown } from '@/features/credentials'
 import {
-  Stack,
-  useDisclosure,
-  Text,
   Flex,
-  HStack,
-  Switch,
   FormLabel,
+  HStack,
+  Stack,
+  Switch,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { CodeEditor } from '@/components/CodeEditor'
 import { CredentialsType, SendEmailOptions, Variable } from 'models'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { env, isNotEmpty } from 'utils'
 import { SmtpConfigModal } from './SmtpConfigModal'
-import { SwitchWithLabel } from '@/components/SwitchWithLabel'
-import { VariableSearchInput } from '@/components/VariableSearchInput'
-import { CredentialsDropdown } from '@/features/credentials'
-import { Input, Textarea } from '@/components/inputs'
 
 type Props = {
   options: SendEmailOptions
@@ -120,46 +120,35 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
           refreshDropdownKey={refreshCredentialsKey}
         />
       </Stack>
-      <Stack>
-        <Text>Responder a: </Text>
-        <Input
-          onChange={handleReplyToChange}
-          defaultValue={options.replyTo}
-          placeholder={'email@gmail.com'}
-        />
-      </Stack>
-      <Stack>
-        <Text>Para: </Text>
-        <Input
-          onChange={handleToChange}
-          defaultValue={options.recipients.join(', ')}
-          placeholder="email1@gmail.com, email2@gmail.com"
-        />
-      </Stack>
-      <Stack>
-        <Text>Cc: </Text>
-        <Input
-          onChange={handleCcChange}
-          defaultValue={options.cc?.join(', ') ?? ''}
-          placeholder="email1@gmail.com, email2@gmail.com"
-        />
-      </Stack>
-      <Stack>
-        <Text>Bcc: </Text>
-        <Input
-          onChange={handleBccChange}
-          defaultValue={options.bcc?.join(', ') ?? ''}
-          placeholder="email1@gmail.com, email2@gmail.com"
-        />
-      </Stack>
-      <Stack>
-        <Text>Assunto: </Text>
-        <Input
-          data-testid="subject-input"
-          onChange={handleSubjectChange}
-          defaultValue={options.subject ?? ''}
-        />
-      </Stack>
+      <TextInput
+        label="Responder a:"
+        onChange={handleReplyToChange}
+        defaultValue={options.replyTo}
+        placeholder={'email@gmail.com'}
+      />
+      <TextInput
+        label="Para:"
+        onChange={handleToChange}
+        defaultValue={options.recipients.join(', ')}
+        placeholder="email1@gmail.com, email2@gmail.com"
+      />
+      <TextInput
+        label="Cc:"
+        onChange={handleCcChange}
+        defaultValue={options.cc?.join(', ') ?? ''}
+        placeholder="email1@gmail.com, email2@gmail.com"
+      />
+      <TextInput
+        label="Bcc:"
+        onChange={handleBccChange}
+        defaultValue={options.bcc?.join(', ') ?? ''}
+        placeholder="email1@gmail.com, email2@gmail.com"
+      />
+      <TextInput
+        label="Assunto:"
+        onChange={handleSubjectChange}
+        defaultValue={options.subject ?? ''}
+      />
       <SwitchWithLabel
         label={'Conteúdo personalizado?'}
         moreInfoContent="Por padrão, o corpo do email será uma recapitulação do que foi coletado até agora. Você pode substituí-lo com esta opção."

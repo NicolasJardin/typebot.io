@@ -1,5 +1,5 @@
-import { Input } from '@/components/inputs'
-import { VariableSearchInput } from '@/components/VariableSearchInput'
+import { TextInput } from '@/components/inputs'
+import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { FormLabel, Stack } from '@chakra-ui/react'
 import { EmailInputOptions, Variable } from 'models'
 import React from 'react'
@@ -24,36 +24,21 @@ export const EmailInputSettingsBody = ({
 
   return (
     <Stack spacing={4}>
-      <Stack>
-        <FormLabel mb="0" htmlFor="placeholder">
-          Espaço reservado:
-        </FormLabel>
-        <Input
-          id="placeholder"
-          defaultValue={options.labels.placeholder}
-          onChange={handlePlaceholderChange}
-        />
-      </Stack>
-      <Stack>
-        <FormLabel mb="0" htmlFor="button">
-          Rótulo do botão:
-        </FormLabel>
-        <Input
-          id="button"
-          defaultValue={options.labels.button}
-          onChange={handleButtonLabelChange}
-        />
-      </Stack>
-      <Stack>
-        <FormLabel mb="0" htmlFor="retry">
-          Mensagem de repetição:
-        </FormLabel>
-        <Input
-          id="retry"
-          defaultValue={options.retryMessageContent}
-          onChange={handleRetryMessageChange}
-        />
-      </Stack>
+      <TextInput
+        label="Espaço reservado:"
+        defaultValue={options.labels.placeholder}
+        onChange={handlePlaceholderChange}
+      />
+      <TextInput
+        label="Rótulo do botão:"
+        defaultValue={options.labels.button}
+        onChange={handleButtonLabelChange}
+      />
+      <TextInput
+        label="Repetir a mensagem:"
+        defaultValue={options.retryMessageContent}
+        onChange={handleRetryMessageChange}
+      />
       <Stack>
         <FormLabel mb="0" htmlFor="variable">
           Salvar resposta em uma variável:

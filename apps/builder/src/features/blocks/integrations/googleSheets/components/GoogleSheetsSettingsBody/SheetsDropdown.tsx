@@ -1,15 +1,13 @@
 import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
-import { SearchableDropdown } from '@/components/SearchableDropdown'
+import { Select } from '@/components/inputs/Select'
 import { HStack, Input } from '@chakra-ui/react'
-import { useMemo } from 'react'
-import { isDefined } from 'utils'
 import { Sheet } from '../../types'
 
 type Props = {
   sheets: Sheet[]
   isLoading: boolean
   sheetId?: string
-  onSelectSheetId: (id: string) => void
+  onSelectSheetId: (id: string | undefined) => void
 }
 
 export const SheetsDropdown = ({
@@ -18,17 +16,7 @@ export const SheetsDropdown = ({
   sheetId,
   onSelectSheetId,
 }: Props) => {
-  const currentSheet = useMemo(
-    () => sheets?.find((s) => s.id === sheetId),
-    [sheetId, sheets]
-  )
-
-  const handleSpreadsheetSelect = (name: string) => {
-    const id = sheets?.find((s) => s.name === name)?.id
-    if (isDefined(id)) onSelectSheetId(id)
-  }
-
-  if (isLoading) return <Input value="Carregando..." isDisabled />
+  if (isLoading) return <Input value="Loading..." isDisabled />
   if (!sheets || sheets.length === 0)
     return (
       <HStack>
@@ -40,10 +28,10 @@ export const SheetsDropdown = ({
       </HStack>
     )
   return (
-    <SearchableDropdown
-      selectedItem={currentSheet?.name}
-      items={(sheets ?? []).map((s) => s.name)}
-      onValueChange={handleSpreadsheetSelect}
+    <Select
+      selectedItem={sheetId}
+      items={(sheets ?? []).map((s) => ({ label: s.name, value: s.id }))}
+      onSelect={onSelectSheetId}
       placeholder={'Selecione a folha'}
     />
   )

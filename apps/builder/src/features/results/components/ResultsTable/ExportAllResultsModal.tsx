@@ -1,6 +1,6 @@
 import { AlertInfo } from '@/components/AlertInfo'
 import { DownloadIcon } from '@/components/icons'
-import { SwitchWithLabel } from '@/components/SwitchWithLabel'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { useTypebot } from '@/features/editor'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/lib/trpc'
@@ -21,6 +21,7 @@ import { useState } from 'react'
 import { parseResultHeader } from 'utils/results'
 import { useResults } from '../../ResultsProvider'
 import { convertResultsToTableData, parseAccessor } from '../../utils'
+import { parseColumnOrder } from '../../utils/parseColumnsOrder'
 
 type Props = {
   isOpen: boolean
@@ -74,25 +75,20 @@ export const ExportAllResultsModal = ({ isOpen, onClose }: Props) => {
 
     const dataToUnparse = convertResultsToTableData(results, resultHeader)
 
-    const fields =
-      typebot?.resultsTablePreferences?.columnsOrder &&
-      !areDeletedBlocksIncluded
-        ? typebot.resultsTablePreferences.columnsOrder.reduce<string[]>(
-            (currentHeaderLabels, columnId) => {
-              if (
-                typebot.resultsTablePreferences?.columnsVisibility[columnId] ===
-                false
-              )
-                return currentHeaderLabels
-              const columnLabel = resultHeader.find(
-                (headerCell) => headerCell.id === columnId
-              )?.label
-              if (!columnLabel) return currentHeaderLabels
-              return [...currentHeaderLabels, columnLabel]
-            },
-            []
-          )
-        : resultHeader.map((headerCell) => headerCell.label)
+    const fields = parseColumnOrder(
+      typebot?.resultsTablePreferences?.columnsOrder,
+      resultHeader
+    ).reduce<string[]>((currentHeaderLabels, columnId) => {
+      if (
+        typebot?.resultsTablePreferences?.columnsVisibility[columnId] === false
+      )
+        return currentHeaderLabels
+      const columnLabel = resultHeader.find(
+        (headerCell) => headerCell.id === columnId
+      )?.label
+      if (!columnLabel) return currentHeaderLabels
+      return [...currentHeaderLabels, columnLabel]
+    }, [])
 
     const data = dataToUnparse.map<{ [key: string]: string }>((data) => {
       const newObject: { [key: string]: string } = {}

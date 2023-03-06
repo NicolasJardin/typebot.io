@@ -15,7 +15,7 @@ export const WithVariableContent = ({ block }: Props) => {
   )?.name
 
   return (
-    <Text>
+    <Text w="calc(100% - 25px)">
       Coletar{' '}
       <chakra.span
         bgColor="orange.400"

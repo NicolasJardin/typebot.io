@@ -30,6 +30,8 @@ export const executeLogic = async (
       return executeTypebotLink(block, context)
     case LogicBlockType.WAIT:
       return { nextEdgeId: await executeWait(block, context) }
+    default:
+      return {}
   }
 
   return { nextEdgeId: block.outgoingEdgeId }

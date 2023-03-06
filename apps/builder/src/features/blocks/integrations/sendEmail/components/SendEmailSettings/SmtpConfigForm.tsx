@@ -1,5 +1,5 @@
-import { Input, SmartNumberInput } from '@/components/inputs'
-import { SwitchWithLabel } from '@/components/SwitchWithLabel'
+import { TextInput, NumberInput } from '@/components/inputs'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { Stack } from '@chakra-ui/react'
 import { isDefined } from '@udecode/plate-common'
 import { SmtpCredentialsData } from 'models'
@@ -27,7 +27,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
 
   return (
     <Stack as="form" spacing={4}>
-      <Input
+      <TextInput
         isRequired
         label="Do email"
         defaultValue={config.from.email ?? ''}
@@ -35,14 +35,14 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         placeholder="notificações@provedor.com"
         withVariableButton={false}
       />
-      <Input
+      <TextInput
         label="Do nome"
         defaultValue={config.from.name ?? ''}
         onChange={handleFromNameChange}
         placeholder="John Smith"
         withVariableButton={false}
       />
-      <Input
+      <TextInput
         isRequired
         label="Host"
         defaultValue={config.host ?? ''}
@@ -50,7 +50,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         placeholder="email.provedor.com"
         withVariableButton={false}
       />
-      <Input
+      <TextInput
         isRequired
         label="Nome de usuário / e-mail"
         type="email"
@@ -59,7 +59,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         placeholder="usuário@provedor.com"
         withVariableButton={false}
       />
-      <Input
+      <TextInput
         isRequired
         label="Senha"
         type="password"
@@ -73,7 +73,7 @@ export const SmtpConfigForm = ({ config, onConfigChange }: Props) => {
         onCheckChange={handleTlsCheck}
         moreInfoContent="Se ativado, a conexão usará TLS ao se conectar ao servidor. Se desativado, o TLS será usado se o servidor suportar a extensão STARTTLS. Na maioria dos casos, ative-o se estiver se conectando à porta 465. Para a porta 587 ou 25, mantenha-o desativado."
       />
-      <SmartNumberInput
+      <NumberInput
         isRequired
         label="Número da porta:"
         placeholder="25"

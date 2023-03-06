@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react'
 import { WaitOptions } from 'models'
 import React from 'react'
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 
 type Props = {
   options: WaitOptions
@@ -15,7 +15,7 @@ export const WaitSettings = ({ options, onOptionsChange }: Props) => {
 
   return (
     <Stack spacing={4}>
-      <Input
+      <TextInput
         label="Segundos para digitar:"
         defaultValue={options.secondsToWaitFor}
         onChange={handleSecondsChange}

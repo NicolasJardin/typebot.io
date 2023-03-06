@@ -1,5 +1,39 @@
 # Changelog
 
+<a name="2.11.2"></a>
+## 2.11.2 (2023-03-02)
+
+### Changed
+
+- ♿ (js) Use px instead of rem to look good on any website [[cce63df](https://github.com/baptisteArno/typebot.io/commit/cce63dfea307338ff7f954024bd705f76aeb022a)]
+- 🚸 (webhook) Also add atomic deep keys selection [[73f4846](https://github.com/baptisteArno/typebot.io/commit/73f4846e1ba8a0ebf726099527f3de6c73e4bbf0)]
+
+### Fixed
+
+- 🚑 (webhook) Remove get deep keys test sample [[9d96805](https://github.com/baptisteArno/typebot.io/commit/9d96805d84810390586e01b9806ee157d522afb4)]
+- 🐛 (viewer) Fix client side action when in separate group [[a1cf1e8](https://github.com/baptisteArno/typebot.io/commit/a1cf1e89e79855d3788693a801ebc7db23290240)]
+- 🐛 (settings) Fix custom head code not updating [[4968ed4](https://github.com/baptisteArno/typebot.io/commit/4968ed4202fe99031be559bc44f2b3ed6222925f)]
+- 🐛 (condition) Fix contains not working with lists [[506fe00](https://github.com/baptisteArno/typebot.io/commit/506fe003d1c25b3f9b4b0ec4443db4aff7efb668)]
+
+### Miscellaneous
+
+- 📝 Add change password faq [[b2ad91c](https://github.com/baptisteArno/typebot.io/commit/b2ad91c11fff7cc9595eb5e109ebbf1e3e7b87a4)]
+
+
+<a name="2.11.1"></a>
+## 2.11.1 (2023-03-02)
+
+### Changed
+
+- 🚸 (js) Parse script to content to remove useless script tags if any [[cc07389](https://github.com/baptisteArno/typebot.io/commit/cc07389c37e1008dc5041bb22162bfc69fd5eac4)]
+
+### Fixed
+
+- 🐛 (js) Improve session remember behavior [[ba253cf](https://github.com/baptisteArno/typebot.io/commit/ba253cf3e9574ba53ec6d142e87a8ef44da69f10)]
+- 🐛 (editor) Graph connectors still displayed when switching to dynamic buttons [[c172a44](https://github.com/baptisteArno/typebot.io/commit/c172a44566ae6f27710c38286b0b60ea4a7f7e0a)]
+- 🐛 (share) Fix publicId null when publishing [[eebcbb1](https://github.com/baptisteArno/typebot.io/commit/eebcbb10b820a0a5ac8705a28a965d8fcb2243e8)]
+
+
 <a name="2.11.0"></a>
 ## 2.11.0 (2023-03-01)
 

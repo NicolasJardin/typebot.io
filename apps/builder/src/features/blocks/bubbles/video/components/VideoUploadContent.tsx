@@ -1,5 +1,5 @@
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import urlParser from 'js-video-url-parser/lib/base'
 import 'js-video-url-parser/lib/provider/vimeo'
@@ -56,7 +56,7 @@ export const VideoUploadContent = ({
       </HStack>
       {currentTab === 'link' ? (
         <Stack p="2">
-          <Input
+          <TextInput
             placeholder="Cole o link do vídeo..."
             defaultValue={content?.url ?? ''}
             onChange={handleUrlChange}

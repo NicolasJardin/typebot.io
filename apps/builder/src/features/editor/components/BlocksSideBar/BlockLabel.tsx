@@ -1,7 +1,4 @@
-import { isFreePlan, LockTag } from '@/features/billing'
-import { useWorkspace } from '@/features/workspace'
-import { HStack, Text, Tooltip } from '@chakra-ui/react'
-import { Plan } from 'db'
+import { Text, Tooltip } from '@chakra-ui/react'
 import {
   BlockType,
   BubbleBlockType,
@@ -12,9 +9,7 @@ import {
 
 type Props = { type: BlockType }
 
-export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
-  const { workspace } = useWorkspace()
-
+export const BlockLabel = ({ type }: Props): JSX.Element => {
   switch (type) {
     case 'start':
       return <Text>Início</Text>
@@ -54,14 +49,7 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
     case InputBlockType.RATING:
       return <Text>Avaliação</Text>
     case InputBlockType.FILE:
-      return (
-        <Tooltip label="Upload Files">
-          <HStack>
-            <Text>Arquivo</Text>
-            {isFreePlan(workspace) && <LockTag plan={Plan.STARTER} />}
-          </HStack>
-        </Tooltip>
-      )
+      return <Text>Arquivo</Text>
     case LogicBlockType.SET_VARIABLE:
       return <Text>Variável</Text>
     case LogicBlockType.CONDITION:
@@ -90,6 +78,8 @@ export const BlockTypeLabel = ({ type }: Props): JSX.Element => {
       return <Text>Remover tag</Text>
     case LogicBlockType.END:
       return <Text>Fim</Text>
+    case LogicBlockType.JUMP:
+      return <Text>Pular</Text>
     case IntegrationBlockType.GOOGLE_SHEETS:
       return (
         <Tooltip label="Planilhas Google">

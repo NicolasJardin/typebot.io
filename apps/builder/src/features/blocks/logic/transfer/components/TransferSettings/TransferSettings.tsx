@@ -1,4 +1,4 @@
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import { useToast } from '@/hooks/useToast'
 import useGetAttendants from '@/whatsflow/api/transfer/queries/useGetAttendants'
 import useGetDepartments from '@/whatsflow/api/transfer/queries/useGetDepartments'
@@ -161,7 +161,7 @@ export default function TransferSettings({
         </Select>
       </FormControl>
 
-      <Input
+      <TextInput
         label="Mensagem de Transferência:"
         defaultValue={options?.message || ''}
         onChange={handleMessageChange}

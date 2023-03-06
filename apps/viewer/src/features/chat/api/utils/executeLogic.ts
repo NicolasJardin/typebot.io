@@ -1,6 +1,7 @@
 import { executeCondition } from '@/features/blocks/logic/condition/api'
 import { executeCreateTag } from '@/features/blocks/logic/createTag/api/executeCreateTag'
 import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
+import { executeJumpBlock } from '@/features/blocks/logic/jump/executeJumpBlock'
 import { executeRedirect } from '@/features/blocks/logic/redirect/api'
 import { executeRemoveTag } from '@/features/blocks/logic/removeTag/api/executeRemoveTag'
 import { executeScript } from '@/features/blocks/logic/script/executeScript'
@@ -38,5 +39,7 @@ export const executeLogic =
         return executeRemoveTag(block, lastBubbleBlockId)
       case LogicBlockType.END:
         return executeEnd(block, lastBubbleBlockId)
+      case LogicBlockType.JUMP:
+        return executeJumpBlock(state, block.options)
     }
   }
