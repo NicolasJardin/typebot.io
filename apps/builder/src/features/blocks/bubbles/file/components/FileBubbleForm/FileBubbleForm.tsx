@@ -1,8 +1,8 @@
+import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
+import { TextInput } from '@/components/inputs'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from 'models'
-import { Input } from '@/components/inputs'
 import { useState } from 'react'
-import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 
 type FileBubbleFormProps = {
   fileUploadPath: string
@@ -52,7 +52,7 @@ export default function FileBubbleForm({
         )}
         {currentTab === 'link' && (
           <>
-            <Input
+            <TextInput
               placeholder="Cole o link do arquivo..."
               defaultValue={content.url ?? ''}
               onChange={submit}

@@ -1,21 +1,21 @@
-import {
-  Stack,
-  useDisclosure,
-  Text,
-  Flex,
-  HStack,
-  Switch,
-  FormLabel,
-} from '@chakra-ui/react'
+import { Textarea, TextInput } from '@/components/inputs'
 import { CodeEditor } from '@/components/inputs/CodeEditor'
-import { CredentialsType, SendEmailOptions, Variable } from 'models'
-import React, { useState } from 'react'
-import { env, isNotEmpty } from 'utils'
-import { SmtpConfigModal } from './SmtpConfigModal'
 import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { CredentialsDropdown } from '@/features/credentials'
-import { TextInput, Textarea } from '@/components/inputs'
+import {
+  Flex,
+  FormLabel,
+  HStack,
+  Stack,
+  Switch,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react'
+import { CredentialsType, SendEmailOptions, Variable } from 'models'
+import { useState } from 'react'
+import { env, isNotEmpty } from 'utils'
+import { SmtpConfigModal } from './SmtpConfigModal'
 
 type Props = {
   options: SendEmailOptions

@@ -1,4 +1,4 @@
-import { Input } from '@/components/inputs'
+import { TextInput } from '@/components/inputs'
 import { Stack } from '@chakra-ui/react'
 import { ButtonOptions } from 'models'
 import { useCallback } from 'react'
@@ -32,14 +32,14 @@ export default function ButtonSettings({
 
   return (
     <Stack spacing={4}>
-      <Input
+      <TextInput
         label="Texto do Botão"
         defaultValue={options.title}
         onChange={handleTitleChange}
         placeholder="Ex: Clique para acessar"
       />
 
-      <Input
+      <TextInput
         label="Link do Botão"
         defaultValue={options.url}
         onChange={handleUrlChange}

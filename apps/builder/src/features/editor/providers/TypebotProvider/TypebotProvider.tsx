@@ -283,7 +283,7 @@ export const TypebotProvider = ({
       await savePublishedTypebot({
         ...parseTypebotToPublicTypebot(newLocalTypebot),
         id: publishedTypebot.id,
-      })
+      }).then(async () => await saveTypebot())
     } else {
       setIsPublishing(true)
       const { data, error } = await createPublishedTypebotQuery(
@@ -295,11 +295,12 @@ export const TypebotProvider = ({
       setIsPublishing(false)
       if (error)
         return showToast({ title: error.name, description: error.message })
+
       mutate({
         typebot: localTypebot,
         publishedTypebot: data,
         webhooks: webhooks ?? [],
-      })
+      }).then(async () => await saveTypebot())
     }
   }
 

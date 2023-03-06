@@ -35,7 +35,7 @@ export const EmailInputSettingsBody = ({
         onChange={handleButtonLabelChange}
       />
       <TextInput
-        label="Retry message:"
+        label="Repetir a mensagem:"
         defaultValue={options.retryMessageContent}
         onChange={handleRetryMessageChange}
       />
