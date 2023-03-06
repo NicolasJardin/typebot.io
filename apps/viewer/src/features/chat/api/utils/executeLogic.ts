@@ -1,6 +1,7 @@
 import { executeCondition } from '@/features/blocks/logic/condition/api'
 import { executeCreateTag } from '@/features/blocks/logic/createTag/api/executeCreateTag'
 import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
+import { executeJumpBlock } from '@/features/blocks/logic/jump/executeJumpBlock'
 import { executeRedirect } from '@/features/blocks/logic/redirect/api'
 import { executeRemoveTag } from '@/features/blocks/logic/removeTag/api/executeRemoveTag'
 import { executeScript } from '@/features/blocks/logic/script/executeScript'
@@ -11,8 +12,6 @@ import { executeWait } from '@/features/blocks/logic/wait/api/utils/executeWait'
 import { executeWaitFor } from '@/features/blocks/logic/waitFor/api/executeWaitFor'
 import { LogicBlock, LogicBlockType, SessionState } from 'models'
 import { ExecuteLogicResponse } from '../../types'
-import { executeScript } from '@/features/blocks/logic/script/executeScript'
-import { executeJumpBlock } from '@/features/blocks/logic/jump/executeJumpBlock'
 
 export const executeLogic =
   (state: SessionState, lastBubbleBlockId?: string) =>
