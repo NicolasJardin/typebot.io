@@ -1,19 +1,23 @@
+/* eslint-disable solid/components-return-once */
 import { AudioBubble } from '@/features/blocks/bubbles/audio'
 import { EmbedBubble } from '@/features/blocks/bubbles/embed'
+import FileBubble from '@/features/blocks/bubbles/file/components/FileBubble'
 import { ImageBubble } from '@/features/blocks/bubbles/image'
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
+import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
-import type {
+import {
   AudioBubbleContent,
   ChatMessage,
   EmbedBubbleContent,
   ImageBubbleContent,
   TextBubbleContent,
+  TransferOptions,
   TypingEmulation,
   VideoBubbleContent,
 } from 'models'
 import { BubbleBlockType } from 'models/features/blocks/bubbles/enums'
-import { Match, Switch } from 'solid-js'
+import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
 
 type Props = {
   message: ChatMessage
@@ -22,43 +26,66 @@ type Props = {
 }
 
 export const HostBubble = (props: Props) => {
-  const onTransitionEnd = () => {
-    props.onTransitionEnd()
+  const onTransitionEnd = () => props.onTransitionEnd()
+
+  const getHostBubble = () => {
+    switch (props.message.type) {
+      case BubbleBlockType.TEXT:
+        return (
+          <TextBubble
+            content={
+              props.message.content as Omit<TextBubbleContent, 'richText'>
+            }
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+      case BubbleBlockType.IMAGE:
+        return (
+          <ImageBubble
+            url={(props.message.content as ImageBubbleContent).url}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+      case BubbleBlockType.EMBED:
+        return (
+          <EmbedBubble
+            content={props.message.content as EmbedBubbleContent}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+      case BubbleBlockType.VIDEO:
+        return (
+          <VideoBubble
+            content={props.message.content as VideoBubbleContent}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+      case BubbleBlockType.AUDIO:
+        return (
+          <AudioBubble
+            url={(props.message.content as AudioBubbleContent).url}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+      case BubbleBlockType.FILE:
+        return (
+          <FileBubble
+            url={(props.message.content as FileBubbleContent).url}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+    }
+
+    return (
+      <TransferBubble
+        options={props.message.content as TransferOptions}
+        typingEmulation={props.typingEmulation}
+        onTransitionEnd={onTransitionEnd}
+      />
+    )
   }
 
-  return (
-    <Switch>
-      <Match when={props.message.type === BubbleBlockType.TEXT}>
-        <TextBubble
-          content={props.message.content as Omit<TextBubbleContent, 'richText'>}
-          typingEmulation={props.typingEmulation}
-          onTransitionEnd={onTransitionEnd}
-        />
-      </Match>
-      <Match when={props.message.type === BubbleBlockType.IMAGE}>
-        <ImageBubble
-          url={(props.message.content as ImageBubbleContent).url}
-          onTransitionEnd={onTransitionEnd}
-        />
-      </Match>
-      <Match when={props.message.type === BubbleBlockType.VIDEO}>
-        <VideoBubble
-          content={props.message.content as VideoBubbleContent}
-          onTransitionEnd={onTransitionEnd}
-        />
-      </Match>
-      <Match when={props.message.type === BubbleBlockType.EMBED}>
-        <EmbedBubble
-          content={props.message.content as EmbedBubbleContent}
-          onTransitionEnd={onTransitionEnd}
-        />
-      </Match>
-      <Match when={props.message.type === BubbleBlockType.AUDIO}>
-        <AudioBubble
-          url={(props.message.content as AudioBubbleContent).url}
-          onTransitionEnd={onTransitionEnd}
-        />
-      </Match>
-    </Switch>
-  )
+  return <div>{getHostBubble()}</div>
 }

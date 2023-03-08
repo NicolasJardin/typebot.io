@@ -79,17 +79,13 @@ export const PreviewDrawer = () => {
       <VStack w="full" spacing={4}>
         <HStack justifyContent={'space-between'} w="full">
           <HStack>
-            <RuntimeMenu
-              selectedRuntime={selectedRuntime}
-              onSelectRuntime={(runtime) => setSelectedRuntime(runtime)}
-            />
             {selectedRuntime.name === 'Web' ? (
               <Button
                 onClick={handleRestartClick}
                 isLoading={isSavingLoading}
                 variant="ghost"
               >
-                Restart
+                Reiniciar
               </Button>
             ) : null}
           </HStack>

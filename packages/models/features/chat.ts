@@ -2,8 +2,10 @@ import { z } from 'zod'
 import {
   googleAnalyticsOptionsSchema,
   inputBlockSchema,
+  LogicBlockType,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
+  transferOptionsSchema,
   WaitForTypeEnum,
 } from './blocks'
 import { publicTypebotSchema } from './publicTypebot'
@@ -89,6 +91,11 @@ const fileMessageSchema = z.object({
   content: fileBubbleContentSchema,
 })
 
+const transferMessageSchema = z.object({
+  type: z.enum([LogicBlockType.TRANSFER]),
+  content: transferOptionsSchema,
+})
+
 const embedMessageSchema = z.object({
   type: z.enum([BubbleBlockType.EMBED]),
   content: embedBubbleContentSchema
@@ -107,6 +114,7 @@ const chatMessageSchema = z
       .or(audioMessageSchema)
       .or(embedMessageSchema)
       .or(fileMessageSchema)
+      .or(transferMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

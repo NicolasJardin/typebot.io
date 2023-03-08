@@ -9,6 +9,7 @@ import {
   Group,
   InputBlock,
   InputBlockType,
+  LogicBlockType,
   RuntimeOptions,
   SessionState,
 } from 'models'
@@ -49,6 +50,17 @@ export const executeGroup =
         messages.push(
           parseBubbleBlock(newSessionState.typebot.variables)(block)
         )
+        lastBubbleBlockId = block.id
+
+        continue
+      }
+
+      if (block.type === LogicBlockType.TRANSFER) {
+        messages.push({
+          content: block.options,
+          id: block.id,
+          type: block.type,
+        })
         lastBubbleBlockId = block.id
 
         continue
