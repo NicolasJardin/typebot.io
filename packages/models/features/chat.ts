@@ -5,6 +5,8 @@ import {
   LogicBlockType,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
+  removeTagOptionsSchema,
+  tagOptionsSchema,
   transferOptionsSchema,
   WaitForTypeEnum,
   waitOptionsSchema,
@@ -102,6 +104,16 @@ const waitMessageSchema = z.object({
   content: waitOptionsSchema,
 })
 
+const tagMessageSchema = z.object({
+  type: z.enum([LogicBlockType.TAG]),
+  content: tagOptionsSchema,
+})
+
+const removeTagMessageSchema = z.object({
+  type: z.enum([LogicBlockType.REMOVE_TAG]),
+  content: removeTagOptionsSchema,
+})
+
 const embedMessageSchema = z.object({
   type: z.enum([BubbleBlockType.EMBED]),
   content: embedBubbleContentSchema
@@ -122,6 +134,8 @@ const chatMessageSchema = z
       .or(fileMessageSchema)
       .or(transferMessageSchema)
       .or(waitMessageSchema)
+      .or(tagMessageSchema)
+      .or(removeTagMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

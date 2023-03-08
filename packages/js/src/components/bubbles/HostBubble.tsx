@@ -17,10 +17,13 @@ import {
   TypingEmulation,
   VideoBubbleContent,
   WaitOptions,
+  TagOptions,
+  RemoveTagOptions,
 } from 'models'
 import { BubbleBlockType } from 'models/features/blocks/bubbles/enums'
 import { LogicBlockType } from 'models/features/blocks/logic/enums'
 import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
+import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
 
 type Props = {
   message: ChatMessage
@@ -86,6 +89,26 @@ export const HostBubble = (props: Props) => {
             secondsToWaitFor={
               (props.message.content as WaitOptions).secondsToWaitFor
             }
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.TAG:
+        return (
+          <TagBubble
+            name={(props.message.content as TagOptions).name}
+            type="add"
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.REMOVE_TAG:
+        return (
+          <TagBubble
+            name={(props.message.content as RemoveTagOptions).name}
+            type="remove"
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />
