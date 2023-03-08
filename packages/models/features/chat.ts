@@ -7,6 +7,7 @@ import {
   redirectOptionsSchema,
   transferOptionsSchema,
   WaitForTypeEnum,
+  waitOptionsSchema,
 } from './blocks'
 import { publicTypebotSchema } from './publicTypebot'
 import { ChatSession as ChatSessionPrisma } from 'db'
@@ -96,6 +97,11 @@ const transferMessageSchema = z.object({
   content: transferOptionsSchema,
 })
 
+const waitMessageSchema = z.object({
+  type: z.enum([LogicBlockType.WAIT]),
+  content: waitOptionsSchema,
+})
+
 const embedMessageSchema = z.object({
   type: z.enum([BubbleBlockType.EMBED]),
   content: embedBubbleContentSchema
@@ -115,6 +121,7 @@ const chatMessageSchema = z
       .or(embedMessageSchema)
       .or(fileMessageSchema)
       .or(transferMessageSchema)
+      .or(waitMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

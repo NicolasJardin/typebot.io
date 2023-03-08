@@ -66,6 +66,18 @@ export const executeGroup =
         continue
       }
 
+      if (block.type === LogicBlockType.WAIT) {
+        messages.push({
+          content: block.options,
+          id: block.id,
+          type: block.type,
+        })
+
+        lastBubbleBlockId = block.id
+
+        continue
+      }
+
       if (isInputBlock(block))
         return {
           messages,

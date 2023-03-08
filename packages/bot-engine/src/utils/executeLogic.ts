@@ -28,8 +28,8 @@ export const executeLogic = async (
       return { nextEdgeId: await executeScript(block, context) }
     case LogicBlockType.TYPEBOT_LINK:
       return executeTypebotLink(block, context)
-    case LogicBlockType.WAIT:
-      return { nextEdgeId: await executeWait(block, context) }
+    // case LogicBlockType.WAIT:
+    //   return { nextEdgeId: await executeWait(block, context) }
   }
 
   return { nextEdgeId: block.outgoingEdgeId }

@@ -6,6 +6,7 @@ import { ImageBubble } from '@/features/blocks/bubbles/image'
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
+import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
 import {
   AudioBubbleContent,
   ChatMessage,
@@ -15,8 +16,10 @@ import {
   TransferOptions,
   TypingEmulation,
   VideoBubbleContent,
+  WaitOptions,
 } from 'models'
 import { BubbleBlockType } from 'models/features/blocks/bubbles/enums'
+import { LogicBlockType } from 'models/features/blocks/logic/enums'
 import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
 
 type Props = {
@@ -72,6 +75,17 @@ export const HostBubble = (props: Props) => {
         return (
           <FileBubble
             url={(props.message.content as FileBubbleContent).url}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.WAIT:
+        return (
+          <WaitBubble
+            secondsToWaitFor={
+              (props.message.content as WaitOptions).secondsToWaitFor
+            }
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />
