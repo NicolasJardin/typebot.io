@@ -55,51 +55,79 @@ export const executeGroup =
         continue
       }
 
-      if (block.type === LogicBlockType.TRANSFER) {
-        messages.push({
-          content: block.options,
-          id: block.id,
-          type: block.type,
-        })
-        lastBubbleBlockId = block.id
+      switch (block.type) {
+        case LogicBlockType.TRANSFER:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
 
-        continue
-      }
+          lastBubbleBlockId = block.id
 
-      if (block.type === LogicBlockType.WAIT) {
-        messages.push({
-          content: block.options,
-          id: block.id,
-          type: block.type,
-        })
+          continue
+        case LogicBlockType.WAIT:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
 
-        lastBubbleBlockId = block.id
+          lastBubbleBlockId = block.id
 
-        continue
-      }
+          continue
 
-      if (block.type === LogicBlockType.TAG) {
-        messages.push({
-          content: block.options,
-          id: block.id,
-          type: block.type,
-        })
+        case LogicBlockType.TAG:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
 
-        lastBubbleBlockId = block.id
+          lastBubbleBlockId = block.id
 
-        continue
-      }
+          continue
 
-      if (block.type === LogicBlockType.REMOVE_TAG) {
-        messages.push({
-          content: block.options,
-          id: block.id,
-          type: block.type,
-        })
+        case LogicBlockType.REMOVE_TAG:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
 
-        lastBubbleBlockId = block.id
+          lastBubbleBlockId = block.id
 
-        continue
+          continue
+        case LogicBlockType.WAIT_FOR:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        case LogicBlockType.END:
+          messages.push({
+            content: {},
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        case BubbleBlockType.BUTTON:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
       }
 
       if (isInputBlock(block))
@@ -116,14 +144,13 @@ export const executeGroup =
           clientSideActions,
           logs,
         }
-      const executionResponse =
-        block.type === BubbleBlockType.BUTTON
-          ? await executeBubble(newSessionState, lastBubbleBlockId)(block)
-          : isLogicBlock(block)
-          ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
-          : isIntegrationBlock(block)
-          ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
-          : null
+      const executionResponse = isBubbleBlock(block)
+        ? await executeBubble(newSessionState, lastBubbleBlockId)(block)
+        : isLogicBlock(block)
+        ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
+        : isIntegrationBlock(block)
+        ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
+        : null
 
       if (!executionResponse) continue
       if (

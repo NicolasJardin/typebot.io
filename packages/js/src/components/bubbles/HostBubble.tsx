@@ -19,11 +19,16 @@ import {
   WaitOptions,
   TagOptions,
   RemoveTagOptions,
+  WaitForOptions,
+  ButtonOptions,
 } from 'models'
 import { BubbleBlockType } from 'models/features/blocks/bubbles/enums'
 import { LogicBlockType } from 'models/features/blocks/logic/enums'
 import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
+import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
+import EndBubble from '@/features/blocks/bubbles/end/components/EndBubble'
+import ButtonBubble from '@/features/blocks/bubbles/button/components/ButtonBubble'
 
 type Props = {
   message: ChatMessage
@@ -109,6 +114,32 @@ export const HostBubble = (props: Props) => {
           <TagBubble
             name={(props.message.content as RemoveTagOptions).name}
             type="remove"
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.WAIT_FOR:
+        return (
+          <WaitForBubble
+            content={props.message.content as WaitForOptions}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.END:
+        return (
+          <EndBubble
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case BubbleBlockType.BUTTON:
+        return (
+          <ButtonBubble
+            content={props.message.content as ButtonOptions}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />

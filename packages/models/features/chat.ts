@@ -8,6 +8,7 @@ import {
   removeTagOptionsSchema,
   tagOptionsSchema,
   transferOptionsSchema,
+  waitForOptionsSchema,
   WaitForTypeEnum,
   waitOptionsSchema,
 } from './blocks'
@@ -23,6 +24,7 @@ import {
   videoBubbleContentSchema,
   audioBubbleContentSchema,
   embedBubbleContentSchema,
+  buttonOptionsSchema,
 } from './blocks/bubbles'
 import { fileBubbleContentSchema } from './blocks/bubbles/file'
 
@@ -109,6 +111,21 @@ const tagMessageSchema = z.object({
   content: tagOptionsSchema,
 })
 
+const waitForMessageSchema = z.object({
+  type: z.enum([LogicBlockType.WAIT_FOR]),
+  content: waitForOptionsSchema,
+})
+
+const buttonMessageSchema = z.object({
+  type: z.enum([BubbleBlockType.BUTTON]),
+  content: buttonOptionsSchema,
+})
+
+const endMessageSchema = z.object({
+  type: z.enum([LogicBlockType.END]),
+  content: z.object({}),
+})
+
 const removeTagMessageSchema = z.object({
   type: z.enum([LogicBlockType.REMOVE_TAG]),
   content: removeTagOptionsSchema,
@@ -136,6 +153,9 @@ const chatMessageSchema = z
       .or(waitMessageSchema)
       .or(tagMessageSchema)
       .or(removeTagMessageSchema)
+      .or(waitForMessageSchema)
+      .or(buttonMessageSchema)
+      .or(endMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({
