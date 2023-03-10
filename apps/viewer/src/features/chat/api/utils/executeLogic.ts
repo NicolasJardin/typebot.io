@@ -31,8 +31,6 @@ export const executeLogic =
         return executeWait(state, block, lastBubbleBlockId)
       case LogicBlockType.TRANSFER:
         return executeTransfer(state, block, lastBubbleBlockId)
-      case LogicBlockType.WAIT_FOR:
-        return executeWaitFor(state, block, lastBubbleBlockId)
       case LogicBlockType.TAG:
         return executeCreateTag(block, lastBubbleBlockId)
       case LogicBlockType.REMOVE_TAG:
