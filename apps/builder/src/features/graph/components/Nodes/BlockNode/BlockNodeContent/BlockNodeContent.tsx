@@ -139,7 +139,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case LogicBlockType.WAIT:
       return <WaitNodeContent options={block.options} />
 
-    case LogicBlockType.WAIT_FOR:
+    case InputBlockType.WAIT_FOR:
       return <WaitForNodeContent options={block.options} />
 
     case LogicBlockType.TRANSFER:

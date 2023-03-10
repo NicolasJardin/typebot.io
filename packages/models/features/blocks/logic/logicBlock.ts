@@ -1,16 +1,15 @@
 import { z } from 'zod'
-import { scriptOptionsSchema, scriptBlockSchema } from './script'
 import { conditionBlockSchema } from './condition'
-import { redirectOptionsSchema, redirectBlockSchema } from './redirect'
-import { setVariableOptionsSchema, setVariableBlockSchema } from './setVariable'
-import { typebotLinkOptionsSchema, typebotLinkBlockSchema } from './typebotLink'
-import { waitBlockSchema, waitOptionsSchema } from './wait'
-import { transferBlockSchema, transferOptionsSchema } from './transfer'
-import { tagBlockSchema, tagOptionsSchema } from './tag'
-import { waitForBlockSchema, waitForOptionsSchema } from './waitFor'
 import { endBlockSchema } from './end'
-import { removeTagBlockSchema, removeTagOptionsSchema } from './removeTag'
 import { jumpBlockSchema, jumpOptionsSchema } from './jump'
+import { redirectBlockSchema, redirectOptionsSchema } from './redirect'
+import { removeTagBlockSchema, removeTagOptionsSchema } from './removeTag'
+import { scriptBlockSchema, scriptOptionsSchema } from './script'
+import { setVariableBlockSchema, setVariableOptionsSchema } from './setVariable'
+import { tagBlockSchema, tagOptionsSchema } from './tag'
+import { transferBlockSchema, transferOptionsSchema } from './transfer'
+import { typebotLinkBlockSchema, typebotLinkOptionsSchema } from './typebotLink'
+import { waitBlockSchema, waitOptionsSchema } from './wait'
 
 const logicBlockOptionsSchema = scriptOptionsSchema
   .or(redirectOptionsSchema)
@@ -19,7 +18,6 @@ const logicBlockOptionsSchema = scriptOptionsSchema
   .or(waitOptionsSchema)
   .or(transferOptionsSchema)
   .or(tagOptionsSchema)
-  .or(waitForOptionsSchema)
   .or(removeTagOptionsSchema)
   .or(jumpOptionsSchema)
 
@@ -31,7 +29,6 @@ export const logicBlockSchema = scriptBlockSchema
   .or(waitBlockSchema)
   .or(transferBlockSchema)
   .or(tagBlockSchema)
-  .or(waitForBlockSchema)
   .or(endBlockSchema)
   .or(removeTagBlockSchema)
   .or(jumpBlockSchema)

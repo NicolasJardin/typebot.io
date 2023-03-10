@@ -206,7 +206,7 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
-              type={LogicBlockType.WAIT_FOR}
+              type={InputBlockType.WAIT_FOR}
               onMouseDown={handleMouseDown}
             />
 

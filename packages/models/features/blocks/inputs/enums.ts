@@ -9,4 +9,5 @@ export enum InputBlockType {
   PAYMENT = 'payment input',
   RATING = 'rating input',
   FILE = 'file input',
+  WAIT_FOR = 'Wait for input',
 }
