@@ -18,6 +18,7 @@ import {
   videoBubbleContentSchema,
   audioBubbleContentSchema,
   embedBubbleContentSchema,
+  buttonOptionsSchema,
 } from './blocks/bubbles'
 import { fileBubbleContentSchema } from './blocks/bubbles/file'
 
@@ -89,6 +90,11 @@ const fileMessageSchema = z.object({
   content: fileBubbleContentSchema,
 })
 
+const buttonMessageSchema = z.object({
+  type: z.enum([BubbleBlockType.BUTTON]),
+  content: buttonOptionsSchema,
+})
+
 const embedMessageSchema = z.object({
   type: z.enum([BubbleBlockType.EMBED]),
   content: embedBubbleContentSchema
@@ -107,6 +113,7 @@ const chatMessageSchema = z
       .or(audioMessageSchema)
       .or(embedMessageSchema)
       .or(fileMessageSchema)
+      .or(buttonMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

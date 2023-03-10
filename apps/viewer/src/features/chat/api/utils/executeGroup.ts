@@ -54,6 +54,17 @@ export const executeGroup =
         continue
       }
 
+      if (block.type == BubbleBlockType.BUTTON) {
+        messages.push({
+          ...block,
+          content: block.options,
+        })
+
+        lastBubbleBlockId = block.id
+
+        continue
+      }
+
       if (isInputBlock(block))
         return {
           messages,
@@ -68,14 +79,11 @@ export const executeGroup =
           clientSideActions,
           logs,
         }
-      const executionResponse =
-        block.type === BubbleBlockType.BUTTON
-          ? await executeBubble(newSessionState, lastBubbleBlockId)(block)
-          : isLogicBlock(block)
-          ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
-          : isIntegrationBlock(block)
-          ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
-          : null
+      const executionResponse = isLogicBlock(block)
+        ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
+        : isIntegrationBlock(block)
+        ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
+        : null
 
       if (!executionResponse) continue
       if (
