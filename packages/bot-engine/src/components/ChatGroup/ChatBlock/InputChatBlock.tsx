@@ -115,6 +115,8 @@ const Input = ({
           hasGuestAvatar={hasGuestAvatar}
         />
       )
+    case InputBlockType.WAIT_FOR:
+      return <div>TODO</div>
     case InputBlockType.NUMBER:
       return (
         <NumberInput
