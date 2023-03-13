@@ -47,7 +47,7 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
   }, [])
 
   const handleNumberChange = useCallback(
-    (number: string | undefined) =>
+    (number: number | undefined) =>
       onOptionsChange({
         ...options,
         number,
@@ -106,8 +106,8 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
 
       <TextInput
         label={`${getMeasures(options.type)} para aguardar`}
-        defaultValue={options.number}
-        onChange={handleNumberChange}
+        defaultValue={options.number?.toString()}
+        onChange={(value) => handleNumberChange(Number(value))}
         placeholder="0"
       />
 

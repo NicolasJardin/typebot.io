@@ -9,7 +9,6 @@ import { executeSetVariable } from '@/features/blocks/logic/setVariable/api'
 import { executeTransfer } from '@/features/blocks/logic/transfer/api/utils/executeTransfer'
 import { executeTypebotLink } from '@/features/blocks/logic/typebotLink/api'
 import { executeWait } from '@/features/blocks/logic/wait/api/utils/executeWait'
-import { executeWaitFor } from '@/features/blocks/logic/waitFor/api/executeWaitFor'
 import { LogicBlock, LogicBlockType, SessionState } from 'models'
 import { ExecuteLogicResponse } from '../../types'
 
@@ -31,8 +30,6 @@ export const executeLogic =
         return executeWait(state, block, lastBubbleBlockId)
       case LogicBlockType.TRANSFER:
         return executeTransfer(state, block, lastBubbleBlockId)
-      case LogicBlockType.WAIT_FOR:
-        return executeWaitFor(state, block, lastBubbleBlockId)
       case LogicBlockType.TAG:
         return executeCreateTag(block, lastBubbleBlockId)
       case LogicBlockType.REMOVE_TAG:

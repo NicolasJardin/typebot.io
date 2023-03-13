@@ -97,7 +97,7 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <Icon as={AiOutlineTag} color={purple} {...props} />
     case LogicBlockType.REMOVE_TAG:
       return <Icon as={AiOutlineDelete} color={purple} {...props} />
-    case LogicBlockType.WAIT_FOR:
+    case InputBlockType.WAIT_FOR:
       return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TRANSFER:
       return <Icon as={BiShuffle} color={purple} {...props} />

@@ -269,7 +269,7 @@ export const BlockSettings = ({
           onOptionsChange={handleOptionsChange}
         />
       )
-    case LogicBlockType.WAIT_FOR:
+    case InputBlockType.WAIT_FOR:
       return (
         <WaitForSettings
           options={block.options}

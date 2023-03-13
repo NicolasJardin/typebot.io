@@ -2,6 +2,7 @@ import { z } from 'zod'
 import {
   googleAnalyticsOptionsSchema,
   inputBlockSchema,
+  InputBlockType,
   LogicBlockType,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
@@ -112,7 +113,7 @@ const tagMessageSchema = z.object({
 })
 
 const waitForMessageSchema = z.object({
-  type: z.enum([LogicBlockType.WAIT_FOR]),
+  type: z.enum([InputBlockType.WAIT_FOR]),
   content: waitForOptionsSchema,
 })
 
@@ -272,19 +273,6 @@ const clientSideActionSchema = z
             departmentId: z.string().optional(),
             attendantId: z.string().optional(),
             message: z.string(),
-          }),
-        })
-      )
-      .or(
-        z.object({
-          waitFor: z.object({
-            number: z.number(),
-            type: z.enum([
-              WaitForTypeEnum.DAY,
-              WaitForTypeEnum.HOUR,
-              WaitForTypeEnum.MINUTE,
-            ]),
-            until: z.date().optional(),
           }),
         })
       )

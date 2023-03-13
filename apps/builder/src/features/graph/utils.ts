@@ -419,7 +419,7 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultScriptOptions
     case LogicBlockType.WAIT:
       return defaultWaitOptions
-    case LogicBlockType.WAIT_FOR:
+    case InputBlockType.WAIT_FOR:
       return defaultWaitForOptions
     case LogicBlockType.JUMP:
       return {}
