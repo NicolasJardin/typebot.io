@@ -24,6 +24,7 @@ import {
 } from 'models'
 import { BubbleBlockType } from 'models/features/blocks/bubbles/enums'
 import { LogicBlockType } from 'models/features/blocks/logic/enums'
+import { InputBlockType } from 'models/features/blocks/inputs/enums'
 import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
 import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
@@ -119,7 +120,7 @@ export const HostBubble = (props: Props) => {
           />
         )
 
-      case LogicBlockType.WAIT_FOR:
+      case InputBlockType.WAIT_FOR:
         return (
           <WaitForBubble
             content={props.message.content as WaitForOptions}
