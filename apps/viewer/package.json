@@ -23,6 +23,7 @@
     "aws-sdk": "2.1321.0",
     "bot-engine": "workspace:*",
     "cors": "2.8.5",
+    "date-fns": "^2.29.3",
     "db": "workspace:*",
     "google-spreadsheet": "3.3.0",
     "got": "12.5.3",
@@ -37,9 +38,9 @@
     "trpc-openapi": "1.1.2"
   },
   "devDependencies": {
-    "@paralleldrive/cuid2": "2.2.0",
     "@babel/preset-env": "7.20.2",
     "@faire/mjml-react": "3.1.1",
+    "@paralleldrive/cuid2": "2.2.0",
     "@playwright/test": "1.31.1",
     "@types/cors": "2.8.13",
     "@types/google-spreadsheet": "3.3.1",

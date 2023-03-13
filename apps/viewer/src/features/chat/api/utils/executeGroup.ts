@@ -1,6 +1,7 @@
 import { injectVariableValuesInButtonsInputBlock } from '@/features/blocks/inputs/buttons/api/utils/injectVariableValuesInButtonsInputBlock'
 import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/api'
 import { deepParseVariable } from '@/features/variables'
+import { format } from 'date-fns'
 import {
   BubbleBlock,
   BubbleBlockType,
@@ -19,7 +20,6 @@ import {
   isIntegrationBlock,
   isLogicBlock,
 } from 'utils'
-import { executeBubble } from './executeBubble'
 import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
@@ -175,6 +175,22 @@ const injectVariablesValueInBlock =
   (state: Pick<SessionState, 'isPreview' | 'typebot'>) =>
   async (block: InputBlock): Promise<ChatReply['input']> => {
     switch (block.type) {
+      case InputBlockType.WAIT_FOR: {
+        return deepParseVariable(state.typebot.variables)({
+          ...block,
+          options: {
+            ...block.options,
+            until: block.options.until
+              ? format(new Date(block.options.until), 'yyyy-MM-dd HH:mm:ss')
+              : '',
+          },
+          runtimeOptions: await computeRuntimeOptions(state)(block),
+          prefilledValue: getPrefilledInputValue(state.typebot.variables)(
+            block
+          ),
+        })
+      }
+
       case InputBlockType.CHOICE: {
         return injectVariableValuesInButtonsInputBlock(state.typebot.variables)(
           block
