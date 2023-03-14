@@ -185,9 +185,12 @@ const BotContent = (props: BotContentProps) => {
     <div
       ref={botContainer}
       class={
-        'relative flex w-full h-full text-base overflow-hidden bg-cover flex-col items-center typebot-container ' +
+        'relative flex w-full h-full text-base overflow-hidden bg-cover flex-col items-center ' +
         props.class
       }
+      style={{
+        'background-image': `url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png")`,
+      }}
     >
       <div class="flex w-full h-full justify-center">
         <ConversationContainer
