@@ -1,4 +1,5 @@
 import { ButtonOptions, TypingEmulation } from 'models'
+import { onCleanup, onMount } from 'solid-js'
 
 type Props = {
   content: ButtonOptions
@@ -6,9 +7,11 @@ type Props = {
   onTransitionEnd: () => void
 }
 
-export const showAnimationDuration = 400
-
 export default function ButtonBubble(props: Props) {
+  onMount(() => {
+    props.onTransitionEnd()
+  })
+
   return (
     <div class="flex flex-col animate-fade-in">
       <div class="flex mb-2 w-full items-center">
