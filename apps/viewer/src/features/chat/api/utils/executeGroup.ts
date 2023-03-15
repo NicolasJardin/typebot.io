@@ -10,6 +10,7 @@ import {
   Group,
   InputBlock,
   InputBlockType,
+  LogicBlockType,
   RuntimeOptions,
   SessionState,
 } from 'models'
@@ -54,15 +55,79 @@ export const executeGroup =
         continue
       }
 
-      if (block.type == BubbleBlockType.BUTTON) {
-        messages.push({
-          ...block,
-          content: block.options,
-        })
+      switch (block.type) {
+        case LogicBlockType.TRANSFER:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
 
-        lastBubbleBlockId = block.id
+          lastBubbleBlockId = block.id
 
-        continue
+          continue
+        case LogicBlockType.WAIT:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
+        case LogicBlockType.TAG:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
+        case LogicBlockType.REMOVE_TAG:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        case InputBlockType.WAIT_FOR:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        case LogicBlockType.END:
+          messages.push({
+            content: {},
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        case BubbleBlockType.BUTTON:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
       }
 
       if (isInputBlock(block))

@@ -2,9 +2,16 @@ import { z } from 'zod'
 import {
   googleAnalyticsOptionsSchema,
   inputBlockSchema,
+  InputBlockType,
+  LogicBlockType,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
+  removeTagOptionsSchema,
+  tagOptionsSchema,
+  transferOptionsSchema,
+  waitForOptionsSchema,
   WaitForTypeEnum,
+  waitOptionsSchema,
 } from './blocks'
 import { publicTypebotSchema } from './publicTypebot'
 import { ChatSession as ChatSessionPrisma } from 'db'
@@ -90,9 +97,39 @@ const fileMessageSchema = z.object({
   content: fileBubbleContentSchema,
 })
 
+const transferMessageSchema = z.object({
+  type: z.enum([LogicBlockType.TRANSFER]),
+  content: transferOptionsSchema,
+})
+
+const waitMessageSchema = z.object({
+  type: z.enum([LogicBlockType.WAIT]),
+  content: waitOptionsSchema,
+})
+
+const tagMessageSchema = z.object({
+  type: z.enum([LogicBlockType.TAG]),
+  content: tagOptionsSchema,
+})
+
+const waitForMessageSchema = z.object({
+  type: z.enum([InputBlockType.WAIT_FOR]),
+  content: waitForOptionsSchema,
+})
+
 const buttonMessageSchema = z.object({
   type: z.enum([BubbleBlockType.BUTTON]),
   content: buttonOptionsSchema,
+})
+
+const endMessageSchema = z.object({
+  type: z.enum([LogicBlockType.END]),
+  content: z.object({}),
+})
+
+const removeTagMessageSchema = z.object({
+  type: z.enum([LogicBlockType.REMOVE_TAG]),
+  content: removeTagOptionsSchema,
 })
 
 const embedMessageSchema = z.object({
@@ -113,7 +150,13 @@ const chatMessageSchema = z
       .or(audioMessageSchema)
       .or(embedMessageSchema)
       .or(fileMessageSchema)
+      .or(transferMessageSchema)
+      .or(waitMessageSchema)
+      .or(tagMessageSchema)
+      .or(removeTagMessageSchema)
+      .or(waitForMessageSchema)
       .or(buttonMessageSchema)
+      .or(endMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({
