@@ -7,9 +7,9 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { VariablesButton } from '@/features/variables'
-import { Variable } from 'models'
-import { env } from 'utils'
+import { VariablesButton } from '@/features/variables/components/VariablesButton'
+import { Variable } from '@typebot.io/schemas'
+import { env } from '@typebot.io/lib'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night'
 import { githubLight } from '@uiw/codemirror-theme-github'
@@ -67,7 +67,12 @@ export const CodeEditor = ({
   const handleChange = (newValue: string) => {
     if (isDefined(props.value)) return
     setValue(newValue)
-    setCarretPosition(codeEditor.current?.state?.selection.main.head ?? 0)
+  }
+
+  const rememberCarretPosition = () => {
+    setCarretPosition(
+      codeEditor.current?.view?.state?.selection.asSingle().main.head ?? 0
+    )
   }
 
   useEffect(
@@ -114,6 +119,7 @@ export const CodeEditor = ({
         ref={codeEditor}
         value={props.value ?? value}
         onChange={handleChange}
+        onBlur={rememberCarretPosition}
         theme={theme}
         extensions={[loadLanguage(lang)].filter(isDefined)}
         editable={!isReadOnly}

@@ -1,6 +1,6 @@
 import { TagSearchInput } from '@/components/TagSearchInput'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import { RemoveTagOptions } from 'models'
+import { RemoveTagOptions } from '@typebot.io/schemas'
 
 type RemoveTagSettingsProps = {
   options: RemoveTagOptions | undefined

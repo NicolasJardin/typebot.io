@@ -1,5 +1,5 @@
 import { Text } from '@chakra-ui/react'
-import { WaitForOptions, WaitForTypeEnum } from 'models'
+import { WaitForOptions, WaitForTypeEnum } from '@typebot.io/schemas'
 import { useMemo } from 'react'
 
 type WaitForNodeContentProps = {

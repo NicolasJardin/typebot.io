@@ -13,13 +13,13 @@ import {
 } from '@chakra-ui/react'
 import { useState, useRef, useEffect, ReactNode } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { env, isDefined } from 'utils'
+import { env, isDefined } from '@typebot.io/lib'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 import { useParentModal } from '@/features/graph/providers/ParentModalProvider'
-import { VariablesButton } from '@/features/variables'
-import { Variable } from 'models'
-import { injectVariableInText } from '@/features/variables/utils/injectVariableInTextInput'
-import { focusInput } from '@/utils/focusInput'
+import { VariablesButton } from '@/features/variables/components/VariablesButton'
+import { Variable } from '@typebot.io/schemas'
+import { injectVariableInText } from '@/features/variables/helpers/injectVariableInTextInput'
+import { focusInput } from '@/helpers/focusInput'
 import { MoreInfoTooltip } from '../MoreInfoTooltip'
 
 type Props = {

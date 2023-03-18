@@ -1,5 +1,5 @@
 import { Link, Text } from '@chakra-ui/react'
-import { FileBubbleContent } from 'models/features/blocks/bubbles/file'
+import { FileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 
 type FileNodeContentProps = {
   content: FileBubbleContent

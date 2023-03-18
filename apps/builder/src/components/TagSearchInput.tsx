@@ -23,9 +23,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { TagOptions } from 'models'
+import { isDefined, isNotDefined } from '@typebot.io/lib'
+import { TagOptions } from '@typebot.io/schemas'
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { isDefined, isNotDefined } from 'utils'
 
 type Props = {
   defaultTagName?: string

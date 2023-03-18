@@ -1,13 +1,10 @@
 import { Alert, AlertIcon, Button, Link, Stack, Text } from '@chakra-ui/react'
 import { ExternalLinkIcon } from '@/components/icons'
-import { useTypebot } from '@/features/editor'
-import { Webhook, WebhookOptions, ZapierBlock } from 'models'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { Webhook, WebhookOptions, ZapierBlock } from '@typebot.io/schemas'
 import React, { useCallback, useEffect, useState } from 'react'
-import { byId, env } from 'utils'
+import { byId } from '@typebot.io/lib'
 import { WebhookAdvancedConfigForm } from '../../webhook/components/WebhookAdvancedConfigForm'
-import { useDebouncedCallback } from 'use-debounce'
-
-const debounceWebhookTimeout = 2000
 
 type Props = {
   block: ZapierBlock
@@ -23,19 +20,12 @@ export const ZapierSettings = ({
 
   const [localWebhook, _setLocalWebhook] = useState(webhook)
 
-  const updateWebhookDebounced = useDebouncedCallback(
-    async (newLocalWebhook) => {
+  const setLocalWebhook = useCallback(
+    async (newLocalWebhook: Webhook) => {
+      _setLocalWebhook(newLocalWebhook)
       await updateWebhook(newLocalWebhook.id, newLocalWebhook)
     },
-    env('E2E_TEST') === 'true' ? 0 : debounceWebhookTimeout
-  )
-
-  const setLocalWebhook = useCallback(
-    (newLocalWebhook: Webhook) => {
-      _setLocalWebhook(newLocalWebhook)
-      updateWebhookDebounced(newLocalWebhook)
-    },
-    [updateWebhookDebounced]
+    [updateWebhook]
   )
 
   useEffect(() => {
@@ -51,13 +41,6 @@ export const ZapierSettings = ({
       url: webhook?.url,
     })
   }, [webhook, localWebhook, setLocalWebhook])
-
-  useEffect(
-    () => () => {
-      updateWebhookDebounced.flush()
-    },
-    [updateWebhookDebounced]
-  )
 
   return (
     <Stack spacing={4}>

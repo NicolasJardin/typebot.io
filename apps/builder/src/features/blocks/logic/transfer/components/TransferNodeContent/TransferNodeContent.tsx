@@ -1,5 +1,5 @@
 import { Text } from '@chakra-ui/react'
-import { TransferOptions } from 'models'
+import { TransferOptions } from '@typebot.io/schemas'
 import { useMemo } from 'react'
 
 type TransferNodeContentProps = {

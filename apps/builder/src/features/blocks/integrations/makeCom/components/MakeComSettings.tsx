@@ -1,10 +1,9 @@
 import { ExternalLinkIcon } from '@/components/icons'
-import { useTypebot } from '@/features/editor'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { Alert, AlertIcon, Button, Link, Stack, Text } from '@chakra-ui/react'
-import { MakeComBlock, Webhook, WebhookOptions } from 'models'
+import { byId } from '@typebot.io/lib'
+import { MakeComBlock, Webhook, WebhookOptions } from '@typebot.io/schemas'
 import { useCallback, useEffect, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
-import { byId, env } from 'utils'
 import { WebhookAdvancedConfigForm } from '../../webhook/components/WebhookAdvancedConfigForm'
 
 const debounceWebhookTimeout = 2000
@@ -22,19 +21,13 @@ export const MakeComSettings = ({
   const webhook = webhooks.find(byId(webhookId))
 
   const [localWebhook, _setLocalWebhook] = useState(webhook)
-  const updateWebhookDebounced = useDebouncedCallback(
-    async (newLocalWebhook) => {
-      await updateWebhook(newLocalWebhook.id, newLocalWebhook)
-    },
-    env('E2E_TEST') === 'true' ? 0 : debounceWebhookTimeout
-  )
 
   const setLocalWebhook = useCallback(
-    (newLocalWebhook: Webhook) => {
+    async (newLocalWebhook: Webhook) => {
       _setLocalWebhook(newLocalWebhook)
-      updateWebhookDebounced(newLocalWebhook)
+      await updateWebhook(newLocalWebhook.id, newLocalWebhook)
     },
-    [updateWebhookDebounced]
+    [updateWebhook]
   )
 
   useEffect(() => {
@@ -50,13 +43,6 @@ export const MakeComSettings = ({
       url: webhook?.url,
     })
   }, [webhook, localWebhook, setLocalWebhook])
-
-  useEffect(
-    () => () => {
-      updateWebhookDebounced.flush()
-    },
-    [updateWebhookDebounced]
-  )
 
   return (
     <Stack spacing={4}>

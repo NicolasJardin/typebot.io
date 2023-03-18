@@ -1,8 +1,8 @@
+import { compressFile } from '@/helpers/compressFile'
 import { useToast } from '@/hooks/useToast'
-import { compressFile } from '@/utils/helpers'
 import { Button, ButtonProps, chakra } from '@chakra-ui/react'
+import { uploadFiles } from '@typebot.io/lib'
 import { ChangeEvent, useMemo, useState } from 'react'
-import { uploadFiles } from 'utils'
 
 type UploadButtonProps = {
   fileType: 'image' | 'audio' | 'file' | 'video'

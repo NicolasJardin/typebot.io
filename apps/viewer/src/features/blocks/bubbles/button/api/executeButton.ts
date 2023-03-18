@@ -1,5 +1,5 @@
-import { ExecuteLogicResponse } from '@/features/chat'
-import { ButtonBlock } from 'models'
+import { ExecuteLogicResponse } from '@/features/chat/types'
+import { ButtonBlock } from '@typebot.io/schemas'
 
 export const executeButton = async (
   block: ButtonBlock

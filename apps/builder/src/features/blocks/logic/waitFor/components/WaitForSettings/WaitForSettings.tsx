@@ -2,7 +2,7 @@ import { TextInput } from '@/components/inputs'
 import { FormControl, FormLabel, Select, Stack } from '@chakra-ui/react'
 import add from 'date-fns/add'
 import set from 'date-fns/set'
-import { WaitForOptions, WaitForTypeEnum } from 'models'
+import { WaitForOptions, WaitForTypeEnum } from '@typebot.io/schemas'
 import { ChangeEvent, useCallback } from 'react'
 
 type Props = {

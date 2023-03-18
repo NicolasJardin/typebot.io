@@ -1,7 +1,8 @@
 import { DownloadIcon, ToolIcon } from '@/components/icons'
-import { useUser } from '@/features/account'
-import { createTypebotQuery, importTypebotQuery } from '@/features/dashboard'
-import { useWorkspace } from '@/features/workspace'
+import { useUser } from '@/features/account/hooks/useUser'
+import { createTypebotQuery } from '@/features/dashboard/queries/createTypebotQuery'
+import { importTypebotQuery } from '@/features/dashboard/queries/importTypebotQuery'
+import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
 import {
   Button,
@@ -11,7 +12,7 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import { Typebot } from 'models'
+import { Typebot } from '@typebot.io/schemas'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { ImportTypebotFromFileButton } from './ImportTypebotFromFileButton'

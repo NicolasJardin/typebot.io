@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,6 +7,7 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react'
+import { useRef, useState } from 'react'
 
 type ConfirmDeleteModalProps = {
   isOpen: boolean

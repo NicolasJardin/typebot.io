@@ -1,5 +1,5 @@
-import { ExecuteLogicResponse } from '@/features/chat'
-import { RemoveTagBlock } from 'models'
+import { ExecuteLogicResponse } from '@/features/chat/types'
+import { RemoveTagBlock } from '@typebot.io/schemas'
 
 export const executeRemoveTag = async (
   block: RemoveTagBlock,

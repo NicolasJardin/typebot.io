@@ -3,8 +3,8 @@ import {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query'
+import { sendRequest } from '@typebot.io/lib'
 import { useCallback } from 'react'
-import { sendRequest } from 'utils'
 
 type Data = string | undefined
 type Variables = {

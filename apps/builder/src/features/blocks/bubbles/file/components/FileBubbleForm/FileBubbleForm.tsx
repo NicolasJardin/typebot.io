@@ -1,7 +1,7 @@
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
-import { AudioBubbleContent } from 'models'
+import { AudioBubbleContent } from '@typebot.io/schemas'
 import { useState } from 'react'
 
 type FileBubbleFormProps = {

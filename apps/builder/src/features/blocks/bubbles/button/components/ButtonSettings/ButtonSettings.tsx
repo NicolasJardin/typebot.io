@@ -1,6 +1,6 @@
 import { TextInput } from '@/components/inputs'
 import { Stack } from '@chakra-ui/react'
-import { ButtonOptions } from 'models'
+import { ButtonOptions } from '@typebot.io/schemas'
 import { useCallback } from 'react'
 
 type ButtonSettingsProps = {

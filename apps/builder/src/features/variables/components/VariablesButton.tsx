@@ -10,7 +10,7 @@ import {
   Portal,
 } from '@chakra-ui/react'
 import { UserIcon } from '@/components/icons'
-import { Variable } from 'models'
+import { Variable } from '@typebot.io/schemas'
 import React, { useRef } from 'react'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { useOutsideClick } from '@/hooks/useOutsideClick'
@@ -48,6 +48,7 @@ export const VariablesButton = ({ onSelectVariable, ...props }: Props) => {
       <Portal containerRef={parentModalRef}>
         <PopoverContent w="full" ref={popoverRef}>
           <VariableSearchInput
+            initialVariableId={undefined}
             onSelectVariable={(variable) => {
               onClose()
               if (variable) onSelectVariable(variable)

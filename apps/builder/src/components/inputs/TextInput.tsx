@@ -1,17 +1,25 @@
-import { VariablesButton } from '@/features/variables'
-import { injectVariableInText } from '@/features/variables/utils/injectVariableInTextInput'
-import { focusInput } from '@/utils/focusInput'
+import { VariablesButton } from '@/features/variables/components/VariablesButton'
+import { injectVariableInText } from '@/features/variables/helpers/injectVariableInTextInput'
+import { focusInput } from '@/helpers/focusInput'
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   HStack,
   Input as ChakraInput,
   InputProps,
 } from '@chakra-ui/react'
-import { Variable } from 'models'
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { Variable } from '@typebot.io/schemas'
+import React, {
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { env } from 'utils'
+import { env } from '@typebot.io/lib'
 import { MoreInfoTooltip } from '../MoreInfoTooltip'
 
 export type TextInputProps = {
@@ -19,6 +27,7 @@ export type TextInputProps = {
   onChange: (value: string) => void
   debounceTimeout?: number
   label?: ReactNode
+  helperText?: ReactNode
   moreInfoTooltip?: string
   withVariableButton?: boolean
   isRequired?: boolean
@@ -29,23 +38,28 @@ export type TextInputProps = {
   'autoComplete' | 'onFocus' | 'onKeyUp' | 'type' | 'autoFocus'
 >
 
-export const TextInput = ({
-  type,
-  defaultValue,
-  debounceTimeout = 1000,
-  label,
-  moreInfoTooltip,
-  withVariableButton = true,
-  isRequired,
-  placeholder,
-  autoComplete,
-  isDisabled,
-  autoFocus,
-  onChange: _onChange,
-  onFocus,
-  onKeyUp,
-}: TextInputProps) => {
+export const TextInput = forwardRef(function TextInput(
+  {
+    type,
+    defaultValue,
+    debounceTimeout = 1000,
+    label,
+    helperText,
+    moreInfoTooltip,
+    withVariableButton = true,
+    isRequired,
+    placeholder,
+    autoComplete,
+    isDisabled,
+    autoFocus,
+    onChange: _onChange,
+    onFocus,
+    onKeyUp,
+  }: TextInputProps,
+  ref
+) {
   const inputRef = useRef<HTMLInputElement | null>(null)
+  useImperativeHandle(ref, () => inputRef.current)
   const [isTouched, setIsTouched] = useState(false)
   const [localValue, setLocalValue] = useState<string>(defaultValue ?? '')
   const [carretPosition, setCarretPosition] = useState<number>(
@@ -126,6 +140,7 @@ export const TextInput = ({
       ) : (
         Input
       )}
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   )
-}
+})
