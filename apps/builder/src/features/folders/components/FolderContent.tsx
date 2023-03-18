@@ -13,7 +13,7 @@ import {
   useEventListener,
   Wrap,
 } from '@chakra-ui/react'
-import { WorkspaceRole } from '@typebot.io/prisma'
+import { DashboardFolder, WorkspaceRole } from '@typebot.io/prisma'
 import React, { useState } from 'react'
 import { OnboardingModal } from '../../dashboard/components/OnboardingModal'
 import { useFolders } from '../hooks/useFolders'

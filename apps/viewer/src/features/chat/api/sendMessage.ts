@@ -1,7 +1,13 @@
-import prisma from '@/lib/prisma'
+import { checkChatsUsage } from '@/features/usage/checkChatsUsage'
+import { deepParseVariables } from '@/features/variables/deepParseVariable'
+import { injectVariablesFromExistingResult } from '@/features/variables/injectVariablesFromExistingResult'
+import { parseVariables } from '@/features/variables/parseVariables'
+import { prefillVariables } from '@/features/variables/prefillVariables'
 import { publicProcedure } from '@/helpers/server/trpc'
+import prisma from '@/lib/prisma'
 import { TRPCError } from '@trpc/server'
-import { Prisma } from '@typebot.io/prisma'
+import { env, isDefined, omit } from '@typebot.io/lib'
+import { Plan, Prisma } from '@typebot.io/prisma'
 import {
   ChatReply,
   chatReplySchema,
@@ -22,12 +28,6 @@ import {
   setResultAsCompleted,
   startBotFlow,
 } from '../helpers'
-import { env, isDefined, omit } from '@typebot.io/lib'
-import { prefillVariables } from '@/features/variables/prefillVariables'
-import { checkChatsUsage } from '@/features/usage/checkChatsUsage'
-import { injectVariablesFromExistingResult } from '@/features/variables/injectVariablesFromExistingResult'
-import { deepParseVariables } from '@/features/variables/deepParseVariable'
-import { parseVariables } from '@/features/variables/parseVariables'
 
 export const sendMessage = publicProcedure
   .meta({
@@ -288,7 +288,11 @@ const getTypebot = async (
     typebotQuery && 'typebot' in typebotQuery
       ? await checkChatsUsage({
           typebotId: parsedTypebot.id,
-          workspace: typebotQuery.typebot.workspace,
+
+          workspace: {
+            ...typebotQuery.typebot.workspace,
+            plan: typebotQuery.typebot.workspace.plan as Plan,
+          },
         })
       : false
 

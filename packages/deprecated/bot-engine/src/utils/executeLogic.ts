@@ -1,13 +1,12 @@
 import { TypebotViewerProps } from '@/components/TypebotViewer'
 import { executeCondition } from '@/features/blocks/logic/condition'
 import { executeRedirect } from '@/features/blocks/logic/redirect'
+import { executeScript } from '@/features/blocks/logic/script/executeScript'
 import { executeSetVariable } from '@/features/blocks/logic/setVariable'
 import { executeTypebotLink } from '@/features/blocks/logic/typebotLink'
-import { executeWait } from '@/features/blocks/logic/wait'
 import { LinkedTypebot } from '@/providers/TypebotProvider'
 import { EdgeId, LogicState } from '@/types'
 import { LogicBlock, LogicBlockType } from '@typebot.io/schemas'
-import { executeScript } from '@/features/blocks/logic/script/executeScript'
 
 export const executeLogic = async (
   block: LogicBlock,
@@ -28,8 +27,6 @@ export const executeLogic = async (
       return { nextEdgeId: await executeScript(block, context) }
     case LogicBlockType.TYPEBOT_LINK:
       return executeTypebotLink(block, context)
-    // case LogicBlockType.WAIT:
-    //   return { nextEdgeId: await executeWait(block, context) }
   }
 
   return { nextEdgeId: block.outgoingEdgeId }
