@@ -1,5 +1,5 @@
-import { ExecuteLogicResponse } from '@/features/chat'
-import { TagBlock } from 'models'
+import { ExecuteLogicResponse } from '@/features/chat/types'
+import { TagBlock } from '@typebot.io/schemas'
 
 export const executeCreateTag = async (
   block: TagBlock,

@@ -1,30 +1,31 @@
-import { DashboardFolder } from 'db'
+import { ConfirmModal } from '@/components/ConfirmModal'
+import { FolderIcon, MoreVerticalIcon } from '@/components/icons'
+import { useToast } from '@/hooks/useToast'
+import { useI18n } from '@/locales'
 import {
   Button,
   Editable,
   EditableInput,
   EditablePreview,
-  MenuItem,
-  useDisclosure,
-  Text,
-  VStack,
   IconButton,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
-  SkeletonText,
   SkeletonCircle,
-  WrapItem,
+  SkeletonText,
+  Text,
   useColorModeValue,
+  useDisclosure,
+  VStack,
+  WrapItem,
 } from '@chakra-ui/react'
-import { FolderIcon, MoreVerticalIcon } from '@/components/icons'
-import { ConfirmModal } from '@/components/ConfirmModal'
-import { useTypebotDnd } from '../TypebotDndProvider'
+import { DashboardFolder } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { deleteFolderQuery } from '../queries/deleteFolderQuery'
-import { useToast } from '@/hooks/useToast'
 import { updateFolderQuery } from '../queries/updateFolderQuery'
+import { useTypebotDnd } from '../TypebotDndProvider'
 
 export const FolderButton = ({
   folder,
@@ -35,6 +36,7 @@ export const FolderButton = ({
   onFolderDeleted: () => void
   onFolderRenamed: (newName: string) => void
 }) => {
+  const t = useI18n()
   const router = useRouter()
   const { draggedTypebot, setMouseOverFolderId, mouseOverFolderId } =
     useTypebotDnd()
@@ -59,7 +61,7 @@ export const FolderButton = ({
     if (newName === '' || newName === folder.name) return
     const { error } = await updateFolderQuery(folder.id, { name: newName })
     return error
-      ? showToast({ title: 'An error occured', description: error.message })
+      ? showToast({ title: t('errorMessage'), description: error.message })
       : onFolderRenamed(newName)
   }
 

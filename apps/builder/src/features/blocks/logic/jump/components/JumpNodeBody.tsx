@@ -1,8 +1,8 @@
 import React from 'react'
 import { Tag, Text } from '@chakra-ui/react'
-import { useTypebot } from '@/features/editor'
-import { byId, isDefined } from 'utils'
-import { JumpBlock } from 'models/features/blocks/logic/jump'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { byId, isDefined, parseGroupTitle } from '@typebot.io/lib'
+import { JumpBlock } from '@typebot.io/schemas/features/blocks/logic/jump'
 
 type Props = {
   options: JumpBlock['options']
@@ -15,7 +15,8 @@ export const JumpNodeBody = ({ options }: Props) => {
   if (!selectedGroup) return <Text color="gray.500">Configure...</Text>
   return (
     <Text>
-      Jump to <Tag colorScheme="blue">{selectedGroup.title}</Tag>{' '}
+      Jump to{' '}
+      <Tag colorScheme="blue">{parseGroupTitle(selectedGroup.title)}</Tag>{' '}
       {isDefined(blockIndex) && blockIndex >= 0 ? (
         <>
           no bloco <Tag colorScheme="blue">{blockIndex + 1}</Tag>

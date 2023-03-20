@@ -1,9 +1,9 @@
 import { Select } from '@/components/inputs/Select'
-import { useTypebot } from '@/features/editor'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { Stack } from '@chakra-ui/react'
-import { JumpBlock } from 'models/features/blocks/logic/jump'
+import { JumpBlock } from '@typebot.io/schemas/features/blocks/logic/jump'
 import React from 'react'
-import { byId } from 'utils'
+import { byId, parseGroupTitle } from '@typebot.io/lib'
 
 type Props = {
   groupId: string
@@ -32,7 +32,7 @@ export const JumpSettings = ({ groupId, options, onOptionsChange }: Props) => {
         items={typebot.groups
           .filter((group) => group.id !== currentGroupId)
           .map((group) => ({
-            label: group.title,
+            label: parseGroupTitle(group.title),
             value: group.id,
           }))}
         selectedItem={selectedGroup?.id}

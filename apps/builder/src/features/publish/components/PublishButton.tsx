@@ -4,10 +4,12 @@ import {
   LockedIcon,
   UnlockedIcon,
 } from '@/components/icons'
-import { ChangePlanModal, isFreePlan, LimitReached } from '@/features/billing'
-import { useTypebot } from '@/features/editor'
-import { useWorkspace } from '@/features/workspace'
-import { timeSince } from '@/utils/helpers'
+import { ChangePlanModal } from '@/features/billing/components/ChangePlanModal'
+import { isFreePlan } from '@/features/billing/helpers/isFreePlan'
+import { LimitReached } from '@/features/billing/types'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { parseTimeSince } from '@/helpers/parseTimeSince'
 import {
   Button,
   ButtonProps,
@@ -23,8 +25,8 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { InputBlockType } from 'models'
-import { isNotDefined } from 'utils'
+import { isNotDefined } from '@typebot.io/lib'
+import { InputBlockType } from '@typebot.io/schemas'
 
 export const PublishButton = (props: ButtonProps) => {
   const warningTextColor = useColorModeValue('red.300', 'red.600')
@@ -85,7 +87,7 @@ export const PublishButton = (props: ButtonProps) => {
             <Text fontStyle="italic">
               Versão publicada de{' '}
               {publishedTypebot &&
-                timeSince(publishedTypebot.updatedAt.toString())}{' '}
+                parseTimeSince(publishedTypebot.updatedAt.toString())}{' '}
               atrás
             </Text>
           </Stack>

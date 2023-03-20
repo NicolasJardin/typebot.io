@@ -11,6 +11,8 @@ import {
 import { useState } from 'react'
 import { PopupSettings } from '../../../settings/PopupSettings'
 import { parseInitPopupCode } from '../../../snippetParsers/popup'
+import { isCloudProdInstance } from '@/helpers/isCloudProdInstance'
+import { env, getViewerUrl } from '@typebot.io/lib'
 
 type Props = {
   publicId: string
@@ -20,6 +22,9 @@ export const WordpressPopupInstructions = ({ publicId }: Props) => {
 
   const initCode = parseInitPopupCode({
     typebot: publicId,
+    apiHost: isCloudProdInstance
+      ? undefined
+      : env('VIEWER_INTERNAL_URL') ?? getViewerUrl(),
     autoShowDelay,
   })
 

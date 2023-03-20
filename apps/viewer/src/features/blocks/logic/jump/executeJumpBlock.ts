@@ -1,11 +1,11 @@
-import { ExecuteLogicResponse } from '@/features/chat'
 import {
   addEdgeToTypebot,
   createPortalEdge,
-} from '@/features/chat/api/utils/addEdgeToTypebot'
+} from '@/features/chat/helpers/addEdgeToTypebot'
+import { ExecuteLogicResponse } from '@/features/chat/types'
 import { TRPCError } from '@trpc/server'
-import { SessionState } from 'models'
-import { JumpBlock } from 'models/features/blocks/logic/jump'
+import { SessionState } from '@typebot.io/schemas'
+import { JumpBlock } from '@typebot.io/schemas/features/blocks/logic/jump'
 
 export const executeJumpBlock = (
   state: SessionState,

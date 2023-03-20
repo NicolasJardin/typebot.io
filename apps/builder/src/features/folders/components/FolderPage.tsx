@@ -1,5 +1,6 @@
 import { Seo } from '@/components/Seo'
 import { useToast } from '@/hooks/useToast'
+import { useI18n } from '@/locales'
 import { Flex, Spinner, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useFolder } from '../hooks/useFolder'
@@ -7,6 +8,7 @@ import { TypebotDndProvider } from '../TypebotDndProvider'
 import { FolderContent } from './FolderContent'
 
 export const FolderPage = () => {
+  const t = useI18n()
   const router = useRouter()
 
   const { showToast } = useToast()
@@ -23,7 +25,7 @@ export const FolderPage = () => {
 
   return (
     <Stack minH="100vh">
-      <Seo title="Meus typebots" />
+      <Seo title="Meus fluxos" />
 
       <TypebotDndProvider>
         {!folder ? (

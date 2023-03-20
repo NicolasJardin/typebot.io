@@ -1,5 +1,5 @@
 import { HStack, Tag, Text } from '@chakra-ui/react'
-import { TagOptions } from 'models'
+import { TagOptions } from '@typebot.io/schemas'
 import { Fragment } from 'react'
 
 type TagNodeContentProps = { options: TagOptions }

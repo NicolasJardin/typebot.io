@@ -1,6 +1,6 @@
-import { ExecuteLogicResponse } from '@/features/chat'
-import { parseVariables } from '@/features/variables'
-import { SessionState, TransferBlock } from 'models'
+import { ExecuteLogicResponse } from '@/features/chat/types'
+import { parseVariables } from '@/features/variables/parseVariables'
+import { SessionState, TransferBlock } from '@typebot.io/schemas'
 
 export const executeTransfer = async (
   { typebot: { variables } }: SessionState,

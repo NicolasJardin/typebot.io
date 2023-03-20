@@ -14,5 +14,6 @@ module.exports = {
   },
   rules: {
     '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
 }

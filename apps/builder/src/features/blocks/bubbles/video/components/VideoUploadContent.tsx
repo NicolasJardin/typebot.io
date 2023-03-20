@@ -1,12 +1,12 @@
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
+import { isDefined } from '@typebot.io/lib'
+import { VideoBubbleContent, VideoBubbleContentType } from '@typebot.io/schemas'
 import urlParser from 'js-video-url-parser/lib/base'
 import 'js-video-url-parser/lib/provider/vimeo'
 import 'js-video-url-parser/lib/provider/youtube'
-import { VideoBubbleContent, VideoBubbleContentType } from 'models'
 import { useCallback, useState } from 'react'
-import { isDefined } from 'utils'
 
 type Props = {
   fileUploadPath: string
@@ -28,11 +28,11 @@ export const VideoUploadContent = ({
 
   const handleUrlChange = (url: string) => {
     const info = urlParser.parse(url)
-    return isDefined(info) && info.provider && info.id
+    return isDefined(info) && info?.provider && info?.id
       ? onSubmit({
-          type: info.provider as VideoBubbleContentType,
+          type: info?.provider as VideoBubbleContentType,
           url,
-          id: info.id,
+          id: info?.id,
         })
       : onSubmit({ type: VideoBubbleContentType.URL, url })
   }

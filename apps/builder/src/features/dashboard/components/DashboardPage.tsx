@@ -1,18 +1,22 @@
 import { Seo } from '@/components/Seo'
-import { useUser } from '@/features/account'
+import { useUser } from '@/features/account/hooks/useUser'
 import {
   PreCheckoutModal,
   PreCheckoutModalProps,
 } from '@/features/billing/components/PreCheckoutModal'
-import { FolderContent, TypebotDndProvider } from '@/features/folders'
-import { useWorkspace } from '@/features/workspace'
+import { FolderContent } from '@/features/folders/components/FolderContent'
+import { TypebotDndProvider } from '@/features/folders/TypebotDndProvider'
+import { ParentModalProvider } from '@/features/graph/providers/ParentModalProvider'
+import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { useScopedI18n } from '@/locales'
 import { Spinner, Stack, Text, VStack } from '@chakra-ui/react'
-import { Plan } from 'db'
+import { guessIfUserIsEuropean } from '@typebot.io/lib/pricing'
+import { Plan } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { guessIfUserIsEuropean } from 'utils/pricing'
 
 export const DashboardPage = () => {
+  const scopedT = useScopedI18n('dashboard')
   const [isLoading, setIsLoading] = useState(false)
   const { query } = useRouter()
   const { user } = useUser()
@@ -43,12 +47,14 @@ export const DashboardPage = () => {
       <Seo title={workspace?.name ?? 'Meus typebots'} />
 
       {!workspace?.stripeId && (
-        <PreCheckoutModal
-          selectedSubscription={preCheckoutPlan}
-          existingEmail={user?.email ?? undefined}
-          existingCompany={workspace?.name ?? undefined}
-          onClose={() => setPreCheckoutPlan(undefined)}
-        />
+        <ParentModalProvider>
+          <PreCheckoutModal
+            selectedSubscription={preCheckoutPlan}
+            existingEmail={user?.email ?? undefined}
+            existingCompany={workspace?.name ?? undefined}
+            onClose={() => setPreCheckoutPlan(undefined)}
+          />
+        </ParentModalProvider>
       )}
       <TypebotDndProvider>
         {isLoading ? (

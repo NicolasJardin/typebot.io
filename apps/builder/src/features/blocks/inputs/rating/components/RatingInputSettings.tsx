@@ -1,20 +1,17 @@
 import { FormLabel, Stack } from '@chakra-ui/react'
 import { DropdownList } from '@/components/DropdownList'
-import { RatingInputOptions, Variable } from 'models'
+import { RatingInputOptions, Variable } from '@typebot.io/schemas'
 import React from 'react'
 import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { TextInput } from '@/components/inputs'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 
-type RatingInputSettingsProps = {
+type Props = {
   options: RatingInputOptions
   onOptionsChange: (options: RatingInputOptions) => void
 }
 
-export const RatingInputSettings = ({
-  options,
-  onOptionsChange,
-}: RatingInputSettingsProps) => {
+export const RatingInputSettings = ({ options, onOptionsChange }: Props) => {
   const handleLengthChange = (length: number) =>
     onOptionsChange({ ...options, length })
 
@@ -64,7 +61,7 @@ export const RatingInputSettings = ({
         </FormLabel>
         <DropdownList
           onItemSelect={handleTypeChange}
-          items={['Icones', 'Números']}
+          items={['Icones', 'Números'] as const}
           currentItem={options.buttonType}
         />
       </Stack>

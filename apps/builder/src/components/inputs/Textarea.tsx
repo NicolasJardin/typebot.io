@@ -1,6 +1,6 @@
-import { VariablesButton } from '@/features/variables'
-import { injectVariableInText } from '@/features/variables/utils/injectVariableInTextInput'
-import { focusInput } from '@/utils/focusInput'
+import { VariablesButton } from '@/features/variables/components/VariablesButton'
+import { injectVariableInText } from '@/features/variables/helpers/injectVariableInTextInput'
+import { focusInput } from '@/helpers/focusInput'
 import {
   FormControl,
   FormLabel,
@@ -8,10 +8,10 @@ import {
   Textarea as ChakraTextarea,
   TextareaProps,
 } from '@chakra-ui/react'
-import { Variable } from 'models'
+import { Variable } from '@typebot.io/schemas'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { env } from 'utils'
+import { env } from '@typebot.io/lib'
 import { MoreInfoTooltip } from '../MoreInfoTooltip'
 
 type Props = {

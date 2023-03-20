@@ -2,7 +2,7 @@ import { DropdownList } from '@/components/DropdownList'
 import { CodeEditor } from '@/components/inputs/CodeEditor'
 import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { TableList, TableListItemProps } from '@/components/TableList'
-import { useTypebot } from '@/features/editor'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useToast } from '@/hooks/useToast'
 import {
   Stack,
@@ -22,17 +22,14 @@ import {
   ResponseVariableMapping,
   WebhookOptions,
   Webhook,
-} from 'models'
+} from '@typebot.io/schemas'
 import { useState, useMemo } from 'react'
 import { executeWebhook } from '../queries/executeWebhookQuery'
-import { convertVariablesForTestToVariables } from '../utils/convertVariablesForTestToVariables'
-import { getDeepKeys } from '../utils/getDeepKeys'
-import {
-  QueryParamsInputs,
-  HeadersInputs,
-} from './WebhookSettings/KeyValueInputs'
-import { DataVariableInputs } from './WebhookSettings/ResponseMappingInputs'
-import { VariableForTestInputs } from './WebhookSettings/VariableForTestInputs'
+import { convertVariablesForTestToVariables } from '../helpers/convertVariablesForTestToVariables'
+import { getDeepKeys } from '../helpers/getDeepKeys'
+import { QueryParamsInputs, HeadersInputs } from './KeyValueInputs'
+import { DataVariableInputs } from './ResponseMappingInputs'
+import { VariableForTestInputs } from './VariableForTestInputs'
 
 type Props = {
   blockId: string
@@ -118,7 +115,7 @@ export const WebhookAdvancedConfigForm = ({
         <>
           <HStack justify="space-between">
             <Text>Método:</Text>
-            <DropdownList<HttpMethod>
+            <DropdownList
               currentItem={webhook.method as HttpMethod}
               onItemSelect={handleMethodChange}
               items={Object.values(HttpMethod)}
@@ -130,13 +127,12 @@ export const WebhookAdvancedConfigForm = ({
                 Parâmetros de consulta
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel py={4} as={Stack} spacing="6">
+              <AccordionPanel>
                 <TableList<KeyValue>
                   initialItems={webhook.queryParams}
                   onItemsChange={handleQueryParamsChange}
                   Item={QueryParamsInputs}
-                  addLabel="Adicionar um parametro"
-                  debounceTimeout={0}
+                  addLabel="Adicionar um parâmetro"
                 />
               </AccordionPanel>
             </AccordionItem>
@@ -145,13 +141,12 @@ export const WebhookAdvancedConfigForm = ({
                 Cabeçalhos
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel py={4} as={Stack} spacing="6">
+              <AccordionPanel>
                 <TableList<KeyValue>
                   initialItems={webhook.headers}
                   onItemsChange={handleHeadersChange}
                   Item={HeadersInputs}
                   addLabel="Adicionar um valor"
-                  debounceTimeout={0}
                 />
               </AccordionPanel>
             </AccordionItem>
@@ -181,7 +176,7 @@ export const WebhookAdvancedConfigForm = ({
                 Valores variáveis para teste
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel py={4} as={Stack} spacing="6">
+              <AccordionPanel>
                 <TableList<VariableForTest>
                   initialItems={
                     options?.variablesForTest ?? { byId: {}, allIds: [] }
@@ -189,7 +184,6 @@ export const WebhookAdvancedConfigForm = ({
                   onItemsChange={handleVariablesChange}
                   Item={VariableForTestInputs}
                   addLabel="Adicionar uma entrada"
-                  debounceTimeout={0}
                 />
               </AccordionPanel>
             </AccordionItem>
@@ -215,13 +209,12 @@ export const WebhookAdvancedConfigForm = ({
               Salvar em variáveis
               <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel py={4} as={Stack} spacing="6">
+            <AccordionPanel>
               <TableList<ResponseVariableMapping>
                 initialItems={options.responseVariableMapping}
                 onItemsChange={handleResponseMappingChange}
                 Item={ResponseMappingInputs}
                 addLabel="Adicionar uma entrada"
-                debounceTimeout={0}
               />
             </AccordionPanel>
           </AccordionItem>

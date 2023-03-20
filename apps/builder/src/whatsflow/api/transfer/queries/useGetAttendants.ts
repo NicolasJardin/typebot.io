@@ -3,7 +3,7 @@ import { Attendant } from '@/whatsflow/api/transfer/interfaces/Attendant'
 import { AttendantGetResponse } from '@/whatsflow/api/transfer/interfaces/AttendantGetResponse'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { sendRequest } from 'utils'
+import { sendRequest } from '@typebot.io/lib'
 
 type Data = Attendant[]
 type UseGetAttendantsOptions = UseQueryOptions<Data>

@@ -6,7 +6,10 @@ import {
   HStack,
   Text,
   Spinner,
-  Tooltip,
+  Alert,
+  Flex,
+  AlertIcon,
+  SlideFade,
 } from '@chakra-ui/react'
 import React, { ChangeEvent, FormEvent, useEffect } from 'react'
 import { useState } from 'react'
@@ -103,40 +106,56 @@ export const SignInForm = ({
     )
   return (
     <Stack spacing="4" w="330px">
-      <SocialLoginButtons providers={providers} />
-      {providers?.email && (
+      {!isMagicLinkSent && (
         <>
-          <DividerWithText mt="6">Ou com seu e-mail</DividerWithText>
-          <HStack as="form" onSubmit={handleEmailSubmit}>
-            <Input
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="email@company.com"
-              required
-              value={emailValue}
-              onChange={handleEmailChange}
-            />
-            <Tooltip
-              label="Um e-mail de login foi enviado. Certifique-se de verificar sua pasta de SPAM."
-              isDisabled={!isMagicLinkSent}
-            >
-              <Button
-                type="submit"
-                isLoading={
-                  ['loading', 'authenticated'].includes(status) || authLoading
-                }
-                isDisabled={isMagicLinkSent}
-              >
-                Enviar
-              </Button>
-            </Tooltip>
-          </HStack>
+          <SocialLoginButtons providers={providers} />
+          {providers?.email && (
+            <>
+              <DividerWithText mt="6">Ou com seu e-mail</DividerWithText>
+              <HStack as="form" onSubmit={handleEmailSubmit}>
+                <Input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="email@empresa.com"
+                  required
+                  value={emailValue}
+                  onChange={handleEmailChange}
+                />
+                <Button
+                  type="submit"
+                  isLoading={
+                    ['loading', 'authenticated'].includes(status) || authLoading
+                  }
+                  isDisabled={isMagicLinkSent}
+                >
+                  Enviar
+                </Button>
+              </HStack>
+            </>
+          )}
         </>
       )}
       {router.query.error && (
         <SignInError error={router.query.error.toString()} />
       )}
+      <SlideFade offsetY="20px" in={isMagicLinkSent} unmountOnExit>
+        <Flex>
+          <Alert status="success" w="100%">
+            <HStack>
+              <AlertIcon />
+              <Stack spacing={1}>
+                <Text fontWeight="semibold">
+                  Um e-mail com link mágico foi enviado. 🪄
+                </Text>
+                <Text fontSize="sm">
+                  Certifique-se de verificar sua pasta de SPAM.
+                </Text>
+              </Stack>
+            </HStack>
+          </Alert>
+        </Flex>
+      </SlideFade>
     </Stack>
   )
 }

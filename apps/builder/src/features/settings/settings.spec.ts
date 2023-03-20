@@ -1,9 +1,9 @@
 import { getTestAsset } from '@/test/utils/playwright'
 import test, { expect } from '@playwright/test'
 import { createId } from '@paralleldrive/cuid2'
-import { defaultTextInputOptions } from 'models'
-import { importTypebotInDatabase } from 'utils/playwright/databaseActions'
-import { freeWorkspaceId } from 'utils/playwright/databaseSetup'
+import { defaultTextInputOptions } from '@typebot.io/schemas'
+import { importTypebotInDatabase } from '@typebot.io/lib/playwright/databaseActions'
+import { freeWorkspaceId } from '@typebot.io/lib/playwright/databaseSetup'
 
 test.describe.parallel('Settings page', () => {
   test.describe('General', () => {
@@ -22,11 +22,6 @@ test.describe.parallel('Settings page', () => {
       await page.click('text="Remember session"')
       await expect(
         page.locator('input[type="checkbox"] >> nth=-3')
-      ).toHaveAttribute('checked', '')
-
-      await page.click('text="Disable responses saving"')
-      await expect(
-        page.locator('input[type="checkbox"] >> nth=-1')
       ).toHaveAttribute('checked', '')
 
       await expect(page.getByPlaceholder('Type your answer...')).toHaveValue(

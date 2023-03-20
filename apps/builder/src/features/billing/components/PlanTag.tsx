@@ -1,7 +1,8 @@
-import { Tag, TagProps, ThemeTypings } from '@chakra-ui/react'
-import { Plan } from 'db'
+import { Tag, TagProps } from '@chakra-ui/react'
+import { Plan } from '@typebot.io/prisma'
+import { Fragment } from 'react'
 
-export const planColorSchemes: Record<Plan, ThemeTypings['colorSchemes']> = {
+export const planColorSchemes = {
   [Plan.LIFETIME]: 'purple',
   [Plan.PRO]: 'blue',
   [Plan.OFFERED]: 'orange',
@@ -84,4 +85,6 @@ export const PlanTag = ({
       )
     }
   }
+
+  return <Fragment />
 }

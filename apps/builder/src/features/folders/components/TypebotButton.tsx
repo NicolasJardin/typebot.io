@@ -1,4 +1,15 @@
-import React from 'react'
+import { ConfirmModal } from '@/components/ConfirmModal'
+import { EmojiOrImageIcon } from '@/components/EmojiOrImageIcon'
+import { GripIcon } from '@/components/icons'
+import { deleteTypebotQuery } from '@/features/dashboard/queries/deleteTypebotQuery'
+import { getTypebotQuery } from '@/features/dashboard/queries/getTypebotQuery'
+import { importTypebotQuery } from '@/features/dashboard/queries/importTypebotQuery'
+import { TypebotInDashboard } from '@/features/dashboard/types'
+import { deletePublishedTypebotQuery } from '@/features/publish/queries/deletePublishedTypebotQuery'
+import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { isMobile } from '@/helpers/isMobile'
+import { useToast } from '@/hooks/useToast'
+import { useScopedI18n } from '@/locales'
 import {
   Button,
   Flex,
@@ -10,24 +21,12 @@ import {
   VStack,
   WrapItem,
 } from '@chakra-ui/react'
+import { Plan } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
-import { ConfirmModal } from '@/components/ConfirmModal'
-import { GripIcon } from '@/components/icons'
-import { useTypebotDnd } from '../TypebotDndProvider'
+import React from 'react'
 import { useDebounce } from 'use-debounce'
-import { Plan } from 'db'
-import { useWorkspace } from '@/features/workspace'
-import { useToast } from '@/hooks/useToast'
-import { isMobile } from '@/utils/helpers'
-import {
-  getTypebotQuery,
-  deleteTypebotQuery,
-  importTypebotQuery,
-  TypebotInDashboard,
-} from '@/features/dashboard'
+import { useTypebotDnd } from '../TypebotDndProvider'
 import { MoreButton } from './MoreButton'
-import { EmojiOrImageIcon } from '@/components/EmojiOrImageIcon'
-import { deletePublishedTypebotQuery } from '@/features/publish/queries/deletePublishedTypebotQuery'
 
 type Props = {
   typebot: TypebotInDashboard
@@ -42,6 +41,7 @@ export const TypebotButton = ({
   onTypebotUpdated,
   onMouseDown,
 }: Props) => {
+  const scopedT = useScopedI18n('folders.typebotButton')
   const router = useRouter()
   const { workspace } = useWorkspace()
   const { draggedTypebot } = useTypebotDnd()
@@ -154,7 +154,7 @@ export const TypebotButton = ({
             pos="absolute"
             top="20px"
             right="20px"
-            aria-label={`Show ${typebot.name} menu`}
+            aria-label={scopedT('showMoreOptions')}
           >
             {typebot.publishedTypebotId && (
               <MenuItem onClick={handleUnpublishClick}>

@@ -1,5 +1,5 @@
 import { HStack, Tag, Text } from '@chakra-ui/react'
-import { RemoveTagOptions } from 'models'
+import { RemoveTagOptions } from '@typebot.io/schemas'
 import { Fragment } from 'react'
 
 type RemoveTagNodeContentProps = { options: RemoveTagOptions }

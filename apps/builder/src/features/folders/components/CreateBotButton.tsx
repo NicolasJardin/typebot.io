@@ -1,8 +1,7 @@
-import { Button, ButtonProps, Text, VStack } from '@chakra-ui/react'
 import { PlusIcon } from '@/components/icons'
+import { Button, ButtonProps, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { stringify } from 'qs'
-import React from 'react'
 
 export const CreateBotButton = ({
   folderId,

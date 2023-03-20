@@ -7,7 +7,7 @@ import {
   StatNumber,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { Stats } from 'models'
+import { Stats } from '@typebot.io/schemas'
 import React from 'react'
 
 const computeCompletionRate = (

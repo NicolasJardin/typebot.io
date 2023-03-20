@@ -3,7 +3,7 @@ import { Department } from '@/whatsflow/api/transfer/interfaces/Department'
 import { DepartmentGetResponse } from '@/whatsflow/api/transfer/interfaces/DepartmentGetResponse'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { sendRequest } from 'utils'
+import { sendRequest } from '@typebot.io/lib'
 
 type Data = Department[]
 type UseGetDepartmentsOptions = UseQueryOptions<Data>
