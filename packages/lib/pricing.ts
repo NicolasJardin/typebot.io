@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import type { Workspace } from '@typebot.io/prisma'
 import { Plan } from '@typebot.io/prisma'
 

@@ -100,7 +100,7 @@ export const ChangePlanForm = ({ workspace, onUpgradeSuccess }: Props) => {
               : 0
           }
           onPayClick={(props) =>
-            handlePayClick({ ...props, plan: Plan.STARTER })
+            handlePayClick({ ...props, plan: Plan.STARTER as 'STARTER' })
           }
           isLoading={isUpdatingSubscription}
           currency={data?.subscription.currency}
@@ -117,7 +117,9 @@ export const ChangePlanForm = ({ workspace, onUpgradeSuccess }: Props) => {
               ? data?.subscription.additionalStorageIndex
               : 0
           }
-          onPayClick={(props) => handlePayClick({ ...props, plan: Plan.PRO })}
+          onPayClick={(props) =>
+            handlePayClick({ ...props, plan: Plan.PRO as 'PRO' })
+          }
           isLoading={isUpdatingSubscription}
           currency={data?.subscription.currency}
         />

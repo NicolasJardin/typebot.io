@@ -15,6 +15,7 @@ import {
   audioBubbleBlockSchema,
   buttonBlockSchema,
   ButtonBlock,
+  ButtonOptions,
 } from './bubbles'
 import {
   textInputSchema,
@@ -87,6 +88,7 @@ export type BlockOptions =
   | InputBlockOptions
   | LogicBlockOptions
   | IntegrationBlockOptions
+  | ButtonOptions
 
 export type BlockWithItems = ConditionBlock | ChoiceInputBlock
 

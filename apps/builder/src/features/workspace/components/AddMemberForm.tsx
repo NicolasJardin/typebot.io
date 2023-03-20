@@ -115,7 +115,7 @@ export const convertWorkspaceRoleToReadable = (role: WorkspaceRole): string => {
       return 'Admin'
     case WorkspaceRole.MEMBER:
       return 'Member'
-    case WorkspaceRole.GUEST:
-      return 'Guest'
   }
+
+  return 'Guest'
 }
