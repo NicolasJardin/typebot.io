@@ -11,7 +11,19 @@ export default function TagNodeContent({ options }: TagNodeContentProps) {
         <HStack alignItems="center" justifyContent="center">
           <Text>Criar Tag:</Text>
 
-          <Tag style={{ background: options.color }}>{options.name}</Tag>
+          <Tag
+            size="sm"
+            sx={{
+              minWidth: 1,
+              minHeight: 1,
+              height: 4,
+              width: 4,
+            }}
+            style={{ background: options.color }}
+            borderRadius="full"
+          />
+
+          <Text>{options.name}</Text>
         </HStack>
       ) : (
         <Text color="gray.500">Clique para editar...</Text>
