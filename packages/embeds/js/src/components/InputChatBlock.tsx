@@ -12,6 +12,7 @@ import type {
   TextInputBlock,
   Theme,
   UrlInputBlock,
+  WaitForOptions,
 } from '@typebot.io/schemas'
 import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums'
 import { GuestBubble } from './bubbles/GuestBubble'
@@ -29,6 +30,7 @@ import { createSignal, Switch, Match } from 'solid-js'
 import { isNotDefined } from '@typebot.io/lib'
 import { isMobile } from '@/utils/isMobileSignal'
 import { PaymentForm } from '@/features/blocks/inputs/payment'
+import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
 
 type Props = {
   block: NonNullable<ChatReply['input']>
@@ -188,6 +190,13 @@ const Input = (props: {
             } as PaymentInputOptions & RuntimeOptions
           }
           onSuccess={submitPaymentSuccess}
+        />
+      </Match>
+
+      <Match when={props.block.type === InputBlockType.WAIT_FOR}>
+        <WaitForBubble
+          options={props.block.options as WaitForOptions}
+          onSubmit={onSubmit}
         />
       </Match>
     </Switch>
