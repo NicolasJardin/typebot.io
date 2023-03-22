@@ -98,16 +98,7 @@ export const executeGroup =
           lastBubbleBlockId = block.id
 
           continue
-        case InputBlockType.WAIT_FOR:
-          messages.push({
-            content: block.options,
-            id: block.id,
-            type: block.type,
-          })
 
-          lastBubbleBlockId = block.id
-
-          continue
         case LogicBlockType.END:
           messages.push({
             content: {},

@@ -122,15 +122,6 @@ export const HostBubble = (props: Props) => {
           />
         )
 
-      case InputBlockType.WAIT_FOR:
-        return (
-          <WaitForBubble
-            content={props.message.content as WaitForOptions}
-            typingEmulation={props.typingEmulation}
-            onTransitionEnd={onTransitionEnd}
-          />
-        )
-
       case LogicBlockType.END:
         return (
           <EndBubble
