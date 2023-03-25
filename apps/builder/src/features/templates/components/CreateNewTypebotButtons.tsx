@@ -74,7 +74,7 @@ export const CreateNewTypebotButtons = () => {
 
   return (
     <VStack maxW="600px" w="full" flex="1" pt="20" spacing={10}>
-      <Heading>Criar um novo typebot</Heading>
+      <Heading>Criar um novo fluxo</Heading>
       <Stack w="full" spacing={6}>
         <Button
           variant="outline"

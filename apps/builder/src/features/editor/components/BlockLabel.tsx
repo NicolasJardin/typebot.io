@@ -64,8 +64,8 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
       )
     case LogicBlockType.TYPEBOT_LINK:
       return (
-        <Tooltip label="Link para outro dos seus typebots">
-          <Text>Typebot</Text>
+        <Tooltip label="Link para outro dos seus fluxos">
+          <Text>Fluxo</Text>
         </Tooltip>
       )
     case LogicBlockType.WAIT:
