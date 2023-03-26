@@ -111,7 +111,7 @@ export default function TransferSettings({
     setSelectedDepartment(options?.department)
 
     const departmentName = departments?.find(
-      ({ id }) => id === options.department.id
+      ({ id }) => id === options.department?.id
     )?.name
 
     if (departmentName) handleDepartmentNameChange(departmentName)
