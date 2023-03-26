@@ -3,14 +3,18 @@ import { blockBaseSchema } from '../baseSchemas'
 import { LogicBlockType } from './enums'
 
 export const transferOptionsSchema = z.object({
-  department: z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-  }),
-  attendant: z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-  }),
+  department: z
+    .object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
+  attendant: z
+    .object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
   message: z.string().optional(),
 })
 

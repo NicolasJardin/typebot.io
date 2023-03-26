@@ -7,6 +7,8 @@ export const executeTransfer = async (
   block: TransferBlock,
   lastBubbleBlockId?: string
 ): Promise<ExecuteLogicResponse> => {
+  //TODO Não está mais caindo aqui por causa das messages no executeGroup
+
   if (!block.options?.department.id && !block.options?.attendant.id)
     return { outgoingEdgeId: block.outgoingEdgeId }
 

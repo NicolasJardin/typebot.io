@@ -24,6 +24,7 @@ import { injectVariableValuesInButtonsInputBlock } from '@/features/blocks/input
 import { deepParseVariables } from '@/features/variables/deepParseVariable'
 import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/computePaymentInputRuntimeOptions'
 import { format } from 'date-fns'
+import { parseVariables } from '@/features/variables/parseVariables'
 
 export const executeGroup =
   (
@@ -56,9 +57,26 @@ export const executeGroup =
       }
 
       switch (block.type) {
-        case LogicBlockType.TRANSFER:
+        case LogicBlockType.TRANSFER: {
+          const parsedMessage = parseVariables(
+            newSessionState.typebot.variables
+          )(block.options?.message)
+
+          const getTransfer = () => {
+            if (block?.options?.attendant?.id)
+              return {
+                attendant: block?.options?.attendant,
+                message: parsedMessage,
+              }
+
+            return {
+              department: block?.options?.department,
+              message: parsedMessage,
+            }
+          }
+
           messages.push({
-            content: block.options,
+            content: getTransfer(),
             id: block.id,
             type: block.type,
           })
@@ -66,6 +84,8 @@ export const executeGroup =
           lastBubbleBlockId = block.id
 
           continue
+        }
+
         case LogicBlockType.WAIT:
           messages.push({
             content: block.options,

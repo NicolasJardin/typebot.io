@@ -38,9 +38,9 @@ export default function TransferBubble(props: Props) {
         ? 0
         : computeTypingDuration(
             `🔀 Transferido para o ${
-              props.options.attendant.name
+              props.options.attendant?.name
                 ? `atendente ${props.options.attendant.name}`
-                : `setor ${props.options.department.name}`
+                : `setor ${props.options.department?.name}`
             }`,
             props.typingEmulation ?? defaultTypingEmulation
           )
@@ -69,9 +69,9 @@ export default function TransferBubble(props: Props) {
           <ChatText
             isTyping={!!isTyping()}
             text={`🔀 Transferido para o ${
-              props.options.attendant.name
+              props.options.attendant?.name
                 ? `atendente ${props.options.attendant.name}`
-                : `setor ${props.options.department.name}`
+                : `setor ${props.options.department?.name}`
             }`}
           />
         </div>

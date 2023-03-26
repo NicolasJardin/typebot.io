@@ -21,8 +21,8 @@ export default function useTransferFormatter() {
   >(
     (response) =>
       response?.attendants.map((data) => ({
-        id: data.user_uuid,
-        name: data.user_name,
+        id: data.uuid,
+        name: data.name,
       })) || [],
     []
   )
