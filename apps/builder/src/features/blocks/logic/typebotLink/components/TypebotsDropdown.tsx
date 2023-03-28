@@ -36,8 +36,8 @@ export const TypebotsDropdown = ({
         selectedItem={typebotId}
         items={[
           {
-            label: 'Typebot atual',
-            value: 'Typebot atual',
+            label: 'Fluxo atual',
+            value: 'Fluxo atual',
           },
           ...(typebots ?? [])
             .filter((typebot) => !idsToExclude.includes(typebot.id))
@@ -54,7 +54,7 @@ export const TypebotsDropdown = ({
             })),
         ]}
         onSelect={onSelect}
-        placeholder={'Selecione um typebot'}
+        placeholder={'Selecione um fluxo'}
       />
       {typebotId && typebotId !== 'current' && (
         <IconButton
