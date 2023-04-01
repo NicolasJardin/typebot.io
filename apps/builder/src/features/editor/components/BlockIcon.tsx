@@ -35,7 +35,11 @@ import {
   LogicBlockType,
 } from '@typebot.io/schemas'
 import { BubbleBlockType } from '@typebot.io/schemas/features/blocks/bubbles/enums'
-import { AiOutlineDelete, AiOutlineTag } from 'react-icons/ai'
+import {
+  AiOutlineDelete,
+  AiOutlineTag,
+  AiOutlineUnorderedList,
+} from 'react-icons/ai'
 import { BiShuffle } from 'react-icons/bi'
 import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
@@ -100,6 +104,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TRANSFER:
       return <Icon as={BiShuffle} color={purple} {...props} />
+    case LogicBlockType.SPREAD:
+      return <Icon as={AiOutlineUnorderedList} color={purple} {...props} />
     case LogicBlockType.JUMP:
       return <JumpIcon color={purple} {...props} />
     case LogicBlockType.TYPEBOT_LINK:

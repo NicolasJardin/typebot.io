@@ -47,6 +47,7 @@ import {
   defaultTransferOptions,
   defaultWaitForOptions,
   defaultButtonBubbleContent,
+  defaultSpreadOptions,
 } from '@typebot.io/schemas'
 import { defaultFileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 
@@ -128,6 +129,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultTagOptions
     case LogicBlockType.TRANSFER:
       return defaultTransferOptions
+    case LogicBlockType.SPREAD:
+      return defaultSpreadOptions
     case LogicBlockType.JUMP:
       return {}
     case LogicBlockType.TYPEBOT_LINK:

@@ -72,6 +72,8 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
       return <Text>Digitando</Text>
     case LogicBlockType.TRANSFER:
       return <Text>Transferir</Text>
+    case LogicBlockType.SPREAD:
+      return <Text>Distribuir</Text>
     case LogicBlockType.TAG:
       return <Text>Criar tag</Text>
     case LogicBlockType.REMOVE_TAG:

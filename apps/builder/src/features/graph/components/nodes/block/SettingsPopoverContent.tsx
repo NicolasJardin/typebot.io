@@ -51,6 +51,7 @@ import {
 } from '@typebot.io/schemas'
 import { Fragment, useRef } from 'react'
 import { HelpDocButton } from './HelpDocButton'
+import SpreadSettings from '@/features/blocks/logic/spread/components/SpreadSettings/SpreadSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -237,6 +238,16 @@ export const BlockSettings = ({
         />
       )
     }
+
+    case LogicBlockType.SPREAD: {
+      return (
+        <SpreadSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+    }
+
     case LogicBlockType.WAIT: {
       return (
         <WaitSettings options={block.options} onOptionsChange={updateOptions} />
