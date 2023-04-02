@@ -1,3 +1,4 @@
+import { TextInput } from '@/components/inputs'
 import { useToast } from '@/hooks/useToast'
 import useGetAttendants from '@/whatsflow/api/transfer/queries/useGetAttendants'
 import { Fade, FormControl, FormLabel, Stack, Text } from '@chakra-ui/react'
@@ -17,9 +18,16 @@ export default function SpreadSettings({
   options,
   onOptionsChange,
 }: SpreadSettingsProps) {
-  //TODO ADICIONAR MENSAGEM
-
   const { attendant, attendants } = options
+
+  const handleMessage = useCallback(
+    (message: string) =>
+      onOptionsChange({
+        ...options,
+        message,
+      }),
+    [onOptionsChange, options]
+  )
 
   const handleAttendants = useCallback(
     (newAttendants: { value: string; label: string }[]) =>
@@ -68,6 +76,10 @@ export default function SpreadSettings({
 
   return (
     <Stack spacing={4}>
+      <Fade in={!!attendant.name} unmountOnExit>
+        <Text fontWeight={'bold'}>Próximo atendente: {attendant.name}</Text>
+      </Fade>
+
       <FormControl>
         <FormLabel>Atendentes:</FormLabel>
 
@@ -86,9 +98,12 @@ export default function SpreadSettings({
         />
       </FormControl>
 
-      <Fade in={!!attendant.name} unmountOnExit>
-        <Text fontWeight={'bold'}>Próximo atendente: {attendant.name}</Text>
-      </Fade>
+      <TextInput
+        label="Mensagem de Transferência:"
+        defaultValue={options?.message || ''}
+        onChange={handleMessage}
+        placeholder="Digite sua mensagem"
+      />
     </Stack>
   )
 }

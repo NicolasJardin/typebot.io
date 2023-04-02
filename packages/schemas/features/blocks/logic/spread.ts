@@ -10,6 +10,7 @@ export const spreadOptionsSchema = z.object({
     id: z.string().optional(),
     name: z.string().optional(),
   }),
+  message: z.string().optional(),
 })
 
 export const spreadBlockSchema = blockBaseSchema.merge(
