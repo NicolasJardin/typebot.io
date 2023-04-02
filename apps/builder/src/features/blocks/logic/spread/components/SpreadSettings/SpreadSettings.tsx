@@ -17,7 +17,7 @@ export default function SpreadSettings({
   options,
   onOptionsChange,
 }: SpreadSettingsProps) {
-  //TODO ADICIONAR MENSAGEM E AO DELETAR UMA OPÇÃO SELECIONAR OUTRA SE OUVER
+  //TODO ADICIONAR MENSAGEM
 
   const { attendant, attendants } = options
 
@@ -60,7 +60,10 @@ export default function SpreadSettings({
   )
 
   useEffect(() => {
-    if (!attendant.id && attendants?.[0]) handleAttendantChange(attendants[0])
+    if (!attendant?.id && attendants?.[0]) handleAttendantChange(attendants[0])
+
+    if (attendant?.id !== attendants?.[0]?.id)
+      handleAttendantChange(attendants[0] || {})
   }, [attendant, attendants, handleAttendantChange])
 
   return (
