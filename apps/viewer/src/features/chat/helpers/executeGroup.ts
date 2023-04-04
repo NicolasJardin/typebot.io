@@ -9,6 +9,7 @@ import {
   LogicBlockType,
   RuntimeOptions,
   SessionState,
+  SpreadOptions,
 } from '@typebot.io/schemas'
 import {
   isBubbleBlock,
@@ -25,6 +26,7 @@ import { deepParseVariables } from '@/features/variables/deepParseVariable'
 import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/computePaymentInputRuntimeOptions'
 import { format } from 'date-fns'
 import { parseVariables } from '@/features/variables/parseVariables'
+import { updateTypebotQuery } from '@/features/typebot/queries/updateTypebotQuery'
 
 export const executeGroup =
   (
@@ -82,6 +84,58 @@ export const executeGroup =
           })
 
           lastBubbleBlockId = block.id
+
+          continue
+        }
+
+        case LogicBlockType.SPREAD: {
+          const parsedMessage = parseVariables(
+            newSessionState.typebot.variables
+          )(block.options?.message)
+
+          messages.push({
+            content: {
+              attendant: block.options.attendant,
+              message: parsedMessage,
+            },
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          const groups = newSessionState.typebot.groups.map((group) => {
+            const newBlocks = group.blocks.map((block) => {
+              if (block.type === LogicBlockType.SPREAD) {
+                const nextAttendant =
+                  block.options.attendants?.[
+                    block.options.attendants.findIndex(
+                      ({ id }) => id === block.options.attendant.id
+                    ) + 1
+                  ]
+
+                block.options = {
+                  ...block.options,
+                  attendant: nextAttendant
+                    ? nextAttendant
+                    : block.options.attendants?.[0],
+                }
+
+                return block
+              }
+
+              return block
+            })
+
+            return {
+              ...group,
+              blocks: newBlocks,
+            }
+          })
+
+          await updateTypebotQuery(newSessionState.currentTypebotId, {
+            groups,
+          })
 
           continue
         }

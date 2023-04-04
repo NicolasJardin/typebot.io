@@ -113,6 +113,17 @@ const transferMessageSchema = z.object({
   content: transferOptionsSchema,
 })
 
+const spreadMessageSchema = z.object({
+  type: z.enum([LogicBlockType.SPREAD]),
+  content: z.object({
+    attendant: z.object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    }),
+    message: z.string().optional(),
+  }),
+})
+
 const waitMessageSchema = z.object({
   type: z.enum([LogicBlockType.WAIT]),
   content: waitOptionsSchema,
@@ -168,6 +179,7 @@ const chatMessageSchema = z
       .or(waitForMessageSchema)
       .or(buttonMessageSchema)
       .or(endMessageSchema)
+      .or(spreadMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({

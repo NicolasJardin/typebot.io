@@ -1,9 +1,9 @@
 import { TextInput } from '@/components/inputs'
 import { useToast } from '@/hooks/useToast'
 import useGetAttendants from '@/whatsflow/api/transfer/queries/useGetAttendants'
-import { Fade, FormControl, FormLabel, Stack, Text } from '@chakra-ui/react'
+import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { SpreadOptions } from '@typebot.io/schemas'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
 
@@ -18,7 +18,9 @@ export default function SpreadSettings({
   options,
   onOptionsChange,
 }: SpreadSettingsProps) {
-  const { attendant, attendants } = options
+  const { attendants } = options
+
+  const { showToast } = useToast()
 
   const handleMessage = useCallback(
     (message: string) =>
@@ -33,6 +35,10 @@ export default function SpreadSettings({
     (newAttendants: { value: string; label: string }[]) =>
       onOptionsChange({
         ...options,
+        attendant: {
+          id: newAttendants?.[0]?.value,
+          name: newAttendants?.[0]?.label,
+        },
         attendants: newAttendants.map(({ value, label }) => ({
           id: value,
           name: label,
@@ -40,14 +46,6 @@ export default function SpreadSettings({
       }),
     [onOptionsChange, options]
   )
-
-  const handleAttendantChange = useCallback(
-    (attendant: SpreadOptions['attendant']) => {
-      onOptionsChange({ ...options, attendant })
-    },
-    [options, onOptionsChange]
-  )
-  const { showToast } = useToast()
 
   const { data: attendantsData, isFetching: isFetchingAttendants } =
     useGetAttendants({
@@ -67,19 +65,8 @@ export default function SpreadSettings({
     [attendantsData]
   )
 
-  useEffect(() => {
-    if (!attendant?.id && attendants?.[0]) handleAttendantChange(attendants[0])
-
-    if (attendant?.id !== attendants?.[0]?.id)
-      handleAttendantChange(attendants[0] || {})
-  }, [attendant, attendants, handleAttendantChange])
-
   return (
     <Stack spacing={4}>
-      <Fade in={!!attendant.name} unmountOnExit>
-        <Text fontWeight={'bold'}>Próximo atendente: {attendant.name}</Text>
-      </Fade>
-
       <FormControl>
         <FormLabel>Atendentes:</FormLabel>
 

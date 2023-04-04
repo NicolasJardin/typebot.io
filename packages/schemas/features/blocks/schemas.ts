@@ -84,6 +84,7 @@ export type BlockWithOptionsType =
   | InputBlockType
   | Exclude<LogicBlockType, LogicBlockType.CONDITION>
   | IntegrationBlockType
+  | Partial<BubbleBlockType>
 
 export type BlockOptions =
   | InputBlockOptions

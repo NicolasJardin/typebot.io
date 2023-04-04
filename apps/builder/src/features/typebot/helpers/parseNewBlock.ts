@@ -82,8 +82,6 @@ const parseDefaultContent = (type: BubbleBlockType): BubbleBlockContent => {
       return defaultEmbedBubbleContent
     case BubbleBlockType.AUDIO:
       return defaultAudioBubbleContent
-    case BubbleBlockType.BUTTON:
-      return defaultButtonBubbleContent
     case BubbleBlockType.FILE:
       return defaultFileBubbleContent
   }
@@ -151,6 +149,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
     case IntegrationBlockType.OPEN_AI:
       return {}
   }
+
+  return {}
 }
 
 export const parseNewBlock = (
@@ -162,7 +162,10 @@ export const parseNewBlock = (
     id,
     groupId,
     type,
-    content: isBubbleBlockType(type) ? parseDefaultContent(type) : undefined,
+    content:
+      isBubbleBlockType(type) && type !== BubbleBlockType.BUTTON
+        ? parseDefaultContent(type)
+        : undefined,
     options: blockTypeHasOption(type)
       ? parseDefaultBlockOptions(type)
       : undefined,
