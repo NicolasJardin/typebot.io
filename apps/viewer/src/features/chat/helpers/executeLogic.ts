@@ -39,4 +39,6 @@ export const executeLogic =
       case LogicBlockType.JUMP:
         return executeJumpBlock(state, block.options)
     }
+
+    return { outgoingEdgeId: block.outgoingEdgeId }
   }
