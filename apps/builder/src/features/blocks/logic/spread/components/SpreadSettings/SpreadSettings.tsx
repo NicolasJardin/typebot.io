@@ -1,13 +1,10 @@
 import { TextInput } from '@/components/inputs'
+import MultiSelect from '@/components/selects/MultiSelect/MultiSelect'
 import { useToast } from '@/hooks/useToast'
 import useGetAttendants from '@/whatsflow/api/transfer/queries/useGetAttendants'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
 import { SpreadOptions } from '@typebot.io/schemas'
 import { useCallback, useMemo } from 'react'
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated'
-
-const animatedComponents = makeAnimated()
 
 type SpreadSettingsProps = {
   options: SpreadOptions
@@ -70,17 +67,13 @@ export default function SpreadSettings({
       <FormControl>
         <FormLabel>Atendentes:</FormLabel>
 
-        <Select
-          closeMenuOnSelect={false}
-          components={animatedComponents}
+        <MultiSelect
           isLoading={isFetchingAttendants}
           value={attendants.map(({ id, name }) => ({
             value: id,
             label: name,
           }))}
-          isClearable={false}
           onChange={(newValue) => handleAttendants(newValue)}
-          isMulti
           options={selectOptions}
         />
       </FormControl>
