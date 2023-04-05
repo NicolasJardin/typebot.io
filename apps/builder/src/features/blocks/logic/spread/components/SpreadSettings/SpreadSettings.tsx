@@ -73,7 +73,9 @@ export default function SpreadSettings({
             value: id,
             label: name,
           }))}
-          onChange={(newValue) => handleAttendants(newValue)}
+          onChange={(newValue: { value: string; label: string }[]) =>
+            handleAttendants(newValue)
+          }
           options={selectOptions}
         />
       </FormControl>
