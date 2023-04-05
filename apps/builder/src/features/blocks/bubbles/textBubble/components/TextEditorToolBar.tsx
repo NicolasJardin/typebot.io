@@ -68,9 +68,6 @@ export const TextEditorToolBar = ({
           icon={<UnderlineIcon />}
         />
       </span>
-      <span data-testid="link-button">
-        <LinkToolbarButton icon={<LinkIcon />} />
-      </span>
     </HStack>
   )
 }

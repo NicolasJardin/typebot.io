@@ -51,6 +51,7 @@ import {
   StartBlock,
 } from '@typebot.io/schemas'
 import { ItemNodesList } from '../item/ItemNodesList'
+import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -162,6 +163,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.TRANSFER:
       return <TransferNodeContent options={block.options} />
+
+    case LogicBlockType.SPREAD:
+      return <SpreadNodeContent options={block.options} />
 
     case LogicBlockType.TAG:
       return <TagNodeContent options={block.options} />

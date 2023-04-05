@@ -49,6 +49,7 @@ import {
   removeTagBlockSchema,
   tagBlockSchema,
   waitForBlockSchema,
+  spreadBlockSchema,
 } from './logic'
 import { jumpBlockSchema } from './logic/jump'
 import { endBlockSchema } from './logic/end'
@@ -83,6 +84,7 @@ export type BlockWithOptionsType =
   | InputBlockType
   | Exclude<LogicBlockType, LogicBlockType.CONDITION>
   | IntegrationBlockType
+  | Partial<BubbleBlockType>
 
 export type BlockOptions =
   | InputBlockOptions
@@ -142,6 +144,7 @@ export const logicBlockSchema = z.discriminatedUnion('type', [
   endBlockSchema,
   removeTagBlockSchema,
   tagBlockSchema,
+  spreadBlockSchema,
 ])
 
 export type LogicBlock = z.infer<typeof logicBlockSchema>
