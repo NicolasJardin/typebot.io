@@ -11,6 +11,7 @@ jobs:
   build:
     env:
       DATABASE_URL: 'postgresql://'
+      NODE_OPTIONS: "--max_old_space_size=4096"
     strategy:
       matrix:
         app: ['builder', 'viewer']
