@@ -4,7 +4,7 @@ import { ButtonOptions } from '@typebot.io/schemas'
 import { useCallback } from 'react'
 
 type ButtonSettingsProps = {
-  options: ButtonOptions
+  options?: ButtonOptions
   onOptionsChange: (options: ButtonOptions) => void
 }
 
@@ -34,14 +34,14 @@ export default function ButtonSettings({
     <Stack spacing={4}>
       <TextInput
         label="Texto do Botão"
-        defaultValue={options.title}
+        defaultValue={options?.title}
         onChange={handleTitleChange}
         placeholder="Ex: Clique para acessar"
       />
 
       <TextInput
         label="Link do Botão"
-        defaultValue={options.url}
+        defaultValue={options?.url}
         onChange={handleUrlChange}
         placeholder="http://"
       />
