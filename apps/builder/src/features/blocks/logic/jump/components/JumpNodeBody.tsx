@@ -15,7 +15,7 @@ export const JumpNodeBody = ({ options }: Props) => {
   if (!selectedGroup) return <Text color="gray.500">Configure...</Text>
   return (
     <Text>
-      Jump to{' '}
+      Pular para{' '}
       <Tag colorScheme="blue">{parseGroupTitle(selectedGroup.title)}</Tag>{' '}
       {isDefined(blockIndex) && blockIndex >= 0 ? (
         <>

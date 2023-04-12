@@ -14,6 +14,7 @@ import { setMultipleRefs } from '@/helpers/setMultipleRefs'
 import {
   Flex,
   HStack,
+  IconButton,
   Popover,
   PopoverTrigger,
   useColorModeValue,
@@ -40,6 +41,7 @@ import { BlockNodeContextMenu } from './BlockNodeContextMenu'
 import { MediaBubblePopoverContent } from './MediaBubblePopoverContent'
 import { SettingsModal } from './SettingsModal'
 import { BlockSettings, SettingsPopoverContent } from './SettingsPopoverContent'
+import { ExpandIcon } from '@/components/icons'
 
 export const BlockNode = ({
   block,
@@ -180,11 +182,29 @@ export const BlockNode = ({
   })
 
   return isEditing && isTextBubbleBlock(block) ? (
-    <TextBubbleEditor
-      id={block.id}
-      initialValue={block.content.richText}
-      onClose={handleCloseEditor}
-    />
+    <div>
+      <SettingsModal isOpen={isModalOpen} onClose={handleModalClose}>
+        <TextBubbleEditor
+          id={block.id}
+          initialValue={block.content.richText}
+          onClose={handleCloseEditor}
+        />
+      </SettingsModal>
+
+      <IconButton
+        aria-label="expand"
+        icon={<ExpandIcon />}
+        size="xs"
+        sx={{ position: 'absolute', top: 5, right: 5 }}
+        onClick={handleExpandClick}
+      />
+
+      <TextBubbleEditor
+        id={block.id}
+        initialValue={block.content.richText}
+        onClose={handleCloseEditor}
+      />
+    </div>
   ) : (
     <ContextMenu<HTMLDivElement>
       renderMenu={() => <BlockNodeContextMenu indices={indices} />}

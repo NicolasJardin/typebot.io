@@ -39,9 +39,9 @@ export const GoogleSheetConnectModal = ({
         <ModalCloseButton />
         <ModalBody as={Stack} spacing="6">
           <AlertInfo>
-            O Typebot precisa acessar o Google Drive para listar todos os seus
-            planilhas. Ele também precisa acessar suas planilhas para buscar ou
-            injetar dados nele.
+            O Automações.pro precisa acessar o Google Drive para listar todas as
+            suas planilhas. Ele também precisa acessar suas planilhas para
+            buscar ou injetar dados nele.
           </AlertInfo>
           <Text>
             Certifique-se de verificar todas as permissões para que a integração

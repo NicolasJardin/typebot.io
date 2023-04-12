@@ -215,6 +215,10 @@ export const BlocksSideBar = () => {
               onMouseDown={handleMouseDown}
             />
 
+            <BlockCard
+              type={LogicBlockType.JUMP}
+              onMouseDown={handleMouseDown}
+            />
             {/* <BlockCard
               type={LogicBlockType.SPREAD}
               onMouseDown={handleMouseDown}
