@@ -15,11 +15,13 @@ export default function MultiSelect(props: MultiSelectProps) {
       closeMenuOnSelect={false}
       components={animatedComponents}
       isMulti
+      menuPortalTarget={document.body}
       styles={{
         option: (base, { isFocused }) => ({
           ...base,
           color: isFocused ? '#000' : '#fff',
         }),
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
       }}
       theme={
         colorMode === 'dark'
