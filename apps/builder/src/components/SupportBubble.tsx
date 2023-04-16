@@ -7,7 +7,7 @@
 // import { planToReadable } from '@/features/billing/helpers/planToReadable'
 
 export const SupportBubble = () => {
-  return <p>kako</p>
+  return <></>
   // const { typebot } = useTypebot()
   // const { user } = useUser()
   // const { workspace } = useWorkspace()

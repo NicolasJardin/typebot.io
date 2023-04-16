@@ -6,10 +6,6 @@ export const spreadOptionsSchema = z.object({
   attendants: z.array(
     z.object({ id: z.string().optional(), name: z.string().optional() })
   ),
-  attendant: z.object({
-    id: z.string().optional(),
-    name: z.string().optional(),
-  }),
   message: z.string().optional(),
 })
 
@@ -22,7 +18,6 @@ export const spreadBlockSchema = blockBaseSchema.merge(
 
 export const defaultSpreadOptions: SpreadOptions = {
   attendants: [],
-  attendant: {},
 }
 
 export type SpreadBlock = z.infer<typeof spreadBlockSchema>

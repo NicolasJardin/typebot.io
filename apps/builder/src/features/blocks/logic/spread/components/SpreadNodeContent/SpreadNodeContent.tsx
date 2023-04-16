@@ -6,12 +6,7 @@ type SpreadNodeContentProps = {
 }
 
 export default function SpreadNodeContent({
-  options: { attendant },
+  options: { attendants },
 }: SpreadNodeContentProps) {
-  return (
-    <Text>Em manutenção</Text>
-    // <Text color={attendant.name ? '' : 'gray.500'}>
-    //   Distribuir {attendant.name ? `para ${attendant.name}` : ''}
-    // </Text>
-  )
+  return <Text color={attendants.length ? '' : 'gray.500'}>Distribuir</Text>
 }
