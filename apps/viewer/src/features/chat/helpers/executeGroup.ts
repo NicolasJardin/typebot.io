@@ -95,7 +95,7 @@ export const executeGroup =
 
           messages.push({
             content: {
-              attendant: block.options.attendant,
+              attendants: block.options.attendants,
               message: parsedMessage,
             },
             id: block.id,
@@ -103,39 +103,6 @@ export const executeGroup =
           })
 
           lastBubbleBlockId = block.id
-
-          const groups = newSessionState.typebot.groups.map((group) => {
-            const newBlocks = group.blocks.map((block) => {
-              if (block.type === LogicBlockType.SPREAD) {
-                const nextAttendant =
-                  block.options.attendants?.[
-                    block.options.attendants.findIndex(
-                      ({ id }) => id === block.options.attendant.id
-                    ) + 1
-                  ]
-
-                block.options = {
-                  ...block.options,
-                  attendant: nextAttendant
-                    ? nextAttendant
-                    : block.options.attendants?.[0],
-                }
-
-                return block
-              }
-
-              return block
-            })
-
-            return {
-              ...group,
-              blocks: newBlocks,
-            }
-          })
-
-          await updateTypebotQuery(newSessionState.currentTypebotId, {
-            groups,
-          })
 
           continue
         }

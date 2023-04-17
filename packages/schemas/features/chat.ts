@@ -6,6 +6,7 @@ import {
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
   removeTagOptionsSchema,
+  spreadOptionsSchema,
   tagOptionsSchema,
   transferOptionsSchema,
   waitForOptionsSchema,
@@ -115,13 +116,7 @@ const transferMessageSchema = z.object({
 
 const spreadMessageSchema = z.object({
   type: z.enum([LogicBlockType.SPREAD]),
-  content: z.object({
-    attendant: z.object({
-      id: z.string().optional(),
-      name: z.string().optional(),
-    }),
-    message: z.string().optional(),
-  }),
+  content: spreadOptionsSchema,
 })
 
 const waitMessageSchema = z.object({

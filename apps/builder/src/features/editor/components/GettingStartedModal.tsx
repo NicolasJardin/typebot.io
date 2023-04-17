@@ -38,7 +38,7 @@ export const GettingStartedModal = () => {
         <ModalCloseButton />
         <ModalBody as={Stack} spacing="8" py="10">
           <Stack spacing={4}>
-            <Heading fontSize="xl">Editor basics</Heading>
+            <Heading fontSize="xl">Informações básicas</Heading>
             <List spacing={4}>
               <HStack as={ListItem}>
                 <Flex
@@ -114,54 +114,6 @@ export const GettingStartedModal = () => {
                 </Text>
               </HStack>
             </List>
-          </Stack>
-
-          <Text>
-            Sinta-se à vontade para usar o balão no canto inferior direito para
-            entrar em contato se tiver qualquer pergunta. Eu costumo responder
-            nas próximas 24 horas. 😃
-          </Text>
-          <Stack spacing={4}>
-            <Heading fontSize="xl">Veja em ação ({`<`} 5 minutos)</Heading>
-            <iframe
-              width="100%"
-              height="315"
-              src="https://www.youtube.com/embed/jp3ggg_42-M"
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              style={{ borderRadius: '0.5rem', border: 'none' }}
-            />
-            <Accordion allowToggle>
-              <AccordionItem>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    Outros vídeos
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel py={10} as={Stack} spacing="10">
-                  <iframe
-                    width="100%"
-                    height="315"
-                    src="https://www.youtube.com/embed/6BudIC4GYNk"
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{ borderRadius: '0.5rem', border: 'none' }}
-                  />
-                  <iframe
-                    width="100%"
-                    height="315"
-                    src="https://www.youtube.com/embed/ZuyDwFLRbfQ"
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{ borderRadius: '0.5rem', border: 'none' }}
-                  />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
           </Stack>
         </ModalBody>
       </ModalContent>

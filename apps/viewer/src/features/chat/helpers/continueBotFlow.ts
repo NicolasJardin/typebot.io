@@ -126,7 +126,7 @@ const parseRetryMessage = (
   const retryMessage =
     'retryMessageContent' in block.options && block.options.retryMessageContent
       ? block.options.retryMessageContent
-      : 'Invalid message. Please, try again.'
+      : 'Mensagem inválida. Por favor, tente novamente.'
   return {
     messages: [
       {

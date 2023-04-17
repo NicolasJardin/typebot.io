@@ -1,17 +1,17 @@
 /* eslint-disable solid/components-return-once */
 
 import { AudioBubble } from '@/features/blocks/bubbles/audio'
-import { EmbedBubble } from '@/features/blocks/bubbles/embed'
-import { ImageBubble } from '@/features/blocks/bubbles/image'
-import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import ButtonBubble from '@/features/blocks/bubbles/button/components/ButtonBubble'
+import { EmbedBubble } from '@/features/blocks/bubbles/embed'
 import EndBubble from '@/features/blocks/bubbles/end/components/EndBubble'
 import FileBubble from '@/features/blocks/bubbles/file/components/FileBubble'
+import { ImageBubble } from '@/features/blocks/bubbles/image'
+import SpreadBubble from '@/features/blocks/bubbles/spread/components/SpreadBubble'
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
+import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
-import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
-
+import { VideoBubble } from '@/features/blocks/bubbles/video'
 import {
   AudioBubbleContent,
   BubbleBlockType,
@@ -19,18 +19,16 @@ import {
   ChatMessage,
   EmbedBubbleContent,
   ImageBubbleContent,
-  InputBlockType,
   LogicBlockType,
   RemoveTagOptions,
+  SpreadOptions,
   TagOptions,
   TextBubbleContent,
   TransferOptions,
   TypingEmulation,
   VideoBubbleContent,
-  WaitForOptions,
   WaitOptions,
 } from '@typebot.io/schemas'
-import { VideoBubble } from '@/features/blocks/bubbles/video'
 import { FileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 
 type Props = {
@@ -134,6 +132,15 @@ export const HostBubble = (props: Props) => {
         return (
           <ButtonBubble
             content={props.message.content as ButtonOptions}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.SPREAD:
+        return (
+          <SpreadBubble
+            options={props.message.content as SpreadOptions}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />
