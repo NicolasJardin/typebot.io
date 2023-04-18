@@ -185,7 +185,7 @@ export const TypebotButton = ({
         <ConfirmModal
           message={
             <Text>
-              Tem certeza de que deseja excluir seu Typebot {typebot.name}?
+              Tem certeza de que deseja excluir seu fluxo {typebot.name}?
               <br />
               Todos os dados associados serão perdidos.
             </Text>
