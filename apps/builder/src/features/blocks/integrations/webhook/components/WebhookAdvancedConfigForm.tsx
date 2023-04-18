@@ -107,7 +107,7 @@ export const WebhookAdvancedConfigForm = ({
   return (
     <>
       <SwitchWithLabel
-        label="Advanced configuration"
+        label="Configuração avançada"
         initialValue={options.isAdvancedConfig ?? true}
         onCheckChange={handleAdvancedConfigChange}
       />

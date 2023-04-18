@@ -214,6 +214,9 @@ const matchComparison = (
     case ComparisonOperators.CONTAINS: {
       return inputValue.toLowerCase().includes(value.toLowerCase())
     }
+    case ComparisonOperators.NOT_CONTAINS: {
+      return !inputValue.toLowerCase().includes(value.toLowerCase())
+    }
     case ComparisonOperators.EQUAL: {
       return inputValue === value
     }

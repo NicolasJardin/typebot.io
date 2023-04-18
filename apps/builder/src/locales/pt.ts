@@ -18,7 +18,7 @@ export default defineLocale({
   'folders.typebotButton.duplicate': 'Duplicar',
   'folders.typebotButton.delete': 'Deletar',
   'folders.typebotButton.deleteConfirmationMessage':
-    'Tem certeza de que deseja excluir seu typebot {typebotName}?',
+    'Tem certeza de que deseja excluir seu fluxo {typebotName}?',
   'folders.typebotButton.deleteConfirmationMessageWarning':
     'Todos os dados associados serão excluídos e não poderão ser recuperados.',
 })

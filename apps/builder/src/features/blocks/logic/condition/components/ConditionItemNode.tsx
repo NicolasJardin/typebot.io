@@ -179,4 +179,6 @@ const parseComparisonOperatorSymbol = (operator: ComparisonOperators) => {
     case ComparisonOperators.NOT_EQUAL:
       return '!='
   }
+
+  return 'Não contém'
 }

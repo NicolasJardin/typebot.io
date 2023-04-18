@@ -13,6 +13,7 @@ export enum ComparisonOperators {
   EQUAL = 'Igual a',
   NOT_EQUAL = 'Não igual',
   CONTAINS = 'Contém',
+  NOT_CONTAINS = 'Não Contém',
   GREATER = 'Maior que',
   LESS = 'Menor que',
   IS_SET = 'Está definido',
