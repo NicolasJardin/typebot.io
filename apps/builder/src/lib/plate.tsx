@@ -4,8 +4,7 @@ import {
   createUnderlinePlugin,
 } from '@udecode/plate-basic-marks'
 import { createPlugins } from '@udecode/plate-core'
-import { createLinkPlugin, ELEMENT_LINK } from '@udecode/plate-link'
-import { PlateFloatingLink } from '@udecode/plate-ui-link'
+import { ELEMENT_LINK } from '@udecode/plate-link'
 
 export const editorStyle = (backgroundColor: string): React.CSSProperties => ({
   flex: 1,
@@ -19,18 +18,18 @@ export const platePlugins = createPlugins(
     createBoldPlugin(),
     createItalicPlugin(),
     createUnderlinePlugin(),
-    createLinkPlugin({
-      renderAfterEditable: PlateFloatingLink,
-      options: {
-        isUrl: (url: string) =>
-          url.startsWith('http:') ||
-          url.startsWith('https:') ||
-          url.startsWith('mailto:') ||
-          url.startsWith('tel:') ||
-          url.startsWith('sms:'),
-        forceSubmit: true,
-      },
-    }),
+    // createLinkPlugin({
+    //   renderAfterEditable: PlateFloatingLink,
+    //   options: {
+    //     isUrl: (url: string) =>
+    //       url.startsWith('http:') ||
+    //       url.startsWith('https:') ||
+    //       url.startsWith('mailto:') ||
+    //       url.startsWith('tel:') ||
+    //       url.startsWith('sms:'),
+    //     forceSubmit: true,
+    //   },
+    // }),
   ],
   {
     components: {
