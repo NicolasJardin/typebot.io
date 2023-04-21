@@ -37,7 +37,7 @@ export const platePlugins = createPlugins(
         <a
           href={props.element.url}
           target="_blank"
-          // rel="noreferrer"
+          rel="noreferrer"
           className={props.className}
         >
           {props.children}
