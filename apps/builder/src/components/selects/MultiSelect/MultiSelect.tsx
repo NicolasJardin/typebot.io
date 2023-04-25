@@ -1,4 +1,5 @@
 import { useColorMode } from '@chakra-ui/react'
+import { useCallback } from 'react'
 import Select, { Props } from 'react-select'
 import makeAnimated from 'react-select/animated'
 
@@ -8,6 +9,17 @@ type MultiSelectProps = Props<any>
 
 export default function MultiSelect(props: MultiSelectProps) {
   const { colorMode } = useColorMode()
+
+  const getColor = useCallback(
+    (isFocused: boolean) => {
+      if (colorMode === 'dark') {
+        if (isFocused) return '#000'
+
+        return '#fff'
+      }
+    },
+    [colorMode]
+  )
 
   return (
     <Select
@@ -19,7 +31,7 @@ export default function MultiSelect(props: MultiSelectProps) {
       styles={{
         option: (base, { isFocused }) => ({
           ...base,
-          color: isFocused ? '#000' : '#fff',
+          color: getColor(isFocused),
         }),
         menuPortal: (base) => ({ ...base, zIndex: 9999 }),
       }}
