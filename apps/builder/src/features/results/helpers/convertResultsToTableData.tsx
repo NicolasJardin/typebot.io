@@ -8,8 +8,8 @@ import {
 } from '@typebot.io/schemas'
 import { FileLinks } from '../components/FileLinks'
 import { TableData } from '../types'
-import { convertDateToReadable } from './convertDateToReadable'
 import { parseAccessor } from './parseAccessor'
+import { format } from 'date-fns'
 
 export const convertResultsToTableData = (
   results: ResultWithAnswers[] | undefined,
@@ -17,8 +17,8 @@ export const convertResultsToTableData = (
 ): TableData[] =>
   (results ?? []).map((result) => ({
     id: { plainText: result.id },
-    'Submitted at': {
-      plainText: convertDateToReadable(result.createdAt),
+    'Enviado em': {
+      plainText: format(result.createdAt, 'dd/MM/yyyy'),
     },
     ...[...result.answers, ...result.variables].reduce<{
       [key: string]: { element?: JSX.Element; plainText: string }

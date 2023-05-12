@@ -95,7 +95,7 @@ const TableSettingsMenu = ({
           >
             <HStack>
               <ListIcon />
-              <Text>Column settings</Text>
+              <Text>Configurações da coluna</Text>
             </HStack>
 
             <ChevronRightIcon color="gray.400" />
@@ -109,7 +109,7 @@ const TableSettingsMenu = ({
           >
             <HStack>
               <DownloadIcon />
-              <Text>Export all</Text>
+              <Text>Exportar tudo</Text>
             </HStack>
           </Button>
         </PopoverBody>

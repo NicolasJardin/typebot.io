@@ -32,7 +32,7 @@ export const getResultExample = authenticatedProcedure
           message: z.literal(
             'This is a sample result, it has been generated ⬇️'
           ),
-          'Submitted at': z.string(),
+          'Enviado em': z.string(),
         })
         .and(z.record(z.string().optional()))
         .describe('Can contain any fields.'),

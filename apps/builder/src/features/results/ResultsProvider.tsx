@@ -54,6 +54,8 @@ export const ResultsProvider = ({
     [linkedTypebots, publishedTypebot]
   )
 
+  console.log({ resultHeader })
+
   const tableData = useMemo(
     () =>
       publishedTypebot

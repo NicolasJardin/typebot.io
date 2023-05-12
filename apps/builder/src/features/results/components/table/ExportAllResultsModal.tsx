@@ -127,16 +127,16 @@ export const ExportAllResultsModal = ({ isOpen, onClose }: Props) => {
         <ModalHeader />
         <ModalBody as={Stack} spacing="4">
           <SwitchWithLabel
-            label="Include deleted blocks"
-            moreInfoContent="Blocks from previous bot version that have been deleted"
+            label="Incluir blocos excluídos"
+            moreInfoContent="Blocos da versão anterior do bot que foram excluídos"
             initialValue={false}
             onCheckChange={setAreDeletedBlocksIncluded}
           />
-          <AlertInfo>The export may take up to 1 minute.</AlertInfo>
+          <AlertInfo>A exportação pode levar até 1 minuto.</AlertInfo>
         </ModalBody>
         <ModalFooter as={HStack}>
           <Button onClick={onClose} variant="ghost" size="sm">
-            Cancel
+            Cancelar
           </Button>
           <Button
             colorScheme="blue"
@@ -145,7 +145,7 @@ export const ExportAllResultsModal = ({ isOpen, onClose }: Props) => {
             size="sm"
             isLoading={isExportLoading}
           >
-            Export
+            Exportar
           </Button>
         </ModalFooter>
       </ModalContent>

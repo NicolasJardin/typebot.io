@@ -10,6 +10,7 @@ import {
 } from '@typebot.io/schemas'
 import { isInputBlock, byId, isNotDefined } from '@typebot.io/lib'
 import { parseResultHeader } from '@typebot.io/lib/results'
+import { format } from 'date-fns'
 
 export const parseResultExample =
   (
@@ -21,7 +22,7 @@ export const parseResultExample =
   ): Promise<
     {
       message: 'This is a sample result, it has been generated ⬇️'
-      'Submitted at': string
+      'Enviado em': string
     } & { [k: string]: string | undefined }
   > => {
     const header = parseResultHeader(typebot, linkedTypebots)
@@ -32,7 +33,7 @@ export const parseResultExample =
 
     return {
       message: 'This is a sample result, it has been generated ⬇️',
-      'Submitted at': new Date().toISOString(),
+      'Enviado em': format(new Date(), 'yyyy-MM-dd'),
       ...parseResultSample(linkedInputBlocks, header),
     }
   }
