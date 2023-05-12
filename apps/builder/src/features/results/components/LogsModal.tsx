@@ -41,7 +41,7 @@ export const LogsModal = ({ typebotId, resultId, onClose }: Props) => {
           ))}
           {isLoading && <Spinner />}
           {!isLoading && (logs ?? []).length === 0 && (
-            <Text>No logs found.</Text>
+            <Text>Nenhum log foi encontrado</Text>
           )}
         </ModalBody>
 
@@ -91,9 +91,9 @@ const LogCard = ({ log }: { log: Log }) => {
 const StatusTag = ({ status }: { status: string }) => {
   switch (status) {
     case 'error':
-      return <Tag colorScheme={'red'}>Fail</Tag>
+      return <Tag colorScheme={'red'}>Erro</Tag>
     case 'warning':
-      return <Tag colorScheme={'orange'}>Warn</Tag>
+      return <Tag colorScheme={'orange'}>Aviso</Tag>
     case 'info':
       return <Tag colorScheme={'blue'}>Info</Tag>
     default:

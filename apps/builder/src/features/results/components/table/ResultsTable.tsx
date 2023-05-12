@@ -156,7 +156,7 @@ export const ResultsTable = ({
         ),
         cell: ({ row }) => (
           <Button size="sm" onClick={onLogOpenIndex(row.index)}>
-            See logs
+            Ver logs
           </Button>
         ),
       },

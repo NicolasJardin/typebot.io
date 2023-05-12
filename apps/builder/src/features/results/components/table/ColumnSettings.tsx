@@ -79,7 +79,7 @@ export const ColumnSettings = ({
   return (
     <Stack>
       <Text fontWeight="semibold" fontSize="sm">
-        Shown in table:
+        Mostrar na tabela:
       </Text>
       <DndContext
         sensors={sensors}
@@ -160,7 +160,7 @@ const SortableColumns = ({
       <IconButton
         icon={isHidden ? <EyeOffIcon /> : <EyeIcon />}
         size="sm"
-        aria-label={'Hide column'}
+        aria-label={'Esconder coluna'}
         onClick={onEyeClick(header.id)}
       />
     </Flex>

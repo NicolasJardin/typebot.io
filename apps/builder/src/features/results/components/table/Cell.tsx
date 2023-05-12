@@ -22,6 +22,12 @@ const Cell = ({
   cellIndex,
   onExpandButtonClick,
 }: Props) => {
+  console.log({
+    cell,
+    cell2: cell.column.columnDef.cell,
+    context: cell.getContext(),
+  })
+
   return (
     <chakra.td
       key={cell.id}
@@ -52,7 +58,7 @@ const Cell = ({
             size="xs"
             onClick={onExpandButtonClick}
           >
-            Open
+            Abrir
           </Button>
         </Fade>
       </chakra.span>
