@@ -18,12 +18,14 @@ import Link from 'next/link'
 import React from 'react'
 import { trpc } from '@/lib/trpc'
 import { useToast } from '@/hooks/useToast'
+import { useScopedI18n } from '@/locales'
 
 type Props = {
   workspaceId: string
 }
 
 export const InvoicesList = ({ workspaceId }: Props) => {
+  const scopedT = useScopedI18n('billing.invoices')
   const { showToast } = useToast()
   const { data, status } = trpc.billing.listInvoices.useQuery(
     {
@@ -38,7 +40,7 @@ export const InvoicesList = ({ workspaceId }: Props) => {
 
   return (
     <Stack spacing={6}>
-      <Heading fontSize="3xl">Invoices</Heading>
+      <Heading fontSize="3xl">{scopedT('heading')}</Heading>
       {data?.invoices.length === 0 && status !== 'loading' ? (
         <Text>Nenhuma fatura encontrada para este espaço de trabalho.</Text>
       ) : (

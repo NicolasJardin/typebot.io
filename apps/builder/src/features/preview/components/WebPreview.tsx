@@ -1,8 +1,8 @@
+import { WebhookIcon } from '@/components/icons'
 import { useEditor } from '@/features/editor/providers/EditorProvider'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useGraph } from '@/features/graph/providers/GraphProvider'
 import { useToast } from '@/hooks/useToast'
-import { UseToastOptions } from '@chakra-ui/react'
 import { Standard } from '@typebot.io/react'
 import { ChatReply } from '@typebot.io/schemas'
 
@@ -14,7 +14,21 @@ export const WebPreview = () => {
   const { showToast } = useToast()
 
   const handleNewLogs = (logs: ChatReply['logs']) => {
-    logs?.forEach((log) => showToast(log as UseToastOptions))
+    logs?.forEach((log) => {
+      showToast({
+        icon: <WebhookIcon />,
+        status: log.status as 'success' | 'error' | 'info',
+        title: log.status === 'error' ? 'An error occured' : undefined,
+        description: log.description,
+        details: log.details
+          ? {
+              lang: 'json',
+              content: JSON.stringify(log.details, null, 2),
+            }
+          : undefined,
+      })
+      console.error(log)
+    })
   }
 
   if (!typebot) return null

@@ -11,4 +11,5 @@ export enum LogicBlockType {
   REMOVE_TAG = 'Remove tag',
   END = 'End',
   JUMP = 'Jump',
+  AB_TEST = 'AB test',
 }

@@ -24,7 +24,7 @@ import { MoreInfoTooltip } from '../MoreInfoTooltip'
 
 export type TextInputProps = {
   defaultValue?: string
-  onChange: (value: string) => void
+  onChange?: (value: string) => void
   debounceTimeout?: number
   label?: ReactNode
   helperText?: ReactNode
@@ -35,7 +35,7 @@ export type TextInputProps = {
   isDisabled?: boolean
 } & Pick<
   InputProps,
-  'autoComplete' | 'onFocus' | 'onKeyUp' | 'type' | 'autoFocus'
+  'autoComplete' | 'onFocus' | 'onKeyUp' | 'type' | 'autoFocus' | 'size'
 >
 
 export const TextInput = forwardRef(function TextInput(
@@ -55,6 +55,7 @@ export const TextInput = forwardRef(function TextInput(
     onChange: _onChange,
     onFocus,
     onKeyUp,
+    size,
   }: TextInputProps,
   ref
 ) {
@@ -66,7 +67,8 @@ export const TextInput = forwardRef(function TextInput(
     localValue.length ?? 0
   )
   const onChange = useDebouncedCallback(
-    _onChange,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    _onChange ?? (() => {}),
     env('E2E_TEST') === 'true' ? 0 : debounceTimeout
   )
 
@@ -119,6 +121,7 @@ export const TextInput = forwardRef(function TextInput(
       onKeyUp={onKeyUp}
       onBlur={updateCarretPosition}
       onChange={(e) => changeValue(e.target.value)}
+      size={size}
     />
   )
 

@@ -1,10 +1,14 @@
 import { TextInput } from '@/components/inputs'
 import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
-import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import { ChoiceInputOptions, Variable } from '@typebot.io/schemas'
+import {
+  ChoiceInputOptions,
+  Variable,
+  defaultChoiceInputOptions,
+} from '@typebot.io/schemas'
 import React from 'react'
+import { SwitchWithRelatedSettings } from '@/components/SwitchWithRelatedSettings'
 
 type Props = {
   options?: ChoiceInputOptions
@@ -12,40 +16,57 @@ type Props = {
 }
 
 export const ButtonsBlockSettings = ({ options, onOptionsChange }: Props) => {
-  const handleIsMultipleChange = (isMultipleChoice: boolean) =>
+  const updateIsMultiple = (isMultipleChoice: boolean) =>
     options && onOptionsChange({ ...options, isMultipleChoice })
-  const handleButtonLabelChange = (buttonLabel: string) =>
+  const updateIsSearchable = (isSearchable: boolean) =>
+    options && onOptionsChange({ ...options, isSearchable })
+  const updateButtonLabel = (buttonLabel: string) =>
     options && onOptionsChange({ ...options, buttonLabel })
-  const handleVariableChange = (variable?: Variable) =>
+  const updateSearchInputPlaceholder = (searchInputPlaceholder: string) =>
+    options && onOptionsChange({ ...options, searchInputPlaceholder })
+  const updateSaveVariable = (variable?: Variable) =>
     options && onOptionsChange({ ...options, variableId: variable?.id })
-  const handleDynamicVariableChange = (variable?: Variable) =>
+  const updateDynamicDataVariable = (variable?: Variable) =>
     options && onOptionsChange({ ...options, dynamicVariableId: variable?.id })
 
   return (
     <Stack spacing={4}>
-      <SwitchWithLabel
+      <SwitchWithRelatedSettings
         label="Múltipla escolha?"
         initialValue={options?.isMultipleChoice ?? false}
-        onCheckChange={handleIsMultipleChange}
-      />
-      {options?.isMultipleChoice && (
+        onCheckChange={updateIsMultiple}
+      >
         <TextInput
           label="Rótulo do botão:"
           defaultValue={options?.buttonLabel ?? 'Enviar'}
-          onChange={handleButtonLabelChange}
+          onChange={updateButtonLabel}
         />
-      )}
+      </SwitchWithRelatedSettings>
+      <SwitchWithRelatedSettings
+        label="É pesquisavel?"
+        initialValue={options?.isSearchable ?? false}
+        onCheckChange={updateIsSearchable}
+      >
+        <TextInput
+          label="laceholder do input:"
+          defaultValue={
+            options?.searchInputPlaceholder ??
+            defaultChoiceInputOptions.searchInputPlaceholder
+          }
+          onChange={updateSearchInputPlaceholder}
+        />
+      </SwitchWithRelatedSettings>
       <FormControl>
         <FormLabel>
-          Dynamic items from variable:{' '}
+          Dados dinamicos:{' '}
           <MoreInfoTooltip>
-            If defined, buttons will be dynamically displayed based on what the
-            variable contains.
+            Se definido, os botões serão exibidos dinamicamente com base no que
+            o contém.
           </MoreInfoTooltip>
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options?.dynamicVariableId}
-          onSelectVariable={handleDynamicVariableChange}
+          onSelectVariable={updateDynamicDataVariable}
         />
       </FormControl>
       <Stack>
@@ -54,7 +75,7 @@ export const ButtonsBlockSettings = ({ options, onOptionsChange }: Props) => {
         </FormLabel>
         <VariableSearchInput
           initialVariableId={options?.variableId}
-          onSelectVariable={handleVariableChange}
+          onSelectVariable={updateSaveVariable}
         />
       </Stack>
     </Stack>

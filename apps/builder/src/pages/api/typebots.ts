@@ -2,7 +2,6 @@ import { Plan } from '@typebot.io/prisma'
 import prisma from '@/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
-  badRequest,
   methodNotAllowed,
   notAuthenticated,
   notFound,
@@ -16,37 +15,9 @@ import { omit } from '@typebot.io/lib'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getAuthenticatedUser(req)
+  const user = await getAuthenticatedUser(req, res)
   if (!user) return notAuthenticated(res)
   try {
-    if (req.method === 'GET') {
-      const workspaceId = req.query.workspaceId as string | undefined
-      if (!workspaceId) return badRequest(res)
-      const typebotIds = req.query.typebotIds as string[]
-      const typebots = await prisma.typebot.findMany({
-        where: {
-          OR: [
-            {
-              workspace: { members: { some: { userId: user.id } } },
-              id: { in: typebotIds },
-              isArchived: { not: true },
-            },
-            {
-              id: { in: typebotIds },
-              collaborators: {
-                some: {
-                  userId: user.id,
-                },
-              },
-              isArchived: { not: true },
-            },
-          ],
-        },
-        orderBy: { createdAt: 'desc' },
-        select: { name: true, id: true, groups: true, variables: true },
-      })
-      return res.send({ typebots })
-    }
     if (req.method === 'POST') {
       const workspace = await prisma.workspace.findFirst({
         where: { id: req.body.workspaceId },

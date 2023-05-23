@@ -1,17 +1,23 @@
 import { createId } from '@paralleldrive/cuid2'
 import {
-  isBubbleBlockType,
+  blockTypeHasItems,
   blockTypeHasOption,
   blockTypeHasWebhook,
-  blockTypeHasItems,
+  isBubbleBlockType,
 } from '@typebot.io/lib'
 import {
-  DraggableBlockType,
-  DraggableBlock,
   BlockOptions,
   BlockWithOptionsType,
   BubbleBlockContent,
   BubbleBlockType,
+  DraggableBlock,
+  DraggableBlockType,
+  InputBlockType,
+  IntegrationBlockType,
+  Item,
+  ItemType,
+  LogicBlockType,
+  defaultAbTestOptions,
   defaultAudioBubbleContent,
   defaultChatwootOptions,
   defaultChoiceInputOptions,
@@ -28,36 +34,33 @@ import {
   defaultPhoneInputOptions,
   defaultRatingInputOptions,
   defaultRedirectOptions,
+  defaultRemoveTagOptions,
   defaultScriptOptions,
   defaultSendEmailOptions,
   defaultSetVariablesOptions,
+  defaultSpreadOptions,
+  defaultTagOptions,
   defaultTextBubbleContent,
   defaultTextInputOptions,
+  defaultTransferOptions,
   defaultUrlInputOptions,
   defaultVideoBubbleContent,
+  defaultWaitForOptions,
   defaultWaitOptions,
   defaultWebhookOptions,
-  InputBlockType,
-  IntegrationBlockType,
-  Item,
-  ItemType,
-  LogicBlockType,
-  defaultRemoveTagOptions,
-  defaultTagOptions,
-  defaultTransferOptions,
-  defaultWaitForOptions,
-  defaultButtonBubbleContent,
-  defaultSpreadOptions,
 } from '@typebot.io/schemas'
 import { defaultFileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
+import { defaultPictureChoiceOptions } from '@typebot.io/schemas/features/blocks/inputs/pictureChoice'
 
 const parseDefaultItems = (
-  type: LogicBlockType.CONDITION | InputBlockType.CHOICE,
+  type: BlockWithItems['type'],
   blockId: string
 ): Item[] => {
   switch (type) {
     case InputBlockType.CHOICE:
       return [{ id: createId(), blockId, type: ItemType.BUTTON }]
+    case InputBlockType.PICTURE_CHOICE:
+      return [{ id: createId(), blockId, type: ItemType.PICTURE_CHOICE }]
     case LogicBlockType.CONDITION:
       return [
         {
@@ -66,6 +69,11 @@ const parseDefaultItems = (
           type: ItemType.CONDITION,
           content: defaultConditionContent,
         },
+      ]
+    case LogicBlockType.AB_TEST:
+      return [
+        { id: createId(), blockId, type: ItemType.AB_TEST, path: 'a' },
+        { id: createId(), blockId, type: ItemType.AB_TEST, path: 'b' },
       ]
   }
 }
@@ -103,6 +111,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultUrlInputOptions
     case InputBlockType.CHOICE:
       return defaultChoiceInputOptions
+    case InputBlockType.PICTURE_CHOICE:
+      return defaultPictureChoiceOptions
     case InputBlockType.PAYMENT:
       return defaultPaymentInputOptions
     case InputBlockType.RATING:
@@ -133,6 +143,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return {}
     case LogicBlockType.TYPEBOT_LINK:
       return {}
+    case LogicBlockType.AB_TEST:
+      return defaultAbTestOptions
     case IntegrationBlockType.GOOGLE_SHEETS:
       return defaultGoogleSheetsOptions
     case IntegrationBlockType.GOOGLE_ANALYTICS:

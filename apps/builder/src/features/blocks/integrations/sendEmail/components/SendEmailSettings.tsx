@@ -16,6 +16,7 @@ import {
 import { env, isNotEmpty } from '@typebot.io/lib'
 import { SendEmailOptions, Variable } from '@typebot.io/schemas'
 import { SmtpConfigModal } from './SmtpConfigModal'
+import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
 
 type Props = {
   options: SendEmailOptions
@@ -187,9 +188,16 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
         </Stack>
       )}
       <Stack>
-        <FormLabel mb="0" htmlFor="variable">
-          Anexos:
-        </FormLabel>
+        <HStack>
+          <FormLabel m="0" htmlFor="variable">
+            Arquivos para anexar:
+          </FormLabel>
+          <MoreInfoTooltip>
+            A variável selecionada deve ter previamente coletado arquivos do
+            bloco de entrada de upload de arquivo.
+          </MoreInfoTooltip>
+        </HStack>
+
         <VariableSearchInput
           initialVariableId={options.attachmentsVariableId}
           onSelectVariable={handleChangeAttachmentVariable}

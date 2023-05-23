@@ -226,6 +226,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={LogicBlockType.AB_TEST}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={LogicBlockType.END}
               onMouseDown={handleMouseDown}
             />

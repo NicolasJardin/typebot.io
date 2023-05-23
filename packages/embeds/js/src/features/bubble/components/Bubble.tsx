@@ -28,6 +28,7 @@ export const Bubble = (props: BubbleProps) => {
     'previewMessage',
     'onPreviewMessageClick',
     'theme',
+    'autoShowDelay',
   ])
   const [prefilledVariables, setPrefilledVariables] = createSignal(
     // eslint-disable-next-line solid/reactivity
@@ -47,11 +48,18 @@ export const Bubble = (props: BubbleProps) => {
 
   onMount(() => {
     window.addEventListener('message', processIncomingEvent)
-    const autoShowDelay = bubbleProps.previewMessage?.autoShowDelay
+    const autoShowDelay = bubbleProps.autoShowDelay
+    const previewMessageAutoShowDelay =
+      bubbleProps.previewMessage?.autoShowDelay
     if (isDefined(autoShowDelay)) {
       setTimeout(() => {
-        showMessage()
+        openBot()
       }, autoShowDelay)
+    }
+    if (isDefined(previewMessageAutoShowDelay)) {
+      setTimeout(() => {
+        showMessage()
+      }, previewMessageAutoShowDelay)
     }
   })
 
@@ -122,6 +130,7 @@ export const Bubble = (props: BubbleProps) => {
         <PreviewMessage
           {...previewMessage()}
           previewMessageTheme={bubbleProps.theme?.previewMessage}
+          buttonSize={bubbleProps.theme?.button?.size}
           onClick={handlePreviewMessageClick}
           onCloseClick={hideMessage}
         />
@@ -132,6 +141,7 @@ export const Bubble = (props: BubbleProps) => {
         isBotOpened={isBotOpened()}
       />
       <div
+        part="bot"
         style={{
           height: 'calc(100% - 80px)',
           transition:
@@ -143,8 +153,9 @@ export const Bubble = (props: BubbleProps) => {
           'z-index': 42424242,
         }}
         class={
-          'fixed bottom-20 sm:right-4 rounded-lg w-full sm:w-[400px] max-h-[704px] ' +
-          (isBotOpened() ? 'opacity-1' : 'opacity-0 pointer-events-none')
+          'fixed sm:right-5 rounded-lg w-full sm:w-[400px] max-h-[704px]' +
+          (isBotOpened() ? ' opacity-1' : ' opacity-0 pointer-events-none') +
+          (props.theme?.button?.size === 'large' ? ' bottom-24' : ' bottom-20')
         }
       >
         <Show when={isBotStarted()}>

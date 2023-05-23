@@ -4,10 +4,11 @@ import {
   PreCheckoutModal,
   PreCheckoutModalProps,
 } from '@/features/billing/components/PreCheckoutModal'
-import { FolderContent } from '@/features/folders/components/FolderContent'
 import { TypebotDndProvider } from '@/features/folders/TypebotDndProvider'
+import { FolderContent } from '@/features/folders/components/FolderContent'
 import { ParentModalProvider } from '@/features/graph/providers/ParentModalProvider'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { trpc } from '@/lib/trpc'
 import { useScopedI18n } from '@/locales'
 import { Spinner, Stack, Text, VStack } from '@chakra-ui/react'
 import { guessIfUserIsEuropean } from '@typebot.io/lib/pricing'
@@ -18,17 +19,34 @@ import { useEffect, useState } from 'react'
 export const DashboardPage = () => {
   const scopedT = useScopedI18n('dashboard')
   const [isLoading, setIsLoading] = useState(false)
-  const { query } = useRouter()
+  const router = useRouter()
   const { user } = useUser()
   const { workspace } = useWorkspace()
   const [preCheckoutPlan, setPreCheckoutPlan] =
     useState<PreCheckoutModalProps['selectedSubscription']>()
+  const { mutate: createCustomCheckoutSession } =
+    trpc.billing.createCustomCheckoutSession.useMutation({
+      onSuccess: (data) => {
+        router.push(data.checkoutUrl)
+      },
+    })
 
   useEffect(() => {
-    const { subscribePlan, chats, storage } = query as {
-      subscribePlan: Plan | undefined
-      chats: string | undefined
-      storage: string | undefined
+    const { subscribePlan, chats, storage, isYearly, claimCustomPlan } =
+      router.query as {
+        subscribePlan: Plan | undefined
+        chats: string | undefined
+        storage: string | undefined
+        isYearly: string | undefined
+        claimCustomPlan: string | undefined
+      }
+    if (claimCustomPlan && user?.email && workspace) {
+      setIsLoading(true)
+      createCustomCheckoutSession({
+        email: user.email,
+        workspaceId: workspace.id,
+        returnUrl: `${window.location.origin}/typebots`,
+      })
     }
     if (workspace && subscribePlan && user && workspace.plan === 'FREE') {
       setIsLoading(true)
@@ -38,9 +56,10 @@ export const DashboardPage = () => {
         additionalChats: chats ? parseInt(chats) : 0,
         additionalStorage: storage ? parseInt(storage) : 0,
         currency: guessIfUserIsEuropean() ? 'eur' : 'usd',
+        isYearly: isYearly === 'false' ? false : true,
       })
     }
-  }, [query, user, workspace])
+  }, [createCustomCheckoutSession, router.query, user, workspace])
 
   return (
     <Stack minH="100vh">

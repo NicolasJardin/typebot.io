@@ -8,9 +8,11 @@ The "Set variable" block allows you to set a particular value to a variable.
 
 <img src="/img/blocks/logic/set-variable.png" width="600" alt="Set variable"/>
 
-This value can be any kind of plain text but also **Javascript code**.
+## Custom
 
-## Expressions with existing variables
+You can set your variable with any value with `Custom`. It can be any kind of plain text but also **Javascript code**.
+
+### Expressions with existing variables
 
 It means you can apply operations on existing variables.
 
@@ -44,9 +46,17 @@ Extract the first name from a full name:
 {{Full name}}.split(' ')[0]
 ```
 
-## Code
+Transform existing variable to upper case or lower case:
 
-The code value should be written Javascript. It will read the returned value of the code and set it to your variable.
+```
+{{Name}}.toUpperCase()
+```
+
+```
+{{Name}}.toLowerCase()
+```
+
+This can also be Javascript code. It will read the returned value of the code and set it to your variable.
 
 ```js
 const name = 'John' + 'Smith'
@@ -65,50 +75,25 @@ is the same as
 return 'John' + 'Smith'
 ```
 
-## Current Date
+:::note
+Variables in script are not parsed, they are evaluated. So it should be treated as if it were real Javascript variables.
 
-You can create a `Submitted at` (or any other name) variable using this code:
+So, if you write `"{{My variable}}"`, it will parse the variable ID (something like `vclfqgqkdf000008mh3r6xakty`). You need to remove the double quotes to properly get the variable content value.
 
-```js
-new Date().toISOString()
-```
+For example,
 
-It will set the variable to the current date and time.
+- ❌ `"{{URL base}}/path"` => `vclfqgqkdf000008mh3r6xakty/path`
+- ✅ `{{URL base}} + '/path'` => `https://domain.com/path`
+- ✅ `` `${{{URL base}}}/path` `` => `https://domain.com/path`
 
-## Random ID
-
-Or a random ID:
-
-```js
-Math.round(Math.random() * 1000000)
-```
-
-## Current URL
-
-A popular request also is to set a variable to the current URL. Here is the value that should be inserted:
-
-```js
-window.location.href
-```
-
-:::caution
-It will not give you the parent URL if you embed the bot on your site.
-A more bulletproof option is to pass the URL as a prefilled variable in the embed code options. You can find an example [here](/embed/html-javascript#additional-configuration).
 :::
 
-## Extract a cookie
+## Map
 
-This code allows you to extract the value of a cookie called "my_cookie":
+This is a convenient value block that allows you to easily get an item from a list that has the same index as an item from another list.
 
-```js
-const getCookie = (name) => {
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) return parts.pop().split(';').shift()
-  return 'not found'
-}
+When you are pulling data from another service, sometimes, you will have 2 lists: `Labels` and `Ids`. Labels are the data displayed to the user and Ids are the data used for other requests to that external service.
 
-return getCookie('my_cookie')
-```
+This value block allows you to find the `Id` from `Ids` with the same index as `Label` in `Labels`
 
-As you can see the code can also be multi-line. The Set variable block will get the value following the `return` statement.
+<img src="/img/blocks/logic/set-variable-map-item.png" width="600" alt="Set variable map item with same index"/>

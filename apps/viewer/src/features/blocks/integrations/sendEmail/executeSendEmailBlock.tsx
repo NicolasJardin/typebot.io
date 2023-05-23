@@ -9,16 +9,18 @@ import {
   SendEmailOptions,
   SessionState,
   SmtpCredentials,
+  Variable,
 } from '@typebot.io/schemas'
 import { createTransport } from 'nodemailer'
 import Mail from 'nodemailer/lib/mailer'
-import { byId, isEmpty, isNotDefined, omit } from '@typebot.io/lib'
+import { byId, isDefined, isEmpty, isNotDefined, omit } from '@typebot.io/lib'
 import { parseAnswers } from '@typebot.io/lib/results'
 import { decrypt } from '@typebot.io/lib/api'
 import { defaultFrom, defaultTransportOptions } from './constants'
 import { ExecuteIntegrationResponse } from '@/features/chat/types'
 import { saveErrorLog } from '@/features/logs/saveErrorLog'
 import { saveSuccessLog } from '@/features/logs/saveSuccessLog'
+import { findUniqueVariableValue } from '../../../variables/findUniqueVariableValue'
 
 export const executeSendEmailBlock = async (
   { result, typebot }: SessionState,
@@ -37,23 +39,38 @@ export const executeSendEmailBlock = async (
         },
       ],
     }
-  await sendEmail({
-    typebotId: typebot.id,
-    result,
-    credentialsId: options.credentialsId,
-    recipients: options.recipients.map(parseVariables(variables)),
-    subject: parseVariables(variables)(options.subject ?? ''),
-    body: parseVariables(variables)(options.body ?? ''),
-    cc: (options.cc ?? []).map(parseVariables(variables)),
-    bcc: (options.bcc ?? []).map(parseVariables(variables)),
-    replyTo: options.replyTo
-      ? parseVariables(variables)(options.replyTo)
-      : undefined,
-    fileUrls:
-      variables.find(byId(options.attachmentsVariableId))?.value ?? undefined,
-    isCustomBody: options.isCustomBody,
-    isBodyCode: options.isBodyCode,
-  })
+
+  const body =
+    findUniqueVariableValue(variables)(options.body)?.toString() ??
+    parseVariables(variables, { escapeHtml: true })(options.body ?? '')
+
+  try {
+    await sendEmail({
+      typebotId: typebot.id,
+      result,
+      credentialsId: options.credentialsId,
+      recipients: options.recipients.map(parseVariables(variables)),
+      subject: parseVariables(variables)(options.subject ?? ''),
+      body,
+      cc: (options.cc ?? []).map(parseVariables(variables)),
+      bcc: (options.bcc ?? []).map(parseVariables(variables)),
+      replyTo: options.replyTo
+        ? parseVariables(variables)(options.replyTo)
+        : undefined,
+      fileUrls: getFileUrls(variables)(options.attachmentsVariableId),
+      isCustomBody: options.isCustomBody,
+      isBodyCode: options.isBodyCode,
+    })
+  } catch (err) {
+    await saveErrorLog({
+      resultId: result.id,
+      message: 'Email not sent',
+      details: {
+        error: err,
+      },
+    })
+  }
+
   return { outgoingEdgeId: block.outgoingEdgeId }
 }
 
@@ -226,3 +243,12 @@ const parseEmailRecipient = (
     email: recipient,
   }
 }
+
+const getFileUrls =
+  (variables: Variable[]) =>
+  (variableId: string | undefined): string | string[] | undefined => {
+    const fileUrls = variables.find(byId(variableId))?.value
+    if (!fileUrls) return
+    if (typeof fileUrls === 'string') return fileUrls
+    return fileUrls.filter(isDefined)
+  }

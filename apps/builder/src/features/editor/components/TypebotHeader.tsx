@@ -1,4 +1,5 @@
 import { EditableEmojiOrImageIcon } from '@/components/EditableEmojiOrImageIcon'
+import { SupportBubble } from '@/components/SupportBubble'
 import { ChevronLeftIcon, RedoIcon, UndoIcon } from '@/components/icons'
 import { PublishButton } from '@/features/publish/components/PublishButton'
 import { useUndoShortcut } from '@/hooks/useUndoShortcut'
@@ -11,6 +12,7 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { isDefined, isNotDefined } from '@typebot.io/lib'
 import Link from 'next/link'
@@ -41,6 +43,7 @@ export const TypebotHeader = () => {
   const hideUndoShortcutTooltipLater = useDebouncedCallback(() => {
     setUndoShortcutTooltipOpen(false)
   }, 1000)
+  const { isOpen, onOpen } = useDisclosure()
 
   const handleNameSubmit = (name: string) => updateTypebot({ name })
 
@@ -72,6 +75,7 @@ export const TypebotHeader = () => {
       bgColor={useColorModeValue('white', 'gray.900')}
       flexShrink={0}
     >
+      {isOpen && <SupportBubble autoShowDelay={0} />}
       <HStack
         display={['none', 'flex']}
         pos={{ base: 'absolute', xl: 'static' }}

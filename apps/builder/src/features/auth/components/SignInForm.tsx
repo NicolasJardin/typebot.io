@@ -27,6 +27,7 @@ import { BuiltInProviderType } from 'next-auth/providers'
 import { useToast } from '@/hooks/useToast'
 import { TextLink } from '@/components/TextLink'
 import { SignInError } from './SignInError'
+import { useScopedI18n } from '@/locales'
 
 type Props = {
   defaultEmail?: string
@@ -34,6 +35,7 @@ type Props = {
 export const SignInForm = ({
   defaultEmail,
 }: Props & HTMLChakraProps<'form'>) => {
+  const scopedT = useScopedI18n('auth')
   const router = useRouter()
   const { status } = useSession()
   const [authLoading, setAuthLoading] = useState(false)

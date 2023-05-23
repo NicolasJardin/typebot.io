@@ -1,3 +1,4 @@
+import { executeAbTest } from '@/features/blocks/logic/abTest/executeAbTest'
 import { executeCondition } from '@/features/blocks/logic/condition/executeCondition'
 import { executeCreateTag } from '@/features/blocks/logic/createTag/api/executeCreateTag'
 import { executeEnd } from '@/features/blocks/logic/end/api/executeEnd'
@@ -17,7 +18,7 @@ export const executeLogic =
   async (block: LogicBlock): Promise<ExecuteLogicResponse> => {
     switch (block.type) {
       case LogicBlockType.SET_VARIABLE:
-        return executeSetVariable(state, block)
+        return executeSetVariable(state, block, lastBubbleBlockId)
       case LogicBlockType.CONDITION:
         return executeCondition(state, block)
       case LogicBlockType.REDIRECT:
@@ -38,6 +39,8 @@ export const executeLogic =
         return executeEnd(block, lastBubbleBlockId)
       case LogicBlockType.JUMP:
         return executeJumpBlock(state, block.options)
+      case LogicBlockType.AB_TEST:
+        return executeAbTest(state, block)
     }
 
     return { outgoingEdgeId: block.outgoingEdgeId }

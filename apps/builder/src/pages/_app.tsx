@@ -18,6 +18,7 @@ import { NewVersionPopup } from '@/components/NewVersionPopup'
 import { I18nProvider } from '@/locales'
 import { TypebotProvider } from '@/features/editor/providers/TypebotProvider'
 import { WorkspaceProvider } from '@/features/workspace/WorkspaceProvider'
+import { isCloudProdInstance } from '@/helpers/isCloudProdInstance'
 
 const { ToastContainer, toast } = createStandaloneToast(customTheme)
 
@@ -26,9 +27,13 @@ const App = ({ Component, pageProps }: AppProps) => {
   const { query, pathname } = useRouter()
 
   useEffect(() => {
-    pathname.endsWith('/edit')
-      ? (document.body.style.overflow = 'hidden')
-      : (document.body.style.overflow = 'auto')
+    if (pathname.endsWith('/edit')) {
+      document.body.style.overflow = 'hidden'
+      document.body.classList.add('disable-scroll-x-behavior')
+    } else {
+      document.body.style.overflow = 'auto'
+      document.body.classList.remove('disable-scroll-x-behavior')
+    }
   }, [pathname])
 
   useEffect(() => {
@@ -54,7 +59,9 @@ const App = ({ Component, pageProps }: AppProps) => {
               <TypebotProvider typebotId={typebotId}>
                 <WorkspaceProvider typebotId={typebotId}>
                   <Component {...pageProps} />
-                  <SupportBubble />
+                  {!pathname.endsWith('edit') && isCloudProdInstance && (
+                    <SupportBubble />
+                  )}
                   <NewVersionPopup />
                 </WorkspaceProvider>
               </TypebotProvider>

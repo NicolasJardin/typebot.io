@@ -35,16 +35,27 @@ const initialGoogleSheetsOptionsSchema = googleSheetsOptionsBaseSchema.merge(
   })
 )
 
+export const totalRowsToExtractOptions = [
+  'All',
+  'First',
+  'Last',
+  'Random',
+] as const
+
 const googleSheetsGetOptionsSchema = googleSheetsOptionsBaseSchema.merge(
   z.object({
     action: z.enum([GoogleSheetsAction.GET]),
-    // TODO: remove referenceCell once migrated to filtering
-    referenceCell: cellSchema.optional(),
-    filter: z.object({
-      comparisons: z.array(rowsFilterComparisonSchema),
-      logicalOperator: z.nativeEnum(LogicalOperator),
-    }),
+    referenceCell: cellSchema
+      .optional()
+      .describe('Deprecated. Use `filter` instead.'),
+    filter: z
+      .object({
+        comparisons: z.array(rowsFilterComparisonSchema),
+        logicalOperator: z.nativeEnum(LogicalOperator),
+      })
+      .optional(),
     cellsToExtract: z.array(extractingCellSchema),
+    totalRowsToExtract: z.enum(totalRowsToExtractOptions).optional(),
   })
 )
 
@@ -59,7 +70,15 @@ const googleSheetsUpdateRowOptionsSchema = googleSheetsOptionsBaseSchema.merge(
   z.object({
     action: z.enum([GoogleSheetsAction.UPDATE_ROW]),
     cellsToUpsert: z.array(cellSchema),
-    referenceCell: cellSchema.optional(),
+    referenceCell: cellSchema
+      .optional()
+      .describe('Deprecated. Use `filter` instead.'),
+    filter: z
+      .object({
+        comparisons: z.array(rowsFilterComparisonSchema),
+        logicalOperator: z.nativeEnum(LogicalOperator),
+      })
+      .optional(),
   })
 )
 
@@ -102,14 +121,6 @@ export const defaultGoogleSheetsGetOptions = (
       id: createId(),
     },
   ],
-  filter: {
-    comparisons: [
-      {
-        id: createId(),
-      },
-    ],
-    logicalOperator: LogicalOperator.AND,
-  },
 })
 
 export const defaultGoogleSheetsInsertOptions = (

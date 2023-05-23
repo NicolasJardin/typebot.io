@@ -1,3 +1,20 @@
+import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
+import { Buttons } from '@/features/blocks/inputs/buttons/components/Buttons'
+import { MultipleChoicesForm } from '@/features/blocks/inputs/buttons/components/MultipleChoicesForm'
+import { DateForm } from '@/features/blocks/inputs/date'
+import { EmailInput } from '@/features/blocks/inputs/email'
+import { FileUploadForm } from '@/features/blocks/inputs/fileUpload'
+import { NumberInput } from '@/features/blocks/inputs/number'
+import { PaymentForm } from '@/features/blocks/inputs/payment'
+import { PhoneInput } from '@/features/blocks/inputs/phone'
+import { MultiplePictureChoice } from '@/features/blocks/inputs/pictureChoice/MultiplePictureChoice'
+import { SinglePictureChoice } from '@/features/blocks/inputs/pictureChoice/SinglePictureChoice'
+import { RatingForm } from '@/features/blocks/inputs/rating'
+import { TextInput } from '@/features/blocks/inputs/textInput'
+import { UrlInput } from '@/features/blocks/inputs/url'
+import { BotContext, InputSubmitContent } from '@/types'
+import { isMobile } from '@/utils/isMobileSignal'
+import { isNotDefined } from '@typebot.io/lib'
 import type {
   ChatReply,
   ChoiceInputBlock,
@@ -7,6 +24,7 @@ import type {
   NumberInputBlock,
   PaymentInputOptions,
   PhoneNumberInputBlock,
+  PictureChoiceBlock,
   RatingInputBlock,
   RuntimeOptions,
   TextInputBlock,
@@ -15,22 +33,8 @@ import type {
   WaitForOptions,
 } from '@typebot.io/schemas'
 import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums'
+import { Match, Switch, createSignal } from 'solid-js'
 import { GuestBubble } from './bubbles/GuestBubble'
-import { BotContext, InputSubmitContent } from '@/types'
-import { TextInput } from '@/features/blocks/inputs/textInput'
-import { NumberInput } from '@/features/blocks/inputs/number'
-import { EmailInput } from '@/features/blocks/inputs/email'
-import { UrlInput } from '@/features/blocks/inputs/url'
-import { PhoneInput } from '@/features/blocks/inputs/phone'
-import { DateForm } from '@/features/blocks/inputs/date'
-import { ChoiceForm } from '@/features/blocks/inputs/buttons'
-import { RatingForm } from '@/features/blocks/inputs/rating'
-import { FileUploadForm } from '@/features/blocks/inputs/fileUpload'
-import { createSignal, Switch, Match } from 'solid-js'
-import { isNotDefined } from '@typebot.io/lib'
-import { isMobile } from '@/utils/isMobileSignal'
-import { PaymentForm } from '@/features/blocks/inputs/payment'
-import WaitForBubble from '@/features/blocks/bubbles/waitFor/components/WaitForBubble'
 
 type Props = {
   block: NonNullable<ChatReply['input']>
@@ -39,6 +43,7 @@ type Props = {
   inputIndex: number
   context: BotContext
   isInputPrefillEnabled: boolean
+  hasError: boolean
   onSubmit: (answer: string) => void
   onSkip: () => void
 }
@@ -58,21 +63,22 @@ export const InputChatBlock = (props: Props) => {
 
   return (
     <Switch>
-      <Match when={answer()} keyed>
-        {(answer) => (
-          <GuestBubble
-            message={answer}
-            showAvatar={props.guestAvatar?.isEnabled ?? false}
-            avatarSrc={props.guestAvatar?.url && props.guestAvatar.url}
-          />
-        )}
+      <Match when={answer() && !props.hasError}>
+        <GuestBubble
+          message={answer() as string}
+          showAvatar={props.guestAvatar?.isEnabled ?? false}
+          avatarSrc={props.guestAvatar?.url && props.guestAvatar.url}
+        />
       </Match>
-      <Match when={isNotDefined(answer())}>
-        <div class="flex justify-end animate-fade-in">
+      <Match when={isNotDefined(answer()) || props.hasError}>
+        <div
+          class="flex justify-end animate-fade-in gap-2"
+          data-blockid={props.block.id}
+        >
           {props.hasHostAvatar && (
             <div
               class={
-                'flex mr-2 mb-2 mt-1 flex-shrink-0 items-center ' +
+                'flex flex-shrink-0 items-center ' +
                 (isMobile() ? 'w-6 h-6' : 'w-10 h-10')
               }
             />
@@ -158,12 +164,47 @@ const Input = (props: {
           onSubmit={onSubmit}
         />
       </Match>
-      <Match when={props.block.type === InputBlockType.CHOICE}>
-        <ChoiceForm
-          inputIndex={props.inputIndex}
-          block={props.block as ChoiceInputBlock}
-          onSubmit={onSubmit}
-        />
+      <Match when={isButtonsBlock(props.block)} keyed>
+        {(block) => (
+          <Switch>
+            <Match when={!block.options.isMultipleChoice}>
+              <Buttons
+                inputIndex={props.inputIndex}
+                defaultItems={block.items}
+                options={block.options}
+                onSubmit={onSubmit}
+              />
+            </Match>
+            <Match when={block.options.isMultipleChoice}>
+              <MultipleChoicesForm
+                inputIndex={props.inputIndex}
+                defaultItems={block.items}
+                options={block.options}
+                onSubmit={onSubmit}
+              />
+            </Match>
+          </Switch>
+        )}
+      </Match>
+      <Match when={isPictureChoiceBlock(props.block)} keyed>
+        {(block) => (
+          <Switch>
+            <Match when={!block.options.isMultipleChoice}>
+              <SinglePictureChoice
+                defaultItems={block.items}
+                options={block.options}
+                onSubmit={onSubmit}
+              />
+            </Match>
+            <Match when={block.options.isMultipleChoice}>
+              <MultiplePictureChoice
+                defaultItems={block.items}
+                options={block.options}
+                onSubmit={onSubmit}
+              />
+            </Match>
+          </Switch>
+        )}
       </Match>
       <Match when={props.block.type === InputBlockType.RATING}>
         <RatingForm
@@ -202,3 +243,13 @@ const Input = (props: {
     </Switch>
   )
 }
+
+const isButtonsBlock = (
+  block: ChatReply['input']
+): ChoiceInputBlock | undefined =>
+  block?.type === InputBlockType.CHOICE ? block : undefined
+
+const isPictureChoiceBlock = (
+  block: ChatReply['input']
+): PictureChoiceBlock | undefined =>
+  block?.type === InputBlockType.PICTURE_CHOICE ? block : undefined

@@ -7,6 +7,13 @@ import { workspaceSchema } from '@typebot.io/schemas'
 import Stripe from 'stripe'
 import { isDefined } from '@typebot.io/lib'
 import { z } from 'zod'
+import {
+  getChatsLimit,
+  getStorageLimit,
+  priceIds,
+} from '@typebot.io/lib/pricing'
+import { chatPriceIds, storagePriceIds } from './getSubscription'
+import { createCheckoutSessionUrl } from './createCheckoutSession'
 
 export const updateSubscription = authenticatedProcedure
   .meta({
@@ -20,16 +27,19 @@ export const updateSubscription = authenticatedProcedure
   })
   .input(
     z.object({
+      returnUrl: z.string(),
       workspaceId: z.string(),
       plan: z.enum([Plan.STARTER, Plan.PRO]),
       additionalChats: z.number(),
       additionalStorage: z.number(),
       currency: z.enum(['usd', 'eur']),
+      isYearly: z.boolean(),
     })
   )
   .output(
     z.object({
-      workspace: workspaceSchema,
+      workspace: workspaceSchema.nullish(),
+      checkoutUrl: z.string().nullish(),
     })
   )
   .mutation(
@@ -40,14 +50,12 @@ export const updateSubscription = authenticatedProcedure
         additionalChats,
         additionalStorage,
         currency,
+        isYearly,
+        returnUrl,
       },
       ctx: { user },
     }) => {
-      if (
-        !process.env.STRIPE_SECRET_KEY ||
-        !process.env.STRIPE_ADDITIONAL_CHATS_PRICE_ID ||
-        !process.env.STRIPE_ADDITIONAL_STORAGE_PRICE_ID
-      )
+      if (!process.env.STRIPE_SECRET_KEY)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Stripe environment variables are missing',
@@ -68,44 +76,52 @@ export const updateSubscription = authenticatedProcedure
       })
       const { data } = await stripe.subscriptions.list({
         customer: workspace.stripeId,
+        limit: 1,
+        status: 'active',
       })
       const subscription = data[0] as Stripe.Subscription | undefined
-      const currentStarterPlanItemId = subscription?.items.data.find(
-        (item) => item.price.id === process.env.STRIPE_STARTER_PRICE_ID
-      )?.id
-      const currentProPlanItemId = subscription?.items.data.find(
-        (item) => item.price.id === process.env.STRIPE_PRO_PRICE_ID
+      const currentPlanItemId = subscription?.items.data.find((item) =>
+        [
+          process.env.STRIPE_STARTER_PRODUCT_ID,
+          process.env.STRIPE_PRO_PRODUCT_ID,
+        ].includes(item.price.product.toString())
       )?.id
       const currentAdditionalChatsItemId = subscription?.items.data.find(
-        (item) => item.price.id === process.env.STRIPE_ADDITIONAL_CHATS_PRICE_ID
+        (item) => chatPriceIds.includes(item.price.id)
       )?.id
       const currentAdditionalStorageItemId = subscription?.items.data.find(
-        (item) =>
-          item.price.id === process.env.STRIPE_ADDITIONAL_STORAGE_PRICE_ID
+        (item) => storagePriceIds.includes(item.price.id)
       )?.id
+      const frequency = isYearly ? 'yearly' : 'monthly'
+
       const items = [
         {
-          id: currentStarterPlanItemId ?? currentProPlanItemId,
-          price:
-            plan === Plan.STARTER
-              ? process.env.STRIPE_STARTER_PRICE_ID
-              : process.env.STRIPE_PRO_PRICE_ID,
+          id: currentPlanItemId,
+          price: priceIds[plan].base[frequency],
           quantity: 1,
         },
         additionalChats === 0 && !currentAdditionalChatsItemId
           ? undefined
           : {
               id: currentAdditionalChatsItemId,
-              price: process.env.STRIPE_ADDITIONAL_CHATS_PRICE_ID,
-              quantity: additionalChats,
+              price: priceIds[plan].chats[frequency],
+              quantity: getChatsLimit({
+                plan,
+                additionalChatsIndex: additionalChats,
+                customChatsLimit: null,
+              }),
               deleted: subscription ? additionalChats === 0 : undefined,
             },
         additionalStorage === 0 && !currentAdditionalStorageItemId
           ? undefined
           : {
               id: currentAdditionalStorageItemId,
-              price: process.env.STRIPE_ADDITIONAL_STORAGE_PRICE_ID,
-              quantity: additionalStorage,
+              price: priceIds[plan].storage[frequency],
+              quantity: getStorageLimit({
+                plan,
+                additionalStorageIndex: additionalStorage,
+                customStorageLimit: null,
+              }),
               deleted: subscription ? additionalStorage === 0 : undefined,
             },
       ].filter(isDefined)
@@ -115,18 +131,19 @@ export const updateSubscription = authenticatedProcedure
           items,
         })
       } else {
-        const { data: paymentMethods } = await stripe.paymentMethods.list({
-          customer: workspace.stripeId,
-        })
-        if (paymentMethods.length === 0) {
-          throw Error('No payment method found')
-        }
-        await stripe.subscriptions.create({
-          customer: workspace.stripeId,
-          items,
+        const checkoutUrl = await createCheckoutSessionUrl(stripe)({
+          customerId: workspace.stripeId,
+          userId: user.id,
+          workspaceId,
           currency,
-          default_payment_method: paymentMethods[0].id,
+          plan,
+          returnUrl,
+          additionalChats,
+          additionalStorage,
+          isYearly,
         })
+
+        return { checkoutUrl }
       }
 
       const updatedWorkspace = await prisma.workspace.update({
@@ -135,10 +152,7 @@ export const updateSubscription = authenticatedProcedure
           plan,
           additionalChatsIndex: additionalChats,
           additionalStorageIndex: additionalStorage,
-          chatsLimitFirstEmailSentAt: null,
-          chatsLimitSecondEmailSentAt: null,
-          storageLimitFirstEmailSentAt: null,
-          storageLimitSecondEmailSentAt: null,
+          isQuarantined: false,
         },
       })
 

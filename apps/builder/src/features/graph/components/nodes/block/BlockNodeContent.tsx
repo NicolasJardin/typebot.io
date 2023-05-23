@@ -38,6 +38,9 @@ import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeConten
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
 import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink/components/TypebotLinkNode'
 
+import { PictureChoiceNode } from '@/features/blocks/inputs/pictureChoice/components/PictureChoiceNode'
+import { AbTestNodeBody } from '@/features/blocks/logic/abTest/components/AbTestNodeBody'
+import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
 import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
 import { Text } from '@chakra-ui/react'
@@ -51,7 +54,6 @@ import {
   StartBlock,
 } from '@typebot.io/schemas'
 import { ItemNodesList } from '../item/ItemNodesList'
-import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
 
 type Props = {
   block: Block | StartBlock
@@ -116,6 +118,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case InputBlockType.CHOICE: {
       return <ButtonsBlockNode block={block} indices={indices} />
     }
+    case InputBlockType.PICTURE_CHOICE: {
+      return <PictureChoiceNode block={block} indices={indices} />
+    }
     case InputBlockType.PHONE: {
       return (
         <PhoneNodeContent
@@ -176,6 +181,10 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case LogicBlockType.JUMP:
       return <JumpNodeBody options={block.options} />
 
+    case LogicBlockType.AB_TEST: {
+      return <AbTestNodeBody block={block} />
+    }
+
     case LogicBlockType.TYPEBOT_LINK:
       return <TypebotLinkNode block={block} />
 
@@ -192,15 +201,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
       )
     }
     case IntegrationBlockType.GOOGLE_ANALYTICS: {
-      return (
-        <GoogleAnalyticsNodeBody
-          action={
-            block.options?.action
-              ? `Track "${block.options?.action}" `
-              : undefined
-          }
-        />
-      )
+      return <GoogleAnalyticsNodeBody action={block.options?.action} />
     }
     case IntegrationBlockType.WEBHOOK: {
       return <WebhookContent block={block} />

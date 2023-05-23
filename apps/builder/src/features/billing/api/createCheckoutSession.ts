@@ -21,7 +21,6 @@ export const createCheckoutSession = authenticatedProcedure
       email: z.string(),
       company: z.string(),
       workspaceId: z.string(),
-      prefilledEmail: z.string().optional(),
       currency: z.enum(['usd', 'eur']),
       plan: z.enum([Plan.STARTER, Plan.PRO]),
       returnUrl: z.string(),
@@ -33,6 +32,7 @@ export const createCheckoutSession = authenticatedProcedure
           value: z.string(),
         })
         .optional(),
+      isYearly: z.boolean(),
     })
   )
   .output(
@@ -52,14 +52,11 @@ export const createCheckoutSession = authenticatedProcedure
         returnUrl,
         additionalChats,
         additionalStorage,
+        isYearly,
       },
       ctx: { user },
     }) => {
-      if (
-        !process.env.STRIPE_SECRET_KEY ||
-        !process.env.STRIPE_ADDITIONAL_CHATS_PRICE_ID ||
-        !process.env.STRIPE_ADDITIONAL_STORAGE_PRICE_ID
-      )
+      if (!process.env.STRIPE_SECRET_KEY)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Stripe environment variables are missing',
@@ -97,41 +94,82 @@ export const createCheckoutSession = authenticatedProcedure
           : undefined,
       })
 
-      const session = await stripe.checkout.sessions.create({
-        success_url: `${returnUrl}?stripe=${plan}&success=true`,
-        cancel_url: `${returnUrl}?stripe=cancel`,
-        allow_promotion_codes: true,
-        customer: customer.id,
-        customer_update: {
-          address: 'auto',
-          name: 'never',
-        },
-        mode: 'subscription',
-        metadata: {
-          workspaceId,
-          plan,
-          additionalChats,
-          additionalStorage,
-          userId: user.id,
-        },
+      const checkoutUrl = await createCheckoutSessionUrl(stripe)({
+        customerId: customer.id,
+        userId: user.id,
+        workspaceId,
         currency,
-        billing_address_collection: 'required',
-        automatic_tax: { enabled: true },
-        line_items: parseSubscriptionItems(
-          plan,
-          additionalChats,
-          additionalStorage
-        ),
+        plan,
+        returnUrl,
+        additionalChats,
+        additionalStorage,
+        isYearly,
       })
 
-      if (!session.url)
+      if (!checkoutUrl)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Stripe checkout session creation failed',
         })
 
       return {
-        checkoutUrl: session.url,
+        checkoutUrl,
       }
     }
   )
+
+type Props = {
+  customerId: string
+  workspaceId: string
+  currency: 'usd' | 'eur'
+  plan: 'STARTER' | 'PRO'
+  returnUrl: string
+  additionalChats: number
+  additionalStorage: number
+  isYearly: boolean
+  userId: string
+}
+
+export const createCheckoutSessionUrl =
+  (stripe: Stripe) =>
+  async ({
+    customerId,
+    userId,
+    workspaceId,
+    currency,
+    plan,
+    returnUrl,
+    additionalChats,
+    additionalStorage,
+    isYearly,
+  }: Props) => {
+    const session = await stripe.checkout.sessions.create({
+      success_url: `${returnUrl}?stripe=${plan}&success=true`,
+      cancel_url: `${returnUrl}?stripe=cancel`,
+      allow_promotion_codes: true,
+      customer: customerId,
+      customer_update: {
+        address: 'auto',
+        name: 'never',
+      },
+      mode: 'subscription',
+      metadata: {
+        workspaceId,
+        plan,
+        additionalChats,
+        additionalStorage,
+        userId,
+      },
+      currency,
+      billing_address_collection: 'required',
+      automatic_tax: { enabled: true },
+      line_items: parseSubscriptionItems(
+        plan,
+        additionalChats,
+        additionalStorage,
+        isYearly
+      ),
+    })
+
+    return session.url
+  }

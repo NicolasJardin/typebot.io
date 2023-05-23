@@ -6,10 +6,10 @@ import {
 } from '@/components/icons'
 import { ChangePlanModal } from '@/features/billing/components/ChangePlanModal'
 import { isFreePlan } from '@/features/billing/helpers/isFreePlan'
-import { LimitReached } from '@/features/billing/types'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { parseTimeSince } from '@/helpers/parseTimeSince'
+import { useI18n } from '@/locales'
 import {
   Button,
   ButtonProps,
@@ -29,6 +29,7 @@ import { isNotDefined } from '@typebot.io/lib'
 import { InputBlockType } from '@typebot.io/schemas'
 
 export const PublishButton = (props: ButtonProps) => {
+  const t = useI18n()
   const warningTextColor = useColorModeValue('red.300', 'red.600')
   const { workspace } = useWorkspace()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -69,7 +70,7 @@ export const PublishButton = (props: ButtonProps) => {
       <ChangePlanModal
         isOpen={isOpen}
         onClose={onClose}
-        type={LimitReached.FILE_INPUT}
+        type={t('billing.limitMessage.fileInput')}
       />
       <Tooltip
         placement="bottom-end"

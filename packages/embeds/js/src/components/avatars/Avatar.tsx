@@ -15,11 +15,7 @@ export const Avatar = (props: { initialAvatarSrc?: string }) => {
   })
 
   return (
-    <Show
-      when={isNotEmpty(avatarSrc())}
-      keyed
-      fallback={() => <DefaultAvatar />}
-    >
+    <Show when={isNotEmpty(avatarSrc())} keyed fallback={<DefaultAvatar />}>
       <figure
         class={
           'flex justify-center items-center rounded-full text-white relative animate-fade-in flex-shrink-0 ' +
@@ -30,6 +26,8 @@ export const Avatar = (props: { initialAvatarSrc?: string }) => {
           src={avatarSrc()}
           alt="Bot avatar"
           class="rounded-full object-cover w-full h-full"
+          elementtiming={'Bot avatar'}
+          fetchpriority={'high'}
         />
       </figure>
     </Show>

@@ -21,12 +21,13 @@ import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { LockTag } from '@/features/billing/components/LockTag'
 import { UpgradeButton } from '@/features/billing/components/UpgradeButton'
 import { isProPlan } from '@/features/billing/helpers/isProPlan'
-import { LimitReached } from '@/features/billing/types'
 import { CustomDomainsDropdown } from '@/features/customDomains/components/CustomDomainsDropdown'
 import { TypebotHeader } from '@/features/editor/components/TypebotHeader'
 import { parseDefaultPublicId } from '../helpers/parseDefaultPublicId'
+import { useI18n } from '@/locales'
 
 export const SharePage = () => {
+  const t = useI18n()
   const { workspace } = useWorkspace()
   const { typebot, updateTypebot, publishedTypebot } = useTypebot()
   const { showToast } = useToast()
@@ -53,7 +54,7 @@ export const SharePage = () => {
 
   const checkIfPathnameIsValid = (pathname: string) => {
     const isCorrectlyFormatted =
-      /^([a-z0-9]+-[a-z0-9]+)*$/.test(pathname) || /^[a-z0-9]*$/.test(pathname)
+      /^([a-z0-9]+-[a-z0-9]*)*$/.test(pathname) || /^[a-z0-9]*$/.test(pathname)
 
     if (!isCorrectlyFormatted) {
       showToast({
@@ -129,7 +130,7 @@ export const SharePage = () => {
                 ) : (
                   <UpgradeButton
                     colorScheme="gray"
-                    limitReachedType={LimitReached.CUSTOM_DOMAIN}
+                    limitReachedType={t('billing.limitMessage.customDomain')}
                   >
                     <Text mr="2">Adicionar meu domínio</Text>{' '}
                     <LockTag plan={Plan.PRO} />

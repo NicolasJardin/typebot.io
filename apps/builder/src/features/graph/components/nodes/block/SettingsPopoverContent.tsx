@@ -1,4 +1,3 @@
-import { ExpandIcon } from '@/components/icons'
 import ButtonSettings from '@/features/blocks/bubbles/button/components/ButtonSettings'
 import { ButtonsBlockSettings } from '@/features/blocks/inputs/buttons/components/ButtonsBlockSettings'
 import { DateInputSettings } from '@/features/blocks/inputs/date/components/DateInputSettings'
@@ -7,6 +6,7 @@ import { FileInputSettings } from '@/features/blocks/inputs/fileUpload/component
 import { NumberInputSettings } from '@/features/blocks/inputs/number/components/NumberInputSettings'
 import { PaymentSettings } from '@/features/blocks/inputs/payment/components/PaymentSettings'
 import { PhoneInputSettings } from '@/features/blocks/inputs/phone/components/PhoneInputSettings'
+import { PictureChoiceSettings } from '@/features/blocks/inputs/pictureChoice/components/PictureChoiceSettings'
 import { RatingInputSettings } from '@/features/blocks/inputs/rating/components/RatingInputSettings'
 import { TextInputSettings } from '@/features/blocks/inputs/textInput/components/TextInputSettings'
 import { UrlInputSettings } from '@/features/blocks/inputs/url/components/UrlInputSettings'
@@ -19,23 +19,25 @@ import { PabblyConnectSettings } from '@/features/blocks/integrations/pabbly/com
 import { SendEmailSettings } from '@/features/blocks/integrations/sendEmail/components/SendEmailSettings'
 import { WebhookSettings } from '@/features/blocks/integrations/webhook/components/WebhookSettings'
 import { ZapierSettings } from '@/features/blocks/integrations/zapier/components/ZapierSettings'
+import { AbTestSettings } from '@/features/blocks/logic/abTest/components/AbTestSettings'
 import { JumpSettings } from '@/features/blocks/logic/jump/components/JumpSettings'
 import { RedirectSettings } from '@/features/blocks/logic/redirect/components/RedirectSettings'
 import RemoveTagSettings from '@/features/blocks/logic/removeTag/components/RemoveTagSettings'
 import { ScriptSettings } from '@/features/blocks/logic/script/components/ScriptSettings'
 import { SetVariableSettings } from '@/features/blocks/logic/setVariable/components/SetVariableSettings'
+import SpreadSettings from '@/features/blocks/logic/spread/components/SpreadSettings/SpreadSettings'
 import TagSettings from '@/features/blocks/logic/tag/components/TagSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
 import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink/components/TypebotLinkForm'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
 import {
-  HStack,
-  IconButton,
+  Flex,
   PopoverArrow,
   PopoverBody,
   PopoverContent,
   Portal,
+  SlideFade,
   Stack,
   useColorModeValue,
   useEventListener,
@@ -49,9 +51,8 @@ import {
   IntegrationBlockType,
   LogicBlockType,
 } from '@typebot.io/schemas'
-import { Fragment, useRef } from 'react'
-import { HelpDocButton } from './HelpDocButton'
-import SpreadSettings from '@/features/blocks/logic/spread/components/SpreadSettings/SpreadSettings'
+import { Fragment, useRef, useState } from 'react'
+import { SettingsHoverBar } from './SettingsHoverBar'
 
 type Props = {
   block: BlockWithOptions
@@ -60,6 +61,7 @@ type Props = {
 }
 
 export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
+  const [isHovering, setIsHovering] = useState(false)
   const arrowColor = useColorModeValue('white', 'gray.800')
   const ref = useRef<HTMLDivElement | null>(null)
   const handleMouseDown = (e: React.MouseEvent) => e.stopPropagation()
@@ -79,17 +81,26 @@ export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
           maxH="400px"
           ref={ref}
           shadow="lg"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
           <Stack spacing={3}>
-            <HStack justifyContent="flex-end">
-              <HelpDocButton blockType={props.block.type} />
-              <IconButton
-                aria-label="expand"
-                icon={<ExpandIcon />}
-                size="xs"
-                onClick={onExpandClick}
-              />
-            </HStack>
+            <Flex
+              w="full"
+              pos="absolute"
+              top="-56px"
+              height="64px"
+              right={0}
+              justifyContent="flex-end"
+              align="center"
+            >
+              <SlideFade in={isHovering} unmountOnExit>
+                <SettingsHoverBar
+                  onExpandClick={onExpandClick}
+                  blockType={props.block.type}
+                />
+              </SlideFade>
+            </Flex>
             <BlockSettings {...props} />
           </Stack>
         </PopoverBody>
@@ -169,6 +180,14 @@ export const BlockSettings = ({
     case InputBlockType.CHOICE: {
       return (
         <ButtonsBlockSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+    }
+    case InputBlockType.PICTURE_CHOICE: {
+      return (
+        <PictureChoiceSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />
@@ -271,6 +290,14 @@ export const BlockSettings = ({
     case LogicBlockType.REMOVE_TAG:
       return (
         <RemoveTagSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+
+    case LogicBlockType.AB_TEST:
+      return (
+        <AbTestSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />

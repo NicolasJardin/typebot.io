@@ -1,3 +1,4 @@
+import { useScopedI18n } from '@/locales'
 import {
   GridProps,
   SimpleGrid,
@@ -22,6 +23,7 @@ export const StatsCards = ({
   stats,
   ...props
 }: { stats?: Stats } & GridProps) => {
+  const scopedT = useScopedI18n('analytics')
   const bg = useColorModeValue('white', 'gray.900')
 
   return (

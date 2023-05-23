@@ -13,6 +13,7 @@ import { SendMailOptions } from 'nodemailer'
 import { sendEmail } from '../sendEmail'
 
 type AlmostReachedChatsLimitEmailProps = {
+  usagePercent: number
   chatsLimit: number
   url: string
 }
@@ -26,6 +27,7 @@ const readableResetDate = firstDayOfNextMonth
   .join(' ')
 
 export const AlmostReachedChatsLimitEmail = ({
+  usagePercent,
   chatsLimit,
   url,
 }: AlmostReachedChatsLimitEmailProps) => {
@@ -45,16 +47,13 @@ export const AlmostReachedChatsLimitEmail = ({
             <Text>Your bots are chatting a lot. That&apos;s amazing. 💙</Text>
             <Text>
               This means you&apos;ve almost reached your monthly chats limit.
-              You currently reached 80% of {readableChatsLimit} chats.
+              You currently reached {usagePercent}% of {readableChatsLimit}{' '}
+              chats.
             </Text>
             <Text>This limit will be reset on {readableResetDate}.</Text>
             <Text fontWeight="800">
-              Your bots won&apos;t start the chat if you reach the limit before
-              this date❗
-            </Text>
-            <Text>
-              If you need more monthly responses, you will need to upgrade your
-              plan.
+              Upon this limit your bots will still continue to chat, but we ask
+              you kindly to upgrade your monthly chats limit.
             </Text>
 
             <MjmlSpacer height="24px" />

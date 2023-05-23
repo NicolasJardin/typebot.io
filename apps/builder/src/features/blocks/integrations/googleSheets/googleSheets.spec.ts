@@ -58,12 +58,16 @@ test.describe.parallel('Google sheets integration', () => {
     await page.click('text=Select an operation')
     await page.click('text=Update a row')
 
-    await page.click('text=Add a value')
+    await page.getByRole('button', { name: 'Row(s) to update' }).click()
+    await page.getByRole('button', { name: 'Add filter rule' }).click()
     await page.click('text=Select a column')
     await page.click('button >> text="Email"')
+    await page.getByRole('button', { name: 'Select an operator' }).click()
+    await page.getByRole('menuitem', { name: 'Equal to' }).click()
     await page.click('[aria-label="Insert a variable"]')
     await page.click('button >> text="Email" >> nth=1')
 
+    await page.getByRole('button', { name: 'Cells to update' }).click()
     await page.click('text=Add a value')
     await page.click('text=Select a column')
     await page.click('text=Last name')
@@ -82,7 +86,7 @@ test.describe.parallel('Google sheets integration', () => {
       .locator('input[placeholder="Type your email..."]')
       .press('Enter')
     await expect(
-      page.getByText('Succesfully updated row in CRM > Sheet1').nth(0)
+      page.getByText('Succesfully updated matching rows').nth(0)
     ).toBeVisible()
   })
 
@@ -99,6 +103,8 @@ test.describe.parallel('Google sheets integration', () => {
     await page.click('text=Select an operation')
     await page.click('text=Get data from sheet')
 
+    await page.getByRole('button', { name: 'Rows to filter' }).click()
+    await page.getByRole('button', { name: 'Add filter rule' }).click()
     await page.click('text=Select a column')
     await page.click('button >> text="Email"')
     await page.getByRole('button', { name: 'Select an operator' }).click()
@@ -110,6 +116,7 @@ test.describe.parallel('Google sheets integration', () => {
     await page.getByRole('button', { name: 'AND', exact: true }).click()
     await page.getByRole('menuitem', { name: 'OR' }).click()
 
+    await page.getByRole('button', { name: 'Columns to extract' }).click()
     await page.click('text=Select a column')
     await page.getByRole('menuitem', { name: 'Email' }).click()
     await page.getByRole('button', { name: 'Select an operator' }).click()
@@ -117,12 +124,12 @@ test.describe.parallel('Google sheets integration', () => {
     await page.getByPlaceholder('Type a value...').nth(-1).fill('test@test.com')
 
     await page.click('text=Select a column')
-    await page.click('text="First name"')
+    await page.getByRole('menuitem', { name: 'First name' }).click()
     await createNewVar(page, 'First name')
 
     await page.click('text=Add a value')
     await page.click('text=Select a column')
-    await page.click('text="Last name"')
+    await page.getByRole('menuitem', { name: 'Last name' }).click()
     await createNewVar(page, 'Last name')
 
     await page.click('text=Preview')
@@ -136,9 +143,7 @@ test.describe.parallel('Google sheets integration', () => {
       .press('Enter')
     await expect(
       page.locator('typebot-standard').locator('text=Your name is:')
-    ).toHaveText(
-      `Your name is: ["Georges","John","Fred","Georges","Georges"] ["Last name","Smith","Smith"]`
-    )
+    ).toHaveText(`Your name is: Georges2 Smith2`)
   })
 })
 

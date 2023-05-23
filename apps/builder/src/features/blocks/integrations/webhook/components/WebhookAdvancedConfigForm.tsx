@@ -127,7 +127,7 @@ export const WebhookAdvancedConfigForm = ({
                 Parâmetros de consulta
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel>
+              <AccordionPanel pt="4">
                 <TableList<KeyValue>
                   initialItems={webhook.queryParams}
                   onItemsChange={handleQueryParamsChange}
@@ -141,7 +141,7 @@ export const WebhookAdvancedConfigForm = ({
                 Cabeçalhos
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel>
+              <AccordionPanel pt="4">
                 <TableList<KeyValue>
                   initialItems={webhook.headers}
                   onItemsChange={handleHeadersChange}
@@ -176,7 +176,7 @@ export const WebhookAdvancedConfigForm = ({
                 Valores variáveis para teste
                 <AccordionIcon />
               </AccordionButton>
-              <AccordionPanel>
+              <AccordionPanel pt="4">
                 <TableList<VariableForTest>
                   initialItems={
                     options?.variablesForTest ?? { byId: {}, allIds: [] }
@@ -202,24 +202,22 @@ export const WebhookAdvancedConfigForm = ({
       {testResponse && (
         <CodeEditor isReadOnly lang="json" value={testResponse} />
       )}
-      {(testResponse || options?.responseVariableMapping.length > 0) && (
-        <Accordion allowMultiple>
-          <AccordionItem>
-            <AccordionButton justifyContent="space-between">
-              Salvar em variáveis
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <TableList<ResponseVariableMapping>
-                initialItems={options.responseVariableMapping}
-                onItemsChange={handleResponseMappingChange}
-                Item={ResponseMappingInputs}
-                addLabel="Adicionar uma entrada"
-              />
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      )}
+      <Accordion allowMultiple>
+        <AccordionItem>
+          <AccordionButton justifyContent="space-between">
+            Save in variables
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pt="4">
+            <TableList<ResponseVariableMapping>
+              initialItems={options.responseVariableMapping}
+              onItemsChange={handleResponseMappingChange}
+              Item={ResponseMappingInputs}
+              addLabel="Adicionar uma entrada"
+            />
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
     </>
   )
 }

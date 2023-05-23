@@ -4,8 +4,10 @@ import React, { useEffect } from 'react'
 import { GraphNavigationRadioGroup } from './GraphNavigationRadioGroup'
 import { AppearanceRadioGroup } from './AppearanceRadioGroup'
 import { useUser } from '../hooks/useUser'
+import { useScopedI18n } from '@/locales'
 
 export const UserPreferencesForm = () => {
+  const scopedT = useScopedI18n('account.preferences')
   const { colorMode, setColorMode } = useColorMode()
   const { user, updateUser } = useUser()
 

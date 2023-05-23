@@ -7,12 +7,14 @@ import {
   Theme,
 } from '@typebot.io/schemas'
 import { BackgroundType } from '@typebot.io/schemas/features/typebot/theme/enums'
+import { isLight, hexToRgb } from '@typebot.io/lib/hexToRgb'
 
 const cssVariableNames = {
   general: {
     bgImage: '--typebot-container-bg-image',
     bgColor: '--typebot-container-bg-color',
     fontFamily: '--typebot-container-font-family',
+    color: '--typebot-container-color',
   },
   chat: {
     hostBubbles: {
@@ -30,10 +32,14 @@ const cssVariableNames = {
     },
     buttons: {
       bgColor: '--typebot-button-bg-color',
+      bgColorRgb: '--typebot-button-bg-color-rgb',
       color: '--typebot-button-color',
     },
+    checkbox: {
+      bgColor: '--typebot-checkbox-bg-color',
+    },
   },
-}
+} as const
 
 export const setCssVariablesValue = (
   theme: Theme | undefined,
@@ -59,11 +65,12 @@ const setChatTheme = (
   chatTheme: ChatTheme,
   documentStyle: CSSStyleDeclaration
 ) => {
-  const { hostBubbles, guestBubbles, buttons, inputs } = chatTheme
+  const { hostBubbles, guestBubbles, buttons, inputs, roundness } = chatTheme
   if (hostBubbles) setHostBubbles(hostBubbles, documentStyle)
   if (guestBubbles) setGuestBubbles(guestBubbles, documentStyle)
   if (buttons) setButtons(buttons, documentStyle)
   if (inputs) setInputs(inputs, documentStyle)
+  if (roundness) setRoundness(roundness, documentStyle)
 }
 
 const setHostBubbles = (
@@ -102,11 +109,17 @@ const setButtons = (
   buttons: ContainerColors,
   documentStyle: CSSStyleDeclaration
 ) => {
-  if (buttons.backgroundColor)
+  if (buttons.backgroundColor) {
     documentStyle.setProperty(
       cssVariableNames.chat.buttons.bgColor,
       buttons.backgroundColor
     )
+    documentStyle.setProperty(
+      cssVariableNames.chat.buttons.bgColorRgb,
+      hexToRgb(buttons.backgroundColor).join(', ')
+    )
+  }
+
   if (buttons.color)
     documentStyle.setProperty(
       cssVariableNames.chat.buttons.color,
@@ -133,12 +146,50 @@ const setTypebotBackground = (
   background: Background,
   documentStyle: CSSStyleDeclaration
 ) => {
+  documentStyle.setProperty(cssVariableNames.general.bgImage, null)
+  documentStyle.setProperty(cssVariableNames.general.bgColor, null)
   documentStyle.setProperty(
     background?.type === BackgroundType.IMAGE
       ? cssVariableNames.general.bgImage
       : cssVariableNames.general.bgColor,
-    background.type === BackgroundType.NONE
-      ? 'transparent'
-      : background.content ?? '#ffffff'
+    parseBackgroundValue(background)
   )
+  const backgroundColor =
+    (BackgroundType.COLOR ? background.content : '#ffffff') ?? '#ffffff'
+  documentStyle.setProperty(
+    cssVariableNames.chat.checkbox.bgColor,
+    (BackgroundType.COLOR ? background.content : '#ffffff') ?? '#ffffff'
+  )
+  documentStyle.setProperty(
+    cssVariableNames.general.color,
+    isLight(backgroundColor) ? '#303235' : '#ffffff'
+  )
+}
+
+const parseBackgroundValue = ({ type, content }: Background) => {
+  switch (type) {
+    case BackgroundType.NONE:
+      return 'transparent'
+    case BackgroundType.COLOR:
+      return content ?? '#ffffff'
+    case BackgroundType.IMAGE:
+      return `url(${content})`
+  }
+}
+
+const setRoundness = (
+  roundness: NonNullable<ChatTheme['roundness']>,
+  documentStyle: CSSStyleDeclaration
+) => {
+  switch (roundness) {
+    case 'none':
+      documentStyle.setProperty('--typebot-border-radius', '0')
+      break
+    case 'medium':
+      documentStyle.setProperty('--typebot-border-radius', '6px')
+      break
+    case 'large':
+      documentStyle.setProperty('--typebot-border-radius', '20px')
+      break
+  }
 }

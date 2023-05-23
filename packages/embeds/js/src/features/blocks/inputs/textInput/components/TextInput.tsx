@@ -29,15 +29,18 @@ export const TextInput = (props: Props) => {
     if (e.key === 'Enter') submit()
   }
 
+  const submitIfCtrlEnter = (e: KeyboardEvent) => {
+    if (!props.block.options.isLong) return
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit()
+  }
+
   onMount(() => {
     if (!isMobile() && inputRef) inputRef.focus()
   })
 
   return (
     <div
-      class={
-        'flex items-end justify-between rounded-lg pr-2 typebot-input w-full'
-      }
+      class={'flex items-end justify-between pr-2 typebot-input w-full'}
       data-testid="input"
       style={{
         'max-width': props.block.options.isLong ? undefined : '350px',
@@ -48,6 +51,7 @@ export const TextInput = (props: Props) => {
         <Textarea
           ref={inputRef as HTMLTextAreaElement}
           onInput={handleInput}
+          onKeyDown={submitIfCtrlEnter}
           value={inputValue()}
           placeholder={
             props.block.options?.labels?.placeholder ?? 'Digite sua resposta...'

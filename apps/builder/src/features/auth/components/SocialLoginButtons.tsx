@@ -15,6 +15,7 @@ import { omit } from '@typebot.io/lib'
 import { AzureAdLogo } from '@/components/logos/AzureAdLogo'
 import { FacebookLogo } from '@/components/logos/FacebookLogo'
 import { GitlabLogo } from '@/components/logos/GitlabLogo'
+import { useScopedI18n } from '@/locales'
 
 type Props = {
   providers:
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export const SocialLoginButtons = ({ providers }: Props) => {
+  const scopedT = useScopedI18n('auth.socialLogin')
   const { query } = useRouter()
   const { status } = useSession()
   const [authLoading, setAuthLoading] =

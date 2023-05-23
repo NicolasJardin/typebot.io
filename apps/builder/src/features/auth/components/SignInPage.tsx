@@ -1,5 +1,6 @@
 import { Seo } from '@/components/Seo'
 import { TextLink } from '@/components/TextLink'
+import { useScopedI18n } from '@/locales'
 import { VStack, Heading, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { SignInForm } from './SignInForm'
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export const SignInPage = ({ type }: Props) => {
+  const scopedT = useScopedI18n('auth')
   const { query } = useRouter()
 
   return (

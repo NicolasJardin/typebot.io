@@ -31,7 +31,8 @@ export const executeCondition = (
 }
 
 const executeComparison =
-  (variables: Variable[]) => (comparison: Comparison) => {
+  (variables: Variable[]) =>
+  (comparison: Comparison): boolean => {
     if (!comparison?.variableId) return false
     const inputValue =
       variables.find((v) => v.id === comparison.variableId)?.value ?? ''
@@ -39,10 +40,11 @@ const executeComparison =
       findUniqueVariableValue(variables)(comparison.value) ??
       parseVariables(variables)(comparison.value)
     if (isNotDefined(value)) return false
+    if (isNotDefined(comparison.comparisonOperator)) return false
     switch (comparison.comparisonOperator) {
       case ComparisonOperators.CONTAINS: {
-        const contains = (a: string, b: string) => {
-          if (b === '') return false
+        const contains = (a: string | null, b: string | null) => {
+          if (b === '' || !b || !a) return false
           return a.toLowerCase().trim().includes(b.toLowerCase().trim())
         }
         return compare(contains, inputValue, value)
@@ -61,30 +63,54 @@ const executeComparison =
         return compare((a, b) => a !== b, inputValue, value)
       }
       case ComparisonOperators.GREATER: {
-        return compare(
-          (a, b) => parseFloat(a) > parseFloat(b),
-          inputValue,
-          value
-        )
+        if (typeof inputValue === 'string') {
+          if (typeof value === 'string')
+            return parseFloat(inputValue) > parseFloat(value)
+          return parseFloat(inputValue) > value.length
+        }
+        if (typeof value === 'string')
+          return inputValue.length > parseFloat(value)
+        return inputValue.length > value.length
       }
       case ComparisonOperators.LESS: {
-        return compare(
-          (a, b) => parseFloat(a) < parseFloat(b),
-          inputValue,
-          value
-        )
+        if (typeof inputValue === 'string') {
+          if (typeof value === 'string')
+            return parseFloat(inputValue) < parseFloat(value)
+          return parseFloat(inputValue) < value.length
+        }
+        if (typeof value === 'string')
+          return inputValue.length < parseFloat(value)
+        return inputValue.length < value.length
       }
       case ComparisonOperators.IS_SET: {
         return isDefined(inputValue) && inputValue.length > 0
+      }
+      case ComparisonOperators.IS_EMPTY: {
+        return isNotDefined(inputValue) || inputValue.length === 0
+      }
+      case ComparisonOperators.STARTS_WITH: {
+        const startsWith = (a: string | null, b: string | null) => {
+          if (b === '' || !b || !a) return false
+          return a.toLowerCase().trim().startsWith(b.toLowerCase().trim())
+        }
+        return compare(startsWith, inputValue, value)
+      }
+      case ComparisonOperators.ENDS_WITH: {
+        const endsWith = (a: string | null, b: string | null) => {
+          if (b === '' || !b || !a) return false
+          return a.toLowerCase().trim().endsWith(b.toLowerCase().trim())
+        }
+        return compare(endsWith, inputValue, value)
       }
     }
   }
 
 const compare = (
-  func: (a: string, b: string) => boolean,
-  a: string | string[],
-  b: string | string[]
+  func: (a: string | null, b: string | null) => boolean,
+  a: Variable['value'],
+  b: Variable['value']
 ): boolean => {
+  if (!a || !b) return false
   if (typeof a === 'string') {
     if (typeof b === 'string') return func(a, b)
     return b.some((b) => func(a, b))

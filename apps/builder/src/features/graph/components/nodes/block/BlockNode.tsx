@@ -1,4 +1,5 @@
 import { ContextMenu } from '@/components/ContextMenu'
+import { ExpandIcon } from '@/components/icons'
 import { TextBubbleEditor } from '@/features/blocks/bubbles/textBubble/components/TextBubbleEditor'
 import { BlockIcon } from '@/features/editor/components/BlockIcon'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
@@ -30,8 +31,8 @@ import {
   DraggableBlock,
   LogicBlockType,
   TextBubbleBlock,
-  TextBubbleContent,
 } from '@typebot.io/schemas'
+import { TElement } from '@udecode/plate-common'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { SourceEndpoint } from '../../endpoints/SourceEndpoint'
@@ -41,7 +42,6 @@ import { BlockNodeContextMenu } from './BlockNodeContextMenu'
 import { MediaBubblePopoverContent } from './MediaBubblePopoverContent'
 import { SettingsModal } from './SettingsModal'
 import { BlockSettings, SettingsPopoverContent } from './SettingsPopoverContent'
-import { ExpandIcon } from '@/components/icons'
 
 export const BlockNode = ({
   block,
@@ -75,7 +75,7 @@ export const BlockNode = ({
     openedBlockId === block.id
   )
   const [isEditing, setIsEditing] = useState<boolean>(
-    isTextBubbleBlock(block) && block.content.plainText === ''
+    isTextBubbleBlock(block) && block.content.richText.length === 0
   )
   const blockRef = useRef<HTMLDivElement | null>(null)
 
@@ -137,8 +137,8 @@ export const BlockNode = ({
       })
   }
 
-  const handleCloseEditor = (content: TextBubbleContent) => {
-    const updatedBlock = { ...block, content } as Block
+  const handleCloseEditor = (content: TElement[]) => {
+    const updatedBlock = { ...block, content: { richText: content } }
     updateBlock(indices, updatedBlock)
     setIsEditing(false)
   }
@@ -225,6 +225,7 @@ export const BlockNode = ({
               onClick={handleClick}
               data-testid={`block`}
               w="full"
+              className="prevent-group-drag"
             >
               <HStack
                 flex="1"

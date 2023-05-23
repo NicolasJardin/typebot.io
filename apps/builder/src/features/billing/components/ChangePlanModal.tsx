@@ -1,5 +1,6 @@
 import { AlertInfo } from '@/components/AlertInfo'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { useI18n } from '@/locales'
 import {
   Modal,
   ModalBody,
@@ -10,11 +11,10 @@ import {
   Button,
   HStack,
 } from '@chakra-ui/react'
-import { LimitReached } from '../types'
 import { ChangePlanForm } from './ChangePlanForm'
 
 type ChangePlanModalProps = {
-  type?: LimitReached
+  type?: string
   isOpen: boolean
   onClose: () => void
 }
@@ -24,6 +24,7 @@ export const ChangePlanModal = ({
   isOpen,
   type,
 }: ChangePlanModalProps) => {
+  const t = useI18n()
   const { workspace, refreshWorkspace } = useWorkspace()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">

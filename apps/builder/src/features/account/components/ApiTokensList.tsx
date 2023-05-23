@@ -25,10 +25,12 @@ import { useApiTokens } from '../hooks/useApiTokens'
 import { ApiTokenFromServer } from '../types'
 import { parseTimeSince } from '@/helpers/parseTimeSince'
 import { deleteApiTokenQuery } from '../queries/deleteApiTokenQuery'
+import { useScopedI18n } from '@/locales'
 
 type Props = { user: User }
 
 export const ApiTokensList = ({ user }: Props) => {
+  const scopedT = useScopedI18n('account.apiTokens')
   const { showToast } = useToast()
   const { apiTokens, isLoading, mutate } = useApiTokens({
     userId: user.id,

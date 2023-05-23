@@ -2,6 +2,7 @@ import { ExecuteIntegrationResponse } from '@/features/chat/types'
 import { transformStringVariablesToList } from '@/features/variables/transformVariablesToList'
 import prisma from '@/lib/prisma'
 import {
+  ChatReply,
   SessionState,
   Variable,
   VariableWithUnknowValue,
@@ -10,6 +11,7 @@ import {
 import {
   ChatCompletionOpenAIOptions,
   OpenAICredentials,
+  modelLimit,
 } from '@typebot.io/schemas/features/blocks/integrations/openai'
 import { OpenAIApi, Configuration, ChatCompletionRequestMessage } from 'openai'
 import { isDefined, byId, isNotEmpty, isEmpty } from '@typebot.io/lib'
@@ -17,6 +19,11 @@ import { decrypt } from '@typebot.io/lib/api/encryption'
 import { saveErrorLog } from '@/features/logs/saveErrorLog'
 import { updateVariables } from '@/features/variables/updateVariables'
 import { parseVariables } from '@/features/variables/parseVariables'
+import { saveSuccessLog } from '@/features/logs/saveSuccessLog'
+import { parseVariableNumber } from '@/features/variables/parseVariableNumber'
+import { encoding_for_model } from '@dqbd/tiktoken'
+
+const minTokenCompletion = 200
 
 export const createChatCompletionOpenAI = async (
   state: SessionState,
@@ -26,9 +33,15 @@ export const createChatCompletionOpenAI = async (
   }: { outgoingEdgeId?: string; options: ChatCompletionOpenAIOptions }
 ): Promise<ExecuteIntegrationResponse> => {
   let newSessionState = state
+  const noCredentialsError = {
+    status: 'error',
+    description: 'Make sure to select an OpenAI account',
+  }
   if (!options.credentialsId) {
-    console.error('OpenAI block has no credentials')
-    return { outgoingEdgeId }
+    return {
+      outgoingEdgeId,
+      logs: [noCredentialsError],
+    }
   }
   const credentials = await prisma.credentials.findUnique({
     where: {
@@ -37,7 +50,7 @@ export const createChatCompletionOpenAI = async (
   })
   if (!credentials) {
     console.error('Could not find credentials in database')
-    return { outgoingEdgeId }
+    return { outgoingEdgeId, logs: [noCredentialsError] }
   }
   const { apiKey } = decrypt(
     credentials.data,
@@ -47,16 +60,22 @@ export const createChatCompletionOpenAI = async (
     apiKey,
   })
   const { variablesTransformedToList, messages } = parseMessages(
-    newSessionState.typebot.variables
+    newSessionState.typebot.variables,
+    options.model
   )(options.messages)
   if (variablesTransformedToList.length > 0)
     newSessionState = await updateVariables(state)(variablesTransformedToList)
+
+  const temperature = parseVariableNumber(newSessionState.typebot.variables)(
+    options.advancedSettings?.temperature
+  )
 
   try {
     const openai = new OpenAIApi(configuration)
     const response = await openai.createChatCompletion({
       model: options.model,
       messages,
+      temperature,
     })
     const messageContent = response.data.choices.at(0)?.message?.content
     const totalTokens = response.data.usage?.total_tokens
@@ -89,17 +108,36 @@ export const createChatCompletionOpenAI = async (
     }, [])
     if (newVariables.length > 0)
       newSessionState = await updateVariables(newSessionState)(newVariables)
+    state.result &&
+      (await saveSuccessLog({
+        resultId: state.result.id,
+        message: 'OpenAI block successfully executed',
+      }))
     return {
       outgoingEdgeId,
       newSessionState,
     }
   } catch (err) {
-    console.error(err)
-    const log = {
+    const log: NonNullable<ChatReply['logs']>[number] = {
       status: 'error',
       description: 'OpenAI block returned error',
-      details: JSON.stringify(err, null, 2).substring(0, 1000),
     }
+
+    if (err && typeof err === 'object') {
+      if ('response' in err) {
+        const { status, data } = err.response as {
+          status: string
+          data: string
+        }
+        log.details = {
+          status,
+          data,
+        }
+      } else if ('message' in err) {
+        log.details = err.message
+      }
+    }
+
     state.result &&
       (await saveErrorLog({
         resultId: state.result.id,
@@ -115,7 +153,7 @@ export const createChatCompletionOpenAI = async (
 }
 
 const parseMessages =
-  (variables: Variable[]) =>
+  (variables: Variable[], model: ChatCompletionOpenAIOptions['model']) =>
   (
     messages: ChatCompletionOpenAIOptions['messages']
   ): {
@@ -123,8 +161,11 @@ const parseMessages =
     messages: ChatCompletionRequestMessage[]
   } => {
     const variablesTransformedToList: VariableWithValue[] = []
+    const firstMessagesSequenceIndex = messages.findIndex(
+      (message) => message.role === 'Messages sequence ✨'
+    )
     const parsedMessages = messages
-      .flatMap((message) => {
+      .flatMap((message, index) => {
         if (!message.role) return
         if (message.role === 'Messages sequence ✨') {
           if (
@@ -156,23 +197,51 @@ const parseMessages =
               variable.id === message.content?.assistantMessagesVariableId
           )?.value ?? []) as string[]
 
+          let allMessages: ChatCompletionRequestMessage[] = []
+
           if (userMessages.length > assistantMessages.length)
-            return userMessages.flatMap((userMessage, index) => [
+            allMessages = userMessages.flatMap((userMessage, index) => [
               {
                 role: 'user',
                 content: userMessage,
               },
-              { role: 'assistant', content: assistantMessages[index] },
+              { role: 'assistant', content: assistantMessages.at(index) ?? '' },
             ]) satisfies ChatCompletionRequestMessage[]
           else {
-            return assistantMessages.flatMap((assistantMessage, index) => [
-              { role: 'assistant', content: assistantMessage },
-              {
-                role: 'user',
-                content: userMessages[index],
-              },
-            ]) satisfies ChatCompletionRequestMessage[]
+            allMessages = assistantMessages.flatMap(
+              (assistantMessage, index) => [
+                { role: 'assistant', content: assistantMessage },
+                {
+                  role: 'user',
+                  content: userMessages.at(index) ?? '',
+                },
+              ]
+            ) satisfies ChatCompletionRequestMessage[]
           }
+
+          if (index !== firstMessagesSequenceIndex) return allMessages
+
+          const encoder = encoding_for_model(model)
+          let messagesToSend: ChatCompletionRequestMessage[] = []
+          let tokenCount = 0
+
+          for (let i = allMessages.length - 1; i >= 0; i--) {
+            const message = allMessages[i]
+            const tokens = encoder.encode(message.content)
+
+            if (
+              tokenCount + tokens.length - minTokenCompletion >
+              modelLimit[model]
+            ) {
+              break
+            }
+            tokenCount += tokens.length
+            messagesToSend = [message, ...messagesToSend]
+          }
+
+          encoder.free()
+
+          return messagesToSend
         }
         return {
           role: message.role,

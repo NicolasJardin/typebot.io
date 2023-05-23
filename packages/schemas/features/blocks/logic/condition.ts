@@ -17,6 +17,9 @@ export enum ComparisonOperators {
   GREATER = 'Maior que',
   LESS = 'Menor que',
   IS_SET = 'Está definido',
+  IS_EMPTY = 'Is empty',
+  STARTS_WITH = 'Inicia com',
+  ENDS_WITH = 'Termina com',
 }
 
 const comparisonSchema = z.object({

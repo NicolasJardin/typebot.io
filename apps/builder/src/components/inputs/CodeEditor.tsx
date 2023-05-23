@@ -25,6 +25,8 @@ type Props = {
   debounceTimeout?: number
   withVariableButton?: boolean
   height?: string
+  maxHeight?: string
+  minWidth?: string
   onChange?: (value: string) => void
 }
 export const CodeEditor = ({
@@ -32,6 +34,8 @@ export const CodeEditor = ({
   lang,
   onChange,
   height = '250px',
+  maxHeight = '70vh',
+  minWidth,
   withVariableButton = true,
   isReadOnly = false,
   debounceTimeout = 1000,
@@ -65,7 +69,6 @@ export const CodeEditor = ({
   }
 
   const handleChange = (newValue: string) => {
-    if (isDefined(props.value)) return
     setValue(newValue)
   }
 
@@ -92,11 +95,13 @@ export const CodeEditor = ({
       width="full"
       h="full"
       pos="relative"
+      minW={minWidth}
       onMouseEnter={onOpen}
       onMouseLeave={onClose}
+      maxWidth={props.maxWidth}
       sx={{
         '& .cm-editor': {
-          maxH: '70vh',
+          maxH: maxHeight,
           outline: '0px solid transparent !important',
           rounded: 'md',
         },

@@ -24,6 +24,7 @@ import { MoreInfoTooltip } from '../MoreInfoTooltip'
 
 type Props = {
   items: string[]
+  value?: string
   defaultValue?: string
   debounceTimeout?: number
   placeholder?: string
@@ -40,6 +41,7 @@ export const AutocompleteInput = ({
   debounceTimeout,
   placeholder,
   withVariableButton = true,
+  value,
   defaultValue,
   label,
   moreInfoTooltip,
@@ -87,6 +89,7 @@ export const AutocompleteInput = ({
   useOutsideClick({
     ref: dropdownRef,
     handler: onClose,
+    isEnabled: isOpen,
   })
 
   useEffect(
@@ -110,7 +113,9 @@ export const AutocompleteInput = ({
     inputRef.current?.focus()
   }
 
-  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const updateFocusedDropdownItem = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === 'Enter' && isDefined(keyboardFocusIndex)) {
       handleItemClick(filteredItems[keyboardFocusIndex])()
       return setKeyboardFocusIndex(undefined)
@@ -175,11 +180,11 @@ export const AutocompleteInput = ({
             <Input
               autoComplete="off"
               ref={inputRef}
-              value={inputValue}
+              value={value ?? inputValue}
               onChange={(e) => changeValue(e.target.value)}
               onFocus={onOpen}
               onBlur={updateCarretPosition}
-              onKeyDown={handleKeyUp}
+              onKeyDown={updateFocusedDropdownItem}
               placeholder={placeholder}
             />
           </PopoverAnchor>

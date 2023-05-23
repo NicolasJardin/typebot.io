@@ -1,4 +1,4 @@
-import NextAuth, { Account } from 'next-auth'
+import NextAuth, { Account, AuthOptions } from 'next-auth'
 import EmailProvider from 'next-auth/providers/email'
 import GitHubProvider from 'next-auth/providers/github'
 import GitlabProvider from 'next-auth/providers/gitlab'
@@ -8,12 +8,12 @@ import AzureADProvider from 'next-auth/providers/azure-ad'
 import prisma from '@/lib/prisma'
 import { Provider } from 'next-auth/providers'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { CustomAdapter } from './adapter'
+import { customAdapter } from '../../../features/auth/api/customAdapter'
 import { User } from '@typebot.io/prisma'
 import { env, getAtPath, isDefined, isNotEmpty } from '@typebot.io/lib'
-import { sendVerificationRequest } from './sendVerificationRequest'
 import { mockedUser } from '@/features/auth/mockedUser'
 import { getNewUserInvitations } from '@/features/auth/helpers/getNewUserInvitations'
+import { sendVerificationRequest } from '@/features/auth/helpers/sendVerificationRequest'
 
 const providers: Provider[] = []
 
@@ -128,56 +128,53 @@ if (isNotEmpty(process.env.CUSTOM_OAUTH_WELL_KNOWN_URL)) {
   })
 }
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
-  if (
+export const authOptions: AuthOptions = {
+  adapter: customAdapter(prisma),
+  secret: process.env.ENCRYPTION_SECRET,
+  providers,
+  session: {
+    strategy: 'database',
+  },
+  pages: {
+    signIn: '/signin',
+  },
+  callbacks: {
+    session: async ({ session, user }) => {
+      const userFromDb = user as User
+      await updateLastActivityDate(userFromDb)
+      return {
+        ...session,
+        user: userFromDb,
+      }
+    },
+    signIn: async ({ account, user }) => {
+      if (!account) return false
+      const isNewUser = !('createdAt' in user && isDefined(user.createdAt))
+      if (process.env.DISABLE_SIGNUP === 'true' && isNewUser && user.email) {
+        const { invitations, workspaceInvitations } =
+          await getNewUserInvitations(prisma, user.email)
+        if (invitations.length === 0 && workspaceInvitations.length === 0)
+          return false
+      }
+      const requiredGroups = getRequiredGroups(account.provider)
+      if (requiredGroups.length > 0) {
+        const userGroups = await getUserGroups(account)
+        return checkHasGroups(userGroups, requiredGroups)
+      }
+      return true
+    },
+  },
+}
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const isMockingSession =
     req.method === 'GET' &&
     req.url === '/api/auth/session' &&
     env('E2E_TEST') === 'true'
-  ) {
-    res.send({ user: mockedUser })
-    return
-  }
-  if (req.method === 'HEAD') {
-    res.status(200)
-    return
-  }
-  NextAuth(req, res, {
-    adapter: CustomAdapter(prisma),
-    secret: process.env.ENCRYPTION_SECRET,
-    providers,
-    session: {
-      strategy: 'database',
-    },
-    pages: {
-      signIn: '/signin',
-    },
-    callbacks: {
-      session: async ({ session, user }) => {
-        const userFromDb = user as User
-        await updateLastActivityDate(userFromDb)
-        return {
-          ...session,
-          user: userFromDb,
-        }
-      },
-      signIn: async ({ account, user }) => {
-        if (!account) return false
-        const isNewUser = !('createdAt' in user && isDefined(user.createdAt))
-        if (process.env.DISABLE_SIGNUP === 'true' && isNewUser && user.email) {
-          const { invitations, workspaceInvitations } =
-            await getNewUserInvitations(prisma, user.email)
-          if (invitations.length === 0 && workspaceInvitations.length === 0)
-            return false
-        }
-        const requiredGroups = getRequiredGroups(account.provider)
-        if (requiredGroups.length > 0) {
-          const userGroups = await getUserGroups(account)
-          return checkHasGroups(userGroups, requiredGroups)
-        }
-        return true
-      },
-    },
-  })
+  if (isMockingSession) return res.send({ user: mockedUser })
+  const requestIsFromCompanyFirewall = req.method === 'HEAD'
+  if (requestIsFromCompanyFirewall) return res.status(200).end()
+  return await NextAuth(req, res, authOptions)
 }
 
 const updateLastActivityDate = async (user: User) => {

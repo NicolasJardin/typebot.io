@@ -2,7 +2,7 @@ import { TypingBubble } from '@/components'
 import { TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
 import ChatText from '../../../components/ChatText'
-import { computeTypingDuration } from '../../../textBubble/utils/computeTypingDuration'
+import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
   url?: string

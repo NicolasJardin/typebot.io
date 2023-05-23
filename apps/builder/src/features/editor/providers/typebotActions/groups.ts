@@ -1,6 +1,6 @@
 import { Coordinates } from '@/features/graph/types'
 import { createId } from '@paralleldrive/cuid2'
-import { parseGroupTitle } from '@typebot.io/lib'
+import { isEmpty, parseGroupTitle } from '@typebot.io/lib'
 import {
   BlockIndices,
   DraggableBlock,
@@ -11,10 +11,10 @@ import {
 import { produce } from 'immer'
 import { SetTypebot } from '../TypebotProvider'
 import {
+  WebhookCallBacks,
   createBlockDraft,
   deleteGroupDraft,
   duplicateBlockDraft,
-  WebhookCallBacks,
 } from './blocks'
 
 export type GroupsActions = {
@@ -79,7 +79,9 @@ const groupsActions = (
         const id = createId()
         const newGroup: Group = {
           ...group,
-          title: `${parseGroupTitle(group.title)} Cópia`,
+          title: isEmpty(group.title)
+            ? ''
+            : `${parseGroupTitle(group.title)} Cópia`,
           id,
           blocks: group.blocks.map((block) =>
             duplicateBlockDraft(id)(block, onWebhookBlockDuplicated)

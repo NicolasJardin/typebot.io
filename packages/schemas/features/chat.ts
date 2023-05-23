@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { answerSchema } from './answer'
 import {
-  googleAnalyticsOptionsSchema,
   InputBlockType,
   LogicBlockType,
+  googleAnalyticsOptionsSchema,
   paymentInputRuntimeOptionsSchema,
   redirectOptionsSchema,
   removeTagOptionsSchema,
@@ -10,24 +11,22 @@ import {
   tagOptionsSchema,
   transferOptionsSchema,
   waitForOptionsSchema,
-  WaitForTypeEnum,
   waitOptionsSchema,
 } from './blocks'
+import {
+  audioBubbleContentSchema,
+  buttonOptionsSchema,
+  embedBubbleContentSchema,
+  imageBubbleContentSchema,
+  textBubbleContentSchema,
+  videoBubbleContentSchema,
+} from './blocks/bubbles'
+import { BubbleBlockType } from './blocks/bubbles/enums'
+import { fileBubbleContentSchema } from './blocks/bubbles/file'
+import { inputBlockSchemas } from './blocks/schemas'
 import { publicTypebotSchema } from './publicTypebot'
 import { logSchema, resultSchema } from './result'
-import { typebotSchema } from './typebot'
-import {
-  textBubbleContentSchema,
-  imageBubbleContentSchema,
-  videoBubbleContentSchema,
-  audioBubbleContentSchema,
-  embedBubbleContentSchema,
-  buttonOptionsSchema,
-} from './blocks/bubbles'
-import { fileBubbleContentSchema } from './blocks/bubbles/file'
-import { answerSchema } from './answer'
-import { BubbleBlockType } from './blocks/bubbles/enums'
-import { inputBlockSchema } from './blocks'
+import { listVariableValue, typebotSchema } from './typebot'
 
 const typebotInSessionStateSchema = publicTypebotSchema.pick({
   id: true,
@@ -84,9 +83,7 @@ const chatSessionSchema = z.object({
 
 const textMessageSchema = z.object({
   type: z.literal(BubbleBlockType.TEXT),
-  content: textBubbleContentSchema.omit({
-    richText: true,
-  }),
+  content: textBubbleContentSchema,
 })
 
 const imageMessageSchema = z.object({
@@ -186,7 +183,7 @@ const scriptToExecuteSchema = z.object({
         .string()
         .or(z.number())
         .or(z.boolean())
-        .or(z.array(z.string()))
+        .or(listVariableValue)
         .nullish(),
     })
   ),
@@ -321,11 +318,17 @@ const clientSideActionSchema = z
           }),
         })
       )
+      .or(
+        z.object({
+          setVariable: z.object({ scriptToExecute: scriptToExecuteSchema }),
+        })
+      )
   )
 
 export const chatReplySchema = z.object({
   messages: z.array(chatMessageSchema),
-  input: inputBlockSchema
+  input: z
+    .discriminatedUnion('type', [...inputBlockSchemas])
     .and(
       z.object({
         prefilledValue: z.string().optional(),
