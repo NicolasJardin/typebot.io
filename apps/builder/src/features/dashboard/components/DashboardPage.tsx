@@ -9,15 +9,12 @@ import { FolderContent } from '@/features/folders/components/FolderContent'
 import { ParentModalProvider } from '@/features/graph/providers/ParentModalProvider'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { trpc } from '@/lib/trpc'
-import { useScopedI18n } from '@/locales'
 import { Spinner, Stack, Text, VStack } from '@chakra-ui/react'
 import { guessIfUserIsEuropean } from '@typebot.io/lib/pricing'
 import { Plan } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-
 export const DashboardPage = () => {
-  const scopedT = useScopedI18n('dashboard')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { user } = useUser()

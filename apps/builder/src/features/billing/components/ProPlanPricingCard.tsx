@@ -1,24 +1,23 @@
 // @ts-nocheck
 
+import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
+import { ChevronLeftIcon } from '@/components/icons'
 import {
-  Stack,
-  Heading,
-  chakra,
+  Button,
+  Flex,
   HStack,
+  Heading,
   Menu,
   MenuButton,
-  Button,
-  MenuList,
   MenuItem,
+  MenuList,
+  Stack,
+  Tag,
   Text,
   Tooltip,
-  Flex,
-  Tag,
+  chakra,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { ChevronLeftIcon } from '@/components/icons'
-import { Plan } from '@typebot.io/prisma'
-import { useEffect, useState } from 'react'
 import { isDefined, parseNumberWithCommas } from '@typebot.io/lib'
 import {
   chatsLimit,
@@ -28,10 +27,10 @@ import {
   getStorageLimit,
   storageLimit,
 } from '@typebot.io/lib/pricing'
-import { FeaturesList } from './FeaturesList'
-import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
-import { useI18n, useScopedI18n } from '@/locales'
+import { Plan } from '@typebot.io/prisma'
 import { Workspace } from '@typebot.io/schemas'
+import { useEffect, useState } from 'react'
+import { FeaturesList } from './FeaturesList'
 
 type Props = {
   workspace: Pick<
@@ -63,7 +62,6 @@ export const ProPlanPricingCard = ({
   isYearly,
   onPayClick,
 }: Props) => {
-  const t = useI18n()
   const scopedT = useScopedI18n('billing.pricingCard')
   const [selectedChatsLimitIndex, setSelectedChatsLimitIndex] =
     useState<number>()

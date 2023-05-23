@@ -1,13 +1,11 @@
-import { Stack, Heading, useColorMode } from '@chakra-ui/react'
+import { Heading, Stack, useColorMode } from '@chakra-ui/react'
 import { GraphNavigation } from '@typebot.io/prisma'
-import React, { useEffect } from 'react'
-import { GraphNavigationRadioGroup } from './GraphNavigationRadioGroup'
-import { AppearanceRadioGroup } from './AppearanceRadioGroup'
+import { useEffect } from 'react'
 import { useUser } from '../hooks/useUser'
-import { useScopedI18n } from '@/locales'
+import { AppearanceRadioGroup } from './AppearanceRadioGroup'
+import { GraphNavigationRadioGroup } from './GraphNavigationRadioGroup'
 
 export const UserPreferencesForm = () => {
-  const scopedT = useScopedI18n('account.preferences')
   const { colorMode, setColorMode } = useColorMode()
   const { user, updateUser } = useUser()
 

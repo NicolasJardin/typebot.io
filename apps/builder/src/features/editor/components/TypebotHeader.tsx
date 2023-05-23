@@ -43,7 +43,7 @@ export const TypebotHeader = () => {
   const hideUndoShortcutTooltipLater = useDebouncedCallback(() => {
     setUndoShortcutTooltipOpen(false)
   }, 1000)
-  const { isOpen, onOpen } = useDisclosure()
+  const { isOpen } = useDisclosure()
 
   const handleNameSubmit = (name: string) => updateTypebot({ name })
 

@@ -1,6 +1,4 @@
-import { BlockWithOptions } from '@typebot.io/schemas'
-
-export const getHelpDocUrl = (blockType: BlockWithOptions['type']): string => {
+export const getHelpDocUrl = () => {
   // switch (blockType) {
   //   case LogicBlockType.TYPEBOT_LINK:
   //     return 'https://docs.typebot.io/editor/blocks/logic/typebot-link'

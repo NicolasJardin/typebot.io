@@ -1,5 +1,11 @@
-import { Stack, Button } from '@chakra-ui/react'
+import { GoogleLogo } from '@/components/GoogleLogo'
 import { GithubIcon } from '@/components/icons'
+import { AzureAdLogo } from '@/components/logos/AzureAdLogo'
+import { FacebookLogo } from '@/components/logos/FacebookLogo'
+import { GitlabLogo } from '@/components/logos/GitlabLogo'
+import { Button, Stack } from '@chakra-ui/react'
+import { omit } from '@typebot.io/lib'
+import { BuiltInProviderType } from 'next-auth/providers'
 import {
   ClientSafeProvider,
   LiteralUnion,
@@ -7,15 +13,8 @@ import {
   useSession,
 } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
 import { stringify } from 'qs'
-import { BuiltInProviderType } from 'next-auth/providers'
-import { GoogleLogo } from '@/components/GoogleLogo'
-import { omit } from '@typebot.io/lib'
-import { AzureAdLogo } from '@/components/logos/AzureAdLogo'
-import { FacebookLogo } from '@/components/logos/FacebookLogo'
-import { GitlabLogo } from '@/components/logos/GitlabLogo'
-import { useScopedI18n } from '@/locales'
+import { useState } from 'react'
 
 type Props = {
   providers:
@@ -24,7 +23,6 @@ type Props = {
 }
 
 export const SocialLoginButtons = ({ providers }: Props) => {
-  const scopedT = useScopedI18n('auth.socialLogin')
   const { query } = useRouter()
   const { status } = useSession()
   const [authLoading, setAuthLoading] =

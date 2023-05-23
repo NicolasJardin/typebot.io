@@ -1,33 +1,31 @@
+import { TextLink } from '@/components/TextLink'
+import { useToast } from '@/hooks/useToast'
 import {
+  Alert,
+  AlertIcon,
   Button,
+  Flex,
+  HStack,
   HTMLChakraProps,
   Input,
-  Stack,
-  HStack,
-  Text,
-  Spinner,
-  Alert,
-  Flex,
-  AlertIcon,
   SlideFade,
+  Spinner,
+  Stack,
+  Text,
 } from '@chakra-ui/react'
-import React, { ChangeEvent, FormEvent, useEffect } from 'react'
-import { useState } from 'react'
+import { BuiltInProviderType } from 'next-auth/providers'
 import {
   ClientSafeProvider,
-  getProviders,
   LiteralUnion,
+  getProviders,
   signIn,
   useSession,
 } from 'next-auth/react'
-import { DividerWithText } from './DividerWithText'
-import { SocialLoginButtons } from './SocialLoginButtons'
 import { useRouter } from 'next/router'
-import { BuiltInProviderType } from 'next-auth/providers'
-import { useToast } from '@/hooks/useToast'
-import { TextLink } from '@/components/TextLink'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { DividerWithText } from './DividerWithText'
 import { SignInError } from './SignInError'
-import { useScopedI18n } from '@/locales'
+import { SocialLoginButtons } from './SocialLoginButtons'
 
 type Props = {
   defaultEmail?: string
@@ -35,7 +33,6 @@ type Props = {
 export const SignInForm = ({
   defaultEmail,
 }: Props & HTMLChakraProps<'form'>) => {
-  const scopedT = useScopedI18n('auth')
   const router = useRouter()
   const { status } = useSession()
   const [authLoading, setAuthLoading] = useState(false)

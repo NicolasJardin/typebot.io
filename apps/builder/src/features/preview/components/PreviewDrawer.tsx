@@ -26,9 +26,7 @@ export const PreviewDrawer = () => {
   const [width, setWidth] = useState(500)
   const [isResizeHandleVisible, setIsResizeHandleVisible] = useState(false)
   const [restartKey, setRestartKey] = useState(0)
-  const [selectedRuntime, setSelectedRuntime] = useState<
-    (typeof runtimes)[number]
-  >(runtimes[0])
+  const [selectedRuntime] = useState<(typeof runtimes)[number]>(runtimes[0])
 
   const handleRestartClick = async () => {
     await save()

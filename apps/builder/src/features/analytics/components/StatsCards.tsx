@@ -1,4 +1,3 @@
-import { useScopedI18n } from '@/locales'
 import {
   GridProps,
   SimpleGrid,
@@ -9,7 +8,6 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { Stats } from '@typebot.io/schemas'
-import React from 'react'
 
 const computeCompletionRate = (
   totalCompleted: number,
@@ -23,7 +21,6 @@ export const StatsCards = ({
   stats,
   ...props
 }: { stats?: Stats } & GridProps) => {
-  const scopedT = useScopedI18n('analytics')
   const bg = useColorModeValue('white', 'gray.900')
 
   return (
