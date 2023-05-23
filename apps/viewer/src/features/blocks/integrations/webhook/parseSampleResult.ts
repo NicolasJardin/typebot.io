@@ -122,6 +122,8 @@ const getSampleValue = (block: InputBlock): string => {
         : block.items[0]?.content ?? 'Item'
     case InputBlockType.DATE:
       return new Date().toUTCString()
+    case InputBlockType.WAIT_FOR:
+      return ''
     case InputBlockType.EMAIL:
       return 'test@email.com'
     case InputBlockType.NUMBER:
