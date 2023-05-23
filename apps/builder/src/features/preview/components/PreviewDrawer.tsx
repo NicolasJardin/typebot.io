@@ -1,3 +1,4 @@
+import { useGraph } from '@/features/graph/providers/GraphProvider'
 import {
   Button,
   CloseButton,
@@ -8,15 +9,13 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react'
-import { useEditor } from '../../editor/providers/EditorProvider'
-import { useGraph } from '@/features/graph/providers/GraphProvider'
-import { useTypebot } from '../../editor/providers/TypebotProvider'
-import React, { useState } from 'react'
+import { useDrag } from '@use-gesture/react'
+import { useState } from 'react'
 import { headerHeight } from '../../editor/constants'
-import { RuntimeMenu } from './RuntimeMenu'
+import { useEditor } from '../../editor/providers/EditorProvider'
+import { useTypebot } from '../../editor/providers/TypebotProvider'
 import { runtimes } from '../data'
 import { PreviewDrawerBody } from './PreviewDrawerBody'
-import { useDrag } from '@use-gesture/react'
 import { ResizeHandle } from './ResizeHandle'
 
 export const PreviewDrawer = () => {

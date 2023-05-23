@@ -1,9 +1,4 @@
-import {
-  BlockWithOptions,
-  InputBlockType,
-  IntegrationBlockType,
-  LogicBlockType,
-} from '@typebot.io/schemas'
+import { BlockWithOptions } from '@typebot.io/schemas'
 
 export const getHelpDocUrl = (blockType: BlockWithOptions['type']): string => {
   // switch (blockType) {
