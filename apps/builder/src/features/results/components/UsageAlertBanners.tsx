@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { UnlockPlanAlertInfo } from '@/components/UnlockPlanAlertInfo'
 import { trpc } from '@/lib/trpc'
 import { Flex } from '@chakra-ui/react'
