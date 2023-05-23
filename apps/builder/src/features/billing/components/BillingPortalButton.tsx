@@ -1,6 +1,5 @@
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/lib/trpc'
-import { useScopedI18n } from '@/locales'
 import { Button, Link } from '@chakra-ui/react'
 
 type Props = {
@@ -8,7 +7,6 @@ type Props = {
 }
 
 export const BillingPortalButton = ({ workspaceId }: Props) => {
-  const scopedT = useScopedI18n('billing')
   const { showToast } = useToast()
   const { data } = trpc.billing.getBillingPortalUrl.useQuery(
     {
@@ -24,11 +22,7 @@ export const BillingPortalButton = ({ workspaceId }: Props) => {
   )
   return (
     <Button as={Link} href={data?.billingPortalUrl} isLoading={!data}>
-<<<<<<< HEAD
       Portal de cobrança
-=======
-      {scopedT('billingPortalButton.label')}
->>>>>>> upstream/main
     </Button>
   )
 }

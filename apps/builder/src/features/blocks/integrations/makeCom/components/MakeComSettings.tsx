@@ -6,8 +6,6 @@ import { MakeComBlock, Webhook, WebhookOptions } from '@typebot.io/schemas'
 import { useCallback, useEffect, useState } from 'react'
 import { WebhookAdvancedConfigForm } from '../../webhook/components/WebhookAdvancedConfigForm'
 
-const debounceWebhookTimeout = 2000
-
 type Props = {
   block: MakeComBlock
   onOptionsChange: (options: WebhookOptions) => void

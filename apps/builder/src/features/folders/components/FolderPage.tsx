@@ -1,14 +1,12 @@
 import { Seo } from '@/components/Seo'
 import { useToast } from '@/hooks/useToast'
-import { useI18n } from '@/locales'
 import { Flex, Spinner, Stack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { useFolder } from '../hooks/useFolder'
 import { TypebotDndProvider } from '../TypebotDndProvider'
+import { useFolder } from '../hooks/useFolder'
 import { FolderContent } from './FolderContent'
 
 export const FolderPage = () => {
-  const t = useI18n()
   const router = useRouter()
 
   const { showToast } = useToast()

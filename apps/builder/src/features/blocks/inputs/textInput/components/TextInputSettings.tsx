@@ -8,12 +8,6 @@ type Props = {
 }
 
 export const TextInputSettings = ({ options, onOptionsChange }: Props) => {
-  const handlePlaceholderChange = (placeholder: string) =>
-    onOptionsChange({ ...options, labels: { ...options.labels, placeholder } })
-  const handleButtonLabelChange = (button: string) =>
-    onOptionsChange({ ...options, labels: { ...options.labels, button } })
-  const handleLongChange = (isLong: boolean) =>
-    onOptionsChange({ ...options, isLong })
   const handleVariableChange = (variable?: Variable) =>
     onOptionsChange({ ...options, variableId: variable?.id })
 
