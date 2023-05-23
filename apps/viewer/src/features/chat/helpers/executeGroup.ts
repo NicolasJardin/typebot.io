@@ -48,6 +48,7 @@ export const executeGroup =
     for (const block of group.blocks) {
       nextEdgeId = block.outgoingEdgeId
 
+      //@ts-ignore
       if (isBubbleBlock(block) && block.type !== BubbleBlockType.BUTTON) {
         messages.push(
           parseBubbleBlock(newSessionState.typebot.variables)(block)
@@ -149,14 +150,16 @@ export const executeGroup =
           lastBubbleBlockId = block.id
 
           continue
+
+        //@ts-ignore
         case BubbleBlockType.BUTTON:
           messages.push({
-            content: block.options,
-            id: block.id,
-            type: block.type,
+            content: (block as any).options,
+            id: (block as any).id,
+            type: (block as any).type,
           })
 
-          lastBubbleBlockId = block.id
+          lastBubbleBlockId = (block as any).id
 
           continue
       }

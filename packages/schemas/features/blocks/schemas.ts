@@ -10,6 +10,7 @@ import {
   videoBubbleBlockSchema,
 } from './bubbles'
 import { BubbleBlockType } from './bubbles/enums'
+import { fileBubbleBlockSchema } from './bubbles/file'
 import {
   dateInputSchema,
   emailInputSchema,
@@ -39,13 +40,18 @@ import { openAIBlockSchema } from './integrations/openai'
 import {
   abTestBlockSchema,
   redirectBlockSchema,
+  removeTagBlockSchema,
   scriptBlockSchema,
   setVariableBlockSchema,
+  spreadBlockSchema,
+  tagBlockSchema,
+  transferBlockSchema,
   typebotLinkBlockSchema,
   waitBlockSchema,
   waitForBlockSchema,
 } from './logic'
 import { conditionBlockSchema } from './logic/condition'
+import { endBlockSchema } from './logic/end'
 import { LogicBlockType } from './logic/enums'
 import { jumpBlockSchema } from './logic/jump'
 import { startBlockSchema } from './start/schemas'
@@ -130,6 +136,12 @@ export const blockSchema = z.discriminatedUnion('type', [
   sendEmailBlockSchema,
   webhookBlockSchema,
   zapierBlockSchema,
+  transferBlockSchema,
+  tagBlockSchema,
+  spreadBlockSchema,
+  fileBubbleBlockSchema,
+  removeTagBlockSchema,
+  endBlockSchema,
 ])
 
 export type Block = z.infer<typeof blockSchema>
