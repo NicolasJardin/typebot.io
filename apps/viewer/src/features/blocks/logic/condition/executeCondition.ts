@@ -50,8 +50,8 @@ const executeComparison =
         return compare(contains, inputValue, value)
       }
       case ComparisonOperators.NOT_CONTAINS: {
-        const notContains = (a: string, b: string) => {
-          if (b === '') return true
+        const notContains = (a: string | null, b: string | null) => {
+          if (b === '' || !b || !a) return true
           return !a.toLowerCase().trim().includes(b.toLowerCase().trim())
         }
         return compare(notContains, inputValue, value)
