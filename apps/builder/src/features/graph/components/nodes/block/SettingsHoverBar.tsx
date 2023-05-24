@@ -7,7 +7,6 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { BlockWithOptions } from '@typebot.io/schemas'
-import { getHelpDocUrl } from '@/features/graph/helpers/getHelpDocUrl'
 
 type Props = {
   blockType: BlockWithOptions['type']
@@ -15,7 +14,7 @@ type Props = {
 }
 
 export const SettingsHoverBar = ({ blockType, onExpandClick }: Props) => {
-  const helpDocUrl = getHelpDocUrl(blockType)
+  // const helpDocUrl = getHelpDocUrl(blockType)
   return (
     <HStack
       rounded="md"
@@ -40,7 +39,7 @@ export const SettingsHoverBar = ({ blockType, onExpandClick }: Props) => {
         borderLeftRadius="none"
         size="xs"
         variant="ghost"
-        href={helpDocUrl}
+        // href={helpDocUrl}
         isExternal
       >
         Help
