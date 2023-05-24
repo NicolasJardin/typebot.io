@@ -136,6 +136,7 @@ export const updateSubscription = authenticatedProcedure
           userId: user.id,
           workspaceId,
           currency,
+          //@ts-ignore
           plan,
           returnUrl,
           additionalChats,
