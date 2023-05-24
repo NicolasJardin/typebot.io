@@ -120,10 +120,13 @@ export const BlockSettings = ({
     onBlockChange({ options } as Partial<Block>)
   }
 
+  //@ts-ignore
   switch (block.type) {
+    //@ts-ignore
     case BubbleBlockType.BUTTON:
       return (
         <ButtonSettings
+          //@ts-ignore
           options={block.options}
           onOptionsChange={updateOptions}
         />
@@ -310,6 +313,7 @@ export const BlockSettings = ({
         />
       )
 
+    //@ts-ignore
     case LogicBlockType.END:
       return <Fragment />
 
