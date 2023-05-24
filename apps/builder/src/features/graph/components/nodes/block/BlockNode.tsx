@@ -307,6 +307,7 @@ export const BlockNode = ({
 }
 
 const hasSettingsPopover = (block: Block): block is BlockWithOptions =>
+  //@ts-ignore
   (!isBubbleBlock(block) || block.type === BubbleBlockType.BUTTON) &&
   block.type !== LogicBlockType.CONDITION &&
   block.type !== LogicBlockType.END
@@ -316,4 +317,5 @@ const isMediaBubbleBlock = (
 ): block is Exclude<BubbleBlock, TextBubbleBlock> =>
   isBubbleBlock(block) &&
   !isTextBubbleBlock(block) &&
+  //@ts-ignore
   block.type !== BubbleBlockType.BUTTON
