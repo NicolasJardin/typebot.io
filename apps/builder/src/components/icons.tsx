@@ -202,15 +202,6 @@ export const CodeIcon = (props: IconProps) => (
   </Icon>
 )
 
-export const PencilIcon = (props: IconProps) => (
-  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
-    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-    <path d="M2 2l7.586 7.586"></path>
-    <circle cx="11" cy="11" r="2"></circle>
-  </Icon>
-)
-
 export const EditIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
@@ -550,5 +541,90 @@ export const CloseIcon = (props: IconProps) => (
   <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
     <line x1="18" y1="6" x2="6" y2="18"></line>
     <line x1="6" y1="6" x2="18" y2="18"></line>
+  </Icon>
+)
+
+export const NoRadiusIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 20 20" {...props}>
+    <mask id="path-1-inside-1_1009_3" fill="white">
+      <path d="M0 0H20V20H0V0Z" />
+    </mask>
+    <path
+      d="M0 0V-2H-2V0H0ZM0 20H-2V22H0V20ZM0 2H20V-2H0V2ZM20 18H0V22H20V18ZM2 20V0H-2V20H2Z"
+      fill="black"
+      mask="url(#path-1-inside-1_1009_3)"
+    />
+  </Icon>
+)
+
+export const MediumRadiusIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 20 20" {...props}>
+    <mask id="path-1-inside-1_1009_4" fill="white">
+      <path d="M0 4C0 1.79086 1.79086 0 4 0H20V20H4C1.79086 20 0 18.2091 0 16V4Z" />
+    </mask>
+    <path
+      d="M-2 4C-2 0.686292 0.686292 -2 4 -2H20V2H4C2.89543 2 2 2.89543 2 4H-2ZM20 22H4C0.686292 22 -2 19.3137 -2 16H2C2 17.1046 2.89543 18 4 18H20V22ZM4 22C0.686292 22 -2 19.3137 -2 16V4C-2 0.686292 0.686292 -2 4 -2V2C2.89543 2 2 2.89543 2 4V16C2 17.1046 2.89543 18 4 18V22ZM20 0V20V0Z"
+      fill="black"
+      mask="url(#path-1-inside-1_1009_4)"
+    />
+  </Icon>
+)
+
+export const LargeRadiusIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 20 20" {...props}>
+    <mask id="path-1-inside-1_1009_5" fill="white">
+      <path d="M0 10C0 4.47715 4.47715 0 10 0H20V20H10C4.47715 20 0 15.5228 0 10V10Z" />
+    </mask>
+    <path
+      d="M-2 10C-2 3.37258 3.37258 -2 10 -2H20V2H10C5.58172 2 2 5.58172 2 10H-2ZM20 22H10C3.37258 22 -2 16.6274 -2 10H2C2 14.4183 5.58172 18 10 18H20V22ZM10 22C3.37258 22 -2 16.6274 -2 10C-2 3.37258 3.37258 -2 10 -2V2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18V22ZM20 0V20V0Z"
+      fill="black"
+      mask="url(#path-1-inside-1_1009_5)"
+    />
+  </Icon>
+)
+
+export const DropletIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+  </Icon>
+)
+
+export const TableIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"></path>
+  </Icon>
+)
+
+export const ShuffleIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <polyline points="16 3 21 3 21 8"></polyline>
+    <line x1="4" y1="20" x2="21" y2="3"></line>
+    <polyline points="21 16 21 21 16 21"></polyline>
+    <line x1="15" y1="15" x2="21" y2="21"></line>
+    <line x1="4" y1="4" x2="9" y2="9"></line>
+  </Icon>
+)
+
+export const InfoIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  </Icon>
+)
+
+export const SmileIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+  </Icon>
+)
+
+export const BookIcon = (props: IconProps) => (
+  <Icon viewBox="0 0 24 24" {...featherIconsBaseProps} {...props}>
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
   </Icon>
 )

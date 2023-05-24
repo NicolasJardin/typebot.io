@@ -1,11 +1,9 @@
-import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
-import React from 'react'
+import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react'
 import { isNotDefined } from '@typebot.io/lib'
 import { ChangePlanModal } from './ChangePlanModal'
-import { LimitReached } from '../types'
 
-type Props = { limitReachedType?: LimitReached } & ButtonProps
+type Props = { limitReachedType?: string } & ButtonProps
 
 export const UpgradeButton = ({ limitReachedType, ...props }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()

@@ -1,4 +1,3 @@
-import { checkChatsUsage } from '@/features/usage/checkChatsUsage'
 import { deepParseVariables } from '@/features/variables/deepParseVariable'
 import { injectVariablesFromExistingResult } from '@/features/variables/injectVariablesFromExistingResult'
 import { parseVariables } from '@/features/variables/parseVariables'
@@ -7,13 +6,11 @@ import { publicProcedure } from '@/helpers/server/trpc'
 import prisma from '@/lib/prisma'
 import { TRPCError } from '@trpc/server'
 import { env, isDefined, omit } from '@typebot.io/lib'
-import { Plan, Prisma } from '@typebot.io/prisma'
+import { Prisma } from '@typebot.io/prisma'
 import {
   ChatReply,
-  chatReplySchema,
   ChatSession,
   ResultInSession,
-  sendMessageInputSchema,
   SessionState,
   StartParams,
   StartTypebot,
@@ -21,6 +18,8 @@ import {
   Typebot,
   Variable,
   VariableWithValue,
+  chatReplySchema,
+  sendMessageInputSchema,
 } from '@typebot.io/schemas'
 import {
   continueBotFlow,
@@ -84,8 +83,13 @@ export const sendMessage = publicProcedure
           },
         })
 
+        const containsSetVariableClientSideAction = clientSideActions?.some(
+          (action) => 'setVariable' in action
+        )
+
         if (
           !input &&
+          !containsSetVariableClientSideAction &&
           session.state.result.answers.length > 0 &&
           session.state.result.id
         )
@@ -120,8 +124,11 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
     isPreview: startParams.isPreview || typeof startParams.typebot !== 'string',
     typebotId: typebot.id,
     prefilledVariables,
-    isNewResultOnRefreshEnabled:
-      typebot.settings.general.isNewResultOnRefreshEnabled ?? false,
+    isRememberUserEnabled:
+      typebot.settings.general.rememberUser?.isEnabled ??
+      (isDefined(typebot.settings.general.isNewResultOnRefreshEnabled)
+        ? !typebot.settings.general.isNewResultOnRefreshEnabled
+        : false),
   })
 
   const startVariables =
@@ -149,42 +156,33 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
     dynamicTheme: parseDynamicThemeInState(typebot.theme),
   }
 
-  const {
-    messages,
-    input,
-    clientSideActions,
-    newSessionState: newInitialState,
-    logs,
-  } = await startBotFlow(initialState, startParams.startGroupId)
+  const { messages, input, clientSideActions, newSessionState, logs } =
+    await startBotFlow(initialState, startParams.startGroupId)
 
-  if (!input)
+  const containsSetVariableClientSideAction = clientSideActions?.some(
+    (action) => 'setVariable' in action
+  )
+
+  if (!input && !containsSetVariableClientSideAction)
     return {
       messages,
       clientSideActions,
       typebot: {
         id: typebot.id,
-        settings: deepParseVariables(newInitialState.typebot.variables)(
+        settings: deepParseVariables(newSessionState.typebot.variables)(
           typebot.settings
         ),
-        theme: deepParseVariables(newInitialState.typebot.variables)(
+        theme: deepParseVariables(newSessionState.typebot.variables)(
           typebot.theme
         ),
       },
-      dynamicTheme: parseDynamicThemeReply(newInitialState),
+      dynamicTheme: parseDynamicThemeReply(newSessionState),
       logs,
     }
 
-  const sessionState: ChatSession['state'] = {
-    ...newInitialState,
-    currentBlock: {
-      groupId: input.groupId,
-      blockId: input.id,
-    },
-  }
-
   const session = (await prisma.chatSession.create({
     data: {
-      state: sessionState,
+      state: newSessionState,
     },
   })) as ChatSession
 
@@ -193,17 +191,17 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
     sessionId: session.id,
     typebot: {
       id: typebot.id,
-      settings: deepParseVariables(newInitialState.typebot.variables)(
+      settings: deepParseVariables(newSessionState.typebot.variables)(
         typebot.settings
       ),
-      theme: deepParseVariables(newInitialState.typebot.variables)(
+      theme: deepParseVariables(newSessionState.typebot.variables)(
         typebot.theme
       ),
     },
     messages,
     input,
     clientSideActions,
-    dynamicTheme: parseDynamicThemeReply(newInitialState),
+    dynamicTheme: parseDynamicThemeReply(newSessionState),
     logs,
   } satisfies ChatReply
 }
@@ -250,9 +248,8 @@ const getTypebot = async (
                   id: true,
                   plan: true,
                   additionalChatsIndex: true,
-                  chatsLimitFirstEmailSentAt: true,
-                  chatsLimitSecondEmailSentAt: true,
                   customChatsLimit: true,
+                  isQuarantined: true,
                 },
               },
             },
@@ -278,28 +275,15 @@ const getTypebot = async (
       message: 'Typebot not found',
     })
 
-  if ('isClosed' in parsedTypebot && parsedTypebot.isClosed)
+  const isQuarantined =
+    typebotQuery &&
+    'typebot' in typebotQuery &&
+    typebotQuery.typebot.workspace.isQuarantined
+
+  if (('isClosed' in parsedTypebot && parsedTypebot.isClosed) || isQuarantined)
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Typebot is closed',
-    })
-
-  const hasReachedLimit =
-    typebotQuery && 'typebot' in typebotQuery
-      ? await checkChatsUsage({
-          typebotId: parsedTypebot.id,
-
-          workspace: {
-            ...typebotQuery.typebot.workspace,
-            plan: typebotQuery.typebot.workspace.plan as Plan,
-          },
-        })
-      : false
-
-  if (hasReachedLimit)
-    throw new TRPCError({
-      code: 'FORBIDDEN',
-      message: 'You have reached your chats limit',
     })
 
   return parsedTypebot
@@ -310,11 +294,11 @@ const getResult = async ({
   isPreview,
   resultId,
   prefilledVariables,
-  isNewResultOnRefreshEnabled,
+  isRememberUserEnabled,
 }: Pick<StartParams, 'isPreview' | 'resultId'> & {
   typebotId: string
   prefilledVariables: Variable[]
-  isNewResultOnRefreshEnabled: boolean
+  isRememberUserEnabled: boolean
 }) => {
   if (isPreview) return
   const select = {
@@ -324,7 +308,7 @@ const getResult = async ({
   } satisfies Prisma.ResultSelect
 
   const existingResult =
-    resultId && !isNewResultOnRefreshEnabled
+    resultId && isRememberUserEnabled
       ? ((await prisma.result.findFirst({
           where: { id: resultId },
           select,

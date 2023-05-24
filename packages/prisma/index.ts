@@ -6,7 +6,7 @@ export const WorkspaceRole: { [x: string]: 'ADMIN' | 'MEMBER' | 'GUEST' } = {
   GUEST: 'GUEST',
 }
 
-export type WorkspaceRole = typeof WorkspaceRole[keyof typeof WorkspaceRole]
+export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
 
 export const Plan: {
   [x: string]:
@@ -27,7 +27,7 @@ export const Plan: {
   UNLIMITED: 'UNLIMITED',
 }
 
-export type Plan = typeof Plan[keyof typeof Plan]
+export type Plan = (typeof Plan)[keyof typeof Plan]
 
 export const GraphNavigation: { [x: string]: 'MOUSE' | 'TRACKPAD' } = {
   MOUSE: 'MOUSE',
@@ -35,7 +35,7 @@ export const GraphNavigation: { [x: string]: 'MOUSE' | 'TRACKPAD' } = {
 }
 
 export type GraphNavigation =
-  typeof GraphNavigation[keyof typeof GraphNavigation]
+  (typeof GraphNavigation)[keyof typeof GraphNavigation]
 
 export const CollaborationType: {
   [x: string]: 'READ' | 'WRITE' | 'FULL_ACCESS'
@@ -46,4 +46,4 @@ export const CollaborationType: {
 }
 
 export type CollaborationType =
-  typeof CollaborationType[keyof typeof CollaborationType]
+  (typeof CollaborationType)[keyof typeof CollaborationType]

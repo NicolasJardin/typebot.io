@@ -10,8 +10,8 @@ import SpreadBubble from '@/features/blocks/bubbles/spread/components/SpreadBubb
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
-import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
+import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
 import {
   AudioBubbleContent,
   BubbleBlockType,
@@ -23,7 +23,6 @@ import {
   RemoveTagOptions,
   SpreadOptions,
   TagOptions,
-  TextBubbleContent,
   TransferOptions,
   TypingEmulation,
   VideoBubbleContent,
@@ -34,20 +33,20 @@ import { FileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/f
 type Props = {
   message: ChatMessage
   typingEmulation: TypingEmulation
-  onTransitionEnd: () => void
+  onTransitionEnd: (offsetTop?: number) => void
 }
 
 export const HostBubble = (props: Props) => {
-  const onTransitionEnd = () => props.onTransitionEnd()
+  const onTransitionEnd = (offsetTop?: number) => {
+    props.onTransitionEnd(offsetTop)
+  }
 
   const getHostBubble = () => {
     switch (props.message.type) {
       case BubbleBlockType.TEXT:
         return (
           <TextBubble
-            content={
-              props.message.content as Omit<TextBubbleContent, 'richText'>
-            }
+            content={props.message.content}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />
@@ -55,7 +54,7 @@ export const HostBubble = (props: Props) => {
       case BubbleBlockType.IMAGE:
         return (
           <ImageBubble
-            url={(props.message.content as ImageBubbleContent).url}
+            content={props.message.content}
             onTransitionEnd={onTransitionEnd}
           />
         )

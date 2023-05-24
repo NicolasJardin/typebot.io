@@ -1,4 +1,5 @@
-import type { ChatReply, Theme } from '@typebot.io/schemas'
+import { ChatReply, Theme } from '@typebot.io/schemas'
+import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums'
 import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { sendMessageQuery } from '@/queries/sendMessageQuery'
 import { ChatChunk } from './ChatChunk'
@@ -43,7 +44,6 @@ type Props = {
 
 export const ConversationContainer = (props: Props) => {
   let chatContainer: HTMLDivElement | undefined
-  let bottomSpacer: HTMLDivElement | undefined
   const [chatChunks, setChatChunks] = createSignal<
     Pick<ChatReply, 'messages' | 'input' | 'clientSideActions'>[]
   >([
@@ -59,6 +59,7 @@ export const ConversationContainer = (props: Props) => {
   const [theme, setTheme] = createSignal(props.initialChatReply.typebot.theme)
   const [isSending, setIsSending] = createSignal(false)
   const [blockedPopupUrl, setBlockedPopupUrl] = createSignal<string>()
+  const [hasError, setHasError] = createSignal(false)
 
   onMount(() => {
     ;(async () => {
@@ -69,7 +70,12 @@ export const ConversationContainer = (props: Props) => {
         )
         for (const action of actionsBeforeFirstBubble) {
           const response = await executeClientSideAction(action)
-          if (response) setBlockedPopupUrl(response.blockedPopupUrl)
+          if (response && 'replyToSend' in response) {
+            sendMessage(response.replyToSend)
+            return
+          }
+          if (response && 'blockedPopupUrl' in response)
+            setBlockedPopupUrl(response.blockedPopupUrl)
         }
       }
     })()
@@ -82,19 +88,37 @@ export const ConversationContainer = (props: Props) => {
   })
 
   const sendMessage = async (message: string | undefined) => {
-    const currentBlockId = [...chatChunks()].pop()?.input?.id
-    if (currentBlockId && props.onAnswer && message)
-      props.onAnswer({ message, blockId: currentBlockId })
+    setHasError(false)
+    const currentInputBlock = [...chatChunks()].pop()?.input
+    if (currentInputBlock?.id && props.onAnswer && message)
+      props.onAnswer({ message, blockId: currentInputBlock.id })
+    if (currentInputBlock?.type === InputBlockType.FILE)
+      props.onNewLogs?.([
+        {
+          description: 'Files are not uploaded in preview mode',
+          status: 'info',
+        },
+      ])
     const longRequest = setTimeout(() => {
       setIsSending(true)
     }, 1000)
-    const data = await sendMessageQuery({
+    const { data, error } = await sendMessageQuery({
       apiHost: props.context.apiHost,
       sessionId: props.initialChatReply.sessionId,
       message,
     })
     clearTimeout(longRequest)
     setIsSending(false)
+    if (error) {
+      setHasError(true)
+      props.onNewLogs?.([
+        {
+          description: 'Failed to send the reply',
+          details: error,
+          status: 'error',
+        },
+      ])
+    }
     if (!data) return
     if (data.logs) props.onNewLogs?.(data.logs)
     if (data.dynamicTheme) setDynamicTheme(data.dynamicTheme)
@@ -110,7 +134,12 @@ export const ConversationContainer = (props: Props) => {
       )
       for (const action of actionsBeforeFirstBubble) {
         const response = await executeClientSideAction(action)
-        if (response) setBlockedPopupUrl(response.blockedPopupUrl)
+        if (response && 'replyToSend' in response) {
+          sendMessage(response.replyToSend)
+          return
+        }
+        if (response && 'blockedPopupUrl' in response)
+          setBlockedPopupUrl(response.blockedPopupUrl)
       }
     }
     setChatChunks((displayedChunks) => [
@@ -123,10 +152,9 @@ export const ConversationContainer = (props: Props) => {
     ])
   }
 
-  const autoScrollToBottom = () => {
-    if (!bottomSpacer) return
+  const autoScrollToBottom = (offsetTop?: number) => {
     setTimeout(() => {
-      chatContainer?.scrollTo(0, chatContainer.scrollHeight)
+      chatContainer?.scrollTo(0, offsetTop ?? chatContainer.scrollHeight)
     }, 50)
   }
 
@@ -147,7 +175,12 @@ export const ConversationContainer = (props: Props) => {
       )
       for (const action of actionsToExecute) {
         const response = await executeClientSideAction(action)
-        if (response) setBlockedPopupUrl(response.blockedPopupUrl)
+        if (response && 'replyToSend' in response) {
+          sendMessage(response.replyToSend)
+          return
+        }
+        if (response && 'blockedPopupUrl' in response)
+          setBlockedPopupUrl(response.blockedPopupUrl)
       }
     }
   }
@@ -157,7 +190,7 @@ export const ConversationContainer = (props: Props) => {
   return (
     <div
       ref={chatContainer}
-      class="overflow-y-scroll w-full min-h-full rounded px-3 pt-10 relative scrollable-container typebot-chat-view scroll-smooth"
+      class="flex flex-col overflow-y-scroll w-full min-h-full px-3 pt-10 relative scrollable-container typebot-chat-view scroll-smooth gap-2"
     >
       <For each={chatChunks()}>
         {(chatChunk, index) => (
@@ -174,6 +207,8 @@ export const ConversationContainer = (props: Props) => {
             onScrollToBottom={autoScrollToBottom}
             onSkip={handleSkip}
             context={props.context}
+            hasError={hasError() && index() === chatChunks().length - 1}
+            hideAvatar={!chatChunk.input && index() < chatChunks().length - 1}
           />
         )}
       </For>
@@ -190,14 +225,11 @@ export const ConversationContainer = (props: Props) => {
           </div>
         )}
       </Show>
-      <BottomSpacer ref={bottomSpacer} />
+      <BottomSpacer />
     </div>
   )
 }
 
-type BottomSpacerProps = {
-  ref: HTMLDivElement | undefined
-}
-const BottomSpacer = (props: BottomSpacerProps) => {
-  return <div ref={props.ref} class="w-full h-32" />
+const BottomSpacer = () => {
+  return <div class="w-full h-32 flex-shrink-0" />
 }

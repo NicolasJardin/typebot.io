@@ -19,7 +19,7 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
     case BubbleBlockType.IMAGE:
       return <Text>Imagem</Text>
     case BubbleBlockType.VIDEO:
-      return <Text>Video</Text>
+      return <Text fontSize="sm">Video</Text>
     case BubbleBlockType.EMBED:
       return (
         <Tooltip label="Incorpore um pdf, um iframe, um site...">
@@ -35,9 +35,9 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
     case InputBlockType.NUMBER:
       return <Text>Número</Text>
     case InputBlockType.EMAIL:
-      return <Text>Email</Text>
+      return <Text fontSize="sm">Email</Text>
     case InputBlockType.URL:
-      return <Text>Website</Text>
+      return <Text fontSize="sm">Website</Text>
     case InputBlockType.DATE:
       return <Text>Data</Text>
     case InputBlockType.PHONE:
@@ -94,20 +94,27 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
           <Text>Análise</Text>
         </Tooltip>
       )
-    case IntegrationBlockType.WEBHOOK:
-      return <Text>Webhook</Text>
-    case IntegrationBlockType.ZAPIER:
-      return <Text>Zapier</Text>
-    case IntegrationBlockType.MAKE_COM:
-      return <Text>Make.com</Text>
-    case IntegrationBlockType.PABBLY_CONNECT:
-      return <Text>Pabbly</Text>
-    case IntegrationBlockType.EMAIL:
-      return <Text>Email</Text>
-    case IntegrationBlockType.CHATWOOT:
-      return <Text>Chatwoot</Text>
-    case IntegrationBlockType.OPEN_AI:
-      return <Text>OpenAI</Text>
+
+    case InputBlockType.PICTURE_CHOICE:
+      return <Text fontSize="sm">Escolher foto</Text>
+
+    case LogicBlockType.AB_TEST:
+      return <Text fontSize="sm">AB Test</Text>
+
+    // case IntegrationBlockType.WEBHOOK:
+    //   return <Text fontSize="sm">Webhook</Text>
+    // case IntegrationBlockType.ZAPIER:
+    //   return <Text fontSize="sm">Zapier</Text>
+    // case IntegrationBlockType.MAKE_COM:
+    //   return <Text fontSize="sm">Make.com</Text>
+    // case IntegrationBlockType.PABBLY_CONNECT:
+    //   return <Text fontSize="sm">Pabbly</Text>
+    // case IntegrationBlockType.EMAIL:
+    //   return <Text fontSize="sm">Email</Text>
+    // case IntegrationBlockType.CHATWOOT:
+    //   return <Text fontSize="sm">Chatwoot</Text>
+    // case IntegrationBlockType.OPEN_AI:
+    //   return <Text fontSize="sm">OpenAI</Text>
   }
 
   return <Text>Aguardar</Text>

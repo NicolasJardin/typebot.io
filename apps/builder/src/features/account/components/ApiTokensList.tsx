@@ -1,30 +1,30 @@
+import { ConfirmModal } from '@/components/ConfirmModal'
+import { parseTimeSince } from '@/helpers/parseTimeSince'
+import { useToast } from '@/hooks/useToast'
 import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
   Button,
-  Text,
-  Heading,
   Checkbox,
+  Flex,
+  Heading,
   Skeleton,
   Stack,
-  Flex,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from '@chakra-ui/react'
-import { ConfirmModal } from '@/components/ConfirmModal'
-import { useToast } from '@/hooks/useToast'
-import { User } from '@typebot.io/prisma'
-import React, { useState } from 'react'
 import { byId, isDefined } from '@typebot.io/lib'
-import { CreateTokenModal } from './CreateTokenModal'
+import { User } from '@typebot.io/prisma'
+import { useState } from 'react'
 import { useApiTokens } from '../hooks/useApiTokens'
-import { ApiTokenFromServer } from '../types'
-import { parseTimeSince } from '@/helpers/parseTimeSince'
 import { deleteApiTokenQuery } from '../queries/deleteApiTokenQuery'
+import { ApiTokenFromServer } from '../types'
+import { CreateTokenModal } from './CreateTokenModal'
 
 type Props = { user: User }
 

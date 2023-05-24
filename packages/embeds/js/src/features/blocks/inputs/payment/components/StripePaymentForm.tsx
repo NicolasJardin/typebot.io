@@ -61,6 +61,11 @@ export const StripePaymentForm = (props: Props) => {
             name: props.options.additionalInformation?.name,
             email: props.options.additionalInformation?.email,
             phone: props.options.additionalInformation?.phoneNumber,
+            address: {
+              ...props.options.additionalInformation?.address,
+              postal_code:
+                props.options.additionalInformation?.address?.postalCode,
+            },
           },
         },
       },
@@ -77,7 +82,7 @@ export const StripePaymentForm = (props: Props) => {
     <form
       id="payment-form"
       onSubmit={handleSubmit}
-      class="flex flex-col rounded-lg p-4 typebot-input w-full items-center"
+      class="flex flex-col p-4 typebot-input w-full items-center"
     >
       <slot name={slotName} ref={paymentElementSlot} />
       <Show when={isMounted()}>

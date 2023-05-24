@@ -89,6 +89,8 @@ model Workspace {
   customChatsLimit              Int?
   customStorageLimit            Int?
   customSeatsLimit              Int?
+  isQuarantined                 Boolean               @default(false)
+  themeTemplates                ThemeTemplate[]
 }
 
 model MemberInWorkspace {
@@ -164,6 +166,7 @@ model Typebot {
   variables               Json
   edges                   Json
   theme                   Json
+  selectedThemeTemplateId String?
   settings                Json
   publicId                String?                   @unique
   customDomain            String?                   @unique
@@ -294,6 +297,10 @@ model ClaimableCustomPlan {
   chatsLimit   Int
   storageLimit Int
   seatsLimit   Int
+  isYearly     Boolean   @default(false)
+  companyName  String?
+  vatType      String?
+  vatValue     String?
 }
 
 model ChatSession {
@@ -301,6 +308,16 @@ model ChatSession {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   state     Json
+}
+
+model ThemeTemplate {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  name        String
+  theme       Json
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
 }
 
 enum WorkspaceRole {

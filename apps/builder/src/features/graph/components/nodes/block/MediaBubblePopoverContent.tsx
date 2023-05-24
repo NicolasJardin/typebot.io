@@ -1,7 +1,7 @@
-import { ImageUploadContent } from '@/components/ImageUploadContent'
 import { AudioBubbleForm } from '@/features/blocks/bubbles/audio/components/AudioBubbleForm'
 import { EmbedUploadContent } from '@/features/blocks/bubbles/embed/components/EmbedUploadContent'
 import FileBubbleForm from '@/features/blocks/bubbles/file/components/FileBubbleForm'
+import { ImageBubbleSettings } from '@/features/blocks/bubbles/image/components/ImageBubbleSettings'
 import { VideoUploadContent } from '@/features/blocks/bubbles/video/components/VideoUploadContent'
 import {
   PopoverArrow,
@@ -47,15 +47,13 @@ export const MediaBubbleContent = ({
   block,
   onContentChange,
 }: Props) => {
-  const handleImageUrlChange = (url: string) => onContentChange({ url })
-
   switch (block.type) {
     case BubbleBlockType.IMAGE: {
       return (
-        <ImageUploadContent
-          filePath={`typebots/${typebotId}/blocks/${block.id}`}
-          defaultUrl={block.content?.url}
-          onSubmit={handleImageUrlChange}
+        <ImageBubbleSettings
+          typebotId={typebotId}
+          block={block}
+          onContentChange={onContentChange}
         />
       )
     }

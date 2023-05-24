@@ -1,3 +1,9 @@
+import {
+  LargeRadiusIcon,
+  MediumRadiusIcon,
+  NoRadiusIcon,
+} from '@/components/icons'
+import { RadioButtons } from '@/components/inputs/RadioButtons'
 import { Heading, Stack } from '@chakra-ui/react'
 import {
   AvatarProps,
@@ -59,6 +65,7 @@ export const ChatThemeSettings = ({
           onHostBubblesChange={handleHostBubblesChange}
         />
       </Stack>
+
       <Stack borderWidth={1} rounded="md" p="4" spacing={4}>
         <Heading fontSize="lg">User bubbles</Heading>
         <GuestBubbles
@@ -78,6 +85,29 @@ export const ChatThemeSettings = ({
         <InputsTheme
           inputs={chatTheme.inputs}
           onInputsChange={handleInputsChange}
+        />
+      </Stack>
+      <Stack borderWidth={1} rounded="md" p="4" spacing={4}>
+        <Heading fontSize="lg">Corners roundness</Heading>
+        <RadioButtons
+          options={[
+            {
+              label: <NoRadiusIcon />,
+              value: 'none',
+            },
+            {
+              label: <MediumRadiusIcon />,
+              value: 'medium',
+            },
+            {
+              label: <LargeRadiusIcon />,
+              value: 'large',
+            },
+          ]}
+          value={chatTheme.roundness ?? 'medium'}
+          onSelect={(roundness) =>
+            onChatThemeChange({ ...chatTheme, roundness })
+          }
         />
       </Stack>
     </Stack>

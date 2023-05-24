@@ -14,11 +14,13 @@ export const deepParseVariables =
     Object.keys(object).reduce<T>((newObj, key) => {
       const currentValue = object[key]
 
-      if (typeof currentValue === 'string')
+      if (typeof currentValue === 'string') {
+        const parsedVariable = parseVariables(variables, options)(currentValue)
         return {
           ...newObj,
-          [key]: parseVariables(variables, options)(currentValue),
+          [key]: parsedVariable,
         }
+      }
 
       if (currentValue instanceof Object && currentValue.constructor === Object)
         return {

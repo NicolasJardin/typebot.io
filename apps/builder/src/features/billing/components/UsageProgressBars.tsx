@@ -13,26 +13,33 @@ import { Plan, Workspace } from '@typebot.io/prisma'
 import React from 'react'
 import { parseNumberWithCommas } from '@typebot.io/lib'
 import { getChatsLimit, getStorageLimit } from '@typebot.io/lib/pricing'
-import { trpc } from '@/lib/trpc'
+import { defaultQueryOptions, trpc } from '@/lib/trpc'
 import { storageToReadable } from '../helpers/storageToReadable'
+import { useScopedI18n } from '@/locales'
 
 type Props = {
   workspace: Workspace
 }
 
 export const UsageProgressBars = ({ workspace }: Props) => {
-  const { data, isLoading } = trpc.billing.getUsage.useQuery({
-    workspaceId: workspace.id,
-  })
+  const scopedT = useScopedI18n('billing.usage')
+  const { data, isLoading } = trpc.billing.getUsage.useQuery(
+    {
+      workspaceId: workspace.id,
+    },
+    defaultQueryOptions
+  )
   const totalChatsUsed = data?.totalChatsUsed ?? 0
   const totalStorageUsed = data?.totalStorageUsed ?? 0
 
   const workspaceChatsLimit = getChatsLimit(workspace)
   const workspaceStorageLimit = getStorageLimit(workspace)
   const workspaceStorageLimitGigabites =
+    //@ts-ignore
     workspaceStorageLimit * 1024 * 1024 * 1024
 
   const chatsPercentage = Math.round(
+    //@ts-ignore
     (totalChatsUsed / workspaceChatsLimit) * 100
   )
   const storagePercentage = Math.round(
@@ -41,7 +48,7 @@ export const UsageProgressBars = ({ workspace }: Props) => {
 
   return (
     <Stack spacing={6}>
-      <Heading fontSize="3xl">Usage</Heading>
+      <Heading fontSize="3xl">{scopedT('heading')}</Heading>
       <Stack spacing={3}>
         <Flex justifyContent="space-between">
           <HStack>
@@ -87,7 +94,8 @@ export const UsageProgressBars = ({ workspace }: Props) => {
               /{' '}
               {workspaceChatsLimit === -1
                 ? 'Ilimitado'
-                : parseNumberWithCommas(workspaceChatsLimit)}
+                : //@ts-ignore
+                  parseNumberWithCommas(workspaceChatsLimit)}
             </Text>
           </HStack>
         </Flex>
@@ -98,6 +106,7 @@ export const UsageProgressBars = ({ workspace }: Props) => {
           rounded="full"
           hasStripe
           isIndeterminate={isLoading}
+          //@ts-ignore
           colorScheme={totalChatsUsed >= workspaceChatsLimit ? 'red' : 'blue'}
         />
       </Stack>

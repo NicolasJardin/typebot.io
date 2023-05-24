@@ -5,26 +5,68 @@ import { Plan } from '@typebot.io/prisma'
 
 const infinity = -1
 
+export const priceIds = {
+  [Plan.STARTER]: {
+    base: {
+      monthly: process.env.STRIPE_STARTER_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_STARTER_YEARLY_PRICE_ID,
+    },
+    chats: {
+      monthly: process.env.STRIPE_STARTER_CHATS_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_STARTER_CHATS_YEARLY_PRICE_ID,
+    },
+    storage: {
+      monthly: process.env.STRIPE_STARTER_STORAGE_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_STARTER_STORAGE_YEARLY_PRICE_ID,
+    },
+  },
+  [Plan.PRO]: {
+    base: {
+      monthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
+    },
+    chats: {
+      monthly: process.env.STRIPE_PRO_CHATS_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_PRO_CHATS_YEARLY_PRICE_ID,
+    },
+    storage: {
+      monthly: process.env.STRIPE_PRO_STORAGE_MONTHLY_PRICE_ID,
+      yearly: process.env.STRIPE_PRO_STORAGE_YEARLY_PRICE_ID,
+    },
+  },
+}
+
 export const prices = {
   [Plan.STARTER]: 39,
   [Plan.PRO]: 89,
 } as const
 
 export const chatsLimit = {
-  [Plan.FREE]: { totalIncluded: 300 },
+  [Plan.FREE]: { totalIncluded: 200 },
   [Plan.STARTER]: {
-    totalIncluded: 2000,
-    increaseStep: {
-      amount: 500,
-      price: 10,
-    },
+    graduatedPrice: [
+      { totalIncluded: 2000, price: 0 },
+      {
+        totalIncluded: 2500,
+        price: 10,
+      },
+      {
+        totalIncluded: 3000,
+        price: 20,
+      },
+      {
+        totalIncluded: 3500,
+        price: 30,
+      },
+    ],
   },
   [Plan.PRO]: {
-    totalIncluded: 10000,
-    increaseStep: {
-      amount: 1000,
-      price: 10,
-    },
+    graduatedPrice: [
+      { totalIncluded: 10000, price: 0 },
+      { totalIncluded: 15000, price: 50 },
+      { totalIncluded: 25000, price: 150 },
+      { totalIncluded: 50000, price: 400 },
+    ],
   },
   [Plan.CUSTOM]: {
     totalIncluded: 2000,
@@ -41,18 +83,38 @@ export const chatsLimit = {
 export const storageLimit = {
   [Plan.FREE]: { totalIncluded: 0 },
   [Plan.STARTER]: {
-    totalIncluded: 2,
-    increaseStep: {
-      amount: 1,
-      price: 2,
-    },
+    graduatedPrice: [
+      { totalIncluded: 2, price: 0 },
+      {
+        totalIncluded: 3,
+        price: 2,
+      },
+      {
+        totalIncluded: 4,
+        price: 4,
+      },
+      {
+        totalIncluded: 5,
+        price: 6,
+      },
+    ],
   },
   [Plan.PRO]: {
-    totalIncluded: 10,
-    increaseStep: {
-      amount: 1,
-      price: 2,
-    },
+    graduatedPrice: [
+      { totalIncluded: 10, price: 0 },
+      {
+        totalIncluded: 15,
+        price: 8,
+      },
+      {
+        totalIncluded: 25,
+        price: 24,
+      },
+      {
+        totalIncluded: 40,
+        price: 49,
+      },
+    ],
   },
   [Plan.CUSTOM]: {
     totalIncluded: 2,
@@ -88,13 +150,11 @@ export const getChatsLimit = ({
   customChatsLimit,
 }: Pick<Workspace, 'additionalChatsIndex' | 'plan' | 'customChatsLimit'>) => {
   if (customChatsLimit) return customChatsLimit
-  const { totalIncluded } = chatsLimit[plan]
-  const increaseStep =
+  const totalIncluded =
     plan === Plan.STARTER || plan === Plan.PRO
-      ? chatsLimit[plan].increaseStep
-      : { amount: 0 }
-  if (totalIncluded === infinity) return infinity
-  return totalIncluded + increaseStep.amount * additionalChatsIndex
+      ? chatsLimit[plan].graduatedPrice[additionalChatsIndex].totalIncluded
+      : chatsLimit[plan].totalIncluded
+  return totalIncluded
 }
 
 export const getStorageLimit = ({
@@ -106,12 +166,11 @@ export const getStorageLimit = ({
   'additionalStorageIndex' | 'plan' | 'customStorageLimit'
 >) => {
   if (customStorageLimit) return customStorageLimit
-  const { totalIncluded } = storageLimit[plan]
-  const increaseStep =
+  const totalIncluded =
     plan === Plan.STARTER || plan === Plan.PRO
-      ? storageLimit[plan].increaseStep
-      : { amount: 0 }
-  return totalIncluded + increaseStep.amount * additionalStorageIndex
+      ? storageLimit[plan].graduatedPrice[additionalStorageIndex].totalIncluded
+      : storageLimit[plan].totalIncluded
+  return totalIncluded
 }
 
 export const getSeatsLimit = ({
@@ -141,20 +200,15 @@ export const isSeatsLimitReached = ({
 export const computePrice = (
   plan: Plan,
   selectedTotalChatsIndex: number,
-  selectedTotalStorageIndex: number
+  selectedTotalStorageIndex: number,
+  frequency: 'monthly' | 'yearly'
 ) => {
   if (plan !== Plan.STARTER && plan !== Plan.PRO) return
-  const {
-    increaseStep: { price: chatsPrice },
-  } = chatsLimit[plan]
-  const {
-    increaseStep: { price: storagePrice },
-  } = storageLimit[plan]
-  return (
+  const price =
     prices[plan] +
-    selectedTotalChatsIndex * chatsPrice +
-    selectedTotalStorageIndex * storagePrice
-  )
+    chatsLimit[plan].graduatedPrice[selectedTotalChatsIndex].price +
+    storageLimit[plan].graduatedPrice[selectedTotalStorageIndex].price
+  return frequency === 'monthly' ? price : price - price * 0.16
 }
 
 const europeanUnionCountryCodes = [
@@ -204,13 +258,15 @@ const europeanUnionExclusiveLanguageCodes = [
   'bg',
 ]
 
-export const guessIfUserIsEuropean = () =>
-  window.navigator.languages.some((language) => {
+export const guessIfUserIsEuropean = () => {
+  if (typeof window === 'undefined') return false
+  return window.navigator.languages.some((language) => {
     const [languageCode, countryCode] = language.split('-')
     return countryCode
       ? europeanUnionCountryCodes.includes(countryCode)
       : europeanUnionExclusiveLanguageCodes.includes(languageCode)
   })
+}
 
 export const formatPrice = (price: number, currency?: 'eur' | 'usd') => {
   const isEuropean = guessIfUserIsEuropean()

@@ -19,15 +19,12 @@ export const DateForm = (props: Props) => {
     <div class="flex flex-col">
       <div class="flex items-center">
         <form
-          class={'flex justify-between rounded-lg typebot-input pr-2 items-end'}
+          class={'flex justify-between typebot-input pr-2 items-end'}
           onSubmit={(e) => {
             if (inputValues().from === '' && inputValues().to === '') return
             e.preventDefault()
             props.onSubmit({
-              value: `${inputValues().from}${
-                props.options?.isRange ? ` to ${inputValues().to}` : ''
-              }`,
-              label: parseReadableDate({
+              value: parseReadableDate({
                 ...inputValues(),
                 hasTime: props.options?.hasTime,
                 isRange: props.options?.isRange,
@@ -39,11 +36,11 @@ export const DateForm = (props: Props) => {
             <div
               class={
                 'flex items-center p-4 ' +
-                (props.options?.isRange ? 'pb-0' : '')
+                (props.options?.isRange ? 'pb-0 gap-2' : '')
               }
             >
               {props.options?.isRange && (
-                <p class="font-semibold mr-2">
+                <p class="font-semibold">
                   {props.options.labels?.from ?? 'From:'}
                 </p>
               )}

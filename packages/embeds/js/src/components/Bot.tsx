@@ -7,9 +7,9 @@ import { setIsMobile } from '@/utils/isMobileSignal'
 import { BotContext, InitialChatReply, OutgoingLog } from '@/types'
 import { ErrorMessage } from './ErrorMessage'
 import {
-  getExistingResultIdFromSession,
-  setResultInSession,
-} from '@/utils/sessionStorage'
+  getExistingResultIdFromStorage,
+  setResultInStorage,
+} from '@/utils/storage'
 import { setCssVariablesValue } from '@/utils/setCssVariablesValue'
 import immutableCss from '../assets/immutable.css'
 
@@ -52,7 +52,7 @@ export const Bot = (props: BotProps & { class?: string }) => {
       isPreview: props.isPreview ?? false,
       resultId: isNotEmpty(props.resultId)
         ? props.resultId
-        : getExistingResultIdFromSession(typebotIdFromProps),
+        : getExistingResultIdFromStorage(typebotIdFromProps),
       startGroupId: props.startGroupId,
       prefilledVariables: {
         ...prefilledVariables,
@@ -60,17 +60,26 @@ export const Bot = (props: BotProps & { class?: string }) => {
       },
     })
     if (error && 'code' in error && typeof error.code === 'string') {
+      if (typeof props.typebot !== 'string' || (props.isPreview ?? false)) {
+        return setError(
+          new Error('An error occurred while loading the bot.', {
+            cause: error.message,
+          })
+        )
+      }
       if (['BAD_REQUEST', 'FORBIDDEN'].includes(error.code))
-        setError(new Error('This bot is now closed.'))
+        return setError(new Error('This bot is now closed.'))
       if (error.code === 'NOT_FOUND')
-        setError(new Error("The bot you're looking for doesn't exist."))
-      return
+        return setError(new Error("The bot you're looking for doesn't exist."))
     }
 
     if (!data) return setError(new Error("Error! Couldn't initiate the chat."))
 
     if (data.resultId && typebotIdFromProps)
-      setResultInSession(typebotIdFromProps, data.resultId)
+      setResultInStorage(data.typebot.settings.general.rememberUser?.storage)(
+        typebotIdFromProps,
+        data.resultId
+      )
     setInitialChatReply(data)
     setCustomCss(data.typebot.theme.customCss ?? '')
 
@@ -159,21 +168,31 @@ const BotContent = (props: BotContentProps) => {
   })
 
   const injectCustomFont = () => {
+    const existingFont = document.getElementById('bot-font')
+    if (
+      existingFont
+        ?.getAttribute('href')
+        ?.includes(
+          props.initialChatReply.typebot?.theme?.general?.font ?? 'Open Sans'
+        )
+    )
+      return
     const font = document.createElement('link')
     font.href = `https://fonts.googleapis.com/css2?family=${
       props.initialChatReply.typebot?.theme?.general?.font ?? 'Open Sans'
     }:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');')`
     font.rel = 'stylesheet'
+    font.id = 'bot-font'
     document.head.appendChild(font)
   }
 
   onMount(() => {
-    injectCustomFont()
     if (!botContainer) return
     resizeObserver.observe(botContainer)
   })
 
   createEffect(() => {
+    injectCustomFont()
     if (!botContainer) return
     setCssVariablesValue(props.initialChatReply.typebot.theme, botContainer)
   })
@@ -187,7 +206,7 @@ const BotContent = (props: BotContentProps) => {
     <div
       ref={botContainer}
       class={
-        'relative flex w-full h-full text-base overflow-hidden bg-cover flex-col items-center ' +
+        'relative flex w-full h-full text-base overflow-hidden bg-cover bg-center flex-col items-center typebot-container ' +
         props.class
       }
       style={{

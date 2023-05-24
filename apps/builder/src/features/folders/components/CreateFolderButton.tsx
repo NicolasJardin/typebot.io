@@ -2,14 +2,15 @@ import { FolderPlusIcon } from '@/components/icons'
 import { ChangePlanModal } from '@/features/billing/components/ChangePlanModal'
 import { LockTag } from '@/features/billing/components/LockTag'
 import { isFreePlan } from '@/features/billing/helpers/isFreePlan'
-import { LimitReached } from '@/features/billing/types'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+import { useI18n } from '@/locales'
 import { Button, HStack, Text, useDisclosure } from '@chakra-ui/react'
 import { Plan } from '@typebot.io/prisma'
 
 type Props = { isLoading: boolean; onClick: () => void }
 
 export const CreateFolderButton = ({ isLoading, onClick }: Props) => {
+  const t = useI18n()
   const { workspace } = useWorkspace()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -30,7 +31,7 @@ export const CreateFolderButton = ({ isLoading, onClick }: Props) => {
       <ChangePlanModal
         isOpen={isOpen}
         onClose={onClose}
-        type={LimitReached.FOLDER}
+        type={t('billing.limitMessage.folder')}
       />
     </Button>
   )

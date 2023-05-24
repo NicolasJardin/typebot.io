@@ -11,24 +11,21 @@ import { deletePublishedTypebotQuery } from '@/features/publish/queries/deletePu
 import { updatePublishedTypebotQuery } from '@/features/publish/queries/updatePublishedTypebotQuery'
 import { preventUserFromRefreshing } from '@/helpers/preventUserFromRefreshing'
 import { useAutoSave } from '@/hooks/useAutoSave'
-import { useLinkedTypebots } from '@/hooks/useLinkedTypebots'
 import { useToast } from '@/hooks/useToast'
 import { useTypebotQuery } from '@/hooks/useTypebotQuery'
+import { trpc } from '@/lib/trpc'
 import { isDefined, omit } from '@typebot.io/lib'
 import {
   LogicBlockType,
   PublicTypebot,
-  ResultsTablePreferences,
-  Settings,
-  Theme,
   Typebot,
   Webhook,
 } from '@typebot.io/schemas'
 import { dequal } from 'dequal'
 import { Router, useRouter } from 'next/router'
 import {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -37,24 +34,28 @@ import {
 } from 'react'
 import { useUndo } from '../hooks/useUndo'
 import { updateTypebotQuery } from '../queries/updateTypebotQuery'
-import { blocksAction, BlocksActions } from './typebotActions/blocks'
-import { edgesAction, EdgesActions } from './typebotActions/edges'
+import { BlocksActions, blocksAction } from './typebotActions/blocks'
+import { EdgesActions, edgesAction } from './typebotActions/edges'
 import { GroupsActions, groupsActions } from './typebotActions/groups'
-import { itemsAction, ItemsActions } from './typebotActions/items'
-import { variablesAction, VariablesActions } from './typebotActions/variables'
+import { ItemsActions, itemsAction } from './typebotActions/items'
+import { VariablesActions, variablesAction } from './typebotActions/variables'
 
 const autoSaveTimeout = 10000
 
-type UpdateTypebotPayload = Partial<{
-  theme: Theme
-  settings: Settings
-  publicId: string
-  name: string
-  icon: string
-  customDomain: string | null
-  resultsTablePreferences: ResultsTablePreferences
-  isClosed: boolean
-}>
+type UpdateTypebotPayload = Partial<
+  Pick<
+    Typebot,
+    | 'theme'
+    | 'selectedThemeTemplateId'
+    | 'settings'
+    | 'publicId'
+    | 'name'
+    | 'icon'
+    | 'customDomain'
+    | 'resultsTablePreferences'
+    | 'isClosed'
+  >
+>
 
 export type SetTypebot = (
   newPresent: Typebot | ((current: Typebot) => Typebot)
@@ -64,7 +65,7 @@ const typebotContext = createContext<
   {
     typebot?: Typebot
     publishedTypebot?: PublicTypebot
-    linkedTypebots?: Typebot[]
+    linkedTypebots?: Pick<Typebot, 'id' | 'groups' | 'variables' | 'name'>[]
     webhooks: Webhook[]
     isReadOnly?: boolean
     isPublished: boolean
@@ -131,22 +132,30 @@ export const TypebotProvider = ({
         []
       ) ?? []
 
-  const { typebots: linkedTypebots } = useLinkedTypebots({
-    workspaceId: localTypebot?.workspaceId ?? undefined,
-    typebotId,
-    typebotIds: linkedTypebotIds,
-    onError: (error) =>
-      showToast({
-        title: 'Erro ao buscar typebots conectados',
-        description: error.message,
-      }),
-  })
+  const { data: linkedTypebotsData } = trpc.getLinkedTypebots.useQuery(
+    {
+      workspaceId: localTypebot?.workspaceId as string,
+      typebotIds: linkedTypebotIds.join(','),
+    },
+    {
+      enabled:
+        isDefined(localTypebot?.workspaceId) && linkedTypebotIds.length > 0,
+      onError: (error) =>
+        showToast({
+          title: 'Erro ao buscar typebots conectados',
+          description: error.message,
+        }),
+    }
+  )
 
   useEffect(() => {
     if (!typebot && isDefined(localTypebot)) setLocalTypebot(undefined)
     if (isFetchingTypebot) return
     if (!typebot) {
-      showToast({ status: 'info', description: "Couldn't find typebot" })
+      showToast({
+        status: 'info',
+        description: 'Não foi possível encontrar o fluxo',
+      })
       push('/typebots')
       return
     }
@@ -385,7 +394,7 @@ export const TypebotProvider = ({
       value={{
         typebot: localTypebot,
         publishedTypebot,
-        linkedTypebots,
+        linkedTypebots: linkedTypebotsData?.typebots ?? [],
         webhooks: webhooks ?? [],
         isReadOnly,
         isSavingLoading,

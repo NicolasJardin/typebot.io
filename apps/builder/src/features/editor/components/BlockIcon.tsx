@@ -10,6 +10,7 @@ import { FileInputIcon } from '@/features/blocks/inputs/fileUpload/components/Fi
 import { NumberInputIcon } from '@/features/blocks/inputs/number/components/NumberInputIcon'
 import { PaymentInputIcon } from '@/features/blocks/inputs/payment/components/PaymentInputIcon'
 import { PhoneInputIcon } from '@/features/blocks/inputs/phone/components/PhoneInputIcon'
+import { PictureChoiceIcon } from '@/features/blocks/inputs/pictureChoice/components/PictureChoiceIcon'
 import { RatingInputIcon } from '@/features/blocks/inputs/rating/components/RatingInputIcon'
 import { TextInputIcon } from '@/features/blocks/inputs/textInput/components/TextInputIcon'
 import { UrlInputIcon } from '@/features/blocks/inputs/url/components/UrlInputIcon'
@@ -20,6 +21,7 @@ import { MakeComLogo } from '@/features/blocks/integrations/makeCom/components/M
 import { OpenAILogo } from '@/features/blocks/integrations/openai/components/OpenAILogo'
 import { PabblyConnectLogo } from '@/features/blocks/integrations/pabbly/components/PabblyConnectLogo'
 import { ZapierLogo } from '@/features/blocks/integrations/zapier/components/ZapierLogo'
+import { AbTestIcon } from '@/features/blocks/logic/abTest/components/AbTestIcon'
 import { ConditionIcon } from '@/features/blocks/logic/condition/components/ConditionIcon'
 import { JumpIcon } from '@/features/blocks/logic/jump/components/JumpIcon'
 import { RedirectIcon } from '@/features/blocks/logic/redirect/components/RedirectIcon'
@@ -51,6 +53,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
   const blue = useColorModeValue('blue.500', 'blue.300')
   const orange = useColorModeValue('orange.500', 'orange.300')
   const purple = useColorModeValue('purple.500', 'purple.300')
+  const openAIColor = useColorModeValue('black', 'white')
+
   switch (type) {
     case BubbleBlockType.TEXT:
       return <TextBubbleIcon color={blue} {...props} />
@@ -80,6 +84,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <PhoneInputIcon color={orange} {...props} />
     case InputBlockType.CHOICE:
       return <ButtonsInputIcon color={orange} {...props} />
+    case InputBlockType.PICTURE_CHOICE:
+      return <PictureChoiceIcon color={orange} {...props} />
     case InputBlockType.PAYMENT:
       return <PaymentInputIcon color={orange} {...props} />
     case InputBlockType.RATING:
@@ -112,6 +118,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <TypebotLinkIcon color={purple} {...props} />
     case LogicBlockType.END:
       return <Icon as={BsDoorClosed} color={purple} {...props} />
+    case LogicBlockType.AB_TEST:
+      return <AbTestIcon color={purple} {...props} />
     case IntegrationBlockType.GOOGLE_SHEETS:
       return <GoogleSheetsLogo {...props} />
     case IntegrationBlockType.GOOGLE_ANALYTICS:
@@ -129,7 +137,7 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
     case IntegrationBlockType.CHATWOOT:
       return <ChatwootLogo {...props} />
     case IntegrationBlockType.OPEN_AI:
-      return <OpenAILogo {...props} />
+      return <OpenAILogo fill={openAIColor} {...props} />
     case 'start':
       return <FlagIcon {...props} />
   }

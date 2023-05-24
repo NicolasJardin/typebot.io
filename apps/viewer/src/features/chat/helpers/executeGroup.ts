@@ -1,3 +1,15 @@
+import { injectVariableValuesInButtonsInputBlock } from '@/features/blocks/inputs/buttons/injectVariableValuesInButtonsInputBlock'
+import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/computePaymentInputRuntimeOptions'
+import { injectVariableValuesInPictureChoiceBlock } from '@/features/blocks/inputs/pictureChoice/injectVariableValuesInPictureChoiceBlock'
+import { deepParseVariables } from '@/features/variables/deepParseVariable'
+import { parseVariables } from '@/features/variables/parseVariables'
+import {
+  isBubbleBlock,
+  isDefined,
+  isInputBlock,
+  isIntegrationBlock,
+  isLogicBlock,
+} from '@typebot.io/lib'
 import {
   BubbleBlock,
   BubbleBlockType,
@@ -9,24 +21,11 @@ import {
   LogicBlockType,
   RuntimeOptions,
   SessionState,
-  SpreadOptions,
 } from '@typebot.io/schemas'
-import {
-  isBubbleBlock,
-  isDefined,
-  isInputBlock,
-  isIntegrationBlock,
-  isLogicBlock,
-} from '@typebot.io/lib'
+import { format } from 'date-fns'
+import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
-import { executeIntegration } from './executeIntegration'
-import { injectVariableValuesInButtonsInputBlock } from '@/features/blocks/inputs/buttons/injectVariableValuesInButtonsInputBlock'
-import { deepParseVariables } from '@/features/variables/deepParseVariable'
-import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/payment/computePaymentInputRuntimeOptions'
-import { format } from 'date-fns'
-import { parseVariables } from '@/features/variables/parseVariables'
-import { updateTypebotQuery } from '@/features/typebot/queries/updateTypebotQuery'
 
 export const executeGroup =
   (
@@ -49,6 +48,7 @@ export const executeGroup =
     for (const block of group.blocks) {
       nextEdgeId = block.outgoingEdgeId
 
+      //@ts-ignore
       if (isBubbleBlock(block) && block.type !== BubbleBlockType.BUTTON) {
         messages.push(
           parseBubbleBlock(newSessionState.typebot.variables)(block)
@@ -150,14 +150,16 @@ export const executeGroup =
           lastBubbleBlockId = block.id
 
           continue
+
+        //@ts-ignore
         case BubbleBlockType.BUTTON:
           messages.push({
-            content: block.options,
-            id: block.id,
-            type: block.type,
+            content: (block as any).options,
+            id: (block as any).id,
+            type: (block as any).type,
           })
 
-          lastBubbleBlockId = block.id
+          lastBubbleBlockId = (block as any).id
 
           continue
       }
@@ -186,11 +188,31 @@ export const executeGroup =
       if (
         'clientSideActions' in executionResponse &&
         executionResponse.clientSideActions
-      )
+      ) {
         clientSideActions = [
           ...(clientSideActions ?? []),
           ...executionResponse.clientSideActions,
         ]
+        if (
+          executionResponse.clientSideActions?.find(
+            (action) => 'setVariable' in action
+          )
+        ) {
+          return {
+            messages,
+            newSessionState: {
+              ...newSessionState,
+              currentBlock: {
+                groupId: group.id,
+                blockId: block.id,
+              },
+            },
+            clientSideActions,
+            logs,
+          }
+        }
+      }
+
       if (executionResponse.logs)
         logs = [...(logs ?? []), ...executionResponse.logs]
       if (executionResponse.newSessionState)
@@ -291,6 +313,11 @@ const injectVariablesValueInBlock =
         return injectVariableValuesInButtonsInputBlock(state.typebot.variables)(
           block
         )
+      }
+      case InputBlockType.PICTURE_CHOICE: {
+        return injectVariableValuesInPictureChoiceBlock(
+          state.typebot.variables
+        )(block)
       }
       default: {
         return deepParseVariables(state.typebot.variables)({

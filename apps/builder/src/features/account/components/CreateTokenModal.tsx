@@ -1,4 +1,5 @@
 import { CopyButton } from '@/components/CopyButton'
+import { useScopedI18n } from '@/locales'
 import {
   Modal,
   ModalOverlay,
@@ -31,6 +32,7 @@ export const CreateTokenModal = ({
   onClose,
   onNewToken,
 }: Props) => {
+  const scopedT = useScopedI18n('account.apiTokens.createModal')
   const [name, setName] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [newTokenValue, setNewTokenValue] = useState<string>()
@@ -84,7 +86,7 @@ export const CreateTokenModal = ({
         <ModalFooter>
           {newTokenValue ? (
             <Button onClick={onClose} colorScheme="blue">
-              Done
+              {scopedT('doneButton.label')}
             </Button>
           ) : (
             <Button
@@ -93,7 +95,7 @@ export const CreateTokenModal = ({
               isLoading={isSubmitting}
               onClick={createToken}
             >
-              Create token
+              {scopedT('createButton.label')}
             </Button>
           )}
         </ModalFooter>

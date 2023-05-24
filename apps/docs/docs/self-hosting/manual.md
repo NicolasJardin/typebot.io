@@ -5,9 +5,9 @@ sidebar_position: 3
 # Manual
 
 :::note
-The easiest way to get started with Typebot is with [the official managed service in the Cloud](https://app.typebot.io). It takes 1 minute to try out the tool for free. You'll have high availability, backups, security, and maintenance all managed for you by me, Baptiste, Typebot's founder.
+The easiest way to get started with Typebot is with [the official managed service in the Cloud](https://app.typebot.io). You'll have high availability, backups, security, and maintenance all managed for you by me, Baptiste, Typebot's founder.
 
-That's also the best way to support my work, open-source software, and you'll get great service!
+The cloud version can save a substantial amount of developer time and resources. For most sites this ends up being the best value option and the revenue goes to funding the maintenance and further development of Typebot. So you’ll be supporting open source software and getting a great service!
 :::
 
 ## Requirements
@@ -29,9 +29,9 @@ git clone git@github.com:<username>/typebot.io.git
 ```sh
 cd typebot.io
 # check out the latest stable version or the one you want to use
-git checkout v2.9.1
+git checkout latest
 # copy the example env file
-cp packages/db/.env.example packages/db/.env
+cp packages/prisma/.env.example packages/prisma/.env
 cp apps/builder/.env.local.example apps/builder/.env.local
 cp apps/viewer/.env.local.example apps/viewer/.env.local
 ```

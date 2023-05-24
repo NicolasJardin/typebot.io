@@ -1,7 +1,11 @@
 import { CollaborationType, WorkspaceRole } from '@typebot.io/prisma'
 import prisma from '@/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { canReadTypebots, canWriteTypebots } from '@/helpers/databaseRules'
+import {
+  canReadTypebots,
+  canWriteTypebots,
+  isUniqueConstraintError,
+} from '@/helpers/databaseRules'
 import {
   badRequest,
   forbidden,
@@ -13,7 +17,7 @@ import { env } from '@typebot.io/lib'
 import { sendGuestInvitationEmail } from '@typebot.io/emails'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await getAuthenticatedUser(req)
+  const user = await getAuthenticatedUser(req, res)
   if (!user) return notAuthenticated(res)
   const typebotId = req.query.typebotId as string | undefined
   if (!typebotId) return badRequest(res)
@@ -41,13 +45,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       select: { id: true },
     })
     if (existingUser) {
-      await prisma.collaboratorsOnTypebots.create({
-        data: {
-          type,
-          typebotId,
-          userId: existingUser.id,
-        },
-      })
+      try {
+        await prisma.collaboratorsOnTypebots.create({
+          data: {
+            type,
+            typebotId,
+            userId: existingUser.id,
+          },
+        })
+      } catch (error) {
+        if (isUniqueConstraintError(error)) {
+          return res.status(400).send({
+            message: 'User already has access to this typebot.',
+          })
+        }
+        throw error
+      }
+
       await prisma.memberInWorkspace.upsert({
         where: {
           userId_workspaceId: {

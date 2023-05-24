@@ -1,8 +1,8 @@
 import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
-import { computeTypingDuration } from '@/features/blocks/bubbles/textBubble/utils/computeTypingDuration'
 import { TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
+import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
   typingEmulation: TypingEmulation

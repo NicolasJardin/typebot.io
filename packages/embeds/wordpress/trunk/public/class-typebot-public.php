@@ -10,19 +10,19 @@ class Typebot_Public
       echo '<script>
       if(typeof window.typebotWpUser === "undefined"){
       window.typebotWpUser = {
-          wp_id:"' .
+          "WP ID":"' .
         $wp_user->ID .
         '",
-          wp_username:"' .
+          "WP Username":"' .
         $wp_user->user_login .
         '",
-          wp_email:"' .
+          "WP Email":"' .
         $wp_user->user_email .
         '",
-          wp_first_name:"' .
+          "WP First name":"' .
         $wp_user->user_firstname .
         '",
-          wp_last_name:"' .
+          "WP Last name":"' .
         $wp_user->user_lastname .
         '",
         }
@@ -65,7 +65,7 @@ class Typebot_Public
 					return windowPath !== excludePath;
 				})) {
           ' . get_option('init_snippet') . '
-          Typebot.setPrefilledVariables({ typebotWpUser });
+          Typebot.setPrefilledVariables({ ...typebotWpUser });
           
         }';
       }
@@ -80,7 +80,7 @@ class Typebot_Public
     $lib_url = "https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0/dist/web.js";
     $width = '100%';
     $height = '500px';
-    $api_host = 'https://api.typebot.io';
+    $api_host = 'https://viewer.typebot.io';
     if (array_key_exists('width', $attributes)) {
       $width = sanitize_text_field($attributes['width']);
     }
@@ -90,8 +90,8 @@ class Typebot_Public
     if (array_key_exists('typebot', $attributes)) {
       $typebot = sanitize_text_field($attributes['typebot']);
     }
-    if (array_key_exists('apiHost', $attributes)) {
-      $api_host = sanitize_text_field($attributes['apiHost']);
+    if (array_key_exists('host', $attributes)) {
+      $api_host = sanitize_text_field($attributes['host']);
     }
     if (!$typebot) {
       return;
@@ -101,7 +101,8 @@ class Typebot_Public
 
     $bot_initializer = '<script type="module">
     import Typebot from "' . $lib_url . '"
-    Typebot.initStandard({ apiHost: "' . $api_host . '", id: "' . $id . '", typebot: "' . $typebot . '", prefilledVariables: { typebotWpUser } });</script>';
+
+    Typebot.initStandard({ apiHost: "' . $api_host . '", id: "' . $id . '", typebot: "' . $typebot . '", prefilledVariables: { ...window.typebotWpUser } });</script>';
 
     return  '<typebot-standard id="' . $id . '" style="width: ' . $width . '; height: ' . $height . ';"></typebot-standard>' . $bot_initializer;
   }

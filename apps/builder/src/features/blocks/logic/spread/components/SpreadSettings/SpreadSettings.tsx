@@ -69,8 +69,13 @@ export default function SpreadSettings({
             value: id,
             label: name,
           }))}
-          onChange={(newValue: { value: string; label: string }[]) =>
-            handleAttendants(newValue)
+          onChange={(newValue) =>
+            handleAttendants(
+              newValue as {
+                value: string
+                label: string
+              }[]
+            )
           }
           options={selectOptions}
         />

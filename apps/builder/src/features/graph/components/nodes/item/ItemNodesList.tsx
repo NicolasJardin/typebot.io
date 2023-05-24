@@ -11,7 +11,6 @@ import {
   BlockIndices,
   BlockWithItems,
   LogicBlockType,
-  Item,
 } from '@typebot.io/schemas'
 import React, { useEffect, useRef, useState } from 'react'
 import { ItemNode } from './ItemNode'
@@ -20,6 +19,7 @@ import { isDefined } from '@typebot.io/lib'
 import {
   useBlockDnd,
   computeNearestPlaceholderIndex,
+  DraggabbleItem,
 } from '@/features/graph/providers/GraphDndProvider'
 import { useGraph } from '@/features/graph/providers/GraphProvider'
 import { Coordinates } from '@dnd-kit/utilities'
@@ -41,7 +41,7 @@ export const ItemNodesList = ({
   const isDraggingOnCurrentBlock =
     (draggedItem && mouseOverBlock?.id === block.id) ?? false
   const showPlaceholders =
-    draggedItem !== undefined && block.items[0].type === draggedItem.type
+    draggedItem !== undefined && block.items.at(0)?.type === draggedItem.type
 
   const isLastBlock =
     isDefined(typebot) &&
@@ -75,7 +75,7 @@ export const ItemNodesList = ({
   }, [block.id, mouseOverBlock?.id, showPlaceholders])
 
   const handleMouseMoveOnBlock = (event: MouseEvent) => {
-    if (!isDraggingOnCurrentBlock) return
+    if (!isDraggingOnCurrentBlock || !showPlaceholders) return
     const index = computeNearestPlaceholderIndex(event.pageY, placeholderRefs)
     setExpandedPlaceholderIndex(index)
   }
@@ -107,7 +107,7 @@ export const ItemNodesList = ({
     (itemIndex: number) =>
     (
       { absolute, relative }: { absolute: Coordinates; relative: Coordinates },
-      item: Item
+      item: DraggabbleItem
     ) => {
       if (!typebot || block.items.length <= 1) return
       placeholderRefs.current.splice(itemIndex + 1, 1)

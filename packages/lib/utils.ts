@@ -18,6 +18,7 @@ import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums
 import { BubbleBlockType } from '@typebot.io/schemas/features/blocks/bubbles/enums'
 import { LogicBlockType } from '@typebot.io/schemas/features/blocks/logic/enums'
 import { IntegrationBlockType } from '@typebot.io/schemas/features/blocks/integrations/enums'
+import { PictureChoiceBlock } from '@typebot.io/schemas/features/blocks/inputs/pictureChoice'
 
 export const sendRequest = async <ResponseData>(
   params:
@@ -90,6 +91,10 @@ export const isTextInputBlock = (block: Block): block is TextInputBlock =>
 export const isChoiceInput = (block: Block): block is ChoiceInputBlock =>
   block.type === InputBlockType.CHOICE
 
+export const isPictureChoiceInput = (
+  block: Block
+): block is PictureChoiceBlock => block.type === InputBlockType.PICTURE_CHOICE
+
 export const isSingleChoiceInput = (block: Block): block is ChoiceInputBlock =>
   block.type === InputBlockType.CHOICE &&
   'options' in block &&
@@ -133,8 +138,14 @@ export const blockTypeHasWebhook = (
 
 export const blockTypeHasItems = (
   type: BlockType
-): type is LogicBlockType.CONDITION | InputBlockType.CHOICE =>
-  type === LogicBlockType.CONDITION || type === InputBlockType.CHOICE
+): type is
+  | LogicBlockType.CONDITION
+  | InputBlockType.CHOICE
+  | LogicBlockType.AB_TEST =>
+  type === LogicBlockType.CONDITION ||
+  type === InputBlockType.CHOICE ||
+  type === LogicBlockType.AB_TEST ||
+  type === InputBlockType.PICTURE_CHOICE
 
 export const blockHasItems = (
   block: Block
@@ -154,7 +165,7 @@ interface Omit {
 
 export const omit: Omit = (obj, ...keys) => {
   const ret = {} as {
-    [K in keyof typeof obj]: typeof obj[K]
+    [K in keyof typeof obj]: (typeof obj)[K]
   }
   let key: keyof typeof obj
   for (key in obj) {
@@ -165,11 +176,14 @@ export const omit: Omit = (obj, ...keys) => {
   return ret
 }
 
+const isVariableString = (str: string): boolean => /^\{\{.*\}\}$/.test(str)
+
 export const sanitizeUrl = (url: string): string =>
   url.startsWith('http') ||
   url.startsWith('mailto:') ||
   url.startsWith('tel:') ||
-  url.startsWith('sms:')
+  url.startsWith('sms:') ||
+  isVariableString(url)
     ? url
     : `https://${url}`
 
@@ -309,3 +323,6 @@ export const getAtPath = <T>(obj: T, path: string): unknown => {
 
 export const parseGroupTitle = (title: string) =>
   isEmpty(title) ? 'Untitled' : title
+
+export const isSvgSrc = (src: string | undefined) =>
+  src?.startsWith('data:image/svg') || src?.endsWith('.svg')

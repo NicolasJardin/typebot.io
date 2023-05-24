@@ -172,5 +172,7 @@ const Input = ({
       return (
         <FileUploadForm block={block} onSubmit={onSubmit} onSkip={onSkip} />
       )
+    default:
+      return null
   }
 }

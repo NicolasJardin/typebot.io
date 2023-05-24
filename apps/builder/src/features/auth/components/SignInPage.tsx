@@ -1,6 +1,6 @@
 import { Seo } from '@/components/Seo'
 import { TextLink } from '@/components/TextLink'
-import { VStack, Heading, Text } from '@chakra-ui/react'
+import { Heading, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { SignInForm } from './SignInForm'
 

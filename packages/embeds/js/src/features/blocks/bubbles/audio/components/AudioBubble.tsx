@@ -4,7 +4,7 @@ import { createSignal, onCleanup, onMount } from 'solid-js'
 
 type Props = {
   url: AudioBubbleContent['url']
-  onTransitionEnd: () => void
+  onTransitionEnd: (offsetTop?: number) => void
 }
 
 const showAnimationDuration = 400
@@ -13,13 +13,14 @@ const typingDuration = 500
 let typingTimeout: NodeJS.Timeout
 
 export const AudioBubble = (props: Props) => {
+  let ref: HTMLDivElement | undefined
   const [isTyping, setIsTyping] = createSignal(true)
 
   onMount(() => {
     typingTimeout = setTimeout(() => {
       setIsTyping(false)
       setTimeout(() => {
-        props.onTransitionEnd()
+        props.onTransitionEnd(ref?.offsetTop)
       }, showAnimationDuration)
     }, typingDuration)
   })
@@ -29,11 +30,11 @@ export const AudioBubble = (props: Props) => {
   })
 
   return (
-    <div class="flex flex-col animate-fade-in">
-      <div class="flex mb-2 w-full items-center">
+    <div class="flex flex-col animate-fade-in" ref={ref}>
+      <div class="flex w-full items-center">
         <div class={'flex relative z-10 items-start typebot-host-bubble'}>
           <div
-            class="flex items-center absolute px-4 py-2 rounded-lg bubble-typing z-10 "
+            class="flex items-center absolute px-4 py-2 bubble-typing z-10 "
             style={{
               width: isTyping() ? '64px' : '100%',
               height: isTyping() ? '32px' : '100%',

@@ -5,7 +5,7 @@ import { createSignal, Match, onCleanup, onMount, Switch } from 'solid-js'
 
 type Props = {
   content: VideoBubbleContent
-  onTransitionEnd: () => void
+  onTransitionEnd: (offsetTop?: number) => void
 }
 
 export const showAnimationDuration = 400
@@ -13,13 +13,14 @@ export const showAnimationDuration = 400
 let typingTimeout: NodeJS.Timeout
 
 export const VideoBubble = (props: Props) => {
+  let ref: HTMLDivElement | undefined
   const [isTyping, setIsTyping] = createSignal(true)
 
   const onTypingEnd = () => {
     if (!isTyping()) return
     setIsTyping(false)
     setTimeout(() => {
-      props.onTransitionEnd()
+      props.onTransitionEnd(ref?.offsetTop)
     }, showAnimationDuration)
   }
 
@@ -32,11 +33,11 @@ export const VideoBubble = (props: Props) => {
   })
 
   return (
-    <div class="flex flex-col animate-fade-in">
-      <div class="flex mb-2 w-full items-center">
+    <div class="flex flex-col animate-fade-in" ref={ref}>
+      <div class="flex w-full items-center">
         <div class={'flex relative z-10 items-start typebot-host-bubble'}>
           <div
-            class="flex items-center absolute px-4 py-2 rounded-lg bubble-typing z-10 "
+            class="flex items-center absolute px-4 py-2 bubble-typing z-10 "
             style={{
               width: isTyping() ? '64px' : '100%',
               height: isTyping() ? '32px' : '100%',
@@ -68,7 +69,7 @@ const VideoContent = (props: VideoContentProps) => {
         <video
           controls
           class={
-            'p-4 focus:outline-none w-full z-10 text-fade-in rounded-md ' +
+            'p-4 focus:outline-none w-full z-10 text-fade-in ' +
             (props.isTyping ? 'opacity-0' : 'opacity-100')
           }
           style={{
@@ -97,7 +98,7 @@ const VideoContent = (props: VideoContentProps) => {
               : 'https://www.youtube.com/embed'
           }/${props.content.id}`}
           class={
-            'w-full p-4 text-fade-in z-10 rounded-md ' +
+            'w-full p-4 text-fade-in z-10 ' +
             (props.isTyping ? 'opacity-0' : 'opacity-100')
           }
           height={props.isTyping ? '32px' : '200px'}

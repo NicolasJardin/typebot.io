@@ -1,20 +1,19 @@
 import { AlertInfo } from '@/components/AlertInfo'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import {
+  Button,
+  HStack,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalOverlay,
   Stack,
-  Button,
-  HStack,
 } from '@chakra-ui/react'
-import { LimitReached } from '../types'
 import { ChangePlanForm } from './ChangePlanForm'
 
 type ChangePlanModalProps = {
-  type?: LimitReached
+  type?: string
   isOpen: boolean
   onClose: () => void
 }

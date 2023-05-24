@@ -1,9 +1,9 @@
-import { executeOpenAIBlock } from '@/features/blocks/integrations/openai/executeOpenAIBlock'
-import { executeSendEmailBlock } from '@/features/blocks/integrations/sendEmail/executeSendEmailBlock'
-import { executeWebhookBlock } from '@/features/blocks/integrations/webhook/executeWebhookBlock'
 import { executeChatwootBlock } from '@/features/blocks/integrations/chatwoot/executeChatwootBlock'
 import { executeGoogleAnalyticsBlock } from '@/features/blocks/integrations/googleAnalytics/executeGoogleAnalyticsBlock'
 import { executeGoogleSheetBlock } from '@/features/blocks/integrations/googleSheets/executeGoogleSheetBlock'
+import { executeOpenAIBlock } from '@/features/blocks/integrations/openai/executeOpenAIBlock'
+import { executeSendEmailBlock } from '@/features/blocks/integrations/sendEmail/executeSendEmailBlock'
+import { executeWebhookBlock } from '@/features/blocks/integrations/webhook/executeWebhookBlock'
 import {
   IntegrationBlock,
   IntegrationBlockType,

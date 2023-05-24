@@ -1,33 +1,30 @@
 import { z } from 'zod'
-import { BubbleBlockType } from './bubbles/enums'
-import { ChoiceInputBlock, choiceInputSchema } from './inputs/choice'
-import { InputBlockType } from './inputs/enums'
-import { IntegrationBlockType } from './integrations/enums'
-import { ConditionBlock, conditionBlockSchema } from './logic/condition'
-import { LogicBlockType } from './logic/enums'
+import { Item } from '../items'
 import { blockBaseSchema } from './baseSchemas'
-import { startBlockSchema } from './start/schemas'
 import {
-  textBubbleBlockSchema,
-  imageBubbleBlockSchema,
-  videoBubbleBlockSchema,
-  embedBubbleBlockSchema,
-  audioBubbleBlockSchema,
-  buttonBlockSchema,
-  ButtonBlock,
   ButtonOptions,
+  audioBubbleBlockSchema,
+  embedBubbleBlockSchema,
+  imageBubbleBlockSchema,
+  textBubbleBlockSchema,
+  videoBubbleBlockSchema,
 } from './bubbles'
+import { BubbleBlockType } from './bubbles/enums'
+import { fileBubbleBlockSchema } from './bubbles/file'
 import {
-  textInputSchema,
-  emailInputSchema,
-  numberInputSchema,
-  urlInputSchema,
-  phoneNumberInputBlockSchema,
   dateInputSchema,
-  paymentInputSchema,
-  ratingInputBlockSchema,
+  emailInputSchema,
   fileInputStepSchema,
+  numberInputSchema,
+  paymentInputSchema,
+  phoneNumberInputBlockSchema,
+  ratingInputBlockSchema,
+  textInputSchema,
+  urlInputSchema,
 } from './inputs'
+import { choiceInputSchema } from './inputs/choice'
+import { InputBlockType } from './inputs/enums'
+import { pictureChoiceBlockSchema } from './inputs/pictureChoice'
 import {
   chatwootBlockSchema,
   googleAnalyticsBlockSchema,
@@ -38,22 +35,26 @@ import {
   webhookBlockSchema,
   zapierBlockSchema,
 } from './integrations'
+import { IntegrationBlockType } from './integrations/enums'
 import { openAIBlockSchema } from './integrations/openai'
 import {
-  scriptBlockSchema,
+  abTestBlockSchema,
   redirectBlockSchema,
+  removeTagBlockSchema,
+  scriptBlockSchema,
   setVariableBlockSchema,
+  spreadBlockSchema,
+  tagBlockSchema,
+  transferBlockSchema,
   typebotLinkBlockSchema,
   waitBlockSchema,
-  transferBlockSchema,
-  removeTagBlockSchema,
-  tagBlockSchema,
   waitForBlockSchema,
-  spreadBlockSchema,
 } from './logic'
-import { jumpBlockSchema } from './logic/jump'
+import { conditionBlockSchema } from './logic/condition'
 import { endBlockSchema } from './logic/end'
-import { fileBubbleBlockSchema } from './bubbles/file'
+import { LogicBlockType } from './logic/enums'
+import { jumpBlockSchema } from './logic/jump'
+import { startBlockSchema } from './start/schemas'
 
 export type DraggableBlock =
   | BubbleBlock
@@ -74,11 +75,7 @@ export type DraggableBlockType =
   | LogicBlockType
   | IntegrationBlockType
 
-export type BlockWithOptions =
-  | InputBlock
-  | Exclude<LogicBlock, ConditionBlock>
-  | IntegrationBlock
-  | ButtonBlock
+export type BlockWithOptions = Extract<Block, { options: any }>
 
 export type BlockWithOptionsType =
   | InputBlockType
@@ -92,8 +89,6 @@ export type BlockOptions =
   | IntegrationBlockOptions
   | ButtonOptions
 
-export type BlockWithItems = ConditionBlock | ChoiceInputBlock
-
 export type BlockBase = z.infer<typeof blockBaseSchema>
 
 export type BlockIndices = {
@@ -101,21 +96,7 @@ export type BlockIndices = {
   blockIndex: number
 }
 
-const bubbleBlockSchema = z.discriminatedUnion('type', [
-  textBubbleBlockSchema,
-  imageBubbleBlockSchema,
-  videoBubbleBlockSchema,
-  embedBubbleBlockSchema,
-  audioBubbleBlockSchema,
-  buttonBlockSchema,
-  fileBubbleBlockSchema,
-])
-
-export type BubbleBlock = z.infer<typeof bubbleBlockSchema>
-//@ts-ignore
-export type BubbleBlockContent = BubbleBlock['content']
-
-export const inputBlockSchema = z.discriminatedUnion('type', [
+export const inputBlockSchemas = [
   textInputSchema,
   choiceInputSchema,
   emailInputSchema,
@@ -126,13 +107,18 @@ export const inputBlockSchema = z.discriminatedUnion('type', [
   paymentInputSchema,
   ratingInputBlockSchema,
   fileInputStepSchema,
+  pictureChoiceBlockSchema,
   waitForBlockSchema,
-])
+] as const
 
-export type InputBlock = z.infer<typeof inputBlockSchema>
-export type InputBlockOptions = InputBlock['options']
-
-export const logicBlockSchema = z.discriminatedUnion('type', [
+export const blockSchema = z.discriminatedUnion('type', [
+  startBlockSchema,
+  textBubbleBlockSchema,
+  imageBubbleBlockSchema,
+  videoBubbleBlockSchema,
+  embedBubbleBlockSchema,
+  audioBubbleBlockSchema,
+  ...inputBlockSchemas,
   scriptBlockSchema,
   conditionBlockSchema,
   redirectBlockSchema,
@@ -140,24 +126,7 @@ export const logicBlockSchema = z.discriminatedUnion('type', [
   typebotLinkBlockSchema,
   waitBlockSchema,
   jumpBlockSchema,
-  transferBlockSchema,
-  endBlockSchema,
-  removeTagBlockSchema,
-  tagBlockSchema,
-  spreadBlockSchema,
-])
-
-export type LogicBlock = z.infer<typeof logicBlockSchema>
-
-export type LogicBlockOptions = LogicBlock extends
-  | {
-      options?: infer Options
-    }
-  | {}
-  ? Options
-  : never
-
-export const integrationBlockSchema = z.discriminatedUnion('type', [
+  abTestBlockSchema,
   chatwootBlockSchema,
   googleAnalyticsBlockSchema,
   googleSheetsBlockSchema,
@@ -167,17 +136,32 @@ export const integrationBlockSchema = z.discriminatedUnion('type', [
   sendEmailBlockSchema,
   webhookBlockSchema,
   zapierBlockSchema,
-])
-
-export type IntegrationBlock = z.infer<typeof integrationBlockSchema>
-export type IntegrationBlockOptions = IntegrationBlock['options']
-
-export const blockSchema = z.union([
-  startBlockSchema,
-  bubbleBlockSchema,
-  inputBlockSchema,
-  logicBlockSchema,
-  integrationBlockSchema,
+  transferBlockSchema,
+  tagBlockSchema,
+  spreadBlockSchema,
+  fileBubbleBlockSchema,
+  removeTagBlockSchema,
+  endBlockSchema,
 ])
 
 export type Block = z.infer<typeof blockSchema>
+
+export type BubbleBlock = Extract<Block, { type: BubbleBlockType }>
+export type BubbleBlockContent = BubbleBlock['content']
+
+export type InputBlock = Extract<Block, { type: InputBlockType }>
+export type InputBlockOptions = InputBlock['options']
+
+export type LogicBlock = Extract<Block, { type: LogicBlockType }>
+export type LogicBlockOptions = LogicBlock extends
+  | {
+      options?: infer Options
+    }
+  | {}
+  ? Options
+  : never
+
+export type IntegrationBlock = Extract<Block, { type: IntegrationBlockType }>
+export type IntegrationBlockOptions = IntegrationBlock['options']
+
+export type BlockWithItems = Extract<Block, { items: Item[] }>

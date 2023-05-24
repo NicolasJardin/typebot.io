@@ -1,7 +1,13 @@
 import {
-  StackProps,
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  UserIcon,
+} from '@/components/icons'
+import {
   HStack,
   IconButton,
+  StackProps,
   useColorModeValue,
 } from '@chakra-ui/react'
 import {
@@ -10,15 +16,7 @@ import {
   MARK_UNDERLINE,
 } from '@udecode/plate-basic-marks'
 import { getPluginType, usePlateEditorRef } from '@udecode/plate-core'
-import { LinkToolbarButton } from '@udecode/plate-ui-link'
 import { MarkToolbarButton } from '@udecode/plate-ui-toolbar'
-import {
-  BoldIcon,
-  ItalicIcon,
-  UnderlineIcon,
-  LinkIcon,
-  UserIcon,
-} from '@/components/icons'
 
 type Props = {
   onVariablesButtonClick: () => void

@@ -3,21 +3,24 @@ title: Builder
 ---
 
 import { SponsorButton } from '../../../src/js/SponsorButton.jsx'
+import { Asterix } from '../../../src/js/Asterix.jsx'
 
 # Builder configuration
 
+Parameters marked with <Asterix/> are required.
+
 ## General
 
-| Parameter              | Default | Description                                                                                                                                                                                                                                 |
-| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DATABASE_URL           |         | The database URL                                                                                                                                                                                                                            |
-| ENCRYPTION_SECRET      |         | A 256-bit key used to encrypt sensitive data. It is strongly recommended to [generate](https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx) a new one. The secret should be the same between builder and viewer. |
-| ADMIN_EMAIL            |         | The email that will get a "Pro" plan on user creation                                                                                                                                                                                       |
-| NEXTAUTH_URL           |         | The builder base URL. Should be the publicly accessible URL (i.e. `https://typebot.domain.com`)                                                                                                                                             |
-| NEXT_PUBLIC_VIEWER_URL |         | The viewer base URL. Should be the publicly accessible URL (i.e. `https://bot.domain.com`)                                                                                                                                                  |
-| NEXTAUTH_URL_INTERNAL  |         | The internal builder base URL. You have to set it only when `NEXTAUTH_URL` can't be reached by your builder container / server. For a docker deployment, you should set it to `http://localhost:3000`.                                      |
-| DEFAULT_WORKSPACE_PLAN | FREE    | Default workspace plan on user creation or when a user creates a new workspace. Possible values are `FREE`, `STARTER`, `PRO`, `LIFETIME`, `UNLIMITED`. The default plan for admin user is `UNLIMITED`                                       |
-| DISABLE_SIGNUP         | false   | Disable new user sign ups. Invited users are still able to sign up.                                                                                                                                                                         |
+| Parameter                         | Default | Description                                                                                                                                                                                                                                 |
+| --------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DATABASE_URL <Asterix/>           |         | The database URL                                                                                                                                                                                                                            |
+| ENCRYPTION_SECRET <Asterix/>      |         | A 256-bit key used to encrypt sensitive data. It is strongly recommended to [generate](https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx) a new one. The secret should be the same between builder and viewer. |
+| NEXTAUTH_URL <Asterix/>           |         | The builder base URL. Should be the publicly accessible URL (i.e. `https://typebot.domain.com`)                                                                                                                                             |
+| NEXT_PUBLIC_VIEWER_URL <Asterix/> |         | The viewer base URL. Should be the publicly accessible URL (i.e. `https://bot.domain.com`)                                                                                                                                                  |
+| ADMIN_EMAIL                       |         | The email that will get a "Pro" plan on user creation. The associated user will be able to bypass database rules.                                                                                                                           |
+| NEXTAUTH_URL_INTERNAL             |         | The internal builder base URL. You have to set it only when `NEXTAUTH_URL` can't be reached by your builder container / server. For a docker deployment, you should set it to `http://localhost:3000`.                                      |
+| DEFAULT_WORKSPACE_PLAN            | FREE    | Default workspace plan on user creation or when a user creates a new workspace. Possible values are `FREE`, `STARTER`, `PRO`, `LIFETIME`, `UNLIMITED`. The default plan for admin user is `UNLIMITED`                                       |
+| DISABLE_SIGNUP                    | false   | Disable new user sign ups. Invited users are still able to sign up.                                                                                                                                                                         |
 
 ## Email (Auth, notifications)
 
@@ -177,6 +180,15 @@ Used to search for GIF. You can create a Giphy app [here](https://developers.gip
 | ------------------------- | ------- | ------------- |
 | NEXT_PUBLIC_GIPHY_API_KEY |         | Giphy API key |
 
+## Unsplash (image picker)
+
+Used to search for images. You can create a Giphy app [here](https://unsplash.com/developers)
+
+| Parameter                       | Default | Description       |
+| ------------------------------- | ------- | ----------------- |
+| NEXT_PUBLIC_UNSPLASH_APP_NAME   |         | Unsplash App name |
+| NEXT_PUBLIC_UNSPLASH_ACCESS_KEY |         | Unsplash API key  |
+
 ## Others
 
 <details><summary><h3>Show</h3></summary>
@@ -189,15 +201,26 @@ The related environment variables are listed here but you are probably not inter
 <details><summary><h4>Stripe</h4></summary>
 <p>
 
-| Parameter                          | Default | Description                 |
-| ---------------------------------- | ------- | --------------------------- |
-| NEXT_PUBLIC_STRIPE_PUBLIC_KEY      |         | Stripe public key           |
-| STRIPE_SECRET_KEY                  |         | Stripe secret key           |
-| STRIPE_PRO_PRICE_ID                |         | Pro plan price id           |
-| STRIPE_STARTER_PRICE_ID            |         | Starter plan price id       |
-| STRIPE_ADDITIONAL_CHATS_PRICE_ID   |         | Additional chats price id   |
-| STRIPE_ADDITIONAL_STORAGE_PRICE_ID |         | Additional storage price id |
-| STRIPE_WEBHOOK_SECRET              |         | Stripe Webhook secret       |
+| Parameter                               | Default | Description                                 |
+| --------------------------------------- | ------- | ------------------------------------------- |
+| NEXT_PUBLIC_STRIPE_PUBLIC_KEY           |         | Stripe public key                           |
+| STRIPE_SECRET_KEY                       |         | Stripe secret key                           |
+| STRIPE_STARTER_PRODUCT_ID               |         | Starter plan product ID                     |
+| STRIPE_STARTER_MONTHLY_PRICE_ID         |         | Starter monthly plan price id               |
+| STRIPE_STARTER_YEARLY_PRICE_ID          |         | Starter yearly plan price id                |
+| STRIPE_PRO_PRODUCT_ID                   |         | Pro plan product ID                         |
+| STRIPE_PRO_MONTHLY_PRICE_ID             |         | Pro monthly plan price id                   |
+| STRIPE_PRO_YEARLY_PRICE_ID              |         | Pro yearly plan price id                    |
+| STRIPE_STARTER_CHATS_MONTHLY_PRICE_ID   |         | Starter Additional chats monthly price id   |
+| STRIPE_STARTER_CHATS_YEARLY_PRICE_ID    |         | Starter Additional chats yearly price id    |
+| STRIPE_PRO_CHATS_MONTHLY_PRICE_ID       |         | Pro Additional chats monthly price id       |
+| STRIPE_PRO_CHATS_YEARLY_PRICE_ID        |         | Pro Additional chats yearly price id        |
+| STRIPE_STARTER_STORAGE_MONTHLY_PRICE_ID |         | Starter Additional storage monthly price id |
+| STRIPE_STARTER_STORAGE_YEARLY_PRICE_ID  |         | Starter Additional storage yearly price id  |
+| STRIPE_PRO_STORAGE_MONTHLY_PRICE_ID     |         | Pro Additional storage monthly price id     |
+| STRIPE_PRO_STORAGE_YEARLY_PRICE_ID      |         | Pro Additional storage yearly price id      |
+| STRIPE_ADDITIONAL_STORAGE_PRICE_ID      |         | Additional storage price id                 |
+| STRIPE_WEBHOOK_SECRET                   |         | Stripe Webhook secret                       |
 
 </p></details>
 

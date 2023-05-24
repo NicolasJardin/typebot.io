@@ -5,8 +5,10 @@ import { ApiTokensList } from './ApiTokensList'
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { useUser } from '../hooks/useUser'
 import { TextInput } from '@/components/inputs/TextInput'
+import { useScopedI18n } from '@/locales'
 
 export const MyAccountForm = () => {
+  const scopedT = useScopedI18n('account.myAccount')
   const { user, updateUser } = useUser()
   const [name, setName] = useState(user?.name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
@@ -44,7 +46,7 @@ export const MyAccountForm = () => {
             Mudar foto
           </UploadButton>
           <Text color="gray.500" fontSize="sm">
-            .jpg or.png, max 1MB
+            {scopedT('changePhotoButton.specification')}
           </Text>
         </Stack>
       </HStack>

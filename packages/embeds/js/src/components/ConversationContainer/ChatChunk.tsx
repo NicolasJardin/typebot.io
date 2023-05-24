@@ -12,8 +12,10 @@ type Props = Pick<ChatReply, 'messages' | 'input'> & {
   inputIndex: number
   context: BotContext
   isLoadingBubbleDisplayed: boolean
+  hasError: boolean
+  hideAvatar: boolean
   onNewBubbleDisplayed: (blockId: string) => Promise<void>
-  onScrollToBottom: () => void
+  onScrollToBottom: (top?: number) => void
   onSubmit: (input: string) => void
   onSkip: () => void
   onAllBubblesDisplayed: () => void
@@ -29,7 +31,7 @@ export const ChatChunk = (props: Props) => {
     props.onScrollToBottom()
   })
 
-  const displayNextMessage = async () => {
+  const displayNextMessage = async (bubbleOffsetTop?: number) => {
     const lastBubbleBlockId = props.messages[displayedMessageIndex()].id
     await props.onNewBubbleDisplayed(lastBubbleBlockId)
     setDisplayedMessageIndex(
@@ -37,16 +39,16 @@ export const ChatChunk = (props: Props) => {
         ? displayedMessageIndex()
         : displayedMessageIndex() + 1
     )
-    props.onScrollToBottom()
+    props.onScrollToBottom(bubbleOffsetTop)
     if (displayedMessageIndex() === props.messages.length) {
       props.onAllBubblesDisplayed()
     }
   }
 
   return (
-    <div class="flex w-full">
-      <div class="flex flex-col w-full min-w-0">
-        <div class="flex">
+    <div class="flex flex-col w-full min-w-0 gap-2">
+      <Show when={props.messages.length > 0}>
+        <div class={'flex' + (isMobile() ? ' gap-1' : ' gap-2')}>
           <Show
             when={
               props.theme.chat.hostAvatar?.isEnabled &&
@@ -55,10 +57,12 @@ export const ChatChunk = (props: Props) => {
           >
             <AvatarSideContainer
               hostAvatarSrc={props.theme.chat.hostAvatar?.url}
+              hideAvatar={props.hideAvatar}
             />
           </Show>
+
           <div
-            class="flex-1"
+            class="flex flex-col flex-1 gap-2"
             style={{
               'margin-right': props.theme.chat.guestAvatar?.isEnabled
                 ? isMobile()
@@ -78,21 +82,22 @@ export const ChatChunk = (props: Props) => {
             </For>
           </div>
         </div>
-        {props.input && displayedMessageIndex() === props.messages.length && (
-          <InputChatBlock
-            block={props.input}
-            inputIndex={props.inputIndex}
-            onSubmit={props.onSubmit}
-            onSkip={props.onSkip}
-            hasHostAvatar={props.theme.chat.hostAvatar?.isEnabled ?? false}
-            guestAvatar={props.theme.chat.guestAvatar}
-            context={props.context}
-            isInputPrefillEnabled={
-              props.settings.general.isInputPrefillEnabled ?? true
-            }
-          />
-        )}
-      </div>
+      </Show>
+      {props.input && displayedMessageIndex() === props.messages.length && (
+        <InputChatBlock
+          block={props.input}
+          inputIndex={props.inputIndex}
+          onSubmit={props.onSubmit}
+          onSkip={props.onSkip}
+          hasHostAvatar={props.theme.chat.hostAvatar?.isEnabled ?? false}
+          guestAvatar={props.theme.chat.guestAvatar}
+          context={props.context}
+          isInputPrefillEnabled={
+            props.settings.general.isInputPrefillEnabled ?? true
+          }
+          hasError={props.hasError}
+        />
+      )}
     </div>
   )
 }

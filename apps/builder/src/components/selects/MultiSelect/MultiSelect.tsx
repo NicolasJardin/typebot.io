@@ -5,7 +5,7 @@ import makeAnimated from 'react-select/animated'
 
 const animatedComponents = makeAnimated()
 
-type MultiSelectProps = Props<any>
+type MultiSelectProps = Props
 
 export default function MultiSelect(props: MultiSelectProps) {
   const { colorMode } = useColorMode()
