@@ -158,6 +158,9 @@ importers:
       aws-sdk:
         specifier: 2.1369.0
         version: 2.1369.0
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
       browser-image-compression:
         specifier: 2.0.2
         version: 2.0.2
@@ -10701,6 +10704,16 @@ packages:
     dependencies:
       follow-redirects: 1.15.2
       form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /axios@1.4.0:
+    resolution: {integrity: sha512-S4XCWMEmzvo64T9GfvQDOXgYRDJ/wsSZc7Jvdgx5u1sd0JwsuPLqb3SYmusag+edF6ziyMensPVqLTSc1PiSEA==}
+    dependencies:
+      follow-redirects: 1.15.2
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
