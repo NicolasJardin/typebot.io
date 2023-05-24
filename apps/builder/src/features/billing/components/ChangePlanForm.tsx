@@ -139,6 +139,7 @@ export const ChangePlanForm = ({ workspace, onUpgradeSuccess }: Props) => {
               workspace={workspace}
               currentSubscription={{ isYearly: data.subscription?.isYearly }}
               onPayClick={(props) =>
+                //@ts-ignore
                 handlePayClick({ ...props, plan: Plan.STARTER })
               }
               isYearly={isYearly}
@@ -150,6 +151,7 @@ export const ChangePlanForm = ({ workspace, onUpgradeSuccess }: Props) => {
               workspace={workspace}
               currentSubscription={{ isYearly: data.subscription?.isYearly }}
               onPayClick={(props) =>
+                //@ts-ignore
                 handlePayClick({ ...props, plan: Plan.PRO })
               }
               isYearly={isYearly}

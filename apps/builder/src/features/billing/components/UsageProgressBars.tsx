@@ -35,9 +35,11 @@ export const UsageProgressBars = ({ workspace }: Props) => {
   const workspaceChatsLimit = getChatsLimit(workspace)
   const workspaceStorageLimit = getStorageLimit(workspace)
   const workspaceStorageLimitGigabites =
+    //@ts-ignore
     workspaceStorageLimit * 1024 * 1024 * 1024
 
   const chatsPercentage = Math.round(
+    //@ts-ignore
     (totalChatsUsed / workspaceChatsLimit) * 100
   )
   const storagePercentage = Math.round(
@@ -92,7 +94,8 @@ export const UsageProgressBars = ({ workspace }: Props) => {
               /{' '}
               {workspaceChatsLimit === -1
                 ? 'Ilimitado'
-                : parseNumberWithCommas(workspaceChatsLimit)}
+                : //@ts-ignore
+                  parseNumberWithCommas(workspaceChatsLimit)}
             </Text>
           </HStack>
         </Flex>
@@ -103,6 +106,7 @@ export const UsageProgressBars = ({ workspace }: Props) => {
           rounded="full"
           hasStripe
           isIndeterminate={isLoading}
+          //@ts-ignore
           colorScheme={totalChatsUsed >= workspaceChatsLimit ? 'red' : 'blue'}
         />
       </Stack>
