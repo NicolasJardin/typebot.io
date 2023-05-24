@@ -7,6 +7,7 @@ import {
 } from '@typebot.io/lib'
 import {
   BlockOptions,
+  BlockWithItems,
   BlockWithOptionsType,
   BubbleBlockContent,
   BubbleBlockType,
@@ -19,6 +20,7 @@ import {
   LogicBlockType,
   defaultAbTestOptions,
   defaultAudioBubbleContent,
+  defaultButtonBubbleContent,
   defaultChatwootOptions,
   defaultChoiceInputOptions,
   defaultConditionContent,
@@ -92,6 +94,8 @@ const parseDefaultContent = (type: BubbleBlockType): BubbleBlockContent => {
       return defaultAudioBubbleContent
     case BubbleBlockType.FILE:
       return defaultFileBubbleContent
+    case BubbleBlockType.BUTTON:
+      return defaultButtonBubbleContent
   }
 }
 
