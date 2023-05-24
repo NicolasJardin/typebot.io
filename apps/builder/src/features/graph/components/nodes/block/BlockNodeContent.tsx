@@ -76,6 +76,8 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case BubbleBlockType.AUDIO: {
       return <AudioBubbleNode url={block.content.url} />
     }
+
+    //@ts-ignore
     case BubbleBlockType.BUTTON:
       //@ts-ignore
       return <ButtonNodeContent options={block.options} />
