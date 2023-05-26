@@ -99,7 +99,7 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
       return <Text fontSize="sm">Escolher foto</Text>
 
     case LogicBlockType.AB_TEST:
-      return <Text fontSize="sm">AB Test</Text>
+      return <Text fontSize="sm">Teste AB</Text>
 
     // case IntegrationBlockType.WEBHOOK:
     //   return <Text fontSize="sm">Webhook</Text>
