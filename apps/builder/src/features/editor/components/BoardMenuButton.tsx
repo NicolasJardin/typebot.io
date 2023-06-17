@@ -1,4 +1,12 @@
 import {
+  BookIcon,
+  DownloadIcon,
+  MoreVerticalIcon,
+  SettingsIcon,
+} from '@/components/icons'
+import { useUser } from '@/features/account/hooks/useUser'
+import { parseDefaultPublicId } from '@/features/publish/helpers/parseDefaultPublicId'
+import {
   Flex,
   FlexProps,
   IconButton,
@@ -9,20 +17,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import assert from 'assert'
-import {
-  BookIcon,
-  DownloadIcon,
-  MoreVerticalIcon,
-  SettingsIcon,
-} from '@/components/icons'
-import { useTypebot } from '../providers/TypebotProvider'
-import { useUser } from '@/features/account/hooks/useUser'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
 import { isNotDefined } from '@typebot.io/lib'
+import assert from 'assert'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { useTypebot } from '../providers/TypebotProvider'
 import { EditorSettingsModal } from './EditorSettingsModal'
-import { parseDefaultPublicId } from '@/features/publish/helpers/parseDefaultPublicId'
 
 export const BoardMenuButton = (props: FlexProps) => {
   const { query } = useRouter()
@@ -32,9 +32,13 @@ export const BoardMenuButton = (props: FlexProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    if (isNotDefined(user?.graphNavigation) && isNotDefined(query.isFirstBot))
+    if (
+      user &&
+      isNotDefined(user?.graphNavigation) &&
+      isNotDefined(query.isFirstBot)
+    )
       onOpen()
-  }, [onOpen, query.isFirstBot, user?.graphNavigation])
+  }, [onOpen, query.isFirstBot, user])
 
   const downloadFlow = () => {
     assert(typebot)
