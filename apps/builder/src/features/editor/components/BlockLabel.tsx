@@ -101,16 +101,17 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
     case LogicBlockType.AB_TEST:
       return <Text fontSize="sm">Teste AB</Text>
 
-    // case IntegrationBlockType.WEBHOOK:
-    //   return <Text fontSize="sm">Webhook</Text>
+    case IntegrationBlockType.WEBHOOK:
+      return <Text fontSize="sm">Webhook</Text>
+
+    case IntegrationBlockType.EMAIL:
+      return <Text fontSize="sm">Email</Text>
     // case IntegrationBlockType.ZAPIER:
     //   return <Text fontSize="sm">Zapier</Text>
     // case IntegrationBlockType.MAKE_COM:
     //   return <Text fontSize="sm">Make.com</Text>
     // case IntegrationBlockType.PABBLY_CONNECT:
     //   return <Text fontSize="sm">Pabbly</Text>
-    // case IntegrationBlockType.EMAIL:
-    //   return <Text fontSize="sm">Email</Text>
     // case IntegrationBlockType.CHATWOOT:
     //   return <Text fontSize="sm">Chatwoot</Text>
     // case IntegrationBlockType.OPEN_AI:
