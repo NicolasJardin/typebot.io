@@ -1,5 +1,6 @@
 import { getNewUserInvitations } from '@/features/auth/helpers/getNewUserInvitations'
 import { getUser } from '@/features/auth/helpers/getUser'
+import { newUser } from '@/features/auth/helpers/newUser'
 import { sendVerificationRequest } from '@/features/auth/helpers/sendVerificationRequest'
 import prisma from '@/lib/prisma'
 import { env, getAtPath, isDefined, isNotEmpty } from '@typebot.io/lib'
@@ -167,12 +168,16 @@ export const authOptions: AuthOptions = {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const isMockingSession =
-    req.method === 'GET' && req.url === '/api/auth/session'
+  if (req.method === 'POST' && req.url === '/api/auth/newuser') {
+    const data = await newUser(prisma, req.body)
+    return res.send(data)
+  }
 
-  const user = await getUser(req, res)
+  if (req.method === 'GET' && req.url === '/api/auth/session') {
+    const user = await getUser(req, res)
+    return res.send({ user })
+  }
 
-  if (isMockingSession) return res.send({ user })
   const requestIsFromCompanyFirewall = req.method === 'HEAD'
   if (requestIsFromCompanyFirewall) return res.status(200).end()
   return await NextAuth(req, res, authOptions)
