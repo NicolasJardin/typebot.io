@@ -11,7 +11,6 @@ type Props = Pick<ChatReply, 'messages' | 'input'> & {
   settings: Settings
   inputIndex: number
   context: BotContext
-  isLoadingBubbleDisplayed: boolean
   hasError: boolean
   hideAvatar: boolean
   onNewBubbleDisplayed: (blockId: string) => Promise<void>
@@ -22,13 +21,16 @@ type Props = Pick<ChatReply, 'messages' | 'input'> & {
 }
 
 export const ChatChunk = (props: Props) => {
+  let inputRef: HTMLDivElement | undefined
   const [displayedMessageIndex, setDisplayedMessageIndex] = createSignal(0)
 
   onMount(() => {
     if (props.messages.length === 0) {
       props.onAllBubblesDisplayed()
     }
-    props.onScrollToBottom()
+    props.onScrollToBottom(
+      inputRef?.offsetTop ? inputRef?.offsetTop - 50 : undefined
+    )
   })
 
   const displayNextMessage = async (bubbleOffsetTop?: number) => {
@@ -85,6 +87,7 @@ export const ChatChunk = (props: Props) => {
       </Show>
       {props.input && displayedMessageIndex() === props.messages.length && (
         <InputChatBlock
+          ref={inputRef}
           block={props.input}
           inputIndex={props.inputIndex}
           onSubmit={props.onSubmit}

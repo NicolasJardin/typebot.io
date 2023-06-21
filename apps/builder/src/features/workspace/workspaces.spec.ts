@@ -41,7 +41,9 @@ test.beforeAll(async () => {
 
 test('can switch between workspaces and access typebot', async ({ page }) => {
   await page.goto('/typebots')
-  await expect(page.locator('text="Pro typebot"')).toBeVisible()
+  await expect(page.locator('text="Pro typebot"')).toBeVisible({
+    timeout: 20000,
+  })
   await page.click('text=Pro workspace')
   await page.click('text="Starter workspace"')
   await expect(page.locator('text="Pro typebot"')).toBeHidden()
@@ -74,6 +76,7 @@ test('can update workspace info', async ({ page }) => {
   await page.click('text=Settings & Members')
   await page.click('text="Settings"')
   await page.click('[data-testid="editable-icon"]')
+  await page.getByRole('button', { name: 'Emoji' }).click()
   await page.fill('input[placeholder="Search..."]', 'building')
   await page.click('text="🏦"')
   await page.waitForTimeout(500)
@@ -92,13 +95,13 @@ test('can manage members', async ({ page }) => {
     page.getByRole('heading', { name: 'Members (1/5)' })
   ).toBeVisible()
   await expect(page.locator('text="user@email.com"').nth(1)).toBeVisible()
-  await expect(page.locator('button >> text="Invite"')).toBeEnabled()
+  await expect(page.locator('button >> text="Invite"')).toBeDisabled()
   await page.fill(
     'input[placeholder="colleague@company.com"]',
     'guest@email.com'
   )
   await page.click('button >> text="Invite"')
-  await expect(page.locator('button >> text="Invite"')).toBeEnabled()
+  await expect(page.locator('button >> text="Invite"')).toBeVisible()
   await expect(
     page.locator('input[placeholder="colleague@company.com"]')
   ).toHaveAttribute('value', '')

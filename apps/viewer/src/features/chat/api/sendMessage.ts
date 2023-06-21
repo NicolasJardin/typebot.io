@@ -1,3 +1,4 @@
+import { saveLog } from '@/features/logs/saveLog'
 import { deepParseVariables } from '@/features/variables/deepParseVariable'
 import { injectVariablesFromExistingResult } from '@/features/variables/injectVariablesFromExistingResult'
 import { parseVariables } from '@/features/variables/parseVariables'
@@ -42,8 +43,22 @@ export const sendMessage = publicProcedure
   .input(sendMessageInputSchema)
   .output(chatReplySchema)
   .query(
-    async ({ input: { sessionId, message, startParams }, ctx: { user } }) => {
+    async ({
+      input: { sessionId, message, startParams, clientLogs },
+      ctx: { user },
+    }) => {
       const session = sessionId ? await getSession(sessionId) : null
+
+      if (clientLogs) {
+        for (const log of clientLogs) {
+          await saveLog({
+            message: log.description,
+            status: log.status as 'error' | 'success' | 'info',
+            resultId: session?.state.result.id,
+            details: log.details,
+          })
+        }
+      }
 
       if (!session) {
         const {
@@ -154,6 +169,7 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
     },
     currentTypebotId: typebot.id,
     dynamicTheme: parseDynamicThemeInState(typebot.theme),
+    isStreamEnabled: startParams.isStreamEnabled,
   }
 
   const { messages, input, clientSideActions, newSessionState, logs } =

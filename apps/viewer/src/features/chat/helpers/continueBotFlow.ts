@@ -9,10 +9,12 @@ import {
   ChatReply,
   InputBlock,
   InputBlockType,
+  IntegrationBlockType,
   LogicBlockType,
   ResultInSession,
   SessionState,
   SetVariableBlock,
+  WebhookBlock,
 } from '@typebot.io/schemas'
 import { isInputBlock, isNotDefined, byId } from '@typebot.io/lib'
 import { executeGroup } from './executeGroup'
@@ -23,6 +25,9 @@ import { validatePhoneNumber } from '@/features/blocks/inputs/phone/validatePhon
 import { validateUrl } from '@/features/blocks/inputs/url/validateUrl'
 import { updateVariables } from '@/features/variables/updateVariables'
 import { parseVariables } from '@/features/variables/parseVariables'
+import { OpenAIBlock } from '@typebot.io/schemas/features/blocks/integrations/openai'
+import { resumeChatCompletion } from '@/features/blocks/integrations/openai/resumeChatCompletion'
+import { resumeWebhookExecution } from '@/features/blocks/integrations/webhook/resumeWebhookExecution'
 
 export const continueBotFlow =
   (state: SessionState) =>
@@ -56,6 +61,23 @@ export const continueBotFlow =
           value: reply,
         }
         newSessionState = await updateVariables(state)([newVariable])
+      }
+    } else if (reply && block.type === IntegrationBlockType.WEBHOOK) {
+      const result = await resumeWebhookExecution(
+        state,
+        block
+      )(JSON.parse(reply))
+      if (result.newSessionState) newSessionState = result.newSessionState
+    } else if (
+      block.type === IntegrationBlockType.OPEN_AI &&
+      block.options.task === 'Create chat completion'
+    ) {
+      if (reply) {
+        const result = await resumeChatCompletion(state, {
+          options: block.options,
+          outgoingEdgeId: block.outgoingEdgeId,
+        })(reply)
+        newSessionState = result.newSessionState
       }
     } else if (!isInputBlock(block))
       throw new TRPCError({
@@ -236,7 +258,10 @@ const computeStorageUsed = async (reply: string) => {
 
 const getOutgoingEdgeId =
   ({ typebot: { variables } }: Pick<SessionState, 'typebot'>) =>
-  (block: InputBlock | SetVariableBlock, reply: string | null) => {
+  (
+    block: InputBlock | SetVariableBlock | OpenAIBlock | WebhookBlock,
+    reply: string | null
+  ) => {
     if (
       block.type === InputBlockType.CHOICE &&
       !block.options.isMultipleChoice &&

@@ -51,15 +51,9 @@ export const GoogleAnalyticsSettings = ({
         onChange={updateTrackingId}
       />
       <TextInput
-        label="Categoria do evento:"
-        defaultValue={options?.category ?? ''}
-        placeholder="Exemplo: Automação"
-        onChange={updateCategory}
-      />
-      <TextInput
         label="Ação do evento:"
         defaultValue={options?.action ?? ''}
-        placeholder="Exemplo: enviar email"
+        placeholder="Example: Conversão"
         onChange={updateAction}
       />
       <Accordion allowToggle>
@@ -74,7 +68,13 @@ export const GoogleAnalyticsSettings = ({
           </h2>
           <AccordionPanel pb={4} as={Stack} spacing="6">
             <TextInput
-              label="Rótulo do evento:"
+              label="Categoria do evento:"
+              defaultValue={options?.category ?? ''}
+              placeholder="Example: Fluxo"
+              onChange={updateCategory}
+            />
+            <TextInput
+              label="Rótulo do evento::"
               defaultValue={options?.label ?? ''}
               placeholder="Examplo: Campanha Z"
               onChange={updateLabel}

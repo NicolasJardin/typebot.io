@@ -1,41 +1,28 @@
+import { findUniqueVariableValue } from '@/features/variables/findUniqueVariableValue'
+import { parseVariables } from '@/features/variables/parseVariables'
+import { isNotDefined, isDefined } from '@typebot.io/lib'
 import {
   Comparison,
   ComparisonOperators,
-  ConditionBlock,
+  Condition,
   LogicalOperator,
-  SessionState,
   Variable,
 } from '@typebot.io/schemas'
-import { isNotDefined, isDefined } from '@typebot.io/lib'
-import { ExecuteLogicResponse } from '@/features/chat/types'
-import { findUniqueVariableValue } from '@/features/variables/findUniqueVariableValue'
-import { parseVariables } from '@/features/variables/parseVariables'
 
-export const executeCondition = (
-  { typebot: { variables } }: SessionState,
-  block: ConditionBlock
-): ExecuteLogicResponse => {
-  const passedCondition = block.items.find((item) => {
-    const { content } = item
-    const isConditionPassed =
-      content.logicalOperator === LogicalOperator.AND
-        ? content.comparisons.every(executeComparison(variables))
-        : content.comparisons.some(executeComparison(variables))
-    return isConditionPassed
-  })
-  return {
-    outgoingEdgeId: passedCondition
-      ? passedCondition.outgoingEdgeId
-      : block.outgoingEdgeId,
-  }
-}
+export const executeCondition =
+  (variables: Variable[]) =>
+  (condition: Condition): boolean =>
+    condition.logicalOperator === LogicalOperator.AND
+      ? condition.comparisons.every(executeComparison(variables))
+      : condition.comparisons.some(executeComparison(variables))
 
 const executeComparison =
   (variables: Variable[]) =>
   (comparison: Comparison): boolean => {
     if (!comparison?.variableId) return false
-    const inputValue =
-      variables.find((v) => v.id === comparison.variableId)?.value ?? ''
+    const inputValue = variables.find(
+      (v) => v.id === comparison.variableId
+    )?.value
     const value =
       findUniqueVariableValue(variables)(comparison.value) ??
       parseVariables(variables)(comparison.value)
@@ -54,15 +41,16 @@ const executeComparison =
           if (b === '' || !b || !a) return true
           return !a.toLowerCase().trim().includes(b.toLowerCase().trim())
         }
-        return compare(notContains, inputValue, value)
+        return compare(notContains, inputValue, value, true)
       }
       case ComparisonOperators.EQUAL: {
         return compare((a, b) => a === b, inputValue, value)
       }
       case ComparisonOperators.NOT_EQUAL: {
-        return compare((a, b) => a !== b, inputValue, value)
+        return compare((a, b) => a !== b, inputValue, value, true)
       }
       case ComparisonOperators.GREATER: {
+        if (isNotDefined(inputValue)) return false
         if (typeof inputValue === 'string') {
           if (typeof value === 'string')
             return parseFloat(inputValue) > parseFloat(value)
@@ -73,6 +61,7 @@ const executeComparison =
         return inputValue.length > value.length
       }
       case ComparisonOperators.LESS: {
+        if (isNotDefined(inputValue)) return false
         if (typeof inputValue === 'string') {
           if (typeof value === 'string')
             return parseFloat(inputValue) < parseFloat(value)
@@ -106,15 +95,24 @@ const executeComparison =
   }
 
 const compare = (
-  func: (a: string | null, b: string | null) => boolean,
+  compareStrings: (a: string | null, b: string | null) => boolean,
   a: Variable['value'],
-  b: Variable['value']
+  b: Variable['value'],
+  defaultReturnValue = false
 ): boolean => {
-  if (!a || !b) return false
+  if (!a || !b) return defaultReturnValue
   if (typeof a === 'string') {
-    if (typeof b === 'string') return func(a, b)
-    return b.some((b) => func(a, b))
+    if (typeof b === 'string') return compareStrings(a, b)
+    return defaultReturnValue === true
+      ? b.every((b) => compareStrings(a, b))
+      : b.some((b) => compareStrings(a, b))
   }
-  if (typeof b === 'string') return a.some((a) => func(a, b))
-  return a.some((a) => b.some((b) => func(a, b)))
+  if (typeof b === 'string') {
+    return defaultReturnValue === true
+      ? a.every((a) => compareStrings(a, b))
+      : a.some((a) => compareStrings(a, b))
+  }
+  if (defaultReturnValue === true)
+    return a.every((a) => b.every((b) => compareStrings(a, b)))
+  return a.some((a) => b.some((b) => compareStrings(a, b)))
 }

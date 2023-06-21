@@ -17,7 +17,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { isNotDefined } from '@typebot.io/lib'
 import assert from 'assert'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -32,12 +31,7 @@ export const BoardMenuButton = (props: FlexProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
-    if (
-      user &&
-      isNotDefined(user?.graphNavigation) &&
-      isNotDefined(query.isFirstBot)
-    )
-      onOpen()
+    if (user && !user.graphNavigation && !query.isFirstBot) onOpen()
   }, [onOpen, query.isFirstBot, user])
 
   const downloadFlow = () => {

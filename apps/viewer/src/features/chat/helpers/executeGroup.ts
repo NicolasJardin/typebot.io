@@ -9,6 +9,7 @@ import {
   isInputBlock,
   isIntegrationBlock,
   isLogicBlock,
+  isNotEmpty,
 } from '@typebot.io/lib'
 import {
   BubbleBlock,
@@ -167,7 +168,7 @@ export const executeGroup =
       if (isInputBlock(block))
         return {
           messages,
-          input: await injectVariablesValueInBlock(newSessionState)(block),
+          input: await parseInput(newSessionState)(block),
           newSessionState: {
             ...newSessionState,
             currentBlock: {
@@ -179,23 +180,33 @@ export const executeGroup =
           logs,
         }
       const executionResponse = isLogicBlock(block)
-        ? await executeLogic(newSessionState, lastBubbleBlockId)(block)
+        ? await executeLogic(newSessionState)(block)
         : isIntegrationBlock(block)
-        ? await executeIntegration(newSessionState, lastBubbleBlockId)(block)
+        ? await executeIntegration(newSessionState)(block)
         : null
 
       if (!executionResponse) continue
+      if (executionResponse.logs)
+        logs = [...(logs ?? []), ...executionResponse.logs]
+      if (executionResponse.newSessionState)
+        newSessionState = executionResponse.newSessionState
       if (
         'clientSideActions' in executionResponse &&
         executionResponse.clientSideActions
       ) {
         clientSideActions = [
           ...(clientSideActions ?? []),
-          ...executionResponse.clientSideActions,
+          ...executionResponse.clientSideActions.map((action) => ({
+            ...action,
+            lastBubbleBlockId,
+          })),
         ]
         if (
           executionResponse.clientSideActions?.find(
-            (action) => 'setVariable' in action
+            (action) =>
+              'setVariable' in action ||
+              'streamOpenAiChatCompletion' in action ||
+              'webhookToExecute' in action
           )
         ) {
           return {
@@ -213,10 +224,6 @@ export const executeGroup =
         }
       }
 
-      if (executionResponse.logs)
-        logs = [...(logs ?? []), ...executionResponse.logs]
-      if (executionResponse.newSessionState)
-        newSessionState = executionResponse.newSessionState
       if (executionResponse.outgoingEdgeId) {
         nextEdgeId = executionResponse.outgoingEdgeId
         break
@@ -289,8 +296,8 @@ const parseBubbleBlock =
     }
   }
 
-const injectVariablesValueInBlock =
-  (state: Pick<SessionState, 'result' | 'typebot'>) =>
+const parseInput =
+  (state: SessionState) =>
   async (block: InputBlock): Promise<ChatReply['input']> => {
     switch (block.type) {
       case InputBlockType.WAIT_FOR: {
@@ -310,14 +317,35 @@ const injectVariablesValueInBlock =
       }
 
       case InputBlockType.CHOICE: {
-        return injectVariableValuesInButtonsInputBlock(state.typebot.variables)(
-          block
-        )
+        return injectVariableValuesInButtonsInputBlock(state)(block)
       }
       case InputBlockType.PICTURE_CHOICE: {
         return injectVariableValuesInPictureChoiceBlock(
           state.typebot.variables
         )(block)
+      }
+      case InputBlockType.NUMBER: {
+        const parsedBlock = deepParseVariables(state.typebot.variables)({
+          ...block,
+          prefilledValue: getPrefilledInputValue(state.typebot.variables)(
+            block
+          ),
+        })
+        return {
+          ...parsedBlock,
+          options: {
+            ...parsedBlock.options,
+            min: isNotEmpty(parsedBlock.options.min as string)
+              ? Number(parsedBlock.options.min)
+              : undefined,
+            max: isNotEmpty(parsedBlock.options.max as string)
+              ? Number(parsedBlock.options.max)
+              : undefined,
+            step: isNotEmpty(parsedBlock.options.step as string)
+              ? Number(parsedBlock.options.step)
+              : undefined,
+          },
+        }
       }
       default: {
         return deepParseVariables(state.typebot.variables)({

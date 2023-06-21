@@ -8,4 +8,4 @@ export const saveErrorLog = ({
   resultId: string | undefined
   message: string
   details?: unknown
-}) => saveLog('error', resultId, message, details)
+}) => saveLog({ status: 'error', resultId, message, details })

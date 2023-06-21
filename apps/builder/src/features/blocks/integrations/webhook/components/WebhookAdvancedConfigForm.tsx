@@ -30,6 +30,7 @@ import { getDeepKeys } from '../helpers/getDeepKeys'
 import { QueryParamsInputs, HeadersInputs } from './KeyValueInputs'
 import { DataVariableInputs } from './ResponseMappingInputs'
 import { VariableForTestInputs } from './VariableForTestInputs'
+import { SwitchWithRelatedSettings } from '@/components/SwitchWithRelatedSettings'
 
 type Props = {
   blockId: string
@@ -52,32 +53,31 @@ export const WebhookAdvancedConfigForm = ({
   const [responseKeys, setResponseKeys] = useState<string[]>([])
   const { showToast } = useToast()
 
-  const handleMethodChange = (method: HttpMethod) =>
+  const updateMethod = (method: HttpMethod) =>
     onWebhookChange({ ...webhook, method })
 
-  const handleQueryParamsChange = (queryParams: KeyValue[]) =>
+  const updateQueryParams = (queryParams: KeyValue[]) =>
     onWebhookChange({ ...webhook, queryParams })
 
-  const handleHeadersChange = (headers: KeyValue[]) =>
+  const updateHeaders = (headers: KeyValue[]) =>
     onWebhookChange({ ...webhook, headers })
 
-  const handleBodyChange = (body: string) =>
-    onWebhookChange({ ...webhook, body })
+  const updateBody = (body: string) => onWebhookChange({ ...webhook, body })
 
-  const handleVariablesChange = (variablesForTest: VariableForTest[]) =>
+  const updateVariablesForTest = (variablesForTest: VariableForTest[]) =>
     onOptionsChange({ ...options, variablesForTest })
 
-  const handleResponseMappingChange = (
+  const updateResponseVariableMapping = (
     responseVariableMapping: ResponseVariableMapping[]
   ) => onOptionsChange({ ...options, responseVariableMapping })
 
-  const handleAdvancedConfigChange = (isAdvancedConfig: boolean) =>
+  const updateAdvancedConfig = (isAdvancedConfig: boolean) =>
     onOptionsChange({ ...options, isAdvancedConfig })
 
-  const handleBodyFormStateChange = (isCustomBody: boolean) =>
+  const updateIsCustomBody = (isCustomBody: boolean) =>
     onOptionsChange({ ...options, isCustomBody })
 
-  const handleTestRequestClick = async () => {
+  const executeTestRequest = async () => {
     if (!typebot || !webhook) return
     setIsTestResponseLoading(true)
     await Promise.all([updateWebhook(webhook.id, webhook), save()])
@@ -96,6 +96,9 @@ export const WebhookAdvancedConfigForm = ({
     setIsTestResponseLoading(false)
   }
 
+  const updateIsExecutedOnClient = (isExecutedOnClient: boolean) =>
+    onOptionsChange({ ...options, isExecutedOnClient })
+
   const ResponseMappingInputs = useMemo(
     () =>
       function Component(props: TableListItemProps<ResponseVariableMapping>) {
@@ -106,93 +109,96 @@ export const WebhookAdvancedConfigForm = ({
 
   return (
     <>
-      <SwitchWithLabel
-        label="Configuração avançada"
+      <SwitchWithRelatedSettings
+        label="Configurações avançadas"
         initialValue={options.isAdvancedConfig ?? true}
-        onCheckChange={handleAdvancedConfigChange}
-      />
-      {(options.isAdvancedConfig ?? true) && (
-        <>
-          <HStack justify="space-between">
-            <Text>Método:</Text>
-            <DropdownList
-              currentItem={webhook.method as HttpMethod}
-              onItemSelect={handleMethodChange}
-              items={Object.values(HttpMethod)}
-            />
-          </HStack>
-          <Accordion allowMultiple>
-            <AccordionItem>
-              <AccordionButton justifyContent="space-between">
-                Parâmetros de consulta
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pt="4">
-                <TableList<KeyValue>
-                  initialItems={webhook.queryParams}
-                  onItemsChange={handleQueryParamsChange}
-                  Item={QueryParamsInputs}
-                  addLabel="Adicionar um parâmetro"
+        onCheckChange={updateAdvancedConfig}
+      >
+        <SwitchWithLabel
+          label="Executar no cliente"
+          moreInfoContent="Se ativado, o webhook será executado no cliente. Isso significa que será executado no navegador do seu visitante. Certifique-se de ativar o CORS e não exponha dados confidenciais."
+          initialValue={options.isExecutedOnClient ?? false}
+          onCheckChange={updateIsExecutedOnClient}
+        />
+        <HStack justify="space-between">
+          <Text>Método:</Text>
+          <DropdownList
+            currentItem={webhook.method as HttpMethod}
+            onItemSelect={updateMethod}
+            items={Object.values(HttpMethod)}
+          />
+        </HStack>
+        <Accordion allowMultiple>
+          <AccordionItem>
+            <AccordionButton justifyContent="space-between">
+              Parâmetros de consulta
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pt="4">
+              <TableList<KeyValue>
+                initialItems={webhook.queryParams}
+                onItemsChange={updateQueryParams}
+                Item={QueryParamsInputs}
+                addLabel="Adicionar um parâmetro"
+              />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton justifyContent="space-between">
+              Headers
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pt="4">
+              <TableList<KeyValue>
+                initialItems={webhook.headers}
+                onItemsChange={updateHeaders}
+                Item={HeadersInputs}
+                addLabel="Adicionar um valor"
+              />
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton justifyContent="space-between">
+              Body
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel py={4} as={Stack} spacing="6">
+              <SwitchWithLabel
+                label="Body customizado"
+                initialValue={options.isCustomBody ?? true}
+                onCheckChange={updateIsCustomBody}
+              />
+              {(options.isCustomBody ?? true) && (
+                <CodeEditor
+                  defaultValue={webhook.body ?? ''}
+                  lang="json"
+                  onChange={updateBody}
+                  debounceTimeout={0}
                 />
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionButton justifyContent="space-between">
-                Cabeçalhos
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pt="4">
-                <TableList<KeyValue>
-                  initialItems={webhook.headers}
-                  onItemsChange={handleHeadersChange}
-                  Item={HeadersInputs}
-                  addLabel="Adicionar um valor"
-                />
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionButton justifyContent="space-between">
-                Corpo
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel py={4} as={Stack} spacing="6">
-                <SwitchWithLabel
-                  label="Corpo personalizado"
-                  initialValue={options.isCustomBody ?? true}
-                  onCheckChange={handleBodyFormStateChange}
-                />
-                {(options.isCustomBody ?? true) && (
-                  <CodeEditor
-                    defaultValue={webhook.body ?? ''}
-                    lang="json"
-                    onChange={handleBodyChange}
-                    debounceTimeout={0}
-                  />
-                )}
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionButton justifyContent="space-between">
-                Valores variáveis para teste
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pt="4">
-                <TableList<VariableForTest>
-                  initialItems={
-                    options?.variablesForTest ?? { byId: {}, allIds: [] }
-                  }
-                  onItemsChange={handleVariablesChange}
-                  Item={VariableForTestInputs}
-                  addLabel="Adicionar uma entrada"
-                />
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </>
-      )}
+              )}
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionButton justifyContent="space-between">
+              Valores variáveis para teste
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pt="4">
+              <TableList<VariableForTest>
+                initialItems={
+                  options?.variablesForTest ?? { byId: {}, allIds: [] }
+                }
+                onItemsChange={updateVariablesForTest}
+                Item={VariableForTestInputs}
+                addLabel="Adicionar uma entrada"
+              />
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </SwitchWithRelatedSettings>
       {webhook.url && (
         <Button
-          onClick={handleTestRequestClick}
+          onClick={executeTestRequest}
           colorScheme="blue"
           isLoading={isTestResponseLoading}
         >
@@ -202,22 +208,24 @@ export const WebhookAdvancedConfigForm = ({
       {testResponse && (
         <CodeEditor isReadOnly lang="json" value={testResponse} />
       )}
-      <Accordion allowMultiple>
-        <AccordionItem>
-          <AccordionButton justifyContent="space-between">
-            Save in variables
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pt="4">
-            <TableList<ResponseVariableMapping>
-              initialItems={options.responseVariableMapping}
-              onItemsChange={handleResponseMappingChange}
-              Item={ResponseMappingInputs}
-              addLabel="Adicionar uma entrada"
-            />
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+      {(testResponse || options.responseVariableMapping.length > 0) && (
+        <Accordion allowMultiple>
+          <AccordionItem>
+            <AccordionButton justifyContent="space-between">
+              Save in variables
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pt="4">
+              <TableList<ResponseVariableMapping>
+                initialItems={options.responseVariableMapping}
+                onItemsChange={updateResponseVariableMapping}
+                Item={ResponseMappingInputs}
+                addLabel="Adicionar uma entrada"
+              />
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      )}
     </>
   )
 }

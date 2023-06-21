@@ -41,13 +41,14 @@ export const RowsFilterComparisonItem = ({
         items={Object.values(ComparisonOperators)}
         placeholder="Selecione um operador"
       />
-      {item.comparisonOperator !== ComparisonOperators.IS_SET && (
-        <TextInput
-          defaultValue={item.value ?? ''}
-          onChange={handleChangeValue}
-          placeholder="Digite um valor..."
-        />
-      )}
+      {item.comparisonOperator !== ComparisonOperators.IS_SET &&
+        item.comparisonOperator !== ComparisonOperators.IS_EMPTY && (
+          <TextInput
+            defaultValue={item.value ?? ''}
+            onChange={handleChangeValue}
+            placeholder="Digite um valor..."
+          />
+        )}
     </Stack>
   )
 }

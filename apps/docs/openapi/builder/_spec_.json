@@ -12,7 +12,7 @@
   "paths": {
     "/t/process": {
       "post": {
-        "operationId": "query.processTelemetryEvent",
+        "operationId": "processTelemetryEvent",
         "description": "Only used for the cloud version of Typebot. It's the way it processes telemetry events and inject it to thrid-party services.",
         "requestBody": {
           "required": true,
@@ -343,6 +343,46 @@
                             "data"
                           ],
                           "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string"
+                            },
+                            "workspaceId": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string",
+                              "enum": [
+                                "Workspace automatically quarantined"
+                              ]
+                            },
+                            "data": {
+                              "type": "object",
+                              "properties": {
+                                "chatsLimit": {
+                                  "type": "number"
+                                },
+                                "totalChatsUsed": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "chatsLimit",
+                                "totalChatsUsed"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "userId",
+                            "workspaceId",
+                            "name",
+                            "data"
+                          ],
+                          "additionalProperties": false
                         }
                       ]
                     }
@@ -388,7 +428,7 @@
     },
     "/linkedTypebots": {
       "get": {
-        "operationId": "query.getLinkedTypebots",
+        "operationId": "getLinkedTypebots",
         "summary": "Get linked typebots",
         "tags": [
           "Typebot"
@@ -816,6 +856,68 @@
                                                 },
                                                 "content": {
                                                   "type": "string"
+                                                },
+                                                "displayCondition": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "isEnabled": {
+                                                      "type": "boolean"
+                                                    },
+                                                    "condition": {
+                                                      "type": "object",
+                                                      "properties": {
+                                                        "logicalOperator": {
+                                                          "type": "string",
+                                                          "enum": [
+                                                            "OU",
+                                                            "E"
+                                                          ]
+                                                        },
+                                                        "comparisons": {
+                                                          "type": "array",
+                                                          "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                              "id": {
+                                                                "type": "string"
+                                                              },
+                                                              "variableId": {
+                                                                "type": "string"
+                                                              },
+                                                              "comparisonOperator": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                  "Igual a",
+                                                                  "Não igual",
+                                                                  "Contém",
+                                                                  "Não Contém",
+                                                                  "Maior que",
+                                                                  "Menor que",
+                                                                  "Está definido",
+                                                                  "Is empty",
+                                                                  "Inicia com",
+                                                                  "Termina com"
+                                                                ]
+                                                              },
+                                                              "value": {
+                                                                "type": "string"
+                                                              }
+                                                            },
+                                                            "required": [
+                                                              "id"
+                                                            ],
+                                                            "additionalProperties": false
+                                                          }
+                                                        }
+                                                      },
+                                                      "required": [
+                                                        "logicalOperator",
+                                                        "comparisons"
+                                                      ],
+                                                      "additionalProperties": false
+                                                    }
+                                                  },
+                                                  "additionalProperties": false
                                                 }
                                               },
                                               "required": [
@@ -964,13 +1066,28 @@
                                                 "additionalProperties": false
                                               },
                                               "min": {
-                                                "type": "number"
+                                                "anyOf": [
+                                                  {
+                                                    "type": "number"
+                                                  },
+                                                  {}
+                                                ]
                                               },
                                               "max": {
-                                                "type": "number"
+                                                "anyOf": [
+                                                  {
+                                                    "type": "number"
+                                                  },
+                                                  {}
+                                                ]
                                               },
                                               "step": {
-                                                "type": "number"
+                                                "anyOf": [
+                                                  {
+                                                    "type": "number"
+                                                  },
+                                                  {}
+                                                ]
                                               }
                                             },
                                             "required": [
@@ -1234,6 +1351,30 @@
                                                   },
                                                   "phoneNumber": {
                                                     "type": "string"
+                                                  },
+                                                  "address": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "country": {
+                                                        "type": "string"
+                                                      },
+                                                      "line1": {
+                                                        "type": "string"
+                                                      },
+                                                      "line2": {
+                                                        "type": "string"
+                                                      },
+                                                      "state": {
+                                                        "type": "string"
+                                                      },
+                                                      "city": {
+                                                        "type": "string"
+                                                      },
+                                                      "postalCode": {
+                                                        "type": "string"
+                                                      }
+                                                    },
+                                                    "additionalProperties": false
                                                   }
                                                 },
                                                 "additionalProperties": false
@@ -1293,13 +1434,13 @@
                                                   {
                                                     "type": "string",
                                                     "enum": [
-                                                      "Icons"
+                                                      "Icones"
                                                     ]
                                                   },
                                                   {
                                                     "type": "string",
                                                     "enum": [
-                                                      "Numbers"
+                                                      "Números"
                                                     ]
                                                   }
                                                 ]
@@ -1478,6 +1619,68 @@
                                                 },
                                                 "description": {
                                                   "type": "string"
+                                                },
+                                                "displayCondition": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "isEnabled": {
+                                                      "type": "boolean"
+                                                    },
+                                                    "condition": {
+                                                      "type": "object",
+                                                      "properties": {
+                                                        "logicalOperator": {
+                                                          "type": "string",
+                                                          "enum": [
+                                                            "OU",
+                                                            "E"
+                                                          ]
+                                                        },
+                                                        "comparisons": {
+                                                          "type": "array",
+                                                          "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                              "id": {
+                                                                "type": "string"
+                                                              },
+                                                              "variableId": {
+                                                                "type": "string"
+                                                              },
+                                                              "comparisonOperator": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                  "Igual a",
+                                                                  "Não igual",
+                                                                  "Contém",
+                                                                  "Não Contém",
+                                                                  "Maior que",
+                                                                  "Menor que",
+                                                                  "Está definido",
+                                                                  "Is empty",
+                                                                  "Inicia com",
+                                                                  "Termina com"
+                                                                ]
+                                                              },
+                                                              "value": {
+                                                                "type": "string"
+                                                              }
+                                                            },
+                                                            "required": [
+                                                              "id"
+                                                            ],
+                                                            "additionalProperties": false
+                                                          }
+                                                        }
+                                                      },
+                                                      "required": [
+                                                        "logicalOperator",
+                                                        "comparisons"
+                                                      ],
+                                                      "additionalProperties": false
+                                                    }
+                                                  },
+                                                  "additionalProperties": false
                                                 }
                                               },
                                               "required": [
@@ -1537,6 +1740,68 @@
                                           "groupId",
                                           "type",
                                           "items",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Wait for input"
+                                            ]
+                                          },
+                                          "options": {
+                                            "allOf": [
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "variableId": {
+                                                    "type": "string"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "number": {
+                                                    "type": "number"
+                                                  },
+                                                  "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "DAY",
+                                                      "HOUR",
+                                                      "MINUTE"
+                                                    ],
+                                                    "default": "HOUR"
+                                                  },
+                                                  "until": {
+                                                    "type": "string"
+                                                  },
+                                                  "time": {
+                                                    "type": "string"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
                                           "options"
                                         ],
                                         "additionalProperties": false
@@ -1630,8 +1895,8 @@
                                                     "logicalOperator": {
                                                       "type": "string",
                                                       "enum": [
-                                                        "OR",
-                                                        "AND"
+                                                        "OU",
+                                                        "E"
                                                       ]
                                                     },
                                                     "comparisons": {
@@ -1648,16 +1913,16 @@
                                                           "comparisonOperator": {
                                                             "type": "string",
                                                             "enum": [
-                                                              "Equal to",
-                                                              "Not equal",
-                                                              "Contains",
-                                                              "Does not contain",
-                                                              "Greater than",
-                                                              "Less than",
-                                                              "Is set",
+                                                              "Igual a",
+                                                              "Não igual",
+                                                              "Contém",
+                                                              "Não Contém",
+                                                              "Maior que",
+                                                              "Menor que",
+                                                              "Está definido",
                                                               "Is empty",
-                                                              "Starts with",
-                                                              "Ends with"
+                                                              "Inicia com",
+                                                              "Termina com"
                                                             ]
                                                           },
                                                           "value": {
@@ -1767,6 +2032,35 @@
                                               },
                                               "isCode": {
                                                 "type": "boolean"
+                                              },
+                                              "type": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "Custom",
+                                                  "Empty",
+                                                  "User ID",
+                                                  "Today",
+                                                  "Yesterday",
+                                                  "Tomorrow",
+                                                  "Random ID",
+                                                  "Moment of the day",
+                                                  "Map item with same index"
+                                                ]
+                                              },
+                                              "mapListItemParams": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "baseItemVariableId": {
+                                                    "type": "string"
+                                                  },
+                                                  "baseListVariableId": {
+                                                    "type": "string"
+                                                  },
+                                                  "targetListVariableId": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "additionalProperties": false
                                               },
                                               "isExecutedOnClient": {
                                                 "type": "boolean"
@@ -2193,7 +2487,8 @@
                                                     "required": [
                                                       "id"
                                                     ],
-                                                    "additionalProperties": false
+                                                    "additionalProperties": false,
+                                                    "description": "Deprecated. Use `filter` instead."
                                                   },
                                                   "filter": {
                                                     "type": "object",
@@ -2212,16 +2507,16 @@
                                                             "comparisonOperator": {
                                                               "type": "string",
                                                               "enum": [
-                                                                "Equal to",
-                                                                "Not equal",
-                                                                "Contains",
-                                                                "Does not contain",
-                                                                "Greater than",
-                                                                "Less than",
-                                                                "Is set",
+                                                                "Igual a",
+                                                                "Não igual",
+                                                                "Contém",
+                                                                "Não Contém",
+                                                                "Maior que",
+                                                                "Menor que",
+                                                                "Está definido",
                                                                 "Is empty",
-                                                                "Starts with",
-                                                                "Ends with"
+                                                                "Inicia com",
+                                                                "Termina com"
                                                               ]
                                                             },
                                                             "value": {
@@ -2237,8 +2532,8 @@
                                                       "logicalOperator": {
                                                         "type": "string",
                                                         "enum": [
-                                                          "OR",
-                                                          "AND"
+                                                          "OU",
+                                                          "E"
                                                         ]
                                                       }
                                                     },
@@ -2268,6 +2563,15 @@
                                                       ],
                                                       "additionalProperties": false
                                                     }
+                                                  },
+                                                  "totalRowsToExtract": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "All",
+                                                      "First",
+                                                      "Last",
+                                                      "Random"
+                                                    ]
                                                   }
                                                 },
                                                 "required": [
@@ -2377,6 +2681,60 @@
                                                     "required": [
                                                       "id"
                                                     ],
+                                                    "additionalProperties": false,
+                                                    "description": "Deprecated. Use `filter` instead."
+                                                  },
+                                                  "filter": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "comparisons": {
+                                                        "type": "array",
+                                                        "items": {
+                                                          "type": "object",
+                                                          "properties": {
+                                                            "id": {
+                                                              "type": "string"
+                                                            },
+                                                            "column": {
+                                                              "type": "string"
+                                                            },
+                                                            "comparisonOperator": {
+                                                              "type": "string",
+                                                              "enum": [
+                                                                "Igual a",
+                                                                "Não igual",
+                                                                "Contém",
+                                                                "Não Contém",
+                                                                "Maior que",
+                                                                "Menor que",
+                                                                "Está definido",
+                                                                "Is empty",
+                                                                "Inicia com",
+                                                                "Termina com"
+                                                              ]
+                                                            },
+                                                            "value": {
+                                                              "type": "string"
+                                                            }
+                                                          },
+                                                          "required": [
+                                                            "id"
+                                                          ],
+                                                          "additionalProperties": false
+                                                        }
+                                                      },
+                                                      "logicalOperator": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                          "OU",
+                                                          "E"
+                                                        ]
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "comparisons",
+                                                      "logicalOperator"
+                                                    ],
                                                     "additionalProperties": false
                                                   }
                                                 },
@@ -2483,6 +2841,9 @@
                                               },
                                               "isCustomBody": {
                                                 "type": "boolean"
+                                              },
+                                              "isExecutedOnClient": {
+                                                "type": "boolean"
                                               }
                                             },
                                             "required": [
@@ -2548,12 +2909,17 @@
                                                   "model": {
                                                     "type": "string",
                                                     "enum": [
-                                                      "gpt-4",
-                                                      "gpt-4-0314",
-                                                      "gpt-4-32k",
-                                                      "gpt-4-32k-0314",
                                                       "gpt-3.5-turbo",
-                                                      "gpt-3.5-turbo-0301"
+                                                      "gpt-3.5-turbo-0613",
+                                                      "gpt-3.5-turbo-16k",
+                                                      "gpt-3.5-turbo-16k-0613",
+                                                      "gpt-3.5-turbo-0301",
+                                                      "gpt-4",
+                                                      "gpt-4-0613",
+                                                      "gpt-4-32k",
+                                                      "gpt-4-32k-0613",
+                                                      "gpt-4-32k-0314",
+                                                      "gpt-4-0314"
                                                     ]
                                                   },
                                                   "messages": {
@@ -2575,6 +2941,9 @@
                                                               ]
                                                             },
                                                             "content": {
+                                                              "type": "string"
+                                                            },
+                                                            "name": {
                                                               "type": "string"
                                                             }
                                                           },
@@ -2810,6 +3179,9 @@
                                               },
                                               "isCustomBody": {
                                                 "type": "boolean"
+                                              },
+                                              "isExecutedOnClient": {
+                                                "type": "boolean"
                                               }
                                             },
                                             "required": [
@@ -2975,6 +3347,9 @@
                                               },
                                               "isCustomBody": {
                                                 "type": "boolean"
+                                              },
+                                              "isExecutedOnClient": {
+                                                "type": "boolean"
                                               }
                                             },
                                             "required": [
@@ -3064,6 +3439,9 @@
                                               },
                                               "isCustomBody": {
                                                 "type": "boolean"
+                                              },
+                                              "isExecutedOnClient": {
+                                                "type": "boolean"
                                               }
                                             },
                                             "required": [
@@ -3082,6 +3460,260 @@
                                           "type",
                                           "options",
                                           "webhookId"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Transfer"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "department": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "id": {
+                                                    "type": "string"
+                                                  },
+                                                  "name": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "additionalProperties": false
+                                              },
+                                              "attendant": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "id": {
+                                                    "type": "string"
+                                                  },
+                                                  "name": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "additionalProperties": false
+                                              },
+                                              "message": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Tag"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "color": {
+                                                "type": "string"
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Spread"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "attendants": {
+                                                "type": "array",
+                                                "items": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "id": {
+                                                      "type": "string"
+                                                    },
+                                                    "name": {
+                                                      "type": "string"
+                                                    }
+                                                  },
+                                                  "additionalProperties": false
+                                                }
+                                              },
+                                              "message": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "required": [
+                                              "attendants"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "file"
+                                            ]
+                                          },
+                                          "content": {
+                                            "type": "object",
+                                            "properties": {
+                                              "url": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "content"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Remove tag"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "color": {
+                                                "type": "string"
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "End"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type"
                                         ],
                                         "additionalProperties": false
                                       }
@@ -3162,7 +3794,7 @@
     },
     "/workspaces": {
       "get": {
-        "operationId": "query.workspace.listWorkspaces",
+        "operationId": "workspace-listWorkspaces",
         "summary": "List workspaces",
         "tags": [
           "Workspace"
@@ -3233,7 +3865,7 @@
         }
       },
       "post": {
-        "operationId": "mutation.workspace.createWorkspace",
+        "operationId": "workspace-createWorkspace",
         "summary": "Create workspace",
         "tags": [
           "Workspace"
@@ -3388,7 +4020,7 @@
     },
     "/workspaces/{workspaceId}": {
       "get": {
-        "operationId": "query.workspace.getWorkspace",
+        "operationId": "workspace-getWorkspace",
         "summary": "Get workspace",
         "tags": [
           "Workspace"
@@ -3531,7 +4163,7 @@
         }
       },
       "patch": {
-        "operationId": "mutation.workspace.updateWorkspace",
+        "operationId": "workspace-updateWorkspace",
         "summary": "Update workspace",
         "tags": [
           "Workspace"
@@ -3693,7 +4325,7 @@
         }
       },
       "delete": {
-        "operationId": "mutation.workspace.deleteWorkspace",
+        "operationId": "workspace-deleteWorkspace",
         "summary": "Delete workspace",
         "tags": [
           "Workspace"
@@ -3741,7 +4373,7 @@
     },
     "/workspaces/{workspaceId}/members": {
       "get": {
-        "operationId": "query.workspace.listMembersInWorkspace",
+        "operationId": "workspace-listMembersInWorkspace",
         "summary": "List members in workspace",
         "tags": [
           "Workspace"
@@ -3834,7 +4466,7 @@
     },
     "/typebots": {
       "get": {
-        "operationId": "query.typebot.listTypebots",
+        "operationId": "typebot-listTypebots",
         "summary": "List typebots",
         "tags": [
           "Typebot"
@@ -3885,6 +4517,10 @@
                           "id": {
                             "type": "string"
                           },
+                          "publicId": {
+                            "type": "string",
+                            "nullable": true
+                          },
                           "publishedTypebotId": {
                             "type": "string"
                           }
@@ -3892,7 +4528,8 @@
                         "required": [
                           "name",
                           "icon",
-                          "id"
+                          "id",
+                          "publicId"
                         ],
                         "additionalProperties": false
                       }
@@ -3914,7 +4551,7 @@
     },
     "/typebots/{typebotId}/webhookBlocks": {
       "get": {
-        "operationId": "query.webhook.listWebhookBlocks",
+        "operationId": "webhook-listWebhookBlocks",
         "summary": "List webhook blocks",
         "description": "Returns a list of all the webhook blocks that you can subscribe to.",
         "tags": [
@@ -3982,7 +4619,7 @@
     },
     "/typebots/{typebotId}/webhookBlocks/{blockId}/getResultExample": {
       "get": {
-        "operationId": "query.webhook.getResultExample",
+        "operationId": "webhook-getResultExample",
         "summary": "Get result example",
         "description": "Returns \"fake\" result for webhook block to help you anticipate how the webhook will behave.",
         "tags": [
@@ -4030,15 +4667,14 @@
                                 "This is a sample result, it has been generated ⬇️"
                               ]
                             },
-                            "Submitted at": {
+                            "Enviado em": {
                               "type": "string"
                             }
                           },
                           "required": [
                             "message",
-                            "Submitted at"
-                          ],
-                          "additionalProperties": false
+                            "Enviado em"
+                          ]
                         },
                         {
                           "type": "object",
@@ -4073,7 +4709,7 @@
     },
     "/typebots/{typebotId}/webhookBlocks/{blockId}/subscribe": {
       "post": {
-        "operationId": "query.webhook.subscribeWebhook",
+        "operationId": "webhook-subscribeWebhook",
         "summary": "Subscribe to webhook block",
         "tags": [
           "Webhook"
@@ -4153,7 +4789,7 @@
     },
     "/typebots/{typebotId}/webhookBlocks/{blockId}/unsubscribe": {
       "post": {
-        "operationId": "query.webhook.unsubscribeWebhook",
+        "operationId": "webhook-unsubscribeWebhook",
         "summary": "Unsubscribe from webhook block",
         "tags": [
           "Webhook"
@@ -4163,18 +4799,6 @@
             "Authorization": []
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {},
-                "additionalProperties": false
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "typebotId",
@@ -4226,7 +4850,7 @@
     },
     "/typebots/{typebotId}/results": {
       "get": {
-        "operationId": "query.results.getResults",
+        "operationId": "results-getResults",
         "summary": "List results",
         "tags": [
           "Results"
@@ -4406,7 +5030,7 @@
         }
       },
       "delete": {
-        "operationId": "mutation.results.deleteResults",
+        "operationId": "results-deleteResults",
         "summary": "Delete results",
         "tags": [
           "Results"
@@ -4452,7 +5076,7 @@
     },
     "/typebots/{typebotId}/results/{resultId}/logs": {
       "get": {
-        "operationId": "query.results.getResultLogs",
+        "operationId": "results-getResultLogs",
         "summary": "List result logs",
         "tags": [
           "Results"
@@ -4542,7 +5166,7 @@
     },
     "/billing/subscription/portal": {
       "get": {
-        "operationId": "query.billing.getBillingPortalUrl",
+        "operationId": "billing-getBillingPortalUrl",
         "summary": "Get Stripe billing portal URL",
         "tags": [
           "Billing"
@@ -4590,7 +5214,7 @@
     },
     "/billing/invoices": {
       "get": {
-        "operationId": "query.billing.listInvoices",
+        "operationId": "billing-listInvoices",
         "summary": "List invoices",
         "tags": [
           "Billing"
@@ -4667,7 +5291,7 @@
     },
     "/billing/subscription/checkout": {
       "post": {
-        "operationId": "mutation.billing.createCheckoutSession",
+        "operationId": "billing-createCheckoutSession",
         "summary": "Create checkout session to create a new subscription",
         "tags": [
           "Billing"
@@ -4781,7 +5405,7 @@
     },
     "/billing/subscription": {
       "patch": {
-        "operationId": "mutation.billing.updateSubscription",
+        "operationId": "billing-updateSubscription",
         "summary": "Update subscription",
         "tags": [
           "Billing"
@@ -4798,6 +5422,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "returnUrl": {
+                    "type": "string"
+                  },
                   "workspaceId": {
                     "type": "string"
                   },
@@ -4826,6 +5453,7 @@
                   }
                 },
                 "required": [
+                  "returnUrl",
                   "workspaceId",
                   "plan",
                   "additionalChats",
@@ -4945,12 +5573,14 @@
                         "customSeatsLimit",
                         "isQuarantined"
                       ],
-                      "additionalProperties": false
+                      "additionalProperties": false,
+                      "nullable": true
+                    },
+                    "checkoutUrl": {
+                      "type": "string",
+                      "nullable": true
                     }
                   },
-                  "required": [
-                    "workspace"
-                  ],
                   "additionalProperties": false
                 }
               }
@@ -4962,7 +5592,7 @@
         }
       },
       "get": {
-        "operationId": "query.billing.getSubscription",
+        "operationId": "billing-getSubscription",
         "summary": "List invoices",
         "tags": [
           "Billing"
@@ -5041,7 +5671,7 @@
     },
     "/billing/usage": {
       "get": {
-        "operationId": "query.billing.getUsage",
+        "operationId": "billing-getUsage",
         "summary": "Get current plan usage",
         "tags": [
           "Billing"
@@ -5093,7 +5723,7 @@
     },
     "/billing/subscription/custom-checkout": {
       "post": {
-        "operationId": "mutation.billing.createCustomCheckoutSession",
+        "operationId": "billing-createCustomCheckoutSession",
         "summary": "Create custom checkout session to make a workspace pay for a custom plan",
         "tags": [
           "Billing"
@@ -5159,7 +5789,7 @@
     },
     "/credentials": {
       "post": {
-        "operationId": "mutation.credentials.createCredentials",
+        "operationId": "credentials-createCredentials",
         "summary": "Create credentials",
         "tags": [
           "Credentials"
@@ -5428,7 +6058,7 @@
         }
       },
       "get": {
-        "operationId": "query.credentials.listCredentials",
+        "operationId": "credentials-listCredentials",
         "summary": "List workspace credentials",
         "tags": [
           "Credentials"
@@ -5533,7 +6163,7 @@
     },
     "/credentials/:credentialsId": {
       "delete": {
-        "operationId": "mutation.credentials.deleteCredentials",
+        "operationId": "credentials-deleteCredentials",
         "summary": "Delete credentials",
         "tags": [
           "Credentials"
@@ -5589,7 +6219,7 @@
     },
     "/themeTemplates": {
       "get": {
-        "operationId": "query.theme.listThemeTemplates",
+        "operationId": "theme-listThemeTemplates",
         "summary": "List theme templates",
         "tags": [
           "Theme template"
@@ -5818,7 +6448,7 @@
     },
     "/themeTemplates/{themeTemplateId}": {
       "put": {
-        "operationId": "mutation.theme.saveThemeTemplate",
+        "operationId": "theme-saveThemeTemplate",
         "summary": "Save theme template",
         "tags": [
           "Theme template"
@@ -6244,7 +6874,7 @@
         }
       },
       "delete": {
-        "operationId": "mutation.theme.deleteThemeTemplate",
+        "operationId": "theme-deleteThemeTemplate",
         "summary": "Delete a theme template",
         "tags": [
           "Theme template"
