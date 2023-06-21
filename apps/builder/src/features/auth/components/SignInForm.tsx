@@ -1,5 +1,6 @@
 import { TextLink } from '@/components/TextLink'
 import { useToast } from '@/hooks/useToast'
+import { useScopedI18n } from '@/locales'
 import {
   Alert,
   AlertIcon,
@@ -38,6 +39,8 @@ export const SignInForm = ({
   const [authLoading, setAuthLoading] = useState(false)
   const [isLoadingProviders, setIsLoadingProviders] = useState(true)
 
+  const scopedT = useScopedI18n('auth')
+
   const [emailValue, setEmailValue] = useState(defaultEmail ?? '')
   const [isMagicLinkSent, setIsMagicLinkSent] = useState(false)
 
@@ -69,21 +72,23 @@ export const SignInForm = ({
     e.preventDefault()
     if (isMagicLinkSent) return
     setAuthLoading(true)
-    const response = await signIn('email', {
-      email: emailValue,
-      redirect: false,
-    })
-    if (response?.error) {
-      showToast({
-        title: 'Não autorizado',
-        description: 'As inscrições estão desativadas.',
+    try {
+      const response = await signIn('email', {
+        email: emailValue,
+        redirect: false,
       })
-    } else {
-      setIsMagicLinkSent(true)
+      if (response?.error) {
+        showToast({
+          title: scopedT('signinErrorToast.title'),
+          description: scopedT('signinErrorToast.description'),
+        })
+      } else {
+        setIsMagicLinkSent(true)
+      }
+    } catch {
       showToast({
-        status: 'success',
-        title: 'Successo!',
-        description: 'Verifique sua caixa de entrada para entrar',
+        status: 'info',
+        description: scopedT('signinErrorToast.tooManyRequests'),
       })
     }
     setAuthLoading(false)

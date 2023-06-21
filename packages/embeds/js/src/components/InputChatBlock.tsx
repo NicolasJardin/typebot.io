@@ -37,6 +37,7 @@ import { Match, Switch, createSignal } from 'solid-js'
 import { GuestBubble } from './bubbles/GuestBubble'
 
 type Props = {
+  ref: HTMLDivElement | undefined
   block: NonNullable<ChatReply['input']>
   hasHostAvatar: boolean
   guestAvatar?: Theme['chat']['guestAvatar']
@@ -74,6 +75,7 @@ export const InputChatBlock = (props: Props) => {
         <div
           class="flex justify-end animate-fade-in gap-2"
           data-blockid={props.block.id}
+          ref={props.ref}
         >
           {props.hasHostAvatar && (
             <div

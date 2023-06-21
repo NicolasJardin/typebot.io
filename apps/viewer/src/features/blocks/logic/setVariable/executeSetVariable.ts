@@ -8,18 +8,25 @@ import { parseScriptToExecuteClientSideAction } from '../script/executeScript'
 
 export const executeSetVariable = async (
   state: SessionState,
-  block: SetVariableBlock,
-  lastBubbleBlockId?: string
+  block: SetVariableBlock
 ): Promise<ExecuteLogicResponse> => {
   const { variables } = state.typebot
   if (!block.options?.variableId)
     return {
       outgoingEdgeId: block.outgoingEdgeId,
     }
-  if (block.options.isExecutedOnClient && block.options.expressionToEvaluate) {
+  const expressionToEvaluate = getExpressionToEvaluate(state.result.id)(
+    block.options
+  )
+  const isCustomValue = !block.options.type || block.options.type === 'Custom'
+  if (
+    expressionToEvaluate &&
+    ((isCustomValue && block.options.isExecutedOnClient) ||
+      block.options.type === 'Moment of the day')
+  ) {
     const scriptToExecute = parseScriptToExecuteClientSideAction(
       state.typebot.variables,
-      block.options.expressionToEvaluate
+      expressionToEvaluate
     )
     return {
       outgoingEdgeId: block.outgoingEdgeId,
@@ -28,14 +35,10 @@ export const executeSetVariable = async (
           setVariable: {
             scriptToExecute,
           },
-          lastBubbleBlockId,
         },
       ],
     }
   }
-  const expressionToEvaluate = getExpressionToEvaluate(state.result.id)(
-    block.options
-  )
   const evaluatedExpression = expressionToEvaluate
     ? evaluateSetVariableExpression(variables)(expressionToEvaluate)
     : undefined
@@ -93,6 +96,13 @@ const getExpressionToEvaluate =
       }
       case 'Empty': {
         return null
+      }
+      case 'Moment of the day': {
+        return `const now = new Date()
+        if(now.getHours() < 12) return 'morning'
+        if(now.getHours() >= 12 && now.getHours() < 18) return 'afternoon'
+        if(now.getHours() >= 18) return 'evening'
+        if(now.getHours() >= 22 || now.getHours() < 6) return 'night'`
       }
       case 'Custom':
       case undefined: {

@@ -23,10 +23,12 @@ import {
 } from './blocks/bubbles'
 import { BubbleBlockType } from './blocks/bubbles/enums'
 import { fileBubbleContentSchema } from './blocks/bubbles/file'
+import { chatCompletionMessageSchema } from './blocks/integrations/openai'
 import { inputBlockSchemas } from './blocks/schemas'
 import { publicTypebotSchema } from './publicTypebot'
 import { logSchema, resultSchema } from './result'
 import { listVariableValue, typebotSchema } from './typebot'
+import { executableWebhookSchema } from './webhooks'
 
 const typebotInSessionStateSchema = publicTypebotSchema.pick({
   id: true,
@@ -72,6 +74,7 @@ export const sessionStateSchema = z.object({
       groupId: z.string(),
     })
     .optional(),
+  isStreamEnabled: z.boolean().optional(),
 })
 
 const chatSessionSchema = z.object({
@@ -224,7 +227,15 @@ const startParamsSchema = z.object({
     .describe(
       '[More info about prefilled variables.](https://docs.typebot.io/editor/variables#prefilled-variables)'
     ),
+  isStreamEnabled: z.boolean().optional(),
 })
+
+const replyLogSchema = logSchema
+  .pick({
+    status: true,
+    description: true,
+  })
+  .merge(z.object({ details: z.unknown().optional() }))
 
 export const sendMessageInputSchema = z.object({
   message: z
@@ -239,17 +250,14 @@ export const sendMessageInputSchema = z.object({
     .describe(
       'Session ID that you get from the initial chat request to a bot. If not provided, it will create a new session.'
     ),
+  clientLogs: z
+    .array(replyLogSchema)
+    .optional()
+    .describe('Logs while executing client side actions'),
   startParams: startParamsSchema.optional(),
 })
 
 const runtimeOptionsSchema = paymentInputRuntimeOptionsSchema.optional()
-
-const replyLogSchema = logSchema
-  .pick({
-    status: true,
-    description: true,
-  })
-  .merge(z.object({ details: z.unknown().optional() }))
 
 const clientSideActionSchema = z
   .object({
@@ -321,6 +329,20 @@ const clientSideActionSchema = z
       .or(
         z.object({
           setVariable: z.object({ scriptToExecute: scriptToExecuteSchema }),
+        })
+      )
+      .or(
+        z.object({
+          streamOpenAiChatCompletion: z.object({
+            messages: z.array(
+              chatCompletionMessageSchema.pick({ content: true, role: true })
+            ),
+          }),
+        })
+      )
+      .or(
+        z.object({
+          webhookToExecute: executableWebhookSchema,
         })
       )
   )

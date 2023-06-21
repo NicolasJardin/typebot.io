@@ -1,13 +1,37 @@
-import { Heading, Stack, useColorMode } from '@chakra-ui/react'
+import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
+import { ChevronDownIcon } from '@/components/icons'
+import { useChangeLocale, useCurrentLocale, useScopedI18n } from '@/locales'
+import {
+  Button,
+  HStack,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  useColorMode,
+} from '@chakra-ui/react'
 import { GraphNavigation } from '@typebot.io/prisma'
 import { useEffect } from 'react'
 import { useUser } from '../hooks/useUser'
 import { AppearanceRadioGroup } from './AppearanceRadioGroup'
 import { GraphNavigationRadioGroup } from './GraphNavigationRadioGroup'
 
+const localeHumanReadable = {
+  en: 'English',
+  fr: 'Français',
+  de: 'Deutsch',
+  pt: 'Português',
+} as const
+
 export const UserPreferencesForm = () => {
   const { colorMode, setColorMode } = useColorMode()
   const { user, updateUser } = useUser()
+  const changeLocale = useChangeLocale()
+  const currentLocale = useCurrentLocale()
+
+  const scopedT = useScopedI18n('account.preferences')
 
   useEffect(() => {
     if (!user?.graphNavigation)
@@ -23,8 +47,40 @@ export const UserPreferencesForm = () => {
     updateUser({ preferredAppAppearance: value })
   }
 
+  const updateLocale = (locale: keyof typeof localeHumanReadable) => () => {
+    changeLocale(locale)
+    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000`
+  }
+
   return (
     <Stack spacing={12}>
+      <HStack spacing={4}>
+        <Heading size="md">{scopedT('language.heading')}</Heading>
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            {localeHumanReadable[currentLocale]}
+          </MenuButton>
+          <MenuList>
+            {Object.keys(localeHumanReadable).map((locale) => (
+              <MenuItem
+                key={locale}
+                onClick={updateLocale(
+                  locale as keyof typeof localeHumanReadable
+                )}
+              >
+                {
+                  localeHumanReadable[
+                    locale as keyof typeof localeHumanReadable
+                  ]
+                }
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+        {currentLocale !== 'en' && (
+          <MoreInfoTooltip>{scopedT('language.tooltip')}</MoreInfoTooltip>
+        )}
+      </HStack>
       <Stack spacing={6}>
         <Heading size="md">Navegação do editor</Heading>
         <GraphNavigationRadioGroup

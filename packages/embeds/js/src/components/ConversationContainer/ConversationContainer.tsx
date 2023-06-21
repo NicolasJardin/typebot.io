@@ -1,4 +1,4 @@
-import { ChatReply, Theme } from '@typebot.io/schemas'
+import { ChatReply, SendMessageInput, Theme } from '@typebot.io/schemas'
 import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums'
 import { createEffect, createSignal, For, onMount, Show } from 'solid-js'
 import { sendMessageQuery } from '@/queries/sendMessageQuery'
@@ -69,9 +69,17 @@ export const ConversationContainer = (props: Props) => {
           (action) => isNotDefined(action.lastBubbleBlockId)
         )
         for (const action of actionsBeforeFirstBubble) {
-          const response = await executeClientSideAction(action)
+          if (
+            'streamOpenAiChatCompletion' in action ||
+            'webhookToExecute' in action
+          )
+            setIsSending(true)
+          const response = await executeClientSideAction(action, {
+            apiHost: props.context.apiHost,
+            sessionId: props.initialChatReply.sessionId,
+          })
           if (response && 'replyToSend' in response) {
-            sendMessage(response.replyToSend)
+            sendMessage(response.replyToSend, response.logs)
             return
           }
           if (response && 'blockedPopupUrl' in response)
@@ -87,7 +95,11 @@ export const ConversationContainer = (props: Props) => {
     )
   })
 
-  const sendMessage = async (message: string | undefined) => {
+  const sendMessage = async (
+    message: string | undefined,
+    clientLogs?: SendMessageInput['clientLogs']
+  ) => {
+    if (clientLogs) props.onNewLogs?.(clientLogs)
     setHasError(false)
     const currentInputBlock = [...chatChunks()].pop()?.input
     if (currentInputBlock?.id && props.onAnswer && message)
@@ -106,6 +118,7 @@ export const ConversationContainer = (props: Props) => {
       apiHost: props.context.apiHost,
       sessionId: props.initialChatReply.sessionId,
       message,
+      clientLogs,
     })
     clearTimeout(longRequest)
     setIsSending(false)
@@ -133,9 +146,17 @@ export const ConversationContainer = (props: Props) => {
         isNotDefined(action.lastBubbleBlockId)
       )
       for (const action of actionsBeforeFirstBubble) {
-        const response = await executeClientSideAction(action)
+        if (
+          'streamOpenAiChatCompletion' in action ||
+          'webhookToExecute' in action
+        )
+          setIsSending(true)
+        const response = await executeClientSideAction(action, {
+          apiHost: props.context.apiHost,
+          sessionId: props.initialChatReply.sessionId,
+        })
         if (response && 'replyToSend' in response) {
-          sendMessage(response.replyToSend)
+          sendMessage(response.replyToSend, response.logs)
           return
         }
         if (response && 'blockedPopupUrl' in response)
@@ -174,9 +195,17 @@ export const ConversationContainer = (props: Props) => {
         (action) => action.lastBubbleBlockId === blockId
       )
       for (const action of actionsToExecute) {
-        const response = await executeClientSideAction(action)
+        if (
+          'streamOpenAiChatCompletion' in action ||
+          'webhookToExecute' in action
+        )
+          setIsSending(true)
+        const response = await executeClientSideAction(action, {
+          apiHost: props.context.apiHost,
+          sessionId: props.initialChatReply.sessionId,
+        })
         if (response && 'replyToSend' in response) {
-          sendMessage(response.replyToSend)
+          sendMessage(response.replyToSend, response.logs)
           return
         }
         if (response && 'blockedPopupUrl' in response)
@@ -200,7 +229,6 @@ export const ConversationContainer = (props: Props) => {
             input={chatChunk.input}
             theme={theme()}
             settings={props.initialChatReply.typebot.settings}
-            isLoadingBubbleDisplayed={isSending()}
             onNewBubbleDisplayed={handleNewBubbleDisplayed}
             onAllBubblesDisplayed={handleAllBubblesDisplayed}
             onSubmit={sendMessage}

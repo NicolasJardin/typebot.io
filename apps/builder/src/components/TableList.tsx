@@ -22,6 +22,7 @@ type Props<T> = {
   initialItems: ItemWithId<T>[]
   isOrdered?: boolean
   addLabel?: string
+  newItemDefaultProps?: Partial<T>
   Item: (props: TableListItemProps<T>) => JSX.Element
   ComponentBetweenItems?: (props: unknown) => JSX.Element
   onItemsChange: (items: ItemWithId<T>[]) => void
@@ -32,6 +33,8 @@ export const TableList = <T,>({
   onItemsChange,
   addLabel = 'Adicionar',
   isOrdered,
+  addLabel = 'Add',
+  newItemDefaultProps,
   Item,
   ComponentBetweenItems,
 }: Props<T>) => {
@@ -40,7 +43,7 @@ export const TableList = <T,>({
 
   const createItem = () => {
     const id = createId()
-    const newItem = { id } as ItemWithId<T>
+    const newItem = { id, ...newItemDefaultProps } as ItemWithId<T>
     setItems([...items, newItem])
     onItemsChange([...items, newItem])
   }

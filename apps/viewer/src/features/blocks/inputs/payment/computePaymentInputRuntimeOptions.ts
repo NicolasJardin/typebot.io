@@ -40,9 +40,10 @@ const createStripePaymentIntent =
         : stripeKeys.live.secretKey,
       { apiVersion: '2022-11-15' }
     )
-    const amount =
+    const amount = Math.round(
       Number(parseVariables(variables)(options.amount)) *
-      (isZeroDecimalCurrency(options.currency) ? 1 : 100)
+        (isZeroDecimalCurrency(options.currency) ? 1 : 100)
+    )
     if (isNaN(amount))
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -69,15 +70,23 @@ const createStripePaymentIntent =
         message: 'Could not create payment intent',
       })
 
+    const priceFormatter = new Intl.NumberFormat(
+      options.currency === 'EUR' ? 'fr-FR' : undefined,
+      {
+        style: 'currency',
+        currency: options.currency,
+      }
+    )
+
     return {
       paymentIntentSecret: paymentIntent.client_secret,
       publicKey:
         isPreview && stripeKeys.test?.publicKey
           ? stripeKeys.test.publicKey
           : stripeKeys.live.publicKey,
-      amountLabel: `${
+      amountLabel: priceFormatter.format(
         amount / (isZeroDecimalCurrency(options.currency) ? 1 : 100)
-      }${currencySymbols[options.currency] ?? ` ${options.currency}`}`,
+      ),
     }
   }
 
@@ -88,7 +97,10 @@ const getStripeInfo = async (
     where: { id: credentialsId },
   })
   if (!credentials) return
-  return decrypt(credentials.data, credentials.iv) as StripeCredentials['data']
+  return (await decrypt(
+    credentials.data,
+    credentials.iv
+  )) as StripeCredentials['data']
 }
 
 // https://stripe.com/docs/currencies#zero-decimal
@@ -111,21 +123,3 @@ const isZeroDecimalCurrency = (currency: string) =>
     'XOF',
     'XPF',
   ].includes(currency)
-
-const currencySymbols: { [key: string]: string } = {
-  USD: '$',
-  EUR: '€',
-  CRC: '₡',
-  GBP: '£',
-  ILS: '₪',
-  INR: '₹',
-  JPY: '¥',
-  KRW: '₩',
-  NGN: '₦',
-  PHP: '₱',
-  PLN: 'zł',
-  PYG: '₲',
-  THB: '฿',
-  UAH: '₴',
-  VND: '₫',
-}
