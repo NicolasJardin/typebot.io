@@ -33,7 +33,6 @@ export const TableList = <T,>({
   onItemsChange,
   addLabel = 'Adicionar',
   isOrdered,
-  addLabel = 'Add',
   newItemDefaultProps,
   Item,
   ComponentBetweenItems,

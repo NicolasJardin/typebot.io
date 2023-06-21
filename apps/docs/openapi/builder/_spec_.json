@@ -869,8 +869,8 @@
                                                         "logicalOperator": {
                                                           "type": "string",
                                                           "enum": [
-                                                            "OR",
-                                                            "AND"
+                                                            "OU",
+                                                            "E"
                                                           ]
                                                         },
                                                         "comparisons": {
@@ -887,16 +887,16 @@
                                                               "comparisonOperator": {
                                                                 "type": "string",
                                                                 "enum": [
-                                                                  "Equal to",
-                                                                  "Not equal",
-                                                                  "Contains",
-                                                                  "Does not contain",
-                                                                  "Greater than",
-                                                                  "Less than",
-                                                                  "Is set",
+                                                                  "Igual a",
+                                                                  "Não igual",
+                                                                  "Contém",
+                                                                  "Não Contém",
+                                                                  "Maior que",
+                                                                  "Menor que",
+                                                                  "Está definido",
                                                                   "Is empty",
-                                                                  "Starts with",
-                                                                  "Ends with"
+                                                                  "Inicia com",
+                                                                  "Termina com"
                                                                 ]
                                                               },
                                                               "value": {
@@ -1434,13 +1434,13 @@
                                                   {
                                                     "type": "string",
                                                     "enum": [
-                                                      "Icons"
+                                                      "Icones"
                                                     ]
                                                   },
                                                   {
                                                     "type": "string",
                                                     "enum": [
-                                                      "Numbers"
+                                                      "Números"
                                                     ]
                                                   }
                                                 ]
@@ -1632,8 +1632,8 @@
                                                         "logicalOperator": {
                                                           "type": "string",
                                                           "enum": [
-                                                            "OR",
-                                                            "AND"
+                                                            "OU",
+                                                            "E"
                                                           ]
                                                         },
                                                         "comparisons": {
@@ -1650,16 +1650,16 @@
                                                               "comparisonOperator": {
                                                                 "type": "string",
                                                                 "enum": [
-                                                                  "Equal to",
-                                                                  "Not equal",
-                                                                  "Contains",
-                                                                  "Does not contain",
-                                                                  "Greater than",
-                                                                  "Less than",
-                                                                  "Is set",
+                                                                  "Igual a",
+                                                                  "Não igual",
+                                                                  "Contém",
+                                                                  "Não Contém",
+                                                                  "Maior que",
+                                                                  "Menor que",
+                                                                  "Está definido",
                                                                   "Is empty",
-                                                                  "Starts with",
-                                                                  "Ends with"
+                                                                  "Inicia com",
+                                                                  "Termina com"
                                                                 ]
                                                               },
                                                               "value": {
@@ -1759,6 +1759,68 @@
                                           "type": {
                                             "type": "string",
                                             "enum": [
+                                              "Wait for input"
+                                            ]
+                                          },
+                                          "options": {
+                                            "allOf": [
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "variableId": {
+                                                    "type": "string"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "type": "object",
+                                                "properties": {
+                                                  "number": {
+                                                    "type": "number"
+                                                  },
+                                                  "type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "DAY",
+                                                      "HOUR",
+                                                      "MINUTE"
+                                                    ],
+                                                    "default": "HOUR"
+                                                  },
+                                                  "until": {
+                                                    "type": "string"
+                                                  },
+                                                  "time": {
+                                                    "type": "string"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
                                               "Code"
                                             ]
                                           },
@@ -1833,8 +1895,8 @@
                                                     "logicalOperator": {
                                                       "type": "string",
                                                       "enum": [
-                                                        "OR",
-                                                        "AND"
+                                                        "OU",
+                                                        "E"
                                                       ]
                                                     },
                                                     "comparisons": {
@@ -1851,16 +1913,16 @@
                                                           "comparisonOperator": {
                                                             "type": "string",
                                                             "enum": [
-                                                              "Equal to",
-                                                              "Not equal",
-                                                              "Contains",
-                                                              "Does not contain",
-                                                              "Greater than",
-                                                              "Less than",
-                                                              "Is set",
+                                                              "Igual a",
+                                                              "Não igual",
+                                                              "Contém",
+                                                              "Não Contém",
+                                                              "Maior que",
+                                                              "Menor que",
+                                                              "Está definido",
                                                               "Is empty",
-                                                              "Starts with",
-                                                              "Ends with"
+                                                              "Inicia com",
+                                                              "Termina com"
                                                             ]
                                                           },
                                                           "value": {
@@ -2445,16 +2507,16 @@
                                                             "comparisonOperator": {
                                                               "type": "string",
                                                               "enum": [
-                                                                "Equal to",
-                                                                "Not equal",
-                                                                "Contains",
-                                                                "Does not contain",
-                                                                "Greater than",
-                                                                "Less than",
-                                                                "Is set",
+                                                                "Igual a",
+                                                                "Não igual",
+                                                                "Contém",
+                                                                "Não Contém",
+                                                                "Maior que",
+                                                                "Menor que",
+                                                                "Está definido",
                                                                 "Is empty",
-                                                                "Starts with",
-                                                                "Ends with"
+                                                                "Inicia com",
+                                                                "Termina com"
                                                               ]
                                                             },
                                                             "value": {
@@ -2470,8 +2532,8 @@
                                                       "logicalOperator": {
                                                         "type": "string",
                                                         "enum": [
-                                                          "OR",
-                                                          "AND"
+                                                          "OU",
+                                                          "E"
                                                         ]
                                                       }
                                                     },
@@ -2554,8 +2616,7 @@
                                                       "required": [
                                                         "id"
                                                       ],
-                                                      "additionalProperties": false,
-                                                      "description": "Deprecated. Use `filter` instead."
+                                                      "additionalProperties": false
                                                     }
                                                   }
                                                 },
@@ -2601,8 +2662,7 @@
                                                       "required": [
                                                         "id"
                                                       ],
-                                                      "additionalProperties": false,
-                                                      "description": "Deprecated. Use `filter` instead."
+                                                      "additionalProperties": false
                                                     }
                                                   },
                                                   "referenceCell": {
@@ -2641,16 +2701,16 @@
                                                             "comparisonOperator": {
                                                               "type": "string",
                                                               "enum": [
-                                                                "Equal to",
-                                                                "Not equal",
-                                                                "Contains",
-                                                                "Does not contain",
-                                                                "Greater than",
-                                                                "Less than",
-                                                                "Is set",
+                                                                "Igual a",
+                                                                "Não igual",
+                                                                "Contém",
+                                                                "Não Contém",
+                                                                "Maior que",
+                                                                "Menor que",
+                                                                "Está definido",
                                                                 "Is empty",
-                                                                "Starts with",
-                                                                "Ends with"
+                                                                "Inicia com",
+                                                                "Termina com"
                                                               ]
                                                             },
                                                             "value": {
@@ -2666,8 +2726,8 @@
                                                       "logicalOperator": {
                                                         "type": "string",
                                                         "enum": [
-                                                          "OR",
-                                                          "AND"
+                                                          "OU",
+                                                          "E"
                                                         ]
                                                       }
                                                     },
@@ -3400,6 +3460,260 @@
                                           "type",
                                           "options",
                                           "webhookId"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Transfer"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "department": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "id": {
+                                                    "type": "string"
+                                                  },
+                                                  "name": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "additionalProperties": false
+                                              },
+                                              "attendant": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "id": {
+                                                    "type": "string"
+                                                  },
+                                                  "name": {
+                                                    "type": "string"
+                                                  }
+                                                },
+                                                "additionalProperties": false
+                                              },
+                                              "message": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Tag"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "color": {
+                                                "type": "string"
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Spread"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "attendants": {
+                                                "type": "array",
+                                                "items": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "id": {
+                                                      "type": "string"
+                                                    },
+                                                    "name": {
+                                                      "type": "string"
+                                                    }
+                                                  },
+                                                  "additionalProperties": false
+                                                }
+                                              },
+                                              "message": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "required": [
+                                              "attendants"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "file"
+                                            ]
+                                          },
+                                          "content": {
+                                            "type": "object",
+                                            "properties": {
+                                              "url": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "content"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Remove tag"
+                                            ]
+                                          },
+                                          "options": {
+                                            "type": "object",
+                                            "properties": {
+                                              "color": {
+                                                "type": "string"
+                                              },
+                                              "name": {
+                                                "type": "string"
+                                              }
+                                            },
+                                            "additionalProperties": false
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type",
+                                          "options"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "groupId": {
+                                            "type": "string"
+                                          },
+                                          "outgoingEdgeId": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "End"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "groupId",
+                                          "type"
                                         ],
                                         "additionalProperties": false
                                       }
@@ -4203,6 +4517,10 @@
                           "id": {
                             "type": "string"
                           },
+                          "publicId": {
+                            "type": "string",
+                            "nullable": true
+                          },
                           "publishedTypebotId": {
                             "type": "string"
                           }
@@ -4210,7 +4528,8 @@
                         "required": [
                           "name",
                           "icon",
-                          "id"
+                          "id",
+                          "publicId"
                         ],
                         "additionalProperties": false
                       }
@@ -4348,13 +4667,13 @@
                                 "This is a sample result, it has been generated ⬇️"
                               ]
                             },
-                            "Submitted at": {
+                            "Enviado em": {
                               "type": "string"
                             }
                           },
                           "required": [
                             "message",
-                            "Submitted at"
+                            "Enviado em"
                           ]
                         },
                         {

@@ -18,6 +18,7 @@ import {
   ItemType,
   ItemIndices,
   Condition,
+  ComparisonOperators,
 } from '@typebot.io/schemas'
 import React, { useRef } from 'react'
 import { isNotDefined } from '@typebot.io/lib'
