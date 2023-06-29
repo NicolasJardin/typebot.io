@@ -1,8 +1,13 @@
 import { TextInput } from '@/components/inputs'
-import { FormControl, FormLabel, Select, Stack } from '@chakra-ui/react'
+import { TimeMeasurementSelect } from '@/modules/time'
+import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
+import {
+  WaitForOptions,
+  WaitForTypeEnum,
+  WaitForTypeEnumLabel,
+} from '@typebot.io/schemas'
 import add from 'date-fns/add'
 import set from 'date-fns/set'
-import { WaitForOptions, WaitForTypeEnum } from '@typebot.io/schemas'
 import { ChangeEvent, useCallback } from 'react'
 
 type Props = {
@@ -79,33 +84,18 @@ export default function WaitForSettings({ options, onOptionsChange }: Props) {
     [onOptionsChange, options, getUntil]
   )
 
-  const getMeasures = useCallback((type: WaitForTypeEnum) => {
-    switch (type) {
-      case WaitForTypeEnum.DAY:
-        return 'Dias'
-
-      case WaitForTypeEnum.HOUR:
-        return 'Horas'
-    }
-
-    return 'Minutos'
-  }, [])
-
   return (
     <Stack spacing={4}>
       <FormControl>
         <FormLabel>Medida de tempo:</FormLabel>
-        <Select value={options.type} onChange={handleTypeChange}>
-          {Object.values(WaitForTypeEnum).map((type) => (
-            <option key={type} value={type}>
-              {getMeasures(type)}
-            </option>
-          ))}
-        </Select>
+        <TimeMeasurementSelect
+          value={options.type}
+          onChange={handleTypeChange}
+        />
       </FormControl>
 
       <TextInput
-        label={`${getMeasures(options.type)} para aguardar`}
+        label={`${WaitForTypeEnumLabel[options.type]} para aguardar`}
         defaultValue={options.number?.toString()}
         onChange={(value) => handleNumberChange(Number(value))}
         placeholder="0"
