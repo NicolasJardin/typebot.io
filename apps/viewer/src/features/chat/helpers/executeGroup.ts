@@ -23,10 +23,11 @@ import {
   RuntimeOptions,
   SessionState,
 } from '@typebot.io/schemas'
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
+import { getUntil } from '@/modules/time'
 
 export const executeGroup =
   (
@@ -306,7 +307,7 @@ const parseInput =
           options: {
             ...block.options,
             until: block.options.until
-              ? format(new Date(block.options.until), 'yyyy-MM-dd HH:mm:ss')
+              ? format(new Date(getUntil(block.options)), 'yyyy-MM-dd HH:mm:ss')
               : '',
           },
           runtimeOptions: await computeRuntimeOptions(state)(block),
@@ -315,6 +316,31 @@ const parseInput =
           ),
         })
       }
+
+      case InputBlockType.TEXT:
+        return deepParseVariables(state.typebot.variables)({
+          ...block,
+          options: {
+            ...block.options,
+            wait:
+              block.options.wait?.until &&
+              isValid(new Date(block.options.wait.until))
+                ? {
+                    ...block.options.wait,
+                    until: block.options.wait.until
+                      ? format(
+                          new Date(getUntil(block.options.wait)),
+                          'yyyy-MM-dd HH:mm:ss'
+                        )
+                      : undefined,
+                  }
+                : null,
+          },
+          runtimeOptions: await computeRuntimeOptions(state)(block),
+          prefilledValue: getPrefilledInputValue(state.typebot.variables)(
+            block
+          ),
+        })
 
       case InputBlockType.CHOICE: {
         return injectVariableValuesInButtonsInputBlock(state)(block)
