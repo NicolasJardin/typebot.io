@@ -8,6 +8,12 @@ export enum WaitForTypeEnum {
   MINUTE = 'MINUTE',
 }
 
+export const WaitForTypeEnumLabel = {
+  [WaitForTypeEnum.DAY]: 'Dias',
+  [WaitForTypeEnum.HOUR]: 'Horas',
+  [WaitForTypeEnum.MINUTE]: 'Minutos',
+}
+
 export const waitForOptionsSchema = optionBaseSchema.and(
   z.object({
     number: z.number().optional(),
