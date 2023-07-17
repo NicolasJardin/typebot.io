@@ -34,13 +34,12 @@ import RemoveTagNodeContent from '@/features/blocks/logic/removeTag/components/R
 import { ScriptNodeContent } from '@/features/blocks/logic/script/components/ScriptNodeContent'
 import { SetVariableContent } from '@/features/blocks/logic/setVariable/components/SetVariableContent'
 
-import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
-import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
-import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink/components/TypebotLinkNode'
-
 import { PictureChoiceNode } from '@/features/blocks/inputs/pictureChoice/components/PictureChoiceNode'
 import { AbTestNodeBody } from '@/features/blocks/logic/abTest/components/AbTestNodeBody'
 import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
+import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
+import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
+import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink/components/TypebotLinkNode'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
 import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
 import { Text } from '@chakra-ui/react'
@@ -236,6 +235,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
         />
       )
     }
+    // case IntegrationBlockType.PIXEL: {
+    //   return <PixelNodeBody options={block.options} />
+    // }
     case 'start': {
       return <Text>Início</Text>
     }

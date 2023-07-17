@@ -37,14 +37,14 @@ export const getRow = async (
 
   try {
     await doc.loadInfo()
-    const sheet = doc.sheetsById[sheetId]
+    const sheet = doc.sheetsById[Number(sheetId)]
     const rows = await sheet.getRows()
     const filteredRows = getTotalRows(
       options.totalRowsToExtract,
       rows.filter((row) =>
         referenceCell
-          ? row[referenceCell.column as string] === referenceCell.value
-          : matchFilter(row, filter as NonNullable<typeof filter>)
+          ? row.get(referenceCell.column as string) === referenceCell.value
+          : matchFilter(row, filter)
       )
     )
     if (filteredRows.length === 0) {
@@ -64,7 +64,7 @@ export const getRow = async (
       .filter(isNotEmpty)
     const selectedRows = filteredRows.map((row) =>
       extractingColumns.reduce<{ [key: string]: string }>(
-        (obj, column) => ({ ...obj, [column]: row[column] }),
+        (obj, column) => ({ ...obj, [column]: row.get(column) }),
         {}
       )
     )

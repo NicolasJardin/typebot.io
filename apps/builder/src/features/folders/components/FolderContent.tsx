@@ -2,7 +2,6 @@ import { useTypebots } from '@/features/dashboard/hooks/useTypebots'
 import { TypebotInDashboard } from '@/features/dashboard/types'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
-import { useI18n } from '@/locales'
 import {
   Flex,
   Heading,
@@ -15,7 +14,6 @@ import {
 } from '@chakra-ui/react'
 import { DashboardFolder, WorkspaceRole } from '@typebot.io/prisma'
 import React, { useState } from 'react'
-import { OnboardingModal } from '../../dashboard/components/OnboardingModal'
 import { useFolders } from '../hooks/useFolders'
 import { createFolderQuery } from '../queries/createFolderQuery'
 import { patchTypebotQuery } from '../queries/patchTypebotQuery'
@@ -26,13 +24,11 @@ import { CreateFolderButton } from './CreateFolderButton'
 import { ButtonSkeleton, FolderButton } from './FolderButton'
 import { TypebotButton } from './TypebotButton'
 import { TypebotCardOverlay } from './TypebotButtonOverlay'
-
 type Props = { folder: DashboardFolder | null }
 
 const dragDistanceTolerance = 20
 
 export const FolderContent = ({ folder }: Props) => {
-  const t = useI18n()
   const { workspace, currentRole } = useWorkspace()
   const [isCreatingFolder, setIsCreatingFolder] = useState(false)
   const {

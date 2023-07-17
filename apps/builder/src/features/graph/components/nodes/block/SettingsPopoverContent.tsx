@@ -372,5 +372,13 @@ export const BlockSettings = ({
         />
       )
     }
+    // case IntegrationBlockType.PIXEL: {
+    //   return (
+    //     <PixelSettings
+    //       options={block.options}
+    //       onOptionsChange={updateOptions}
+    //     />
+    //   )
+    // }
   }
 }

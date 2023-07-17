@@ -1,32 +1,32 @@
+import { PlusIcon } from '@/components/icons'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { useGraph } from '@/features/graph/providers/GraphProvider'
 import {
-  Text,
-  Flex,
   Fade,
+  Flex,
   IconButton,
   Popover,
-  Portal,
-  PopoverContent,
+  PopoverAnchor,
   PopoverArrow,
   PopoverBody,
+  PopoverContent,
+  Portal,
+  Text,
   useEventListener,
-  PopoverAnchor,
 } from '@chakra-ui/react'
-import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { createId } from '@paralleldrive/cuid2'
+import { isNotDefined } from '@typebot.io/lib'
 import {
   Comparison,
-  ConditionItem,
-  ItemType,
-  ItemIndices,
-  Condition,
   ComparisonOperators,
+  Condition,
+  ConditionItem,
+  ItemIndices,
+  ItemType,
 } from '@typebot.io/schemas'
 import React, { useRef } from 'react'
-import { isNotDefined } from '@typebot.io/lib'
-import { PlusIcon } from '@/components/icons'
-import { ConditionForm } from './ConditionForm'
-import { useGraph } from '@/features/graph/providers/GraphProvider'
-import { createId } from '@paralleldrive/cuid2'
 import { ConditionContent } from './ConditionContent'
+import { ConditionForm } from './ConditionForm'
 
 type Props = {
   item: ConditionItem
@@ -134,7 +134,7 @@ const comparisonIsEmpty = (comparison: Comparison) =>
   isNotDefined(comparison.value) &&
   isNotDefined(comparison.variableId)
 
-const parseComparisonOperatorSymbol = (
+export const parseComparisonOperatorSymbol = (
   operator: ComparisonOperators
 ): string => {
   switch (operator) {

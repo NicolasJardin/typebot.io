@@ -1,18 +1,22 @@
+import { isDefined, isEmpty } from '@typebot.io/lib/utils'
 import type { GoogleAnalyticsOptions } from '@typebot.io/schemas'
 
-declare const gtag: (
-  type: string,
-  action: string | undefined,
-  options: {
-    event_category: string | undefined
-    event_label: string | undefined
-    value: number | undefined
-    send_to: string | undefined
-  }
-) => void
+declare const window: {
+  gtag?: (
+    type: string,
+    action: string | undefined,
+    options: {
+      event_category: string | undefined
+      event_label: string | undefined
+      value: number | undefined
+      send_to: string | undefined
+    }
+  ) => void
+}
 
-const initGoogleAnalytics = (id: string): Promise<void> =>
-  new Promise((resolve) => {
+export const initGoogleAnalytics = (id: string): Promise<void> => {
+  if (isDefined(window.gtag)) return Promise.resolve()
+  return new Promise((resolve) => {
     const existingScript = document.getElementById('gtag')
     if (!existingScript) {
       const script = document.createElement('script')
@@ -33,15 +37,18 @@ const initGoogleAnalytics = (id: string): Promise<void> =>
     }
     if (existingScript) resolve()
   })
+}
 
 export const sendGaEvent = (options: GoogleAnalyticsOptions) => {
   if (!options) return
-  gtag('event', options.action, {
-    event_category: options.label?.length ? options.category : undefined,
-    event_label: options.label?.length ? options.label : undefined,
+  if (!window.gtag) {
+    console.error('Google Analytics was not properly initialized')
+    return
+  }
+  window.gtag('event', options.action, {
+    event_category: isEmpty(options.category) ? undefined : options.category,
+    event_label: isEmpty(options.label) ? undefined : options.label,
     value: options.value as number,
-    send_to: options.sendTo?.length ? options.sendTo : undefined,
+    send_to: isEmpty(options.sendTo) ? undefined : options.sendTo,
   })
 }
-
-export default initGoogleAnalytics

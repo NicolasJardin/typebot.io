@@ -46,6 +46,7 @@ export const GoogleAnalyticsSettings = ({
     <Stack spacing={4}>
       <TextInput
         label="ID de rastreamento:"
+        moreInfoTooltip="Pode ser encontrado clicando em seu fluxo de dados no painel do Google Analytics."
         defaultValue={options?.trackingId ?? ''}
         placeholder="G-123456..."
         onChange={updateTrackingId}

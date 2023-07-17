@@ -9,13 +9,13 @@ import { useUser } from '@/features/account/hooks/useUser'
 import { ZoomButtons } from './ZoomButtons'
 import { useGesture } from '@use-gesture/react'
 import { GraphNavigation } from '@typebot.io/prisma'
-import { AnswersCount } from '@/features/analytics/types'
 import { headerHeight } from '@/features/editor/constants'
 import { graphPositionDefaultValue, blockWidth } from '../constants'
 import { useBlockDnd } from '../providers/GraphDndProvider'
 import { useGraph } from '../providers/GraphProvider'
 import { useGroupsCoordinates } from '../providers/GroupsCoordinateProvider'
 import { Coordinates } from '../types'
+import { TotalAnswersInBlock } from '@typebot.io/schemas/features/analytics'
 
 const maxScale = 2
 const minScale = 0.3
@@ -23,12 +23,12 @@ const zoomButtonsScaleBlock = 0.2
 
 export const Graph = ({
   typebot,
-  answersCounts,
+  totalAnswersInBlocks,
   onUnlockProPlanClick,
   ...props
 }: {
   typebot: Typebot | PublicTypebot
-  answersCounts?: AnswersCount[]
+  totalAnswersInBlocks?: TotalAnswersInBlock[]
   onUnlockProPlanClick?: () => void
 } & FlexProps) => {
   const {
@@ -58,7 +58,9 @@ export const Graph = ({
   const [debouncedGraphPosition] = useDebounce(graphPosition, 200)
   const transform = useMemo(
     () =>
-      `translate(${graphPosition.x}px, ${graphPosition.y}px) scale(${graphPosition.scale})`,
+      `translate(${Number(graphPosition.x.toFixed(2))}px, ${Number(
+        graphPosition.y.toFixed(2)
+      )}px) scale(${graphPosition.scale})`,
     [graphPosition]
   )
   const { user } = useUser()
@@ -242,7 +244,7 @@ export const Graph = ({
         <GraphElements
           edges={typebot.edges}
           groups={typebot.groups}
-          answersCounts={answersCounts}
+          totalAnswersInBlocks={totalAnswersInBlocks}
           onUnlockProPlanClick={onUnlockProPlanClick}
         />
       </Flex>

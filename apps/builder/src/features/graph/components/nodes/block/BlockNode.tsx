@@ -21,7 +21,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { isBubbleBlock, isDefined, isTextBubbleBlock } from '@typebot.io/lib'
+import {
+  isBubbleBlock,
+  isDefined,
+  isInputBlock,
+  isTextBubbleBlock,
+} from '@typebot.io/lib'
 import {
   Block,
   BlockWithOptions,
@@ -57,6 +62,7 @@ export const BlockNode = ({
   const bg = useColorModeValue('gray.50', 'gray.850')
   const previewingBorderColor = useColorModeValue('blue.400', 'blue.300')
   const borderColor = useColorModeValue('gray.200', 'gray.800')
+  const { pathname } = useRouter()
   const { query } = useRouter()
   const {
     setConnectingIds,
@@ -262,17 +268,20 @@ export const BlockNode = ({
                     groupId={block.groupId}
                   />
                 )}
-                {isConnectable && hasDefaultConnector(block) && (
-                  <SourceEndpoint
-                    source={{
-                      groupId: block.groupId,
-                      blockId: block.id,
-                    }}
-                    pos="absolute"
-                    right="-34px"
-                    bottom="10px"
-                  />
-                )}
+                {(isConnectable ||
+                  (pathname.endsWith('analytics') && isInputBlock(block))) &&
+                  hasDefaultConnector(block) && (
+                    <SourceEndpoint
+                      source={{
+                        groupId: block.groupId,
+                        blockId: block.id,
+                      }}
+                      pos="absolute"
+                      right="-34px"
+                      bottom="10px"
+                      isHidden={!isConnectable}
+                    />
+                  )}
               </HStack>
             </Flex>
           </PopoverTrigger>
