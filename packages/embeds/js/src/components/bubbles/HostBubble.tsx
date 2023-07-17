@@ -18,7 +18,6 @@ import {
   ButtonOptions,
   ChatMessage,
   EmbedBubbleContent,
-  ImageBubbleContent,
   LogicBlockType,
   RemoveTagOptions,
   SpreadOptions,
