@@ -2,6 +2,10 @@ import { z } from 'zod'
 import { blockBaseSchema } from '../baseSchemas'
 import { LogicBlockType } from './enums'
 
+export enum TransferGroupEnum {
+  FINISHED = 'FINISHED',
+}
+
 export const transferOptionsSchema = z.object({
   department: z
     .object({
@@ -13,6 +17,11 @@ export const transferOptionsSchema = z.object({
     .object({
       id: z.string().optional(),
       name: z.string().optional(),
+    })
+    .optional(),
+  group: z
+    .object({
+      type: z.nativeEnum(TransferGroupEnum).optional(),
     })
     .optional(),
   message: z.string().optional(),

@@ -73,6 +73,12 @@ export const executeGroup =
                 message: parsedMessage,
               }
 
+            if (block?.options?.group?.type)
+              return {
+                group: block?.options.group,
+                message: parsedMessage,
+              }
+
             return {
               department: block?.options?.department,
               message: parsedMessage,
