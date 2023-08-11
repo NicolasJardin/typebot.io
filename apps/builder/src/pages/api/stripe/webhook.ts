@@ -4,9 +4,10 @@ import Stripe from 'stripe'
 import Cors from 'micro-cors'
 import { buffer } from 'micro'
 import prisma from '@/lib/prisma'
-import { Plan } from '@typebot.io/prisma'
+import { Plan, WorkspaceRole } from '@typebot.io/prisma'
 import { RequestHandler } from 'next/dist/server/next'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
+import { PublicTypebot, Typebot } from '@typebot.io/schemas'
 
 if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET)
   throw new Error('STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET missing')
@@ -51,18 +52,13 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               }
             | { claimableCustomPlanId: string; userId: string }
           if ('plan' in metadata) {
-            const {
-              workspaceId,
-              plan,
-              additionalChats,
-              additionalStorage,
-              userId,
-            } = metadata
+            const { workspaceId, plan, additionalChats, additionalStorage } =
+              metadata
             if (!workspaceId || !plan || !additionalChats || !additionalStorage)
               return res
                 .status(500)
                 .send({ message: `Couldn't retrieve valid metadata` })
-            await prisma.workspace.update({
+            const workspace = await prisma.workspace.update({
               where: { id: workspaceId },
               data: {
                 plan,
@@ -71,20 +67,31 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 additionalStorageIndex: parseInt(additionalStorage),
                 isQuarantined: false,
               },
-            })
-
-            await sendTelemetryEvents([
-              {
-                name: 'Subscription updated',
-                workspaceId,
-                userId,
-                data: {
-                  plan,
-                  additionalChatsIndex: parseInt(additionalChats),
-                  additionalStorageIndex: parseInt(additionalStorage),
+              include: {
+                members: {
+                  select: { user: { select: { id: true } } },
+                  where: {
+                    role: WorkspaceRole.ADMIN,
+                  },
                 },
               },
-            ])
+            })
+
+            for (const user of workspace.members.map((member) => member.user)) {
+              if (!user?.id) continue
+              await sendTelemetryEvents([
+                {
+                  name: 'Subscription updated',
+                  workspaceId,
+                  userId: user.id,
+                  data: {
+                    plan,
+                    additionalChatsIndex: parseInt(additionalChats),
+                    additionalStorageIndex: parseInt(additionalStorage),
+                  },
+                },
+              ])
+            }
           } else {
             const { claimableCustomPlanId, userId } = metadata
             if (!claimableCustomPlanId)
@@ -97,7 +104,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: { claimedAt: new Date() },
               })
 
-            await prisma.workspace.update({
+            await prisma.workspace.updateMany({
               where: { id: workspaceId },
               data: {
                 plan: Plan.CUSTOM,
@@ -126,7 +133,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         case 'customer.subscription.deleted': {
           const subscription = event.data.object as Stripe.Subscription
-          await prisma.workspace.update({
+          const workspace = await prisma.workspace.update({
             where: {
               stripeId: subscription.customer as string,
             },
@@ -138,7 +145,68 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               customStorageLimit: null,
               customSeatsLimit: null,
             },
+            include: {
+              members: {
+                select: { user: { select: { id: true } } },
+                where: {
+                  role: WorkspaceRole.ADMIN,
+                },
+              },
+            },
           })
+
+          for (const user of workspace.members.map((member) => member.user)) {
+            if (!user?.id) continue
+            await sendTelemetryEvents([
+              {
+                name: 'Subscription updated',
+                workspaceId: workspace.id,
+                userId: user.id,
+                data: {
+                  plan: Plan.FREE,
+                  additionalChatsIndex: 0,
+                  additionalStorageIndex: 0,
+                },
+              },
+            ])
+          }
+
+          const typebots = (await prisma.typebot.findMany({
+            where: {
+              workspaceId: workspace.id,
+              isArchived: { not: true },
+            },
+            include: { publishedTypebot: true },
+          })) as (Typebot & { publishedTypebot: PublicTypebot })[]
+          for (const typebot of typebots) {
+            if (typebot.settings.general.isBrandingEnabled) continue
+            await prisma.typebot.updateMany({
+              where: { id: typebot.id },
+              data: {
+                settings: {
+                  ...typebot.settings,
+                  general: {
+                    ...typebot.settings.general,
+                    isBrandingEnabled: true,
+                  },
+                },
+              },
+            })
+            if (typebot.publishedTypebot.settings.general.isBrandingEnabled)
+              continue
+            await prisma.publicTypebot.updateMany({
+              where: { id: typebot.id },
+              data: {
+                settings: {
+                  ...typebot.publishedTypebot.settings,
+                  general: {
+                    ...typebot.publishedTypebot.settings.general,
+                    isBrandingEnabled: true,
+                  },
+                },
+              },
+            })
+          }
           return res.send({ message: 'workspace downgraded in DB' })
         }
         default: {

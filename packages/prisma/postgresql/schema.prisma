@@ -90,6 +90,7 @@ model Workspace {
   customStorageLimit            Int?
   customSeatsLimit              Int?
   isQuarantined                 Boolean               @default(false)
+  isSuspended                   Boolean               @default(false)
   themeTemplates                ThemeTemplate[]
 }
 
@@ -255,6 +256,7 @@ model Answer {
   createdAt   DateTime @default(now()) @updatedAt
   resultId    String
   blockId     String
+  itemId      String?
   groupId     String
   variableId  String?
   content     String
@@ -262,7 +264,8 @@ model Answer {
   result      Result   @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
   @@unique([resultId, blockId, groupId])
-  @@index([groupId])
+  @@index([blockId, itemId])
+  @@index([storageUsed])
 }
 
 model Coupon {

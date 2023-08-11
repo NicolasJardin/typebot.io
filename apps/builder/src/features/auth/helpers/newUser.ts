@@ -1,10 +1,10 @@
 // Forked from https://github.com/nextauthjs/adapters/blob/main/packages/prisma/src/index.ts
-import { PrismaClient, WorkspaceRole, Plan } from '@typebot.io/prisma'
+import { PrismaClient, WorkspaceRole, Plan, User } from '@typebot.io/prisma'
 import { createId } from '@paralleldrive/cuid2'
 import { generateId } from '@typebot.io/lib'
 
-export async function newUser(p: PrismaClient, data: any) {
-  const userCheck = await p.user.findUnique({ where: { email: data.email } })
+export async function newUser(p: PrismaClient, data: User) {
+  const userCheck = await p.user.findUnique({ where: { email: data.email! } })
   if (userCheck) return { error: 'userExists' }
 
   const user = { id: createId(), email: data.email as string }

@@ -9,7 +9,7 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react'
-import { TransferOptions } from '@typebot.io/schemas'
+import { TransferGroupEnum, TransferOptions } from '@typebot.io/schemas'
 import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
 type TransferSettingsProps = {
@@ -23,9 +23,8 @@ export default function TransferSettings({
 }: TransferSettingsProps) {
   const { showToast } = useToast()
 
-  const [selectedDepartment, setSelectedDepartment] = useState<
-    TransferOptions['department'] | undefined
-  >(options.department)
+  const [selectedDepartmentIdOrGroupType, setSelectedDepartmentIdOrGroupType] =
+    useState<string | undefined>(options.department?.id || options.group?.type)
 
   const [selectedAttendant, setSelectedAttendant] = useState<
     TransferOptions['attendant'] | undefined
@@ -49,8 +48,22 @@ export default function TransferSettings({
       },
     })
 
-  const handleDepartmentIdChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) =>
+  const handleDepartmentOrGroupChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      if (e.target.value === 'FINISHED')
+        return onOptionsChange({
+          ...options,
+          group: {
+            type: TransferGroupEnum.FINISHED,
+          },
+          department: {
+            id: '',
+          },
+          attendant: {
+            id: '',
+          },
+        })
+
       onOptionsChange({
         ...options,
         department: {
@@ -60,7 +73,9 @@ export default function TransferSettings({
         attendant: {
           id: '',
         },
-      }),
+        group: {},
+      })
+    },
     [onOptionsChange, options]
   )
 
@@ -87,6 +102,7 @@ export default function TransferSettings({
         department: {
           id: '',
         },
+        group: {},
       }),
     [onOptionsChange, options]
   )
@@ -108,14 +124,21 @@ export default function TransferSettings({
   }
 
   useEffect(() => {
-    setSelectedDepartment(options?.department)
+    setSelectedDepartmentIdOrGroupType(
+      options?.department?.id || options?.group?.type
+    )
 
     const departmentName = departments?.find(
       ({ id }) => id === options.department?.id
     )?.name
 
     if (departmentName) handleDepartmentNameChange(departmentName)
-  }, [options?.department, departments, handleDepartmentNameChange])
+  }, [
+    options?.department,
+    departments,
+    handleDepartmentNameChange,
+    options?.group?.type,
+  ])
 
   useEffect(() => {
     setSelectedAttendant(options?.attendant)
@@ -133,8 +156,8 @@ export default function TransferSettings({
         <FormLabel>Setor:</FormLabel>
         <Select
           placeholder="Selecione um setor"
-          value={selectedDepartment?.id}
-          onChange={handleDepartmentIdChange}
+          value={selectedDepartmentIdOrGroupType}
+          onChange={handleDepartmentOrGroupChange}
           icon={isFetchingDepartments ? <Spinner speed="0.7s" /> : undefined}
         >
           {departments?.map((department) => (
@@ -142,6 +165,7 @@ export default function TransferSettings({
               {department?.name}
             </option>
           ))}
+          <option value="FINISHED">Transferir para finalizados</option>
         </Select>
       </FormControl>
 

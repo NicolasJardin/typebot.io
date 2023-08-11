@@ -12,7 +12,7 @@ There, you can change the container dimensions. Here is a code example:
 
 ```html
 <script type="module">
-  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0/dist/web.js'
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.1/dist/web.js'
 
   Typebot.initStandard({
     typebot: 'my-typebot',
@@ -32,7 +32,7 @@ Here is an example:
 
 ```html
 <script type="module">
-  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0/dist/web.js'
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.1/dist/web.js'
 
   Typebot.initPopup({
     typebot: 'my-typebot',
@@ -72,7 +72,7 @@ If you have different bots on the same page you will have to make them distinct 
 
 ```html
 <script type="module">
-  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0/dist/web.js'
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.1/dist/web.js'
 
   Typebot.initStandard({
     id: 'bot1'
@@ -104,7 +104,7 @@ Here is an example:
 
 ```html
 <script type="module">
-  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.0/dist/web.js'
+  import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.1/dist/web.js'
 
   Typebot.initBubble({
     typebot: 'my-typebot',
@@ -182,6 +182,28 @@ If you have a preview message, you'll also have to manually position it:
 typebot-bubble::part(preview-message) {
   bottom: 140px;
 }
+```
+
+## Callbacks
+
+If you need to trigger events on your parent website when the user interact with the bot, you can use the following callbacks:
+
+```js
+Typebot.initStandard({
+  typebot: 'my-typebot',
+  onNewInputBlock: (inputBlock) => {
+    console.log('New input block displayed', inputBlock.id)
+  },
+  onAnswer: (answer) => {
+    console.log('Answer received', answer.message, answer.blockId)
+  },
+  onInit: () => {
+    console.log('Bot initialized')
+  },
+  onEnd: () => {
+    console.log('Bot ended')
+  },
+})
 ```
 
 ## Additional configuration

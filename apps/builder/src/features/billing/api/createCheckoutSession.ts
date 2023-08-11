@@ -135,7 +135,6 @@ export const createCheckoutSessionUrl =
   (stripe: Stripe) =>
   async ({
     customerId,
-    userId,
     workspaceId,
     currency,
     plan,
@@ -159,7 +158,6 @@ export const createCheckoutSessionUrl =
         plan,
         additionalChats,
         additionalStorage,
-        userId,
       },
       currency,
       billing_address_collection: 'required',

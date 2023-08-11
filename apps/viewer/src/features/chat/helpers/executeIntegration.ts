@@ -30,5 +30,7 @@ export const executeIntegration =
         return executeWebhookBlock(state, block)
       case IntegrationBlockType.OPEN_AI:
         return executeOpenAIBlock(state, block)
+      // case IntegrationBlockType.PIXEL:
+      //   return executePixelBlock(state, block)
     }
   }

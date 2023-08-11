@@ -31,17 +31,22 @@ export default function TransferBubble(props: Props) {
     }, showAnimationDuration)
   }
 
+  const getText = () => {
+    if (props.options.attendant?.name)
+      return `atendente ${props.options.attendant.name}`
+
+    if (props.options.group?.type) return `grupo finalizados`
+
+    return `setor ${props.options.department?.name}`
+  }
+
   onMount(() => {
     if (!isTyping) return
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
         : computeTypingDuration(
-            `🔀 Transferido para o ${
-              props.options.attendant?.name
-                ? `atendente ${props.options.attendant.name}`
-                : `setor ${props.options.department?.name}`
-            }`,
+            `🔀 Transferido para o ${getText()}`,
             props.typingEmulation ?? defaultTypingEmulation
           )
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
@@ -68,11 +73,7 @@ export default function TransferBubble(props: Props) {
 
           <ChatText
             isTyping={!!isTyping()}
-            text={`🔀 Transferido para o ${
-              props.options.attendant?.name
-                ? `atendente ${props.options.attendant.name}`
-                : `setor ${props.options.department?.name}`
-            }`}
+            text={`🔀 Transferido para o ${getText()}`}
           />
         </div>
       </div>

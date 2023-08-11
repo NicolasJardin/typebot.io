@@ -4,6 +4,7 @@ import { blockBaseSchema } from './baseSchemas'
 import {
   ButtonOptions,
   audioBubbleBlockSchema,
+  buttonBlockSchema,
   embedBubbleBlockSchema,
   imageBubbleBlockSchema,
   textBubbleBlockSchema,
@@ -142,11 +143,13 @@ export const blockSchema = z.discriminatedUnion('type', [
   fileBubbleBlockSchema,
   removeTagBlockSchema,
   endBlockSchema,
+  buttonBlockSchema,
 ])
 
 export type Block = z.infer<typeof blockSchema>
 
 export type BubbleBlock = Extract<Block, { type: BubbleBlockType }>
+//@ts-ignore
 export type BubbleBlockContent = BubbleBlock['content']
 
 export type InputBlock = Extract<Block, { type: InputBlockType }>

@@ -13,7 +13,7 @@ type Props = {
   onExpandClick: () => void
 }
 
-export const SettingsHoverBar = ({ blockType, onExpandClick }: Props) => {
+export const SettingsHoverBar = ({ onExpandClick }: Props) => {
   // const helpDocUrl = getHelpDocUrl(blockType)
   return (
     <HStack

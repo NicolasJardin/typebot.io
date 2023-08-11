@@ -6,11 +6,13 @@ import { prefillVariables } from '@/features/variables/prefillVariables'
 import { publicProcedure } from '@/helpers/server/trpc'
 import prisma from '@/lib/prisma'
 import { TRPCError } from '@trpc/server'
-import { env, isDefined, omit } from '@typebot.io/lib'
+import { env, isDefined, isNotEmpty, omit } from '@typebot.io/lib'
 import { Prisma } from '@typebot.io/prisma'
 import {
   ChatReply,
   ChatSession,
+  GoogleAnalyticsBlock,
+  IntegrationBlockType,
   ResultInSession,
   SessionState,
   StartParams,
@@ -22,6 +24,7 @@ import {
   chatReplySchema,
   sendMessageInputSchema,
 } from '@typebot.io/schemas'
+import { NodeType, parse } from 'node-html-parser'
 import {
   continueBotFlow,
   getSession,
@@ -91,13 +94,6 @@ export const sendMessage = publicProcedure
         const { messages, input, clientSideActions, newSessionState, logs } =
           await continueBotFlow(session.state)(message)
 
-        await prisma.chatSession.updateMany({
-          where: { id: session.id },
-          data: {
-            state: newSessionState,
-          },
-        })
-
         const containsSetVariableClientSideAction = clientSideActions?.some(
           (action) => 'setVariable' in action
         )
@@ -109,6 +105,13 @@ export const sendMessage = publicProcedure
           session.state.result.id
         )
           await setResultAsCompleted(session.state.result.id)
+
+        await prisma.chatSession.updateMany({
+          where: { id: session.id },
+          data: {
+            state: newSessionState,
+          },
+        })
 
         return {
           messages,
@@ -122,10 +125,10 @@ export const sendMessage = publicProcedure
   )
 
 const startSession = async (startParams?: StartParams, userId?: string) => {
-  if (!startParams?.typebot)
+  if (!startParams)
     throw new TRPCError({
       code: 'BAD_REQUEST',
-      message: 'No typebot provided in startParams',
+      message: 'StartParams are missing',
     })
 
   const typebot = await getTypebot(startParams, userId)
@@ -175,14 +178,45 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
   const { messages, input, clientSideActions, newSessionState, logs } =
     await startBotFlow(initialState, startParams.startGroupId)
 
-  const containsSetVariableClientSideAction = clientSideActions?.some(
-    (action) => 'setVariable' in action
+  const clientSideActionsNeedSessionId = clientSideActions?.some(
+    (action) =>
+      'setVariable' in action || 'streamOpenAiChatCompletion' in action
   )
 
-  if (!input && !containsSetVariableClientSideAction)
+  const startClientSideAction = clientSideActions ?? []
+
+  const parsedStartPropsActions = parseStartClientSideAction(typebot)
+
+  const startLogs = logs ?? []
+
+  if (isDefined(parsedStartPropsActions)) {
+    if (!result) {
+      if ('startPropsToInject' in parsedStartPropsActions) {
+        const { customHeadCode, googleAnalyticsId, pixelId, gtmId } =
+          parsedStartPropsActions.startPropsToInject
+        let toolsList = ''
+        if (customHeadCode) toolsList += 'Custom head code, '
+        if (googleAnalyticsId) toolsList += 'Google Analytics, '
+        if (pixelId) toolsList += 'Pixel, '
+        if (gtmId) toolsList += 'Google Tag Manager, '
+        toolsList = toolsList.slice(0, -2)
+        startLogs.push({
+          description: `${toolsList} ${
+            toolsList.includes(',') ? 'are not' : 'is not'
+          } enabled in Preview mode`,
+          status: 'info',
+        })
+      }
+    } else {
+      startClientSideAction.push(parsedStartPropsActions)
+    }
+  }
+
+  if (!input && !clientSideActionsNeedSessionId)
     return {
       messages,
-      clientSideActions,
+      clientSideActions:
+        startClientSideAction.length > 0 ? startClientSideAction : undefined,
       typebot: {
         id: typebot.id,
         settings: deepParseVariables(newSessionState.typebot.variables)(
@@ -193,7 +227,7 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
         ),
       },
       dynamicTheme: parseDynamicThemeReply(newSessionState),
-      logs,
+      logs: startLogs.length > 0 ? startLogs : undefined,
     }
 
   const session = (await prisma.chatSession.create({
@@ -216,9 +250,10 @@ const startSession = async (startParams?: StartParams, userId?: string) => {
     },
     messages,
     input,
-    clientSideActions,
+    clientSideActions:
+      startClientSideAction.length > 0 ? startClientSideAction : undefined,
     dynamicTheme: parseDynamicThemeReply(newSessionState),
-    logs,
+    logs: startLogs.length > 0 ? startLogs : undefined,
   } satisfies ChatReply
 }
 
@@ -266,6 +301,7 @@ const getTypebot = async (
                   additionalChatsIndex: true,
                   customChatsLimit: true,
                   isQuarantined: true,
+                  isSuspended: true,
                 },
               },
             },
@@ -291,12 +327,16 @@ const getTypebot = async (
       message: 'Typebot not found',
     })
 
-  const isQuarantined =
+  const isQuarantinedOrSuspended =
     typebotQuery &&
     'typebot' in typebotQuery &&
-    typebotQuery.typebot.workspace.isQuarantined
+    (typebotQuery.typebot.workspace.isQuarantined ||
+      typebotQuery.typebot.workspace.isSuspended)
 
-  if (('isClosed' in parsedTypebot && parsedTypebot.isClosed) || isQuarantined)
+  if (
+    ('isClosed' in parsedTypebot && parsedTypebot.isClosed) ||
+    isQuarantinedOrSuspended
+  )
     throw new TRPCError({
       code: 'BAD_REQUEST',
       message: 'Typebot is closed',
@@ -400,5 +440,84 @@ const parseDynamicThemeReply = (
     guestAvatarUrl: parseVariables(state?.typebot.variables)(
       state.dynamicTheme.guestAvatarUrl
     ),
+  }
+}
+
+const parseStartClientSideAction = (
+  typebot: StartTypebot
+): NonNullable<ChatReply['clientSideActions']>[number] | undefined => {
+  const blocks = typebot.groups.flatMap((group) => group.blocks)
+  const startPropsToInject = {
+    customHeadCode: isNotEmpty(typebot.settings.metadata.customHeadCode)
+      ? parseHeadCode(typebot.settings.metadata.customHeadCode)
+      : undefined,
+    gtmId: typebot.settings.metadata.googleTagManagerId,
+    googleAnalyticsId: (
+      blocks.find(
+        (block) =>
+          block.type === IntegrationBlockType.GOOGLE_ANALYTICS &&
+          block.options.trackingId
+      ) as GoogleAnalyticsBlock | undefined
+    )?.options.trackingId,
+    // pixelId: (
+    //   blocks.find(
+    //     (block) =>
+    //       block.type === IntegrationBlockType.PIXEL &&
+    //       block.options.pixelId &&
+    //       block.options.isInitSkip !== true
+    //   ) as PixelBlock | undefined
+    // )?.options.pixelId,
+  }
+
+  if (
+    !startPropsToInject.customHeadCode &&
+    !startPropsToInject.gtmId &&
+    !startPropsToInject.googleAnalyticsId
+    // !startPropsToInject.pixelId
+  )
+    return
+
+  return {
+    startPropsToInject,
+  }
+}
+
+const parseHeadCode = (code: string) => {
+  code = injectTryCatch(code)
+  return parse(code)
+    .childNodes.filter((child) => child.nodeType !== NodeType.TEXT_NODE)
+    .join('\n')
+}
+
+const injectTryCatch = (headCode: string) => {
+  const scriptTagRegex = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi
+  const scriptTags = headCode.match(scriptTagRegex)
+  if (scriptTags) {
+    scriptTags.forEach(function (tag) {
+      const wrappedTag = tag.replace(
+        /(<script\b[^>]*>)([\s\S]*?)(<\/script>)/gi,
+        function (_, openingTag, content, closingTag) {
+          if (!isValidJsSyntax(content)) return ''
+          return `${openingTag}
+try {
+  ${content}
+} catch (e) {
+  console.warn(e); 
+}
+${closingTag}`
+        }
+      )
+      headCode = headCode.replace(tag, wrappedTag)
+    })
+  }
+  return headCode
+}
+
+const isValidJsSyntax = (snippet: string): boolean => {
+  try {
+    new Function(snippet)
+    return true
+  } catch (err) {
+    return false
   }
 }

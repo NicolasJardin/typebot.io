@@ -20,6 +20,7 @@ import { GoogleSheetsLogo } from '@/features/blocks/integrations/googleSheets/co
 import { MakeComLogo } from '@/features/blocks/integrations/makeCom/components/MakeComLogo'
 import { OpenAILogo } from '@/features/blocks/integrations/openai/components/OpenAILogo'
 import { PabblyConnectLogo } from '@/features/blocks/integrations/pabbly/components/PabblyConnectLogo'
+import { PixelLogo } from '@/features/blocks/integrations/pixel/components/PixelLogo'
 import { ZapierLogo } from '@/features/blocks/integrations/zapier/components/ZapierLogo'
 import { AbTestIcon } from '@/features/blocks/logic/abTest/components/AbTestIcon'
 import { ConditionIcon } from '@/features/blocks/logic/condition/components/ConditionIcon'
@@ -138,6 +139,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <ChatwootLogo {...props} />
     case IntegrationBlockType.OPEN_AI:
       return <OpenAILogo fill={openAIColor} {...props} />
+    case IntegrationBlockType.PIXEL:
+      return <PixelLogo {...props} />
     case 'start':
       return <FlagIcon {...props} />
   }

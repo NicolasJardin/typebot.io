@@ -20,9 +20,11 @@ const endpointHeight = 32
 
 export const SourceEndpoint = ({
   source,
+  isHidden,
   ...props
 }: BoxProps & {
   source: Source
+  isHidden?: boolean
 }) => {
   const id = source.itemId ?? source.blockId
   const color = useColorModeValue('blue.200', 'blue.100')
@@ -39,10 +41,14 @@ export const SourceEndpoint = ({
   const endpointY = useMemo(
     () =>
       ref.current
-        ? (ref.current?.getBoundingClientRect().y +
-            (endpointHeight * graphPosition.scale) / 2 -
-            graphPosition.y) /
-          graphPosition.scale
+        ? Number(
+            (
+              (ref.current?.getBoundingClientRect().y +
+                (endpointHeight * graphPosition.scale) / 2 -
+                graphPosition.y) /
+              graphPosition.scale
+            ).toFixed(2)
+          )
         : undefined,
     // We need to force recompute whenever the group height and position changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,6 +125,7 @@ export const SourceEndpoint = ({
       justify="center"
       align="center"
       pointerEvents="all"
+      visibility={isHidden ? 'hidden' : 'visible'}
       {...props}
     >
       <Flex

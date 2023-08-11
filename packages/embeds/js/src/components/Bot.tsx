@@ -1,6 +1,6 @@
 import { LiteBadge } from './LiteBadge'
 import { createEffect, createSignal, onCleanup, onMount, Show } from 'solid-js'
-import { injectCustomHeadCode, isNotEmpty } from '@typebot.io/lib'
+import { isNotDefined, isNotEmpty } from '@typebot.io/lib'
 import { getInitialChatReplyQuery } from '@/queries/getInitialChatReplyQuery'
 import { ConversationContainer } from './ConversationContainer'
 import { setIsMobile } from '@/utils/isMobileSignal'
@@ -89,17 +89,15 @@ export const Bot = (props: BotProps & { class?: string }) => {
         groupId: data.input.groupId,
       })
     if (data.logs) props.onNewLogs?.(data.logs)
-    const customHeadCode = data.typebot.settings.metadata.customHeadCode
-    if (customHeadCode) injectCustomHeadCode(customHeadCode)
   }
 
   createEffect(() => {
-    if (!props.typebot || isInitialized()) return
+    if (isNotDefined(props.typebot) || isInitialized()) return
     initializeBot().then()
   })
 
   createEffect(() => {
-    if (typeof props.typebot === 'string') return
+    if (isNotDefined(props.typebot) || typeof props.typebot === 'string') return
     setCustomCss(props.typebot.theme.customCss ?? '')
   })
 

@@ -20,13 +20,13 @@ const executeComparison =
   (variables: Variable[]) =>
   (comparison: Comparison): boolean => {
     if (!comparison?.variableId) return false
-    const inputValue = variables.find(
-      (v) => v.id === comparison.variableId
-    )?.value
+    const inputValue =
+      variables.find((v) => v.id === comparison.variableId)?.value ?? null
     const value =
-      findUniqueVariableValue(variables)(comparison.value) ??
-      parseVariables(variables)(comparison.value)
-    if (isNotDefined(value)) return false
+      comparison.value === 'undefined' || comparison.value === 'null'
+        ? null
+        : findUniqueVariableValue(variables)(comparison.value) ??
+          parseVariables(variables)(comparison.value)
     if (isNotDefined(comparison.comparisonOperator)) return false
     switch (comparison.comparisonOperator) {
       case ComparisonOperators.CONTAINS: {
@@ -34,41 +34,39 @@ const executeComparison =
           if (b === '' || !b || !a) return false
           return a.toLowerCase().trim().includes(b.toLowerCase().trim())
         }
-        return compare(contains, inputValue, value)
+        return compare(contains, inputValue, value, 'some')
       }
       case ComparisonOperators.NOT_CONTAINS: {
         const notContains = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return true
           return !a.toLowerCase().trim().includes(b.toLowerCase().trim())
         }
-        return compare(notContains, inputValue, value, true)
+        return compare(notContains, inputValue, value)
       }
       case ComparisonOperators.EQUAL: {
         return compare((a, b) => a === b, inputValue, value)
       }
       case ComparisonOperators.NOT_EQUAL: {
-        return compare((a, b) => a !== b, inputValue, value, true)
+        return compare((a, b) => a !== b, inputValue, value)
       }
       case ComparisonOperators.GREATER: {
-        if (isNotDefined(inputValue)) return false
+        if (isNotDefined(inputValue) || isNotDefined(value)) return false
         if (typeof inputValue === 'string') {
           if (typeof value === 'string')
-            return parseFloat(inputValue) > parseFloat(value)
-          return parseFloat(inputValue) > value.length
+            return parseDateOrNumber(inputValue) > parseDateOrNumber(value)
+          return Number(inputValue) > value.length
         }
-        if (typeof value === 'string')
-          return inputValue.length > parseFloat(value)
+        if (typeof value === 'string') return inputValue.length > Number(value)
         return inputValue.length > value.length
       }
       case ComparisonOperators.LESS: {
-        if (isNotDefined(inputValue)) return false
+        if (isNotDefined(inputValue) || isNotDefined(value)) return false
         if (typeof inputValue === 'string') {
           if (typeof value === 'string')
-            return parseFloat(inputValue) < parseFloat(value)
-          return parseFloat(inputValue) < value.length
+            return parseDateOrNumber(inputValue) < parseDateOrNumber(value)
+          return Number(inputValue) < value.length
         }
-        if (typeof value === 'string')
-          return inputValue.length < parseFloat(value)
+        if (typeof value === 'string') return inputValue.length < Number(value)
         return inputValue.length < value.length
       }
       case ComparisonOperators.IS_SET: {
@@ -96,23 +94,31 @@ const executeComparison =
 
 const compare = (
   compareStrings: (a: string | null, b: string | null) => boolean,
-  a: Variable['value'],
-  b: Variable['value'],
-  defaultReturnValue = false
+  a: Exclude<Variable['value'], undefined>,
+  b: Exclude<Variable['value'], undefined>,
+  type: 'every' | 'some' = 'every'
 ): boolean => {
-  if (!a || !b) return defaultReturnValue
-  if (typeof a === 'string') {
-    if (typeof b === 'string') return compareStrings(a, b)
-    return defaultReturnValue === true
+  if (!a || typeof a === 'string') {
+    if (!b || typeof b === 'string') return compareStrings(a, b)
+    return type === 'every'
       ? b.every((b) => compareStrings(a, b))
       : b.some((b) => compareStrings(a, b))
   }
-  if (typeof b === 'string') {
-    return defaultReturnValue === true
+  if (!b || typeof b === 'string') {
+    return type === 'every'
       ? a.every((a) => compareStrings(a, b))
       : a.some((a) => compareStrings(a, b))
   }
-  if (defaultReturnValue === true)
+  if (type === 'every')
     return a.every((a) => b.every((b) => compareStrings(a, b)))
   return a.some((a) => b.some((b) => compareStrings(a, b)))
+}
+
+const parseDateOrNumber = (value: string): number => {
+  const parsed = Number(value)
+  if (isNaN(parsed)) {
+    const time = Date.parse(value)
+    return time
+  }
+  return parsed
 }
