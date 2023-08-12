@@ -14,6 +14,8 @@ import { ExecuteIntegrationResponse } from '../types'
 export const executeIntegration =
   (state: SessionState) =>
   async (block: IntegrationBlock): Promise<ExecuteIntegrationResponse> => {
+    console.log('executeIntegration')
+
     switch (block.type) {
       case IntegrationBlockType.GOOGLE_SHEETS:
         return executeGoogleSheetBlock(state, block)

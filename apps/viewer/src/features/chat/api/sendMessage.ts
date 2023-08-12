@@ -52,6 +52,15 @@ export const sendMessage = publicProcedure
     }) => {
       const session = sessionId ? await getSession(sessionId) : null
 
+      console.log('sendMessage Aqui', {
+        session,
+        sessionId,
+        message,
+        startParams,
+        clientLogs,
+        user,
+      })
+
       if (clientLogs) {
         for (const log of clientLogs) {
           await saveLog({

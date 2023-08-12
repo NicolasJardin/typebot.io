@@ -37,6 +37,8 @@ export const VideoBubble = (props: Props) => {
     if (typingTimeout) clearTimeout(typingTimeout)
   })
 
+  console.log('VideoBubble', { isTyping, typingTimeout, props })
+
   return (
     <div class="flex flex-col animate-fade-in" ref={ref}>
       <div class="flex w-full items-center">

@@ -12,6 +12,8 @@ export default function ButtonBubble(props: Props) {
     props.onTransitionEnd()
   })
 
+  console.log('ButtonBubble', { props })
+
   return (
     <div class="flex flex-col animate-fade-in">
       <div class="flex mb-2 w-full items-center">

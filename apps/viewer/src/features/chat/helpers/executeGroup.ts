@@ -52,16 +52,22 @@ export const executeGroup =
 
       //@ts-ignore
       if (isBubbleBlock(block) && block.type !== BubbleBlockType.BUTTON) {
+        console.log('executeGroup 55 inicio', { block: block })
+
         messages.push(
           parseBubbleBlock(newSessionState.typebot.variables)(block)
         )
         lastBubbleBlockId = block.id
+
+        console.log('executeGroup 55 fim', { block: block })
 
         continue
       }
 
       switch (block.type) {
         case LogicBlockType.TRANSFER: {
+          console.log('executeGroup transfer inicio', { block: block })
+
           const parsedMessage = parseVariables(
             newSessionState.typebot.variables
           )(block.options?.message)
@@ -93,10 +99,14 @@ export const executeGroup =
 
           lastBubbleBlockId = block.id
 
+          console.log('executeGroup transfer fim', { block: block })
+
           continue
         }
 
         case LogicBlockType.SPREAD: {
+          console.log('executeGroup spread inicio', { block: block })
+
           const parsedMessage = parseVariables(
             newSessionState.typebot.variables
           )(block.options?.message)
@@ -112,10 +122,14 @@ export const executeGroup =
 
           lastBubbleBlockId = block.id
 
+          console.log('executeGroup spread fim', { block: block })
+
           continue
         }
 
         case LogicBlockType.WAIT:
+          console.log('executeGroup wait inicio', { block: block })
+
           messages.push({
             content: block.options,
             id: block.id,
@@ -123,10 +137,14 @@ export const executeGroup =
           })
 
           lastBubbleBlockId = block.id
+
+          console.log('executeGroup wait fim', { block: block })
 
           continue
 
         case LogicBlockType.TAG:
+          console.log('executeGroup tag inicio', { block: block })
+
           messages.push({
             content: block.options,
             id: block.id,
@@ -134,10 +152,14 @@ export const executeGroup =
           })
 
           lastBubbleBlockId = block.id
+
+          console.log('executeGroup tag fim', { block: block })
 
           continue
 
         case LogicBlockType.REMOVE_TAG:
+          console.log('executeGroup remove_tag inicio', { block: block })
+
           messages.push({
             content: block.options,
             id: block.id,
@@ -146,9 +168,13 @@ export const executeGroup =
 
           lastBubbleBlockId = block.id
 
+          console.log('executeGroup remove_tag fim', { block: block })
+
           continue
 
         case LogicBlockType.END:
+          console.log('executeGroup end inicio', { block: block })
+
           messages.push({
             content: {},
             id: block.id,
@@ -157,10 +183,14 @@ export const executeGroup =
 
           lastBubbleBlockId = block.id
 
+          console.log('executeGroup end fim', { block: block })
+
           continue
 
         //@ts-ignore
         case BubbleBlockType.BUTTON:
+          console.log('executeGroup button inicio', { block: block })
+
           messages.push({
             content: (block as any).options,
             id: (block as any).id,
@@ -169,10 +199,14 @@ export const executeGroup =
 
           lastBubbleBlockId = (block as any).id
 
+          console.log('executeGroup button fim', { block: block })
+
           continue
       }
 
-      if (isInputBlock(block))
+      if (isInputBlock(block)) {
+        console.log('executeGroup inputBlock', { block })
+
         return {
           messages,
           input: await parseInput(newSessionState)(block),
@@ -186,6 +220,8 @@ export const executeGroup =
           clientSideActions,
           logs,
         }
+      }
+
       const executionResponse = isLogicBlock(block)
         ? await executeLogic(newSessionState)(block)
         : isIntegrationBlock(block)

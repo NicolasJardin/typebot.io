@@ -39,6 +39,8 @@ export const ImageBubble = (props: Props) => {
     if (typingTimeout) clearTimeout(typingTimeout)
   })
 
+  console.log('ImageBubble', { isTyping, typingTimeout, props })
+
   const Image = (
     <img
       ref={image}

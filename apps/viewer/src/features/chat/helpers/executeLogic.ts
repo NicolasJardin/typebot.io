@@ -16,6 +16,8 @@ import { ExecuteLogicResponse } from '../types'
 export const executeLogic =
   (state: SessionState) =>
   async (block: LogicBlock): Promise<ExecuteLogicResponse> => {
+    console.log('executeLogic')
+
     switch (block.type) {
       case LogicBlockType.SET_VARIABLE:
         return executeSetVariable(state, block)

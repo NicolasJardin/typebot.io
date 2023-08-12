@@ -47,6 +47,8 @@ export const AudioBubble = (props: Props) => {
     if (typingTimeout) clearTimeout(typingTimeout)
   })
 
+  console.log('AudioBubble', { isTyping, typingTimeout, props })
+
   return (
     <div class="flex flex-col animate-fade-in" ref={ref}>
       <div class="flex w-full items-center">

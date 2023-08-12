@@ -28,6 +28,8 @@ export const EmbedBubble = (props: Props) => {
     if (typingTimeout) clearTimeout(typingTimeout)
   })
 
+  console.log('EmbedBubble', { isTyping, typingTimeout, props })
+
   return (
     <div class="flex flex-col w-full animate-fade-in" ref={ref}>
       <div class="flex w-full items-center">

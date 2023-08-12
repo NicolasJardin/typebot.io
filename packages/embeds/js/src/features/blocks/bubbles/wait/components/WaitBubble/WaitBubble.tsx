@@ -47,6 +47,8 @@ export default function WaitBubble(props: Props) {
     if (typingTimeout) clearTimeout(typingTimeout)
   })
 
+  console.log('WaitBubble', { isTyping, typingTimeout, props })
+
   return (
     <div class="flex flex-col animate-fade-in">
       <div class="flex mb-2 w-full items-center">
