@@ -13,6 +13,6 @@ export const FileInputContent = ({
     <WithVariableContent variableId={variableId} />
   ) : (
     <Text noOfLines={1} pr="6">
-      Collect {isMultipleAllowed ? 'arquivos' : 'arquivo'}
+      Coletar {isMultipleAllowed ? 'arquivos' : 'arquivo'}
     </Text>
   )

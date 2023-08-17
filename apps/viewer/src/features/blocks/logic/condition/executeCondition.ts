@@ -16,6 +16,21 @@ export const executeCondition =
       ? condition.comparisons.every(executeComparison(variables))
       : condition.comparisons.some(executeComparison(variables))
 
+const clear = (value: string | null) => {
+  if (!value) return ''
+
+  const normalizedString = value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+
+  const result = normalizedString
+    .replace(/[^\w\s]/gi, '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+
+  return result
+}
+
 const executeComparison =
   (variables: Variable[]) =>
   (comparison: Comparison): boolean => {
@@ -32,22 +47,25 @@ const executeComparison =
       case ComparisonOperators.CONTAINS: {
         const contains = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return false
-          return a.toLowerCase().trim().includes(b.toLowerCase().trim())
+          return clear(a).includes(clear(b))
         }
         return compare(contains, inputValue, value, 'some')
       }
       case ComparisonOperators.NOT_CONTAINS: {
         const notContains = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return true
-          return !a.toLowerCase().trim().includes(b.toLowerCase().trim())
+          return !clear(a)
+            .toLowerCase()
+            .trim()
+            .includes(clear(b).toLowerCase().trim())
         }
         return compare(notContains, inputValue, value)
       }
       case ComparisonOperators.EQUAL: {
-        return compare((a, b) => a === b, inputValue, value)
+        return compare((a, b) => clear(a) === clear(b), inputValue, value)
       }
       case ComparisonOperators.NOT_EQUAL: {
-        return compare((a, b) => a !== b, inputValue, value)
+        return compare((a, b) => clear(a) !== clear(b), inputValue, value)
       }
       case ComparisonOperators.GREATER: {
         if (isNotDefined(inputValue) || isNotDefined(value)) return false
@@ -78,14 +96,20 @@ const executeComparison =
       case ComparisonOperators.STARTS_WITH: {
         const startsWith = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return false
-          return a.toLowerCase().trim().startsWith(b.toLowerCase().trim())
+          return clear(a)
+            .toLowerCase()
+            .trim()
+            .startsWith(clear(b).toLowerCase().trim())
         }
         return compare(startsWith, inputValue, value)
       }
       case ComparisonOperators.ENDS_WITH: {
         const endsWith = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return false
-          return a.toLowerCase().trim().endsWith(b.toLowerCase().trim())
+          return clear(a)
+            .toLowerCase()
+            .trim()
+            .endsWith(clear(b).toLowerCase().trim())
         }
         return compare(endsWith, inputValue, value)
       }

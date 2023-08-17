@@ -1,9 +1,4 @@
-import {
-  ChevronLeftIcon,
-  CloudOffIcon,
-  LockedIcon,
-  UnlockedIcon,
-} from '@/components/icons'
+import { ChevronLeftIcon, CloudOffIcon } from '@/components/icons'
 import { ChangePlanModal } from '@/features/billing/components/ChangePlanModal'
 import { isFreePlan } from '@/features/billing/helpers/isFreePlan'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
@@ -41,9 +36,7 @@ export const PublishButton = (props: ButtonProps) => {
     restorePublishedTypebot,
     typebot,
     isSavingLoading,
-    updateTypebot,
     unpublishTypebot,
-    save,
   } = useTypebot()
 
   const hasInputFile = typebot?.groups
@@ -53,16 +46,6 @@ export const PublishButton = (props: ButtonProps) => {
   const handlePublishClick = () => {
     if (isFreePlan(workspace) && hasInputFile) return onOpen()
     publishTypebot()
-  }
-
-  const closeTypebot = async () => {
-    updateTypebot({ isClosed: true })
-    await save()
-  }
-
-  const openTypebot = async () => {
-    updateTypebot({ isClosed: false })
-    await save()
   }
 
   return (
@@ -128,15 +111,7 @@ export const PublishButton = (props: ButtonProps) => {
                 Restaurar versão publicada
               </MenuItem>
             )}
-            {!typebot?.isClosed ? (
-              <MenuItem onClick={closeTypebot} icon={<LockedIcon />}>
-                Feche o typebot para novas respostas
-              </MenuItem>
-            ) : (
-              <MenuItem onClick={openTypebot} icon={<UnlockedIcon />}>
-                Reabrir typebot para novas respostas
-              </MenuItem>
-            )}
+
             <MenuItem onClick={unpublishTypebot} icon={<CloudOffIcon />}>
               Cancelar publicação do typebot
             </MenuItem>
