@@ -21,7 +21,7 @@ export const ConditionContent = ({
         const variable = variables.find(byId(comparison.variableId))
         return (
           <Wrap key={comparison.id} spacing={1} noOfLines={1}>
-            {idx === 0 && <Text fontSize={size}>IF</Text>}
+            {idx === 0 && <Text fontSize={size}>Se</Text>}
             {idx > 0 && (
               <Text fontSize={size}>{condition.logicalOperator ?? ''}</Text>
             )}
@@ -55,24 +55,24 @@ const parseComparisonOperatorSymbol = (
 ): string => {
   switch (operator) {
     case ComparisonOperators.CONTAINS:
-      return 'contains'
+      return 'contém'
     case ComparisonOperators.EQUAL:
       return '='
     case ComparisonOperators.GREATER:
       return '>'
     case ComparisonOperators.IS_SET:
-      return 'is set'
+      return 'Está definido'
     case ComparisonOperators.LESS:
       return '<'
     case ComparisonOperators.NOT_EQUAL:
       return '!='
     case ComparisonOperators.ENDS_WITH:
-      return 'ends with'
+      return 'termina com'
     case ComparisonOperators.STARTS_WITH:
-      return 'starts with'
+      return 'inícia com'
     case ComparisonOperators.IS_EMPTY:
-      return 'is empty'
+      return 'está vazio'
     case ComparisonOperators.NOT_CONTAINS:
-      return 'not contains'
+      return 'não contém'
   }
 }
