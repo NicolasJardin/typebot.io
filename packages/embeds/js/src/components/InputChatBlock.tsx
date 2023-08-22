@@ -13,6 +13,7 @@ import { RatingForm } from '@/features/blocks/inputs/rating'
 import { TextInput } from '@/features/blocks/inputs/textInput'
 import { UrlInput } from '@/features/blocks/inputs/url'
 import { BotContext, InputSubmitContent } from '@/types'
+import { formattedMessages } from '@/utils/formattedMessagesSignal'
 import { isMobile } from '@/utils/isMobileSignal'
 import { isNotDefined } from '@typebot.io/lib'
 import type {
@@ -33,7 +34,7 @@ import type {
   WaitForOptions,
 } from '@typebot.io/schemas'
 import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums'
-import { Match, Switch, createSignal } from 'solid-js'
+import { Match, Switch, createEffect, createSignal } from 'solid-js'
 import { GuestBubble } from './bubbles/GuestBubble'
 
 type Props = {
@@ -51,6 +52,7 @@ type Props = {
 
 export const InputChatBlock = (props: Props) => {
   const [answer, setAnswer] = createSignal<string>()
+  const [formattedMessage, setFormattedMessage] = createSignal<string>()
 
   const handleSubmit = async ({ label, value }: InputSubmitContent) => {
     setAnswer(label ?? value)
@@ -62,11 +64,18 @@ export const InputChatBlock = (props: Props) => {
     props.onSkip()
   }
 
+  createEffect(() => {
+    const formattedMessage = formattedMessages().find(
+      (message) => message.inputId === props.block.id
+    )?.formattedMessage
+    if (formattedMessage) setFormattedMessage(formattedMessage)
+  })
+
   return (
     <Switch>
       <Match when={answer() && !props.hasError}>
         <GuestBubble
-          message={answer() as string}
+          message={formattedMessage() ?? (answer() as string)}
           showAvatar={props.guestAvatar?.isEnabled ?? false}
           avatarSrc={props.guestAvatar?.url && props.guestAvatar.url}
         />

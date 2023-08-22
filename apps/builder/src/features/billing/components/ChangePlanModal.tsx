@@ -23,7 +23,7 @@ export const ChangePlanModal = ({
   isOpen,
   type,
 }: ChangePlanModalProps) => {
-  const { workspace, refreshWorkspace } = useWorkspace()
+  const { workspace } = useWorkspace()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
@@ -32,12 +32,7 @@ export const ChangePlanModal = ({
           {type && (
             <AlertInfo>Você precisa atualizar seu plano para {type}</AlertInfo>
           )}
-          {workspace && (
-            <ChangePlanForm
-              workspace={workspace}
-              onUpgradeSuccess={refreshWorkspace}
-            />
-          )}
+          {workspace && <ChangePlanForm workspace={workspace} />}
         </ModalBody>
 
         <ModalFooter>

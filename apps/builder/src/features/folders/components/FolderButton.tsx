@@ -15,17 +15,17 @@ import {
   SkeletonCircle,
   SkeletonText,
   Text,
-  useColorModeValue,
-  useDisclosure,
   VStack,
   WrapItem,
+  useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { DashboardFolder } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import { useTypebotDnd } from '../TypebotDndProvider'
 import { deleteFolderQuery } from '../queries/deleteFolderQuery'
 import { updateFolderQuery } from '../queries/updateFolderQuery'
-import { useTypebotDnd } from '../TypebotDndProvider'
 
 export const FolderButton = ({
   folder,

@@ -38,8 +38,13 @@ const resultsTablePreferencesSchema = z.object({
   columnsWidth: z.record(z.string(), z.number()),
 })
 
+const isDomainNameWithPathNameCompatible = (str: string) =>
+  /^(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:\/[\w-\/]*)?)$/.test(
+    str
+  )
+
 export const typebotSchema = z.object({
-  version: z.enum(['3']).nullable(),
+  version: z.enum(['3', '4', '5']).nullable(),
   id: z.string(),
   name: z.string(),
   groups: z.array(groupSchema),
@@ -52,13 +57,36 @@ export const typebotSchema = z.object({
   updatedAt: z.date(),
   icon: z.string().nullable(),
   folderId: z.string().nullable(),
-  publicId: z.string().nullable(),
-  customDomain: z.string().nullable(),
+  publicId: z
+    .string()
+    .refine((str) => /^[a-zA-Z0-9-.]+$/.test(str))
+    .nullable(),
+  customDomain: z
+    .string()
+    .refine(isDomainNameWithPathNameCompatible)
+    .nullable(),
   workspaceId: z.string(),
   resultsTablePreferences: resultsTablePreferencesSchema.nullable(),
   isArchived: z.boolean(),
   isClosed: z.boolean(),
 }) satisfies z.ZodType<TypebotPrisma>
+
+export const typebotCreateSchema = typebotSchema
+  .pick({
+    name: true,
+    icon: true,
+    selectedThemeTemplateId: true,
+    groups: true,
+    theme: true,
+    settings: true,
+    folderId: true,
+    variables: true,
+    edges: true,
+    resultsTablePreferences: true,
+    publicId: true,
+    customDomain: true,
+  })
+  .partial()
 
 export type Typebot = z.infer<typeof typebotSchema>
 export type Target = z.infer<typeof targetSchema>

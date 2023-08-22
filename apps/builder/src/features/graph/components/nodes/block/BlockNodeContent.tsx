@@ -53,6 +53,8 @@ import {
   StartBlock,
 } from '@typebot.io/schemas'
 import { ItemNodesList } from '../item/ItemNodesList'
+import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
+// import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 
 type Props = {
   block: Block | StartBlock
@@ -235,9 +237,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
         />
       )
     }
-    // case IntegrationBlockType.PIXEL: {
-    //   return <PixelNodeBody options={block.options} />
-    // }
+    case IntegrationBlockType.PIXEL: {
+      return <PixelNodeBody options={block.options} />
+    }
     case 'start': {
       return <Text>Início</Text>
     }

@@ -32,6 +32,7 @@ import {
   googleSheetsBlockSchema,
   makeComBlockSchema,
   pabblyConnectBlockSchema,
+  pixelBlockSchema,
   sendEmailBlockSchema,
   webhookBlockSchema,
   zapierBlockSchema,
@@ -144,6 +145,7 @@ export const blockSchema = z.discriminatedUnion('type', [
   removeTagBlockSchema,
   endBlockSchema,
   buttonBlockSchema,
+  pixelBlockSchema,
 ])
 
 export type Block = z.infer<typeof blockSchema>

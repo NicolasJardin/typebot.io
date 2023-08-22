@@ -55,7 +55,6 @@ export const ConditionItemNode = ({ item, isMouseOver, indices }: Props) => {
     const newItemId = createId()
     createItem(
       {
-        blockId: item.blockId,
         type: ItemType.CONDITION,
         id: newItemId,
       },
@@ -158,5 +157,9 @@ export const parseComparisonOperatorSymbol = (
       return 'está vazio'
     case ComparisonOperators.NOT_CONTAINS:
       return 'não contém'
+    case ComparisonOperators.MATCHES_REGEX:
+      return 'corresponde'
+    case ComparisonOperators.NOT_MATCH_REGEX:
+      return 'não corresponde'
   }
 }
