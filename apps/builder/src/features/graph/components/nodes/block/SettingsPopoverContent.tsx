@@ -53,6 +53,7 @@ import {
 } from '@typebot.io/schemas'
 import { Fragment, useRef, useState } from 'react'
 import { SettingsHoverBar } from './SettingsHoverBar'
+import { PixelSettings } from '@/features/blocks/integrations/pixel/components/PixelSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -372,13 +373,13 @@ export const BlockSettings = ({
         />
       )
     }
-    // case IntegrationBlockType.PIXEL: {
-    //   return (
-    //     <PixelSettings
-    //       options={block.options}
-    //       onOptionsChange={updateOptions}
-    //     />
-    //   )
-    // }
+    case IntegrationBlockType.PIXEL: {
+      return (
+        <PixelSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+    }
   }
 }

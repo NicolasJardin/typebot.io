@@ -74,9 +74,9 @@ export const HostBubble = (props: Props) => {
       case BubbleBlockType.AUDIO:
         return (
           <AudioBubble
-            url={(props.message.content as AudioBubbleContent).url}
+            content={props.message.content as AudioBubbleContent}
             onTransitionEnd={onTransitionEnd}
-          />
+        />
         )
       case BubbleBlockType.FILE:
         return (

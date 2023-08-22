@@ -1,13 +1,13 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { methodNotAllowed } from '@typebot.io/lib/api'
-import Stripe from 'stripe'
-import Cors from 'micro-cors'
-import { buffer } from 'micro'
 import prisma from '@/lib/prisma'
-import { Plan, WorkspaceRole } from '@typebot.io/prisma'
-import { RequestHandler } from 'next/dist/server/next'
+import { methodNotAllowed } from '@typebot.io/lib/api'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
-import { PublicTypebot, Typebot } from '@typebot.io/schemas'
+import { Plan, WorkspaceRole } from '@typebot.io/prisma'
+import { Settings } from '@typebot.io/schemas'
+import { buffer } from 'micro'
+import Cors from 'micro-cors'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { RequestHandler } from 'next/dist/server/next'
+import Stripe from 'stripe'
 
 if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET)
   throw new Error('STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET missing')
@@ -133,6 +133,19 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
         case 'customer.subscription.deleted': {
           const subscription = event.data.object as Stripe.Subscription
+          const { data } = await stripe.subscriptions.list({
+            customer: subscription.customer as string,
+            limit: 1,
+            status: 'active',
+          })
+          const existingSubscription = data[0] as
+            | Stripe.Subscription
+            | undefined
+          if (existingSubscription)
+            return res.send({
+              message:
+                'Ainda existe uma assinatura ativa. Ignorando o downgrade.',
+            })
           const workspace = await prisma.workspace.update({
             where: {
               stripeId: subscription.customer as string,
@@ -171,36 +184,42 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             ])
           }
 
-          const typebots = (await prisma.typebot.findMany({
+          const typebots = await prisma.typebot.findMany({
             where: {
               workspaceId: workspace.id,
               isArchived: { not: true },
             },
             include: { publishedTypebot: true },
-          })) as (Typebot & { publishedTypebot: PublicTypebot })[]
+          })
           for (const typebot of typebots) {
-            if (typebot.settings.general.isBrandingEnabled) continue
+            const settings = typebot.settings as Settings
+            if (settings.general.isBrandingEnabled) continue
             await prisma.typebot.updateMany({
               where: { id: typebot.id },
               data: {
                 settings: {
-                  ...typebot.settings,
+                  ...settings,
                   general: {
-                    ...typebot.settings.general,
+                    ...settings.general,
                     isBrandingEnabled: true,
                   },
                 },
               },
             })
-            if (typebot.publishedTypebot.settings.general.isBrandingEnabled)
+            const publishedTypebotSettings = typebot.publishedTypebot
+              ?.settings as Settings | null
+            if (
+              !publishedTypebotSettings ||
+              publishedTypebotSettings?.general.isBrandingEnabled
+            )
               continue
             await prisma.publicTypebot.updateMany({
               where: { id: typebot.id },
               data: {
                 settings: {
-                  ...typebot.publishedTypebot.settings,
+                  ...publishedTypebotSettings,
                   general: {
-                    ...typebot.publishedTypebot.settings.general,
+                    ...publishedTypebotSettings.general,
                     isBrandingEnabled: true,
                   },
                 },

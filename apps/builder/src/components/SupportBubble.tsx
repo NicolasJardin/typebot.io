@@ -1,12 +1,23 @@
+// import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+// import { useUser } from '@/features/account/hooks/useUser'
+// import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
+// import React, { useEffect, useState } from 'react'
+// import { Bubble, BubbleProps } from '@typebot.io/nextjs'
 // import { planToReadable } from '@/features/billing/helpers/planToReadable'
 
 export const SupportBubble = () => {
-  return <></>
+  return null
   // const { typebot } = useTypebot()
   // const { user } = useUser()
   // const { workspace } = useWorkspace()
 
-  // if (!isCloudProdInstance) return null
+  // const [lastViewedTypebotId, setLastViewedTypebotId] = useState(typebot?.id)
+
+  // useEffect(() => {
+  //   if (!typebot?.id) return
+  //   if (lastViewedTypebotId === typebot?.id) return
+  //   setLastViewedTypebotId(typebot?.id)
+  // }, [lastViewedTypebotId, typebot?.id])
 
   // return (
   //   <Bubble
@@ -16,7 +27,7 @@ export const SupportBubble = () => {
   //       'User ID': user?.id,
   //       'First name': user?.name?.split(' ')[0] ?? undefined,
   //       Email: user?.email ?? undefined,
-  //       'Typebot ID': typebot?.id,
+  //       'Typebot ID': lastViewedTypebotId,
   //       'Avatar URL': user?.image ?? undefined,
   //       Plan: planToReadable(workspace?.plan),
   //     }}
@@ -25,6 +36,7 @@ export const SupportBubble = () => {
   //         backgroundColor: '#fff',
   //       },
   //     }}
+  //     {...props}
   //   />
   // )
 }

@@ -2,6 +2,7 @@ import { executeChatwootBlock } from '@/features/blocks/integrations/chatwoot/ex
 import { executeGoogleAnalyticsBlock } from '@/features/blocks/integrations/googleAnalytics/executeGoogleAnalyticsBlock'
 import { executeGoogleSheetBlock } from '@/features/blocks/integrations/googleSheets/executeGoogleSheetBlock'
 import { executeOpenAIBlock } from '@/features/blocks/integrations/openai/executeOpenAIBlock'
+import { executePixelBlock } from '@/features/blocks/integrations/pixel/executePixelBlock'
 import { executeSendEmailBlock } from '@/features/blocks/integrations/sendEmail/executeSendEmailBlock'
 import { executeWebhookBlock } from '@/features/blocks/integrations/webhook/executeWebhookBlock'
 import {
@@ -30,7 +31,7 @@ export const executeIntegration =
         return executeWebhookBlock(state, block)
       case IntegrationBlockType.OPEN_AI:
         return executeOpenAIBlock(state, block)
-      // case IntegrationBlockType.PIXEL:
-      //   return executePixelBlock(state, block)
+      case IntegrationBlockType.PIXEL:
+        return executePixelBlock(state, block)
     }
   }

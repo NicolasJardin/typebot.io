@@ -1,16 +1,15 @@
 import { DownloadIcon, ToolIcon } from '@/components/icons'
 import { useUser } from '@/features/account/hooks/useUser'
-import { createTypebotQuery } from '@/features/dashboard/queries/createTypebotQuery'
-import { importTypebotQuery } from '@/features/dashboard/queries/importTypebotQuery'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
+import { trpc } from '@/lib/trpc'
 import {
   Button,
   Heading,
   Stack,
+  VStack,
   useColorModeValue,
   useDisclosure,
-  VStack,
 } from '@chakra-ui/react'
 import { Typebot } from '@typebot.io/schemas'
 import { useRouter } from 'next/router'
@@ -28,40 +27,16 @@ export const CreateNewTypebotButtons = () => {
 
   const { showToast } = useToast()
 
-  const handleCreateSubmit = async (typebot?: Typebot) => {
-    if (!user || !workspace) return
-    setIsLoading(true)
-    const folderId = router.query.folderId?.toString() ?? null
-    const { error, data } = typebot
-      ? await importTypebotQuery(
-          {
-            ...typebot,
-            folderId,
-            workspaceId: workspace.id,
-            theme: {
-              ...typebot.theme,
-              chat: {
-                ...typebot.theme.chat,
-                hostAvatar: {
-                  isEnabled: true,
-                  url:
-                    typebot.theme.chat.hostAvatar?.url ??
-                    user.image ??
-                    undefined,
-                },
-              },
-            },
-          },
-          workspace.plan
-        )
-      : await createTypebotQuery({
-          folderId,
-          workspaceId: workspace.id,
-        })
-    if (error) showToast({ description: error.message })
-    if (data)
+  const { mutate } = trpc.typebot.createTypebot.useMutation({
+    onMutate: () => {
+      setIsLoading(true)
+    },
+    onError: (error) => {
+      showToast({ description: error.message })
+    },
+    onSuccess: (data) => {
       router.push({
-        pathname: `/typebots/${data.id}/edit`,
+        pathname: `/typebots/${data.typebot.id}/edit`,
         query:
           router.query.isFirstBot === 'true'
             ? {
@@ -69,7 +44,28 @@ export const CreateNewTypebotButtons = () => {
               }
             : {},
       })
-    setIsLoading(false)
+    },
+    onSettled: () => {
+      setIsLoading(false)
+    },
+  })
+
+  const handleCreateSubmit = async (typebot?: Typebot) => {
+    if (!user || !workspace) return
+    const folderId = router.query.folderId?.toString() ?? null
+    mutate({
+      workspaceId: workspace.id,
+      typebot: {
+        ...(typebot
+          ? {
+              ...typebot,
+              publicId: undefined,
+              customDomain: undefined,
+            }
+          : {}),
+        folderId,
+      },
+    })
   }
 
   return (

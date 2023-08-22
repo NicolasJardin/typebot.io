@@ -2,6 +2,7 @@ import { useTypebots } from '@/features/dashboard/hooks/useTypebots'
 import { TypebotInDashboard } from '@/features/dashboard/types'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
+import { trpc } from '@/lib/trpc'
 import {
   Flex,
   Heading,
@@ -16,7 +17,6 @@ import { DashboardFolder, WorkspaceRole } from '@typebot.io/prisma'
 import React, { useState } from 'react'
 import { useFolders } from '../hooks/useFolders'
 import { createFolderQuery } from '../queries/createFolderQuery'
-import { patchTypebotQuery } from '../queries/patchTypebotQuery'
 import { useTypebotDnd } from '../TypebotDndProvider'
 import { BackButton } from './BackButton'
 import { CreateBotButton } from './CreateBotButton'
@@ -24,6 +24,7 @@ import { CreateFolderButton } from './CreateFolderButton'
 import { ButtonSkeleton, FolderButton } from './FolderButton'
 import { TypebotButton } from './TypebotButton'
 import { TypebotCardOverlay } from './TypebotButtonOverlay'
+
 type Props = { folder: DashboardFolder | null }
 
 const dragDistanceTolerance = 20
@@ -63,6 +64,15 @@ export const FolderContent = ({ folder }: Props) => {
     },
   })
 
+  const { mutate: updateTypebot } = trpc.typebot.updateTypebot.useMutation({
+    onError: (error) => {
+      showToast({ description: error.message })
+    },
+    onSuccess: () => {
+      refetchTypebots()
+    },
+  })
+
   const {
     typebots,
     isLoading: isTypebotLoading,
@@ -80,11 +90,12 @@ export const FolderContent = ({ folder }: Props) => {
 
   const moveTypebotToFolder = async (typebotId: string, folderId: string) => {
     if (!typebots) return
-    const { error } = await patchTypebotQuery(typebotId, {
-      folderId: folderId === 'root' ? null : folderId,
+    updateTypebot({
+      typebotId,
+      typebot: {
+        folderId: folderId === 'root' ? null : folderId,
+      },
     })
-    if (error) showToast({ description: error.message })
-    refetchTypebots()
   }
 
   const handleCreateFolder = async () => {

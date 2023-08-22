@@ -196,7 +196,7 @@ export const DropOffEdge = ({
                   NN
                 </Text>
               )}{' '}
-              usuários
+              usuário{(totalDroppedUser ?? 2) > 1 ? 's' : ''}
             </Tag>
           </VStack>
         </Tooltip>

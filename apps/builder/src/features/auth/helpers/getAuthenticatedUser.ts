@@ -14,7 +14,7 @@ export const getAuthenticatedUser = async (
   const user = await getUser(req, res)
 
   if (!user || !('id' in user)) return
-  setUser({ id: user.id, email: user.email ?? undefined })
+  setUser({ id: user.id })
   return user
 }
 
@@ -25,7 +25,7 @@ const authenticateByToken = async (
   const user = (await prisma.user.findFirst({
     where: { apiTokens: { some: { token: apiToken } } },
   })) as User
-  setUser({ id: user.id, email: user.email ?? undefined })
+  setUser({ id: user.id })
   return user
 }
 

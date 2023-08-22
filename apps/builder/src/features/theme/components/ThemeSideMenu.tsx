@@ -1,35 +1,36 @@
+import { ChatIcon, CodeIcon, DropletIcon, TableIcon } from '@/components/icons'
+import { headerHeight } from '@/features/editor/constants'
+import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import {
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Heading,
   HStack,
+  Heading,
   Stack,
   Tag,
 } from '@chakra-ui/react'
-import { ChatIcon, CodeIcon, DropletIcon, TableIcon } from '@/components/icons'
 import { ChatTheme, GeneralTheme, ThemeTemplate } from '@typebot.io/schemas'
-import React from 'react'
 import { CustomCssSettings } from './CustomCssSettings'
-import { useTypebot } from '@/features/editor/providers/TypebotProvider'
-import { headerHeight } from '@/features/editor/constants'
+import { ThemeTemplates } from './ThemeTemplates'
 import { ChatThemeSettings } from './chat/ChatThemeSettings'
 import { GeneralSettings } from './general/GeneralSettings'
-import { ThemeTemplates } from './ThemeTemplates'
 
 export const ThemeSideMenu = () => {
   const { typebot, updateTypebot } = useTypebot()
 
   const updateChatTheme = (chat: ChatTheme) =>
-    typebot && updateTypebot({ theme: { ...typebot.theme, chat } })
+    typebot && updateTypebot({ updates: { theme: { ...typebot.theme, chat } } })
 
   const updateGeneralTheme = (general: GeneralTheme) =>
-    typebot && updateTypebot({ theme: { ...typebot.theme, general } })
+    typebot &&
+    updateTypebot({ updates: { theme: { ...typebot.theme, general } } })
 
   const updateCustomCss = (customCss: string) =>
-    typebot && updateTypebot({ theme: { ...typebot.theme, customCss } })
+    typebot &&
+    updateTypebot({ updates: { theme: { ...typebot.theme, customCss } } })
 
   const selectedTemplate = (
     selectedTemplate: Partial<Pick<ThemeTemplate, 'id' | 'theme'>>
@@ -37,15 +38,19 @@ export const ThemeSideMenu = () => {
     if (!typebot) return
     const { theme, id } = selectedTemplate
     updateTypebot({
-      selectedThemeTemplateId: id,
-      theme: theme ? { ...theme } : typebot.theme,
+      updates: {
+        selectedThemeTemplateId: id,
+        theme: theme ? { ...theme } : typebot.theme,
+      },
     })
   }
 
   const updateBranding = (isBrandingEnabled: boolean) =>
     typebot &&
     updateTypebot({
-      settings: { ...typebot.settings, general: { isBrandingEnabled } },
+      updates: {
+        settings: { ...typebot.settings, general: { isBrandingEnabled } },
+      },
     })
 
   return (

@@ -43,9 +43,33 @@ export const ComparisonItem = ({
           <TextInput
             defaultValue={item.value ?? ''}
             onChange={handleChangeValue}
-            placeholder="Digite um valor..."
+            placeholder={parseValuePlaceholder(item.comparisonOperator)}
           />
         )}
     </Stack>
   )
+}
+
+const parseValuePlaceholder = (
+  operator: ComparisonOperators | undefined
+): string => {
+  switch (operator) {
+    case ComparisonOperators.NOT_EQUAL:
+    case ComparisonOperators.EQUAL:
+    case ComparisonOperators.CONTAINS:
+    case ComparisonOperators.STARTS_WITH:
+    case ComparisonOperators.ENDS_WITH:
+    case ComparisonOperators.NOT_CONTAINS:
+    case undefined:
+      return 'Digite um valor...'
+    case ComparisonOperators.LESS:
+    case ComparisonOperators.GREATER:
+      return 'Digite um número...'
+    case ComparisonOperators.IS_SET:
+    case ComparisonOperators.IS_EMPTY:
+      return ''
+    case ComparisonOperators.MATCHES_REGEX:
+    case ComparisonOperators.NOT_MATCH_REGEX:
+      return '^[0-9]+$'
+  }
 }

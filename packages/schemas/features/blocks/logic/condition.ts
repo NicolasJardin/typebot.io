@@ -20,6 +20,8 @@ export enum ComparisonOperators {
   IS_EMPTY = 'Is empty',
   STARTS_WITH = 'Inicia com',
   ENDS_WITH = 'Termina com',
+  MATCHES_REGEX = 'Corresponde ao regex',
+  NOT_MATCH_REGEX = 'Não corresponde ao regex',
 }
 
 const comparisonSchema = z.object({
