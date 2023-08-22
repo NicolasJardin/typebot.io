@@ -19,16 +19,6 @@ export const AudioBubble = (props: Props) => {
   let audioElement: HTMLAudioElement | undefined
   const [isTyping, setIsTyping] = createSignal(true)
 
-  const endTyping = () => {
-    if (isPlayed) return
-    isPlayed = true
-    setIsTyping(false)
-    setTimeout(
-      () => props.onTransitionEnd(ref?.offsetTop),
-      showAnimationDuration
-    )
-  }
-
   onMount(() => {
     typingTimeout = setTimeout(() => {
       if (isPlayed) return

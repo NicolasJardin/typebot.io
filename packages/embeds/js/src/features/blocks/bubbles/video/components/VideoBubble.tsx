@@ -15,7 +15,6 @@ let typingTimeout: NodeJS.Timeout
 
 export const VideoBubble = (props: Props) => {
   let ref: HTMLDivElement | undefined
-  let videoElement: HTMLVideoElement | undefined
   const [isTyping, setIsTyping] = createSignal(true)
 
   onMount(() => {
