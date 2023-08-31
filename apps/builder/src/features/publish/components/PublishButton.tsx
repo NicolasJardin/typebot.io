@@ -25,7 +25,6 @@ import {
 import { isNotDefined } from '@typebot.io/lib'
 import { InputBlockType } from '@typebot.io/schemas'
 import { parseDefaultPublicId } from '../helpers/parseDefaultPublicId'
-import { useRouter } from 'next/router'
 
 export const PublishButton = (props: ButtonProps) => {
   const t = useI18n()
@@ -42,7 +41,6 @@ export const PublishButton = (props: ButtonProps) => {
     save,
   } = useTypebot()
   const { showToast } = useToast()
-  const { push, query } = useRouter()
 
   const {
     typebot: {
@@ -61,7 +59,6 @@ export const PublishButton = (props: ButtonProps) => {
         refetchPublishedTypebot({
           typebotId: typebot?.id as string,
         })
-        if (!publishedTypebot) push(`/typebots/${query.typebotId}/share`)
       },
     })
 
