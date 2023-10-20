@@ -146,10 +146,10 @@ export const BlocksSideBar = () => {
               onMouseDown={handleMouseDown}
             />
 
-            <BlockCard
+            {/* <BlockCard
               type={BubbleBlockType.BUTTON}
               onMouseDown={handleMouseDown}
-            />
+            /> */}
           </SimpleGrid>
         </Stack>
 
