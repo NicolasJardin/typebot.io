@@ -1,6 +1,6 @@
 {
     "functions": {
-        "pages/api/v1/[...trpc]": {
+        "pages/api/v1/[...trpc].ts": {
             "maxDuration": 60
         }
     }
