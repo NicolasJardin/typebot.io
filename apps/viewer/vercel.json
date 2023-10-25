@@ -1,6 +1,6 @@
 {
     "functions": {
-        "/api/v1/[...trpc].ts": {
+        "src/pages/api/v1/[...trpc].ts": {
             "memory": 1024,
             "maxDuration": 60
         }
