@@ -3,18 +3,6 @@
         "pages/api/v1/[...trpc].ts": {
             "memory": 1024,
             "maxDuration": 60
-        },
-        "api/v1/[...trpc].ts": {
-            "memory": 1024,
-            "maxDuration": 60
-        },
-        "/api/v1/[...trpc]": {
-            "memory": 1024,
-            "maxDuration": 60
-        },
-        "/api/v1/[...trpc].ts": {
-            "memory": 1024,
-            "maxDuration": 60
         }
     }
 }
