@@ -21,3 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 export default handler
+
+export const config = {
+  maxDuration: 60,
+};
