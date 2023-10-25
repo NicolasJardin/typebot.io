@@ -3,10 +3,10 @@
         "pages/api/v1/[...trpc].ts": {
             "maxDuration": 60
         },
-        "pages/api/**/*.ts": {
+        "pages/api/v1/*.ts": {
             "maxDuration": 60
         },
-        "api/**/*.ts": {
+        "api/v1/*.ts": {
             "maxDuration": 60
         }
     }
