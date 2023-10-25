@@ -1,7 +1,5 @@
 {
     "functions": {
-        "api/v1/[...trpc]": {
-            "maxDuration": 60
-        }
+        "maxDuration": 60
     }
 }
