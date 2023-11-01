@@ -1,12 +1,13 @@
 import { SendButton } from '@/components/SendButton'
 import { BotContext, InputSubmitContent } from '@/types'
-import { guessApiHost } from '@/utils/guessApiHost'
 import { FileInputBlock } from '@typebot.io/schemas'
 import { defaultFileInputOptions } from '@typebot.io/schemas/features/blocks/inputs/file'
 import { createSignal, Match, Show, Switch } from 'solid-js'
-import { uploadFiles } from '@typebot.io/lib'
 import { Button } from '@/components/Button'
 import { Spinner } from '@/components/Spinner'
+import { uploadFiles } from '../helpers/uploadFiles'
+import { guessApiHost } from '@/utils/guessApiHost'
+import { getRuntimeVariable } from '@typebot.io/env/getRuntimeVariable'
 
 type Props = {
   context: BotContext
@@ -25,15 +26,14 @@ export const FileUploadForm = (props: Props) => {
   const onNewFiles = (files: FileList) => {
     setErrorMessage(undefined)
     const newFiles = Array.from(files)
+    const sizeLimit =
+      props.block.options.sizeLimit ??
+      getRuntimeVariable('NEXT_PUBLIC_BOT_FILE_UPLOAD_MAX_SIZE')
     if (
-      newFiles.some(
-        (file) =>
-          file.size > (props.block.options.sizeLimit ?? 10) * 1024 * 1024
-      )
+      sizeLimit &&
+      newFiles.some((file) => file.size > sizeLimit * 1024 * 1024)
     )
-      return setErrorMessage(
-        `A file is larger than ${props.block.options.sizeLimit ?? 10}MB`
-      )
+      return setErrorMessage(`A file is larger than ${sizeLimit}MB`)
     if (!props.block.options.isMultipleAllowed && files)
       return startSingleFileUpload(newFiles[0])
     setSelectedFiles([...selectedFiles(), ...newFiles])
@@ -46,20 +46,21 @@ export const FileUploadForm = (props: Props) => {
   }
 
   const startSingleFileUpload = async (file: File) => {
-    if (props.context.isPreview)
+    if (props.context.isPreview || !props.context.resultId)
       return props.onSubmit({
         label: `File uploaded`,
         value: 'http://fake-upload-url.com',
       })
     setIsUploading(true)
     const urls = await uploadFiles({
-      basePath: `${props.context.apiHost ?? guessApiHost()}/api/typebots/${
-        props.context.typebot.id
-      }/blocks/${props.block.id}`,
+      apiHost: props.context.apiHost ?? guessApiHost(),
       files: [
         {
           file,
-          path: `public/results/${props.context.resultId}/${props.block.id}/${file.name}`,
+          input: {
+            sessionId: props.context.sessionId,
+            fileName: file.name,
+          },
         },
       ],
     })
@@ -69,7 +70,8 @@ export const FileUploadForm = (props: Props) => {
     setErrorMessage('An error occured while uploading the file')
   }
   const startFilesUpload = async (files: File[]) => {
-    if (props.context.isPreview)
+    const resultId = props.context.resultId
+    if (props.context.isPreview || !resultId)
       return props.onSubmit({
         label: `${files.length} file${files.length > 1 ? 's' : ''} uploaded`,
         value: files
@@ -78,12 +80,13 @@ export const FileUploadForm = (props: Props) => {
       })
     setIsUploading(true)
     const urls = await uploadFiles({
-      basePath: `${props.context.apiHost ?? guessApiHost()}/api/typebots/${
-        props.context.typebot.id
-      }/blocks/${props.block.id}`,
+      apiHost: props.context.apiHost ?? guessApiHost(),
       files: files.map((file) => ({
         file: file,
-        path: `public/results/${props.context.resultId}/${props.block.id}/${file.name}`,
+        input: {
+          sessionId: props.context.sessionId,
+          fileName: file.name,
+        },
       })),
       onUploadProgress: setUploadProgressPercent,
     })

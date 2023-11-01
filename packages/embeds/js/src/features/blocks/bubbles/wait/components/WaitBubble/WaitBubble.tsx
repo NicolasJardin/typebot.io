@@ -2,7 +2,7 @@ import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
 import { TypingEmulation, WaitOptions } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
+import { computeTypingDuration } from '@typebot.io/bot-engine/computeTypingDuration'
 
 type Props = {
   secondsToWaitFor: WaitOptions['secondsToWaitFor']
@@ -36,10 +36,10 @@ export default function WaitBubble(props: Props) {
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
-        : computeTypingDuration(
-            `⌨ Digitando por ${props.secondsToWaitFor} segundos`,
-            props.typingEmulation ?? defaultTypingEmulation
-          )
+        : computeTypingDuration({
+            bubbleContent: `⌨ Digitando por ${props.secondsToWaitFor} segundos`,
+            typingSettings: props.typingEmulation ?? defaultTypingEmulation,
+          })
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
   })
 

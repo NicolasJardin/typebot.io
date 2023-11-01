@@ -2,17 +2,17 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Chat API",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "servers": [
     {
-      "url": "https://typebot.io/api/v1"
+      "url": "https://typebot.io/api/v2"
     }
   ],
   "paths": {
     "/sendMessage": {
       "post": {
-        "operationId": "sendMessage",
+        "operationId": "sendMessageV2",
         "summary": "Send a message",
         "description": "To initiate a chat, do not provide a `sessionId` nor a `message`.\n\nContinue the conversation by providing the `sessionId` and the `message` that should answer the previous question.\n\nSet the `isPreview` option to `true` to chat with the non-published version of the typebot.",
         "requestBody": {
@@ -38,6 +38,11 @@
                           {
                             "type": "object",
                             "properties": {
+                              "version": {
+                                "type": "string",
+                                "enum": ["3", "4", "5"],
+                                "nullable": true
+                              },
                               "id": {
                                 "type": "string"
                               },
@@ -62,10 +67,7 @@
                                           "type": "number"
                                         }
                                       },
-                                      "required": [
-                                        "x",
-                                        "y"
-                                      ],
+                                      "required": ["x", "y"],
                                       "additionalProperties": false
                                     },
                                     "blocks": {
@@ -86,9 +88,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "start"
-                                                ]
+                                                "enum": ["start"]
                                               },
                                               "label": {
                                                 "type": "string"
@@ -116,9 +116,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "text"
-                                                ]
+                                                "enum": ["text"]
                                               },
                                               "content": {
                                                 "type": "object",
@@ -133,9 +131,7 @@
                                                     "type": "string"
                                                   }
                                                 },
-                                                "required": [
-                                                  "richText"
-                                                ],
+                                                "required": ["richText"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -161,9 +157,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "image"
-                                                ]
+                                                "enum": ["image"]
                                               },
                                               "content": {
                                                 "type": "object",
@@ -209,9 +203,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "video"
-                                                ]
+                                                "enum": ["video"]
                                               },
                                               "content": {
                                                 "type": "object",
@@ -229,6 +221,14 @@
                                                       "youtube",
                                                       "vimeo"
                                                     ]
+                                                  },
+                                                  "height": {
+                                                    "anyOf": [
+                                                      {
+                                                        "type": "number"
+                                                      },
+                                                      {}
+                                                    ]
                                                   }
                                                 },
                                                 "additionalProperties": false
@@ -256,9 +256,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "embed"
-                                                ]
+                                                "enum": ["embed"]
                                               },
                                               "content": {
                                                 "type": "object",
@@ -275,9 +273,7 @@
                                                     ]
                                                   }
                                                 },
-                                                "required": [
-                                                  "height"
-                                                ],
+                                                "required": ["height"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -303,9 +299,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "audio"
-                                                ]
+                                                "enum": ["audio"]
                                               },
                                               "content": {
                                                 "type": "object",
@@ -342,9 +336,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "text input"
-                                                ]
+                                                "enum": ["text input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -401,9 +393,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "choice input"
-                                                ]
+                                                "enum": ["choice input"]
                                               },
                                               "items": {
                                                 "type": "array",
@@ -422,9 +412,7 @@
                                                     },
                                                     "type": {
                                                       "type": "number",
-                                                      "enum": [
-                                                        0
-                                                      ]
+                                                      "enum": [0]
                                                     },
                                                     "content": {
                                                       "type": "string"
@@ -494,10 +482,7 @@
                                                       "additionalProperties": false
                                                     }
                                                   },
-                                                  "required": [
-                                                    "id",
-                                                    "type"
-                                                  ],
+                                                  "required": ["id", "type"],
                                                   "additionalProperties": false
                                                 }
                                               },
@@ -553,9 +538,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "email input"
-                                                ]
+                                                "enum": ["email input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -583,9 +566,7 @@
                                                     "type": "string"
                                                   }
                                                 },
-                                                "required": [
-                                                  "labels"
-                                                ],
+                                                "required": ["labels"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -611,9 +592,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "number input"
-                                                ]
+                                                "enum": ["number input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -662,9 +641,7 @@
                                                     ]
                                                   }
                                                 },
-                                                "required": [
-                                                  "labels"
-                                                ],
+                                                "required": ["labels"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -690,9 +667,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "url input"
-                                                ]
+                                                "enum": ["url input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -749,9 +724,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "phone number input"
-                                                ]
+                                                "enum": ["phone number input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -811,9 +784,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "date input"
-                                                ]
+                                                "enum": ["date input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -846,6 +817,15 @@
                                                   },
                                                   "isRange": {
                                                     "type": "boolean"
+                                                  },
+                                                  "format": {
+                                                    "type": "string"
+                                                  },
+                                                  "min": {
+                                                    "type": "string"
+                                                  },
+                                                  "max": {
+                                                    "type": "string"
                                                   }
                                                 },
                                                 "required": [
@@ -878,9 +858,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "payment input"
-                                                ]
+                                                "enum": ["payment input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -890,9 +868,7 @@
                                                   },
                                                   "provider": {
                                                     "type": "string",
-                                                    "enum": [
-                                                      "Stripe"
-                                                    ]
+                                                    "enum": ["Stripe"]
                                                   },
                                                   "labels": {
                                                     "type": "object",
@@ -904,9 +880,7 @@
                                                         "type": "string"
                                                       }
                                                     },
-                                                    "required": [
-                                                      "button"
-                                                    ],
+                                                    "required": ["button"],
                                                     "additionalProperties": false
                                                   },
                                                   "additionalInformation": {
@@ -994,9 +968,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "rating input"
-                                                ]
+                                                "enum": ["rating input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1008,15 +980,11 @@
                                                     "anyOf": [
                                                       {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Icons"
-                                                        ]
+                                                        "enum": ["Icons"]
                                                       },
                                                       {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Numbers"
-                                                        ]
+                                                        "enum": ["Numbers"]
                                                       }
                                                     ]
                                                   },
@@ -1036,9 +1004,7 @@
                                                         "type": "string"
                                                       }
                                                     },
-                                                    "required": [
-                                                      "button"
-                                                    ],
+                                                    "required": ["button"],
                                                     "additionalProperties": false
                                                   },
                                                   "customIcon": {
@@ -1051,9 +1017,7 @@
                                                         "type": "string"
                                                       }
                                                     },
-                                                    "required": [
-                                                      "isEnabled"
-                                                    ],
+                                                    "required": ["isEnabled"],
                                                     "additionalProperties": false
                                                   },
                                                   "isOneClickSubmitEnabled": {
@@ -1091,9 +1055,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "file input"
-                                                ]
+                                                "enum": ["file input"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1130,7 +1092,8 @@
                                                     "additionalProperties": false
                                                   },
                                                   "sizeLimit": {
-                                                    "type": "number"
+                                                    "type": "number",
+                                                    "description": "Deprecated"
                                                   }
                                                 },
                                                 "required": [
@@ -1162,9 +1125,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "picture choice input"
-                                                ]
+                                                "enum": ["picture choice input"]
                                               },
                                               "items": {
                                                 "type": "array",
@@ -1183,9 +1144,7 @@
                                                     },
                                                     "type": {
                                                       "type": "number",
-                                                      "enum": [
-                                                        3
-                                                      ]
+                                                      "enum": [3]
                                                     },
                                                     "pictureSrc": {
                                                       "type": "string"
@@ -1261,10 +1220,7 @@
                                                       "additionalProperties": false
                                                     }
                                                   },
-                                                  "required": [
-                                                    "id",
-                                                    "type"
-                                                  ],
+                                                  "required": ["id", "type"],
                                                   "additionalProperties": false
                                                 }
                                               },
@@ -1335,9 +1291,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Code"
-                                                ]
+                                                "enum": ["Code"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1352,9 +1306,7 @@
                                                     "type": "boolean"
                                                   }
                                                 },
-                                                "required": [
-                                                  "name"
-                                                ],
+                                                "required": ["name"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -1380,9 +1332,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Condition"
-                                                ]
+                                                "enum": ["Condition"]
                                               },
                                               "items": {
                                                 "type": "array",
@@ -1401,19 +1351,14 @@
                                                     },
                                                     "type": {
                                                       "type": "number",
-                                                      "enum": [
-                                                        1
-                                                      ]
+                                                      "enum": [1]
                                                     },
                                                     "content": {
                                                       "type": "object",
                                                       "properties": {
                                                         "logicalOperator": {
                                                           "type": "string",
-                                                          "enum": [
-                                                            "OR",
-                                                            "AND"
-                                                          ]
+                                                          "enum": ["OR", "AND"]
                                                         },
                                                         "comparisons": {
                                                           "type": "array",
@@ -1447,9 +1392,7 @@
                                                                 "type": "string"
                                                               }
                                                             },
-                                                            "required": [
-                                                              "id"
-                                                            ],
+                                                            "required": ["id"],
                                                             "additionalProperties": false
                                                           }
                                                         }
@@ -1492,9 +1435,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Redirect"
-                                                ]
+                                                "enum": ["Redirect"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1506,9 +1447,7 @@
                                                     "type": "boolean"
                                                   }
                                                 },
-                                                "required": [
-                                                  "isNewTab"
-                                                ],
+                                                "required": ["isNewTab"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -1534,9 +1473,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Set variable"
-                                                ]
+                                                "enum": ["Set variable"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1555,6 +1492,7 @@
                                                     "enum": [
                                                       "Custom",
                                                       "Empty",
+                                                      "Environment name",
                                                       "User ID",
                                                       "Now",
                                                       "Today",
@@ -1562,7 +1500,9 @@
                                                       "Tomorrow",
                                                       "Random ID",
                                                       "Moment of the day",
-                                                      "Map item with same index"
+                                                      "Map item with same index",
+                                                      "Phone number",
+                                                      "Contact name"
                                                     ]
                                                   },
                                                   "mapListItemParams": {
@@ -1609,9 +1549,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Typebot link"
-                                                ]
+                                                "enum": ["Typebot link"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1621,6 +1559,9 @@
                                                   },
                                                   "groupId": {
                                                     "type": "string"
+                                                  },
+                                                  "mergeResults": {
+                                                    "type": "boolean"
                                                   }
                                                 },
                                                 "additionalProperties": false
@@ -1648,15 +1589,16 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Wait"
-                                                ]
+                                                "enum": ["Wait"]
                                               },
                                               "options": {
                                                 "type": "object",
                                                 "properties": {
                                                   "secondsToWaitFor": {
                                                     "type": "string"
+                                                  },
+                                                  "shouldPause": {
+                                                    "type": "boolean"
                                                   }
                                                 },
                                                 "additionalProperties": false
@@ -1684,9 +1626,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Jump"
-                                                ]
+                                                "enum": ["Jump"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1723,9 +1663,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "AB test"
-                                                ]
+                                                "enum": ["AB test"]
                                               },
                                               "items": {
                                                 "type": "array",
@@ -1747,15 +1685,11 @@
                                                       },
                                                       "type": {
                                                         "type": "number",
-                                                        "enum": [
-                                                          2
-                                                        ]
+                                                        "enum": [2]
                                                       },
                                                       "path": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "a"
-                                                        ]
+                                                        "enum": ["a"]
                                                       }
                                                     },
                                                     "required": [
@@ -1780,15 +1714,11 @@
                                                       },
                                                       "type": {
                                                         "type": "number",
-                                                        "enum": [
-                                                          2
-                                                        ]
+                                                        "enum": [2]
                                                       },
                                                       "path": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "b"
-                                                        ]
+                                                        "enum": ["b"]
                                                       }
                                                     },
                                                     "required": [
@@ -1809,9 +1739,7 @@
                                                     "maximum": 100
                                                   }
                                                 },
-                                                "required": [
-                                                  "aPercent"
-                                                ],
+                                                "required": ["aPercent"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -1838,9 +1766,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Chatwoot"
-                                                ]
+                                                "enum": ["Chatwoot"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1909,9 +1835,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Google Analytics"
-                                                ]
+                                                "enum": ["Google Analytics"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -1965,9 +1889,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Google Sheets"
-                                                ]
+                                                "enum": ["Google Sheets"]
                                               },
                                               "options": {
                                                 "anyOf": [
@@ -2002,9 +1924,7 @@
                                                             "type": "string"
                                                           }
                                                         },
-                                                        "required": [
-                                                          "id"
-                                                        ],
+                                                        "required": ["id"],
                                                         "additionalProperties": false,
                                                         "description": "Deprecated. Use `filter` instead."
                                                       },
@@ -2078,9 +1998,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -2114,9 +2032,7 @@
                                                       },
                                                       "action": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Insert a row"
-                                                        ]
+                                                        "enum": ["Insert a row"]
                                                       },
                                                       "cellsToInsert": {
                                                         "type": "array",
@@ -2133,11 +2049,8 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
-                                                          "additionalProperties": false,
-                                                          "description": "Deprecated. Use `filter` instead."
+                                                          "required": ["id"],
+                                                          "additionalProperties": false
                                                         }
                                                       }
                                                     },
@@ -2161,9 +2074,7 @@
                                                       },
                                                       "action": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Update a row"
-                                                        ]
+                                                        "enum": ["Update a row"]
                                                       },
                                                       "cellsToUpsert": {
                                                         "type": "array",
@@ -2180,11 +2091,8 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
-                                                          "additionalProperties": false,
-                                                          "description": "Deprecated. Use `filter` instead."
+                                                          "required": ["id"],
+                                                          "additionalProperties": false
                                                         }
                                                       },
                                                       "referenceCell": {
@@ -2200,9 +2108,7 @@
                                                             "type": "string"
                                                           }
                                                         },
-                                                        "required": [
-                                                          "id"
-                                                        ],
+                                                        "required": ["id"],
                                                         "additionalProperties": false,
                                                         "description": "Deprecated. Use `filter` instead."
                                                       },
@@ -2311,9 +2217,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Make.com"
-                                                ]
+                                                "enum": ["Make.com"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -2333,9 +2237,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -2354,9 +2256,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -2390,9 +2290,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -2411,9 +2309,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -2480,9 +2376,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "OpenAI"
-                                                ]
+                                                "enum": ["OpenAI"]
                                               },
                                               "options": {
                                                 "anyOf": [
@@ -2493,6 +2387,13 @@
                                                         "not": {}
                                                       },
                                                       "credentialsId": {
+                                                        "type": "string"
+                                                      },
+                                                      "baseUrl": {
+                                                        "type": "string",
+                                                        "default": "https://api.openai.com/v1"
+                                                      },
+                                                      "apiVersion": {
                                                         "type": "string"
                                                       }
                                                     },
@@ -2508,20 +2409,7 @@
                                                         ]
                                                       },
                                                       "model": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                          "gpt-3.5-turbo",
-                                                          "gpt-3.5-turbo-0613",
-                                                          "gpt-3.5-turbo-16k",
-                                                          "gpt-3.5-turbo-16k-0613",
-                                                          "gpt-3.5-turbo-0301",
-                                                          "gpt-4",
-                                                          "gpt-4-0613",
-                                                          "gpt-4-32k",
-                                                          "gpt-4-32k-0613",
-                                                          "gpt-4-32k-0314",
-                                                          "gpt-4-0314"
-                                                        ]
+                                                        "type": "string"
                                                       },
                                                       "messages": {
                                                         "type": "array",
@@ -2620,14 +2508,18 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id",
-                                                            "valueToExtract"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
                                                       "credentialsId": {
+                                                        "type": "string"
+                                                      },
+                                                      "baseUrl": {
+                                                        "type": "string",
+                                                        "default": "https://api.openai.com/v1"
+                                                      },
+                                                      "apiVersion": {
                                                         "type": "string"
                                                       }
                                                     },
@@ -2644,9 +2536,7 @@
                                                     "properties": {
                                                       "task": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Create image"
-                                                        ]
+                                                        "enum": ["Create image"]
                                                       },
                                                       "prompt": {
                                                         "type": "string"
@@ -2692,6 +2582,13 @@
                                                       },
                                                       "credentialsId": {
                                                         "type": "string"
+                                                      },
+                                                      "baseUrl": {
+                                                        "type": "string",
+                                                        "default": "https://api.openai.com/v1"
+                                                      },
+                                                      "apiVersion": {
+                                                        "type": "string"
                                                       }
                                                     },
                                                     "required": [
@@ -2726,9 +2623,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Pabbly"
-                                                ]
+                                                "enum": ["Pabbly"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -2748,9 +2643,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -2769,9 +2662,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -2805,9 +2696,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -2826,9 +2715,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -2895,9 +2782,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Email"
-                                                ]
+                                                "enum": ["Email"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -2971,9 +2856,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Webhook"
-                                                ]
+                                                "enum": ["Webhook"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -2993,9 +2876,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -3014,9 +2895,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -3050,9 +2929,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3071,9 +2948,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3140,9 +3015,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Zapier"
-                                                ]
+                                                "enum": ["Zapier"]
                                               },
                                               "options": {
                                                 "type": "object",
@@ -3162,9 +3035,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -3183,9 +3054,7 @@
                                                           "type": "string"
                                                         }
                                                       },
-                                                      "required": [
-                                                        "id"
-                                                      ],
+                                                      "required": ["id"],
                                                       "additionalProperties": false
                                                     }
                                                   },
@@ -3219,9 +3088,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3240,9 +3107,7 @@
                                                               "type": "string"
                                                             }
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3309,9 +3174,7 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Pixel"
-                                                ]
+                                                "enum": ["Pixel"]
                                               },
                                               "options": {
                                                 "anyOf": [
@@ -3337,9 +3200,7 @@
                                                             },
                                                             "value": {}
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3371,9 +3232,7 @@
                                                             },
                                                             "value": {}
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
@@ -3400,9 +3259,7 @@
                                                         ]
                                                       }
                                                     },
-                                                    "required": [
-                                                      "eventType"
-                                                    ],
+                                                    "required": ["eventType"],
                                                     "additionalProperties": false
                                                   },
                                                   {
@@ -3427,25 +3284,19 @@
                                                             },
                                                             "value": {}
                                                           },
-                                                          "required": [
-                                                            "id"
-                                                          ],
+                                                          "required": ["id"],
                                                           "additionalProperties": false
                                                         }
                                                       },
                                                       "eventType": {
                                                         "type": "string",
-                                                        "enum": [
-                                                          "Custom"
-                                                        ]
+                                                        "enum": ["Custom"]
                                                       },
                                                       "name": {
                                                         "type": "string"
                                                       }
                                                     },
-                                                    "required": [
-                                                      "eventType"
-                                                    ],
+                                                    "required": ["eventType"],
                                                     "additionalProperties": false
                                                   }
                                                 ]
@@ -3473,146 +3324,58 @@
                                               },
                                               "type": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "Pixel"
-                                                ]
+                                                "enum": ["Zemantic AI"]
+                                              },
+                                              "blockId": {
+                                                "type": "string"
                                               },
                                               "options": {
-                                                "anyOf": [
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "pixelId": {
-                                                        "type": "string"
-                                                      },
-                                                      "isInitSkip": {
-                                                        "type": "boolean"
-                                                      },
-                                                      "params": {
-                                                        "type": "array",
-                                                        "items": {
-                                                          "type": "object",
-                                                          "properties": {
-                                                            "id": {
-                                                              "type": "string"
-                                                            },
-                                                            "key": {
-                                                              "type": "string"
-                                                            },
-                                                            "value": {}
-                                                          },
-                                                          "required": [
-                                                            "id"
-                                                          ],
-                                                          "additionalProperties": false
-                                                        }
-                                                      },
-                                                      "eventType": {
-                                                        "not": {}
-                                                      }
-                                                    },
-                                                    "additionalProperties": false
+                                                "type": "object",
+                                                "properties": {
+                                                  "credentialsId": {
+                                                    "type": "string"
                                                   },
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "pixelId": {
-                                                        "type": "string"
-                                                      },
-                                                      "isInitSkip": {
-                                                        "type": "boolean"
-                                                      },
-                                                      "params": {
-                                                        "type": "array",
-                                                        "items": {
-                                                          "type": "object",
-                                                          "properties": {
-                                                            "id": {
-                                                              "type": "string"
-                                                            },
-                                                            "key": {
-                                                              "type": "string"
-                                                            },
-                                                            "value": {}
-                                                          },
-                                                          "required": [
-                                                            "id"
-                                                          ],
-                                                          "additionalProperties": false
-                                                        }
-                                                      },
-                                                      "eventType": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                          "Lead",
-                                                          "Contact",
-                                                          "CompleteRegistration",
-                                                          "Schedule",
-                                                          "SubmitApplication",
-                                                          "ViewContent",
-                                                          "AddPaymentInfo",
-                                                          "AddToCart",
-                                                          "AddToWishlist",
-                                                          "CustomizeProduct",
-                                                          "Donate",
-                                                          "FindLocation",
-                                                          "InitiateCheckout",
-                                                          "Purchase",
-                                                          "Search",
-                                                          "StartTrial",
-                                                          "Subscribe"
-                                                        ]
-                                                      }
-                                                    },
-                                                    "required": [
-                                                      "eventType"
-                                                    ],
-                                                    "additionalProperties": false
+                                                  "projectId": {
+                                                    "type": "string"
                                                   },
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "pixelId": {
-                                                        "type": "string"
-                                                      },
-                                                      "isInitSkip": {
-                                                        "type": "boolean"
-                                                      },
-                                                      "params": {
-                                                        "type": "array",
-                                                        "items": {
-                                                          "type": "object",
-                                                          "properties": {
-                                                            "id": {
-                                                              "type": "string"
-                                                            },
-                                                            "key": {
-                                                              "type": "string"
-                                                            },
-                                                            "value": {}
-                                                          },
-                                                          "required": [
-                                                            "id"
-                                                          ],
-                                                          "additionalProperties": false
+                                                  "systemPrompt": {
+                                                    "type": "string"
+                                                  },
+                                                  "prompt": {
+                                                    "type": "string"
+                                                  },
+                                                  "query": {
+                                                    "type": "string"
+                                                  },
+                                                  "maxResults": {
+                                                    "type": "integer"
+                                                  },
+                                                  "responseMapping": {
+                                                    "type": "array",
+                                                    "items": {
+                                                      "type": "object",
+                                                      "properties": {
+                                                        "id": {
+                                                          "type": "string"
+                                                        },
+                                                        "valueToExtract": {
+                                                          "type": "string",
+                                                          "enum": [
+                                                            "Summary",
+                                                            "Results"
+                                                          ]
+                                                        },
+                                                        "variableId": {
+                                                          "type": "string"
                                                         }
                                                       },
-                                                      "eventType": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                          "Custom"
-                                                        ]
-                                                      },
-                                                      "name": {
-                                                        "type": "string"
-                                                      }
-                                                    },
-                                                    "required": [
-                                                      "eventType"
-                                                    ],
-                                                    "additionalProperties": false
+                                                      "required": ["id"],
+                                                      "additionalProperties": false
+                                                    }
                                                   }
-                                                ]
+                                                },
+                                                "required": ["responseMapping"],
+                                                "additionalProperties": false
                                               }
                                             },
                                             "required": [
@@ -3657,10 +3420,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "groupId",
-                                        "blockId"
-                                      ],
+                                      "required": ["groupId", "blockId"],
                                       "additionalProperties": false
                                     },
                                     "to": {
@@ -3673,17 +3433,11 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "groupId"
-                                      ],
+                                      "required": ["groupId"],
                                       "additionalProperties": false
                                     }
                                   },
-                                  "required": [
-                                    "id",
-                                    "from",
-                                    "to"
-                                  ],
+                                  "required": ["id", "from", "to"],
                                   "additionalProperties": false
                                 }
                               },
@@ -3714,10 +3468,7 @@
                                       "nullable": true
                                     }
                                   },
-                                  "required": [
-                                    "id",
-                                    "name"
-                                  ],
+                                  "required": ["id", "name"],
                                   "additionalProperties": false
                                 }
                               },
@@ -3750,18 +3501,13 @@
                                           },
                                           "storage": {
                                             "type": "string",
-                                            "enum": [
-                                              "session",
-                                              "local"
-                                            ]
+                                            "enum": ["session", "local"]
                                           }
                                         },
                                         "additionalProperties": false
                                       }
                                     },
-                                    "required": [
-                                      "isBrandingEnabled"
-                                    ],
+                                    "required": ["isBrandingEnabled"],
                                     "additionalProperties": false
                                   },
                                   "typingEmulation": {
@@ -3807,6 +3553,68 @@
                                       }
                                     },
                                     "additionalProperties": false
+                                  },
+                                  "whatsApp": {
+                                    "type": "object",
+                                    "properties": {
+                                      "isEnabled": {
+                                        "type": "boolean"
+                                      },
+                                      "startCondition": {
+                                        "type": "object",
+                                        "properties": {
+                                          "logicalOperator": {
+                                            "type": "string",
+                                            "enum": ["OR", "AND"]
+                                          },
+                                          "comparisons": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string"
+                                                },
+                                                "comparisonOperator": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "Equal to",
+                                                    "Not equal",
+                                                    "Contains",
+                                                    "Does not contain",
+                                                    "Greater than",
+                                                    "Less than",
+                                                    "Is set",
+                                                    "Is empty",
+                                                    "Starts with",
+                                                    "Ends with",
+                                                    "Matches regex",
+                                                    "Does not match regex"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["id"],
+                                              "additionalProperties": false
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "logicalOperator",
+                                          "comparisons"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "sessionExpiryTimeout": {
+                                        "type": "number",
+                                        "maximum": 48,
+                                        "minimum": 0.01,
+                                        "description": "Expiration delay in hours after latest interaction"
+                                      }
+                                    },
+                                    "additionalProperties": false
                                   }
                                 },
                                 "required": [
@@ -3830,26 +3638,17 @@
                                         "properties": {
                                           "type": {
                                             "type": "string",
-                                            "enum": [
-                                              "Color",
-                                              "Image",
-                                              "None"
-                                            ]
+                                            "enum": ["Color", "Image", "None"]
                                           },
                                           "content": {
                                             "type": "string"
                                           }
                                         },
-                                        "required": [
-                                          "type"
-                                        ],
+                                        "required": ["type"],
                                         "additionalProperties": false
                                       }
                                     },
-                                    "required": [
-                                      "font",
-                                      "background"
-                                    ],
+                                    "required": ["font", "background"],
                                     "additionalProperties": false
                                   },
                                   "chat": {
@@ -3865,9 +3664,7 @@
                                             "type": "string"
                                           }
                                         },
-                                        "required": [
-                                          "isEnabled"
-                                        ],
+                                        "required": ["isEnabled"],
                                         "additionalProperties": false
                                       },
                                       "guestAvatar": {
@@ -3880,9 +3677,7 @@
                                             "type": "string"
                                           }
                                         },
-                                        "required": [
-                                          "isEnabled"
-                                        ],
+                                        "required": ["isEnabled"],
                                         "additionalProperties": false
                                       },
                                       "hostBubbles": {
@@ -3955,11 +3750,7 @@
                                       },
                                       "roundness": {
                                         "type": "string",
-                                        "enum": [
-                                          "none",
-                                          "medium",
-                                          "large"
-                                        ]
+                                        "enum": ["none", "medium", "large"]
                                       }
                                     },
                                     "required": [
@@ -3974,14 +3765,12 @@
                                     "type": "string"
                                   }
                                 },
-                                "required": [
-                                  "general",
-                                  "chat"
-                                ],
+                                "required": ["general", "chat"],
                                 "additionalProperties": false
                               }
                             },
                             "required": [
+                              "version",
                               "id",
                               "groups",
                               "edges",
@@ -4017,11 +3806,13 @@
                       "isStreamEnabled": {
                         "type": "boolean",
                         "description": "Set this to `true` if you intend to stream OpenAI completions on a client."
+                      },
+                      "isOnlyRegistering": {
+                        "type": "boolean",
+                        "description": "If set to `true`, it will only register the session and not start the chat. This is used for other chat platform integration as it can require a session to be registered before sending the first message."
                       }
                     },
-                    "required": [
-                      "typebot"
-                    ],
+                    "required": ["typebot"],
                     "additionalProperties": false
                   },
                   "clientLogs": {
@@ -4037,10 +3828,7 @@
                         },
                         "details": {}
                       },
-                      "required": [
-                        "status",
-                        "description"
-                      ],
+                      "required": ["status", "description"],
                       "additionalProperties": false
                     },
                     "description": "Logs while executing client side actions"
@@ -4071,9 +3859,7 @@
                                 "type": "string"
                               }
                             },
-                            "required": [
-                              "id"
-                            ]
+                            "required": ["id"]
                           },
                           {
                             "anyOf": [
@@ -4082,9 +3868,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "text"
-                                    ]
+                                    "enum": ["text"]
                                   },
                                   "content": {
                                     "type": "object",
@@ -4099,16 +3883,11 @@
                                         "type": "string"
                                       }
                                     },
-                                    "required": [
-                                      "richText"
-                                    ],
+                                    "required": ["richText"],
                                     "additionalProperties": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "content"
-                                ],
+                                "required": ["type", "content"],
                                 "additionalProperties": false
                               },
                               {
@@ -4116,9 +3895,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "image"
-                                    ]
+                                    "enum": ["image"]
                                   },
                                   "content": {
                                     "type": "object",
@@ -4142,10 +3919,7 @@
                                     "additionalProperties": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "content"
-                                ],
+                                "required": ["type", "content"],
                                 "additionalProperties": false
                               },
                               {
@@ -4153,9 +3927,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "video"
-                                    ]
+                                    "enum": ["video"]
                                   },
                                   "content": {
                                     "type": "object",
@@ -4168,20 +3940,21 @@
                                       },
                                       "type": {
                                         "type": "string",
-                                        "enum": [
-                                          "url",
-                                          "youtube",
-                                          "vimeo"
+                                        "enum": ["url", "youtube", "vimeo"]
+                                      },
+                                      "height": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number"
+                                          },
+                                          {}
                                         ]
                                       }
                                     },
                                     "additionalProperties": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "content"
-                                ],
+                                "required": ["type", "content"],
                                 "additionalProperties": false
                               },
                               {
@@ -4189,9 +3962,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "audio"
-                                    ]
+                                    "enum": ["audio"]
                                   },
                                   "content": {
                                     "type": "object",
@@ -4206,10 +3977,7 @@
                                     "additionalProperties": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "content"
-                                ],
+                                "required": ["type", "content"],
                                 "additionalProperties": false
                               },
                               {
@@ -4217,9 +3985,7 @@
                                 "properties": {
                                   "type": {
                                     "type": "string",
-                                    "enum": [
-                                      "embed"
-                                    ]
+                                    "enum": ["embed"]
                                   },
                                   "content": {
                                     "type": "object",
@@ -4234,10 +4000,7 @@
                                     "additionalProperties": false
                                   }
                                 },
-                                "required": [
-                                  "type",
-                                  "content"
-                                ],
+                                "required": ["type", "content"],
                                 "additionalProperties": false
                               }
                             ]
@@ -4263,9 +4026,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "text input"
-                                  ]
+                                  "enum": ["text input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4280,10 +4041,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "variableId": {
@@ -4293,19 +4051,11 @@
                                       "type": "boolean"
                                     }
                                   },
-                                  "required": [
-                                    "labels",
-                                    "isLong"
-                                  ],
+                                  "required": ["labels", "isLong"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4322,9 +4072,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "choice input"
-                                  ]
+                                  "enum": ["choice input"]
                                 },
                                 "items": {
                                   "type": "array",
@@ -4343,9 +4091,7 @@
                                       },
                                       "type": {
                                         "type": "number",
-                                        "enum": [
-                                          0
-                                        ]
+                                        "enum": [0]
                                       },
                                       "content": {
                                         "type": "string"
@@ -4361,10 +4107,7 @@
                                             "properties": {
                                               "logicalOperator": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "OR",
-                                                  "AND"
-                                                ]
+                                                "enum": ["OR", "AND"]
                                               },
                                               "comparisons": {
                                                 "type": "array",
@@ -4398,9 +4141,7 @@
                                                       "type": "string"
                                                     }
                                                   },
-                                                  "required": [
-                                                    "id"
-                                                  ],
+                                                  "required": ["id"],
                                                   "additionalProperties": false
                                                 }
                                               }
@@ -4415,10 +4156,7 @@
                                         "additionalProperties": false
                                       }
                                     },
-                                    "required": [
-                                      "id",
-                                      "type"
-                                    ],
+                                    "required": ["id", "type"],
                                     "additionalProperties": false
                                   }
                                 },
@@ -4474,9 +4212,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "email input"
-                                  ]
+                                  "enum": ["email input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4494,28 +4230,18 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "retryMessageContent": {
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "labels"
-                                  ],
+                                  "required": ["labels"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4532,9 +4258,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "number input"
-                                  ]
+                                  "enum": ["number input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4552,10 +4276,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "min": {
@@ -4583,18 +4304,11 @@
                                       ]
                                     }
                                   },
-                                  "required": [
-                                    "labels"
-                                  ],
+                                  "required": ["labels"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4611,9 +4325,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "url input"
-                                  ]
+                                  "enum": ["url input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4631,29 +4343,18 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "retryMessageContent": {
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "labels",
-                                    "retryMessageContent"
-                                  ],
+                                  "required": ["labels", "retryMessageContent"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4670,9 +4371,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "phone number input"
-                                  ]
+                                  "enum": ["phone number input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4690,10 +4389,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "retryMessageContent": {
@@ -4703,19 +4399,11 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "labels",
-                                    "retryMessageContent"
-                                  ],
+                                  "required": ["labels", "retryMessageContent"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4732,9 +4420,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "date input"
-                                  ]
+                                  "enum": ["date input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4755,11 +4441,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "button",
-                                        "from",
-                                        "to"
-                                      ],
+                                      "required": ["button", "from", "to"],
                                       "additionalProperties": false
                                     },
                                     "hasTime": {
@@ -4767,22 +4449,22 @@
                                     },
                                     "isRange": {
                                       "type": "boolean"
+                                    },
+                                    "format": {
+                                      "type": "string"
+                                    },
+                                    "min": {
+                                      "type": "string"
+                                    },
+                                    "max": {
+                                      "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "labels",
-                                    "hasTime",
-                                    "isRange"
-                                  ],
+                                  "required": ["labels", "hasTime", "isRange"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4799,9 +4481,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "payment input"
-                                  ]
+                                  "enum": ["payment input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4811,9 +4491,7 @@
                                     },
                                     "provider": {
                                       "type": "string",
-                                      "enum": [
-                                        "Stripe"
-                                      ]
+                                      "enum": ["Stripe"]
                                     },
                                     "labels": {
                                       "type": "object",
@@ -4825,9 +4503,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "button"
-                                      ],
+                                      "required": ["button"],
                                       "additionalProperties": false
                                     },
                                     "additionalInformation": {
@@ -4893,12 +4569,7 @@
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -4915,9 +4586,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "rating input"
-                                  ]
+                                  "enum": ["rating input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -4929,15 +4598,11 @@
                                       "anyOf": [
                                         {
                                           "type": "string",
-                                          "enum": [
-                                            "Icons"
-                                          ]
+                                          "enum": ["Icons"]
                                         },
                                         {
                                           "type": "string",
-                                          "enum": [
-                                            "Numbers"
-                                          ]
+                                          "enum": ["Numbers"]
                                         }
                                       ]
                                     },
@@ -4957,9 +4622,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "button"
-                                      ],
+                                      "required": ["button"],
                                       "additionalProperties": false
                                     },
                                     "customIcon": {
@@ -4972,9 +4635,7 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "isEnabled"
-                                      ],
+                                      "required": ["isEnabled"],
                                       "additionalProperties": false
                                     },
                                     "isOneClickSubmitEnabled": {
@@ -4990,12 +4651,7 @@
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -5012,9 +4668,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "file input"
-                                  ]
+                                  "enum": ["file input"]
                                 },
                                 "options": {
                                   "type": "object",
@@ -5044,29 +4698,19 @@
                                           "type": "string"
                                         }
                                       },
-                                      "required": [
-                                        "placeholder",
-                                        "button"
-                                      ],
+                                      "required": ["placeholder", "button"],
                                       "additionalProperties": false
                                     },
                                     "sizeLimit": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "description": "Deprecated"
                                     }
                                   },
-                                  "required": [
-                                    "isMultipleAllowed",
-                                    "labels"
-                                  ],
+                                  "required": ["isMultipleAllowed", "labels"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "id",
-                                "groupId",
-                                "type",
-                                "options"
-                              ],
+                              "required": ["id", "groupId", "type", "options"],
                               "additionalProperties": false
                             },
                             {
@@ -5083,9 +4727,7 @@
                                 },
                                 "type": {
                                   "type": "string",
-                                  "enum": [
-                                    "picture choice input"
-                                  ]
+                                  "enum": ["picture choice input"]
                                 },
                                 "items": {
                                   "type": "array",
@@ -5104,9 +4746,7 @@
                                       },
                                       "type": {
                                         "type": "number",
-                                        "enum": [
-                                          3
-                                        ]
+                                        "enum": [3]
                                       },
                                       "pictureSrc": {
                                         "type": "string"
@@ -5128,10 +4768,7 @@
                                             "properties": {
                                               "logicalOperator": {
                                                 "type": "string",
-                                                "enum": [
-                                                  "OR",
-                                                  "AND"
-                                                ]
+                                                "enum": ["OR", "AND"]
                                               },
                                               "comparisons": {
                                                 "type": "array",
@@ -5165,9 +4802,7 @@
                                                       "type": "string"
                                                     }
                                                   },
-                                                  "required": [
-                                                    "id"
-                                                  ],
+                                                  "required": ["id"],
                                                   "additionalProperties": false
                                                 }
                                               }
@@ -5182,10 +4817,7 @@
                                         "additionalProperties": false
                                       }
                                     },
-                                    "required": [
-                                      "id",
-                                      "type"
-                                    ],
+                                    "required": ["id", "type"],
                                     "additionalProperties": false
                                   }
                                 },
@@ -5283,6 +4915,9 @@
                             "properties": {
                               "lastBubbleBlockId": {
                                 "type": "string"
+                              },
+                              "expectsDedicatedReply": {
+                                "type": "boolean"
                               }
                             }
                           },
@@ -5529,9 +5164,7 @@
                                                         "additionalProperties": false
                                                       }
                                                     },
-                                                    "required": [
-                                                      "wait"
-                                                    ],
+                                                    "required": ["wait"],
                                                     "additionalProperties": false
                                                   }
                                                 ]
@@ -5606,9 +5239,7 @@
                                                     "additionalProperties": false
                                                   }
                                                 },
-                                                "required": [
-                                                  "setVariable"
-                                                ],
+                                                "required": ["setVariable"],
                                                 "additionalProperties": false
                                               }
                                             ]
@@ -5638,14 +5269,9 @@
                                                       },
                                                       "additionalProperties": false
                                                     }
-                                                  },
-                                                  "displayStream": {
-                                                    "type": "boolean"
                                                   }
                                                 },
-                                                "required": [
-                                                  "messages"
-                                                ],
+                                                "required": ["messages"],
                                                 "additionalProperties": false
                                               }
                                             },
@@ -5687,15 +5313,11 @@
                                                 ]
                                               }
                                             },
-                                            "required": [
-                                              "url"
-                                            ],
+                                            "required": ["url"],
                                             "additionalProperties": false
                                           }
                                         },
-                                        "required": [
-                                          "webhookToExecute"
-                                        ],
+                                        "required": ["webhookToExecute"],
                                         "additionalProperties": false
                                       }
                                     ]
@@ -5710,7 +5332,14 @@
                                             "type": "string"
                                           },
                                           "pixelId": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "Deprecated"
+                                          },
+                                          "pixelIds": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string"
+                                            }
                                           },
                                           "gtmId": {
                                             "type": "string"
@@ -5722,9 +5351,7 @@
                                         "additionalProperties": false
                                       }
                                     },
-                                    "required": [
-                                      "startPropsToInject"
-                                    ],
+                                    "required": ["startPropsToInject"],
                                     "additionalProperties": false
                                   }
                                 ]
@@ -5756,9 +5383,7 @@
                                                 },
                                                 "value": {}
                                               },
-                                              "required": [
-                                                "id"
-                                              ],
+                                              "required": ["id"],
                                               "additionalProperties": false
                                             }
                                           },
@@ -5790,9 +5415,7 @@
                                                 },
                                                 "value": {}
                                               },
-                                              "required": [
-                                                "id"
-                                              ],
+                                              "required": ["id"],
                                               "additionalProperties": false
                                             }
                                           },
@@ -5819,9 +5442,7 @@
                                             ]
                                           }
                                         },
-                                        "required": [
-                                          "eventType"
-                                        ],
+                                        "required": ["eventType"],
                                         "additionalProperties": false
                                       },
                                       {
@@ -5846,33 +5467,25 @@
                                                 },
                                                 "value": {}
                                               },
-                                              "required": [
-                                                "id"
-                                              ],
+                                              "required": ["id"],
                                               "additionalProperties": false
                                             }
                                           },
                                           "eventType": {
                                             "type": "string",
-                                            "enum": [
-                                              "Custom"
-                                            ]
+                                            "enum": ["Custom"]
                                           },
                                           "name": {
                                             "type": "string"
                                           }
                                         },
-                                        "required": [
-                                          "eventType"
-                                        ],
+                                        "required": ["eventType"],
                                         "additionalProperties": false
                                       }
                                     ]
                                   }
                                 },
-                                "required": [
-                                  "pixel"
-                                ],
+                                "required": ["pixel"],
                                 "additionalProperties": false
                               }
                             ]
@@ -5903,26 +5516,17 @@
                                   "properties": {
                                     "type": {
                                       "type": "string",
-                                      "enum": [
-                                        "Color",
-                                        "Image",
-                                        "None"
-                                      ]
+                                      "enum": ["Color", "Image", "None"]
                                     },
                                     "content": {
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "type"
-                                  ],
+                                  "required": ["type"],
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "font",
-                                "background"
-                              ],
+                              "required": ["font", "background"],
                               "additionalProperties": false
                             },
                             "chat": {
@@ -5938,9 +5542,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "isEnabled"
-                                  ],
+                                  "required": ["isEnabled"],
                                   "additionalProperties": false
                                 },
                                 "guestAvatar": {
@@ -5953,9 +5555,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "isEnabled"
-                                  ],
+                                  "required": ["isEnabled"],
                                   "additionalProperties": false
                                 },
                                 "hostBubbles": {
@@ -5968,10 +5568,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "backgroundColor",
-                                    "color"
-                                  ],
+                                  "required": ["backgroundColor", "color"],
                                   "additionalProperties": false
                                 },
                                 "guestBubbles": {
@@ -5984,10 +5581,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "backgroundColor",
-                                    "color"
-                                  ],
+                                  "required": ["backgroundColor", "color"],
                                   "additionalProperties": false
                                 },
                                 "buttons": {
@@ -6000,10 +5594,7 @@
                                       "type": "string"
                                     }
                                   },
-                                  "required": [
-                                    "backgroundColor",
-                                    "color"
-                                  ],
+                                  "required": ["backgroundColor", "color"],
                                   "additionalProperties": false
                                 },
                                 "inputs": {
@@ -6028,11 +5619,7 @@
                                 },
                                 "roundness": {
                                   "type": "string",
-                                  "enum": [
-                                    "none",
-                                    "medium",
-                                    "large"
-                                  ]
+                                  "enum": ["none", "medium", "large"]
                                 }
                               },
                               "required": [
@@ -6047,10 +5634,7 @@
                               "type": "string"
                             }
                           },
-                          "required": [
-                            "general",
-                            "chat"
-                          ],
+                          "required": ["general", "chat"],
                           "additionalProperties": false
                         },
                         "settings": {
@@ -6082,18 +5666,13 @@
                                     },
                                     "storage": {
                                       "type": "string",
-                                      "enum": [
-                                        "session",
-                                        "local"
-                                      ]
+                                      "enum": ["session", "local"]
                                     }
                                   },
                                   "additionalProperties": false
                                 }
                               },
-                              "required": [
-                                "isBrandingEnabled"
-                              ],
+                              "required": ["isBrandingEnabled"],
                               "additionalProperties": false
                             },
                             "typingEmulation": {
@@ -6109,11 +5688,7 @@
                                   "type": "number"
                                 }
                               },
-                              "required": [
-                                "enabled",
-                                "speed",
-                                "maxDelay"
-                              ],
+                              "required": ["enabled", "speed", "maxDelay"],
                               "additionalProperties": false
                             },
                             "metadata": {
@@ -6139,6 +5714,68 @@
                                 }
                               },
                               "additionalProperties": false
+                            },
+                            "whatsApp": {
+                              "type": "object",
+                              "properties": {
+                                "isEnabled": {
+                                  "type": "boolean"
+                                },
+                                "startCondition": {
+                                  "type": "object",
+                                  "properties": {
+                                    "logicalOperator": {
+                                      "type": "string",
+                                      "enum": ["OR", "AND"]
+                                    },
+                                    "comparisons": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "comparisonOperator": {
+                                            "type": "string",
+                                            "enum": [
+                                              "Equal to",
+                                              "Not equal",
+                                              "Contains",
+                                              "Does not contain",
+                                              "Greater than",
+                                              "Less than",
+                                              "Is set",
+                                              "Is empty",
+                                              "Starts with",
+                                              "Ends with",
+                                              "Matches regex",
+                                              "Does not match regex"
+                                            ]
+                                          },
+                                          "value": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": ["id"],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "logicalOperator",
+                                    "comparisons"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "sessionExpiryTimeout": {
+                                  "type": "number",
+                                  "maximum": 48,
+                                  "minimum": 0.01,
+                                  "description": "Expiration delay in hours after latest interaction"
+                                }
+                              },
+                              "additionalProperties": false
                             }
                           },
                           "required": [
@@ -6149,11 +5786,7 @@
                           "additionalProperties": false
                         }
                       },
-                      "required": [
-                        "id",
-                        "theme",
-                        "settings"
-                      ],
+                      "required": ["id", "theme", "settings"],
                       "additionalProperties": false
                     },
                     "resultId": {
@@ -6184,10 +5817,7 @@
                           },
                           "details": {}
                         },
-                        "required": [
-                          "status",
-                          "description"
-                        ],
+                        "required": ["status", "description"],
                         "additionalProperties": false
                       }
                     },
@@ -6196,9 +5826,7 @@
                       "description": "The sent message is validated and formatted on the backend. This is set only if the message differs from the formatted version."
                     }
                   },
-                  "required": [
-                    "messages"
-                  ],
+                  "required": ["messages"],
                   "additionalProperties": false
                 }
               }
@@ -6243,7 +5871,7 @@
           {
             "name": "fileType",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -6258,26 +5886,109 @@
                   "type": "object",
                   "properties": {
                     "presignedUrl": {
-                      "type": "object",
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        },
-                        "fields": {}
-                      },
-                      "required": [
-                        "url"
-                      ],
-                      "additionalProperties": false
+                      "type": "string"
                     },
                     "hasReachedStorageLimit": {
                       "type": "boolean"
                     }
                   },
-                  "required": [
-                    "presignedUrl",
-                    "hasReachedStorageLimit"
-                  ],
+                  "required": ["presignedUrl", "hasReachedStorageLimit"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/generate-upload-url": {
+      "post": {
+        "operationId": "generateUploadUrl",
+        "summary": "Generate upload URL",
+        "description": "Used to upload anything from the client to S3 bucket",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "filePathProps": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "typebotId": {
+                            "type": "string"
+                          },
+                          "blockId": {
+                            "type": "string"
+                          },
+                          "resultId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "typebotId",
+                          "blockId",
+                          "resultId",
+                          "fileName"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "sessionId": {
+                            "type": "string"
+                          },
+                          "fileName": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["sessionId", "fileName"],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "fileType": {
+                    "type": "string"
+                  }
+                },
+                "required": ["filePathProps"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "presignedUrl": {
+                      "type": "string"
+                    },
+                    "formData": {
+                      "type": "object",
+                      "additionalProperties": {}
+                    },
+                    "fileUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["presignedUrl", "formData", "fileUrl"],
                   "additionalProperties": false
                 }
               }
@@ -6319,14 +6030,431 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "enum": [
-                        "success"
-                      ]
+                      "enum": ["success"]
                     }
                   },
-                  "required": [
-                    "message"
-                  ],
+                  "required": ["message"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/workspaces/{workspaceId}/whatsapp/{credentialsId}/webhook": {
+      "get": {
+        "operationId": "whatsAppRouter-subscribeWebhook",
+        "summary": "Subscribe webhook",
+        "tags": ["WhatsApp"],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "credentialsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hub.challenge",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hub.verify_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      },
+      "post": {
+        "operationId": "whatsAppRouter-receiveMessage",
+        "summary": "Message webhook",
+        "tags": ["WhatsApp"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entry": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "changes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "object",
+                                "properties": {
+                                  "metadata": {
+                                    "type": "object",
+                                    "properties": {
+                                      "phone_number_id": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": ["phone_number_id"],
+                                    "additionalProperties": false
+                                  },
+                                  "contacts": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "profile": {
+                                          "type": "object",
+                                          "properties": {
+                                            "name": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": ["name"],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": ["profile"],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "messages": {
+                                    "type": "array",
+                                    "items": {
+                                      "anyOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["text"]
+                                            },
+                                            "text": {
+                                              "type": "object",
+                                              "properties": {
+                                                "body": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["body"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "text",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["button"]
+                                            },
+                                            "button": {
+                                              "type": "object",
+                                              "properties": {
+                                                "text": {
+                                                  "type": "string"
+                                                },
+                                                "payload": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["text", "payload"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "button",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["interactive"]
+                                            },
+                                            "interactive": {
+                                              "type": "object",
+                                              "properties": {
+                                                "button_reply": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "id": {
+                                                      "type": "string"
+                                                    },
+                                                    "title": {
+                                                      "type": "string"
+                                                    }
+                                                  },
+                                                  "required": ["id", "title"],
+                                                  "additionalProperties": false
+                                                }
+                                              },
+                                              "required": ["button_reply"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "interactive",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["image"]
+                                            },
+                                            "image": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["id"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "image",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["video"]
+                                            },
+                                            "video": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["id"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "video",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["audio"]
+                                            },
+                                            "audio": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["id"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "audio",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "from": {
+                                              "type": "string"
+                                            },
+                                            "type": {
+                                              "type": "string",
+                                              "enum": ["document"]
+                                            },
+                                            "document": {
+                                              "type": "object",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": ["id"],
+                                              "additionalProperties": false
+                                            },
+                                            "timestamp": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "from",
+                                            "type",
+                                            "document",
+                                            "timestamp"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": ["metadata"],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": ["value"],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": ["changes"],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["entry"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "credentialsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["message"],
                   "additionalProperties": false
                 }
               }
@@ -6369,17 +6497,12 @@
                         "type": "string"
                       }
                     },
-                    "required": [
-                      "message"
-                    ],
+                    "required": ["message"],
                     "additionalProperties": false
                   }
                 }
               },
-              "required": [
-                "message",
-                "code"
-              ],
+              "required": ["message", "code"],
               "additionalProperties": false
             }
           }

@@ -26,7 +26,13 @@ import { isNotDefined } from '@typebot.io/lib'
 import { InputBlockType } from '@typebot.io/schemas'
 import { parseDefaultPublicId } from '../helpers/parseDefaultPublicId'
 
-export const PublishButton = (props: ButtonProps) => {
+type Props = ButtonProps & {
+  isMoreMenuDisabled?: boolean
+}
+export const PublishButton = ({
+  isMoreMenuDisabled = false,
+  ...props
+}: Props) => {
   const t = useI18n()
   const warningTextColor = useColorModeValue('red.300', 'red.600')
   const { workspace } = useWorkspace()
@@ -138,7 +144,9 @@ export const PublishButton = (props: ButtonProps) => {
           isLoading={isPublishing || isUnpublishing}
           isDisabled={isPublished || isSavingLoading}
           onClick={handlePublishClick}
-          borderRightRadius={publishedTypebot ? 0 : undefined}
+          borderRightRadius={
+            publishedTypebot && !isMoreMenuDisabled ? 0 : undefined
+          }
           {...props}
         >
           {isPublished
@@ -149,7 +157,7 @@ export const PublishButton = (props: ButtonProps) => {
         </Button>
       </Tooltip>
 
-      {publishedTypebot && (
+      {!isMoreMenuDisabled && publishedTypebot && (
         <Menu>
           <MenuButton
             as={IconButton}

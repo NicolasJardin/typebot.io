@@ -31,6 +31,7 @@ export const parseTestTypebot = (
   isArchived: false,
   isClosed: false,
   resultsTablePreferences: null,
+  whatsAppCredentialsId: null,
   variables: [{ id: 'var1', name: 'var1' }],
   ...partialTypebot,
   edges: [

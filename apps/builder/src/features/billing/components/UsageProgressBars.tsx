@@ -1,21 +1,19 @@
+import { AlertIcon } from '@/components/icons'
+import { defaultQueryOptions, trpc } from '@/lib/trpc'
+import { useScopedI18n } from '@/locales'
 import {
-  Stack,
   Flex,
+  HStack,
   Heading,
   Progress,
-  Text,
   Skeleton,
-  HStack,
+  Stack,
+  Text,
   Tooltip,
 } from '@chakra-ui/react'
-import { AlertIcon } from '@/components/icons'
-import { Plan, Workspace } from '@typebot.io/prisma'
-import React from 'react'
 import { parseNumberWithCommas } from '@typebot.io/lib'
-import { getChatsLimit, getStorageLimit } from '@typebot.io/lib/pricing'
-import { defaultQueryOptions, trpc } from '@/lib/trpc'
-import { storageToReadable } from '../helpers/storageToReadable'
-import { useScopedI18n } from '@/locales'
+import { getChatsLimit } from '@typebot.io/lib/billing/getChatsLimit'
+import { Workspace } from '@typebot.io/prisma'
 
 type Props = {
   workspace: Workspace
@@ -30,20 +28,12 @@ export const UsageProgressBars = ({ workspace }: Props) => {
     defaultQueryOptions
   )
   const totalChatsUsed = data?.totalChatsUsed ?? 0
-  const totalStorageUsed = data?.totalStorageUsed ?? 0
 
   const workspaceChatsLimit = getChatsLimit(workspace)
-  const workspaceStorageLimit = getStorageLimit(workspace)
-  const workspaceStorageLimitGigabites =
-    //@ts-ignore
-    workspaceStorageLimit * 1024 * 1024 * 1024
 
   const chatsPercentage = Math.round(
     //@ts-ignore
     (totalChatsUsed / workspaceChatsLimit) * 100
-  )
-  const storagePercentage = Math.round(
-    (totalStorageUsed / workspaceStorageLimitGigabites) * 100
   )
 
   return (
@@ -78,7 +68,7 @@ export const UsageProgressBars = ({ workspace }: Props) => {
               </Tooltip>
             )}
             <Text fontSize="sm" fontStyle="italic" color="gray.500">
-              (reinicia no dia 1º de cada mês)
+              (Resets on {data?.resetsAt.toLocaleDateString()})
             </Text>
           </HStack>
 
@@ -93,9 +83,8 @@ export const UsageProgressBars = ({ workspace }: Props) => {
             <Text>
               /{' '}
               {workspaceChatsLimit === -1
-                ? 'Ilimitado'
-                : //@ts-ignore
-                  parseNumberWithCommas(workspaceChatsLimit)}
+                ? scopedT('unlimited')
+                : parseNumberWithCommas(workspaceChatsLimit)}
             </Text>
           </HStack>
         </Flex>
@@ -104,72 +93,10 @@ export const UsageProgressBars = ({ workspace }: Props) => {
           h="5px"
           value={chatsPercentage}
           rounded="full"
-          hasStripe
           isIndeterminate={isLoading}
-          //@ts-ignore
-          colorScheme={totalChatsUsed >= workspaceChatsLimit ? 'red' : 'blue'}
+          colorScheme={'blue'}
         />
       </Stack>
-      {workspace.plan !== Plan.FREE && (
-        <Stack spacing={3}>
-          <Flex justifyContent="space-between">
-            <HStack>
-              <Heading fontSize="xl" as="h3">
-                Armazenamento
-              </Heading>
-              {storagePercentage >= 80 && (
-                <Tooltip
-                  placement="top"
-                  rounded="md"
-                  p="3"
-                  label={
-                    <Text>
-                      Seus typebots são populares! Em breve você alcançará seu
-                      limite de armazenamento de seu plano. 🚀
-                      <br />
-                      <br />
-                      Certifique-se de <strong>atualizar seu plano</strong> para
-                      continuar coletando arquivos enviados. Você também pode{' '}
-                      <strong>excluir arquivos</strong> para liberar espaço.
-                    </Text>
-                  }
-                >
-                  <span>
-                    <AlertIcon color="orange.500" />
-                  </span>
-                </Tooltip>
-              )}
-            </HStack>
-            <HStack>
-              <Skeleton
-                fontWeight="bold"
-                isLoaded={!isLoading}
-                h={isLoading ? '5px' : 'auto'}
-              >
-                {storageToReadable(totalStorageUsed)}
-              </Skeleton>
-              <Text>
-                /{' '}
-                {workspaceStorageLimit === -1
-                  ? 'Ilimitado'
-                  : `${workspaceStorageLimit} GB`}
-              </Text>
-            </HStack>
-          </Flex>
-          <Progress
-            value={storagePercentage}
-            h="5px"
-            colorScheme={
-              totalStorageUsed >= workspaceStorageLimitGigabites
-                ? 'red'
-                : 'blue'
-            }
-            rounded="full"
-            hasStripe
-            isIndeterminate={isLoading}
-          />
-        </Stack>
-      )}
     </Stack>
   )
 }

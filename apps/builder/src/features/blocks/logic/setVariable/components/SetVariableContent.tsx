@@ -62,6 +62,7 @@ const Expression = ({
     case 'Tomorrow':
     case 'User ID':
     case 'Moment of the day':
+    case 'Environment name':
     case 'Yesterday': {
       return (
         <Text as="span">
@@ -69,5 +70,13 @@ const Expression = ({
         </Text>
       )
     }
+    case 'Contact name':
+    case 'Phone number':
+      return (
+        <Text as="span">
+          {variableName} ={' '}
+          <Tag colorScheme="purple">WhatsApp.{options.type}</Tag>
+        </Text>
+      )
   }
 }

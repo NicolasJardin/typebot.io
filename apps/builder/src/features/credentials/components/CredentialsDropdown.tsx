@@ -1,9 +1,9 @@
 import {
   Button,
+  ButtonProps,
   IconButton,
   Menu,
   MenuButton,
-  MenuButtonProps,
   MenuItem,
   MenuList,
   Stack,
@@ -15,14 +15,16 @@ import { useRouter } from 'next/router'
 import { useToast } from '../../../hooks/useToast'
 import { Credentials } from '@typebot.io/schemas'
 import { trpc } from '@/lib/trpc'
+import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 
-type Props = Omit<MenuButtonProps, 'type'> & {
+type Props = Omit<ButtonProps, 'type'> & {
   type: Credentials['type']
   workspaceId: string
   currentCredentialsId?: string
   onCredentialsSelect: (credentialId?: string) => void
   onCreateNewClick: () => void
   defaultCredentialLabel?: string
+  credentialsName: string
 }
 
 export const CredentialsDropdown = ({
@@ -32,10 +34,12 @@ export const CredentialsDropdown = ({
   onCredentialsSelect,
   onCreateNewClick,
   defaultCredentialLabel,
+  credentialsName,
   ...props
 }: Props) => {
   const router = useRouter()
   const { showToast } = useToast()
+  const { currentRole } = useWorkspace()
   const { data, refetch } = trpc.credentials.listCredentials.useQuery({
     workspaceId,
     type,
@@ -60,7 +64,7 @@ export const CredentialsDropdown = ({
   })
 
   const defaultCredentialsLabel =
-    defaultCredentialLabel ?? `Selecione uma conta`
+    defaultCredentialLabel ?? `Select ${credentialsName}`
 
   const currentCredential = data?.credentials.find(
     (c) => c.id === currentCredentialsId
@@ -98,6 +102,20 @@ export const CredentialsDropdown = ({
       mutate({ workspaceId, credentialsId })
     }
 
+  if (data?.credentials.length === 0 && !defaultCredentialLabel) {
+    return (
+      <Button
+        colorScheme="gray"
+        textAlign="left"
+        leftIcon={<PlusIcon />}
+        onClick={onCreateNewClick}
+        isDisabled={currentRole === 'GUEST'}
+        {...props}
+      >
+        Add {credentialsName}
+      </Button>
+    )
+  }
   return (
     <Menu isLazy>
       <MenuButton
@@ -108,7 +126,11 @@ export const CredentialsDropdown = ({
         textAlign="left"
         {...props}
       >
-        <Text noOfLines={1} overflowY="visible" h="20px">
+        <Text
+          noOfLines={1}
+          overflowY="visible"
+          h={props.size === 'sm' ? '18px' : '20px'}
+        >
           {currentCredential ? currentCredential.name : defaultCredentialsLabel}
         </Text>
       </MenuButton>
@@ -146,16 +168,18 @@ export const CredentialsDropdown = ({
               />
             </MenuItem>
           ))}
-          <MenuItem
-            maxW="500px"
-            overflow="hidden"
-            whiteSpace="nowrap"
-            textOverflow="ellipsis"
-            icon={<PlusIcon />}
-            onClick={onCreateNewClick}
-          >
-            Conectar novo
-          </MenuItem>
+          {currentRole === 'GUEST' ? null : (
+            <MenuItem
+              maxW="500px"
+              overflow="hidden"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              icon={<PlusIcon />}
+              onClick={onCreateNewClick}
+            >
+              Conectar novo
+            </MenuItem>
+          )}
         </Stack>
       </MenuList>
     </Menu>

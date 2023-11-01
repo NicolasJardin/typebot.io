@@ -1,4 +1,11 @@
+import { useScopedI18n } from '@/locales'
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Flex,
   HStack,
   Heading,
@@ -17,6 +24,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 export const GettingStartedModal = () => {
+  const scopedT = useScopedI18n('editor.gettingStartedModal')
   const { query } = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -32,7 +40,7 @@ export const GettingStartedModal = () => {
         <ModalCloseButton />
         <ModalBody as={Stack} spacing="8" py="10">
           <Stack spacing={4}>
-            <Heading fontSize="xl">Informações básicas</Heading>
+            <Heading fontSize="xl">{scopedT('editorBasics.heading')}</Heading>
             <List spacing={4}>
               <HStack as={ListItem}>
                 <Flex
@@ -48,10 +56,7 @@ export const GettingStartedModal = () => {
                 >
                   1
                 </Flex>
-                <Text>
-                  A barra lateral esquerda contém blocos que você pode arrastar
-                  e soltar para o conselho.
-                </Text>
+                <Text>{scopedT('editorBasics.list.one.label')}</Text>
               </HStack>
               <HStack as={ListItem}>
                 <Flex
@@ -67,10 +72,7 @@ export const GettingStartedModal = () => {
                 >
                   2
                 </Flex>
-                <Text>
-                  Você pode agrupar blocos soltando-os abaixo ou acima uns aos
-                  outros
-                </Text>
+                <Text>{scopedT('editorBasics.list.two.label')}</Text>
               </HStack>
               <HStack as={ListItem}>
                 <Flex
@@ -86,7 +88,7 @@ export const GettingStartedModal = () => {
                 >
                   3
                 </Flex>
-                <Text>Conecte os grupos juntos</Text>
+                <Text>{scopedT('editorBasics.list.three.label')}</Text>
               </HStack>
               <HStack as={ListItem}>
                 <Flex
@@ -102,12 +104,55 @@ export const GettingStartedModal = () => {
                 >
                   4
                 </Flex>
-                <Text>
-                  Visualize seu bot clicando no botão de visualização na parte
-                  superior direita
-                </Text>
+                <Text>{scopedT('editorBasics.list.four.label')}</Text>
               </HStack>
             </List>
+          </Stack>
+
+          <Text>{scopedT('editorBasics.list.label')}</Text>
+          <Stack spacing={4}>
+            <Heading fontSize="xl">
+              {scopedT('seeAction.label')} ({`<`} {scopedT('seeAction.time')})
+            </Heading>
+            <iframe
+              width="100%"
+              height="315"
+              src="https://www.youtube.com/embed/jp3ggg_42-M"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ borderRadius: '0.5rem', border: 'none' }}
+            />
+            <Accordion allowToggle>
+              <AccordionItem>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    {scopedT('seeAction.item.label')}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel py={10} as={Stack} spacing="10">
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src="https://www.youtube.com/embed/6BudIC4GYNk"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ borderRadius: '0.5rem', border: 'none' }}
+                  />
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src="https://www.youtube.com/embed/ZuyDwFLRbfQ"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ borderRadius: '0.5rem', border: 'none' }}
+                  />
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </Stack>
         </ModalBody>
       </ModalContent>

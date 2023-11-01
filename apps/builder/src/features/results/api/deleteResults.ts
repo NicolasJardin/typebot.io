@@ -1,8 +1,8 @@
 import { isWriteTypebotForbidden } from '@/features/typebot/helpers/isWriteTypebotForbidden'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
-import prisma from '@/lib/prisma'
 import { TRPCError } from '@trpc/server'
 import { archiveResults } from '@typebot.io/lib/api/helpers/archiveResults'
+import prisma from '@typebot.io/lib/prisma'
 import { Group } from '@typebot.io/schemas'
 import { z } from 'zod'
 

@@ -14,7 +14,7 @@ import { injectStartProps } from './injectStartProps'
 type Props = {
   clientSideAction: NonNullable<ChatReply['clientSideActions']>[0]
   context: ClientSideActionContext
-  onMessageStream?: (message: string) => void
+  onMessageStream?: (props: { id: string; message: string }) => void
 }
 
 export const executeClientSideAction = async ({
@@ -39,7 +39,10 @@ export const executeClientSideAction = async ({
     return executeRedirect(clientSideAction.redirect)
   }
   if ('wait' in clientSideAction) {
-    return executeWait(clientSideAction.wait)
+    await executeWait(clientSideAction.wait)
+    return clientSideAction.expectsDedicatedReply
+      ? { replyToSend: undefined }
+      : undefined
   }
   if ('setVariable' in clientSideAction) {
     return executeSetVariable(clientSideAction.setVariable.scriptToExecute)
@@ -48,10 +51,7 @@ export const executeClientSideAction = async ({
     const { error, message } = await streamChat(context)(
       clientSideAction.streamOpenAiChatCompletion.messages,
       {
-        onMessageStream: clientSideAction.streamOpenAiChatCompletion
-          .displayStream
-          ? onMessageStream
-          : undefined,
+        onMessageStream,
       }
     )
     if (error)
@@ -60,7 +60,7 @@ export const executeClientSideAction = async ({
         logs: [
           {
             status: 'error',
-            description: 'Failed to stream OpenAI completion',
+            description: 'OpenAI returned an error',
             details: JSON.stringify(error, null, 2),
           },
         ],

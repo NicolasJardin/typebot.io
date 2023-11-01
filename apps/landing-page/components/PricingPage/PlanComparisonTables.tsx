@@ -19,16 +19,19 @@ import { HelpCircleIcon } from 'assets/icons/HelpCircleIcon'
 import { Plan } from '@typebot.io/prisma'
 import Link from 'next/link'
 import React from 'react'
-import {
-  chatsLimit,
-  formatPrice,
-  prices,
-  seatsLimit,
-  storageLimit,
-} from '@typebot.io/lib/pricing'
 import { parseNumberWithCommas } from '@typebot.io/lib'
+import {
+  chatsLimits,
+  prices,
+  seatsLimits,
+} from '@typebot.io/lib/billing/constants'
+import { formatPrice } from '@typebot.io/lib/billing/formatPrice'
 
-export const PlanComparisonTables = () => (
+type Props = {
+  onChatsTiersClick: () => void
+}
+
+export const PlanComparisonTables = ({ onChatsTiersClick }: Props) => (
   <Stack spacing="12">
     <TableContainer>
       <Table>
@@ -51,32 +54,23 @@ export const PlanComparisonTables = () => (
           </Tr>
           <Tr>
             <Td>Chats</Td>
-            <Td>{chatsLimit.FREE.totalIncluded} / month</Td>
-            <Td>
-              {parseNumberWithCommas(
-                chatsLimit.STARTER.graduatedPrice[0].totalIncluded
-              )}{' '}
-              / month
-            </Td>
-            <Td>
-              {parseNumberWithCommas(
-                chatsLimit.PRO.graduatedPrice[0].totalIncluded
-              )}{' '}
-              / month
-            </Td>
+            <Td>{chatsLimits.FREE} / month</Td>
+            <Td>{parseNumberWithCommas(chatsLimits.STARTER)} / month</Td>
+            <Td>{parseNumberWithCommas(chatsLimits.PRO)} / month</Td>
           </Tr>
           <Tr>
             <Td>Additional Chats</Td>
             <Td />
+            <Td>{formatPrice(10)} per 500 chats</Td>
             <Td>
-              {formatPrice(chatsLimit.STARTER.graduatedPrice[1].price)} per{' '}
-              {chatsLimit.STARTER.graduatedPrice[1].totalIncluded -
-                chatsLimit.STARTER.graduatedPrice[0].totalIncluded}
-            </Td>
-            <Td>
-              {formatPrice(chatsLimit.PRO.graduatedPrice[1].price)} per{' '}
-              {chatsLimit.PRO.graduatedPrice[1].totalIncluded -
-                chatsLimit.PRO.graduatedPrice[0].totalIncluded}
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={onChatsTiersClick}
+                colorScheme="gray"
+              >
+                See tiers
+              </Button>
             </Td>
           </Tr>
           <Tr>
@@ -86,26 +80,10 @@ export const PlanComparisonTables = () => (
             <Td>10 GB</Td>
           </Tr>
           <Tr>
-            <Td>Additional Storage</Td>
-            <Td />
-            <Td>
-              {formatPrice(storageLimit.STARTER.graduatedPrice[1].price)} per{' '}
-              {storageLimit.STARTER.graduatedPrice[1].totalIncluded -
-                storageLimit.STARTER.graduatedPrice[0].totalIncluded}{' '}
-              GB
-            </Td>
-            <Td>
-              {formatPrice(storageLimit.PRO.graduatedPrice[1].price)} per{' '}
-              {storageLimit.PRO.graduatedPrice[1].totalIncluded -
-                storageLimit.PRO.graduatedPrice[0].totalIncluded}{' '}
-              GB
-            </Td>
-          </Tr>
-          <Tr>
             <Td>Members</Td>
             <Td>Just you</Td>
-            <Td>{seatsLimit.STARTER.totalIncluded} seats</Td>
-            <Td>{seatsLimit.PRO.totalIncluded} seats</Td>
+            <Td>{seatsLimits.STARTER} seats</Td>
+            <Td>{seatsLimits.PRO} seats</Td>
           </Tr>
           <Tr>
             <Td>Guests</Td>
@@ -289,6 +267,14 @@ export const PlanComparisonTables = () => (
             <Td>
               <CheckIcon />
             </Td>
+            <Td>
+              <CheckIcon />
+            </Td>
+          </Tr>
+          <Tr>
+            <Td>WhatsApp integration</Td>
+            <Td />
+            <Td />
             <Td>
               <CheckIcon />
             </Td>

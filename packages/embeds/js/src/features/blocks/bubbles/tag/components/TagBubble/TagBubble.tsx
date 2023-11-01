@@ -1,8 +1,8 @@
 import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
+import { computeTypingDuration } from '@typebot.io/bot-engine/computeTypingDuration'
 import { TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
   name: string | undefined
@@ -37,12 +37,12 @@ export default function TagBubble(props: Props) {
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
-        : computeTypingDuration(
-            `📌 ${props.type === 'add' ? 'Adicionada' : 'Removida'} a Tag ${
-              props.name
-            }`,
-            props.typingEmulation ?? defaultTypingEmulation
-          )
+        : computeTypingDuration({
+            bubbleContent: `📌 ${
+              props.type === 'add' ? 'Adicionada' : 'Removida'
+            } a Tag ${props.name}`,
+            typingSettings: props.typingEmulation ?? defaultTypingEmulation,
+          })
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
   })
 

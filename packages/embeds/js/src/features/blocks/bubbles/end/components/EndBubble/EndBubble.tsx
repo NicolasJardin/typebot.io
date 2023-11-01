@@ -1,8 +1,8 @@
 import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
+import { computeTypingDuration } from '@typebot.io/bot-engine/computeTypingDuration'
 import { TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
   typingEmulation: TypingEmulation
@@ -35,10 +35,10 @@ export default function EndBubble(props: Props) {
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
-        : computeTypingDuration(
-            '🎂 Fim da automação',
-            props.typingEmulation ?? defaultTypingEmulation
-          )
+        : computeTypingDuration({
+            bubbleContent: '🎂 Fim da automação',
+            typingSettings: props.typingEmulation ?? defaultTypingEmulation,
+          })
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
   })
 

@@ -1,4 +1,4 @@
-import { CloseIcon } from '@/components/icons'
+import { TrashIcon } from '@/components/icons'
 import { Seo } from '@/components/Seo'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
@@ -13,18 +13,20 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { Plan } from '@typebot.io/prisma'
-import { isDefined, getViewerUrl, isNotDefined, env } from '@typebot.io/lib'
+import { isDefined, isNotDefined } from '@typebot.io/lib'
 import { isPublicDomainAvailableQuery } from '../queries/isPublicDomainAvailableQuery'
 import { EditableUrl } from './EditableUrl'
 import { integrationsList } from './embeds/EmbedButton'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { LockTag } from '@/features/billing/components/LockTag'
 import { UpgradeButton } from '@/features/billing/components/UpgradeButton'
-import { isProPlan } from '@/features/billing/helpers/isProPlan'
+import { hasProPerks } from '@/features/billing/helpers/hasProPerks'
 import { CustomDomainsDropdown } from '@/features/customDomains/components/CustomDomainsDropdown'
 import { TypebotHeader } from '@/features/editor/components/TypebotHeader'
 import { parseDefaultPublicId } from '../helpers/parseDefaultPublicId'
 import { useI18n } from '@/locales'
+import { env } from '@typebot.io/env'
+import DomainStatusIcon from '@/features/customDomains/components/DomainStatusIcon'
 
 export const SharePage = () => {
   const t = useI18n()
@@ -68,7 +70,7 @@ export const SharePage = () => {
 
   const checkIfPublicIdIsValid = async (publicId: string) => {
     const isLongerThanAllowed = publicId.length >= 4
-    if (!isLongerThanAllowed && isCloudProdInstance) {
+    if (!isLongerThanAllowed && isCloudProdInstance()) {
       showToast({
         description: 'Deve ter mais de 4 caracteres',
       })
@@ -98,7 +100,7 @@ export const SharePage = () => {
             </Heading>
             {typebot && (
               <EditableUrl
-                hostname={getViewerUrl() ?? 'https://typebot.io'}
+                hostname={env.NEXT_PUBLIC_VIEWER_URL[0]}
                 pathname={publicId}
                 isValid={checkIfPublicIdIsValid}
                 onPathnameChange={handlePublicIdChange}
@@ -113,17 +115,23 @@ export const SharePage = () => {
                   onPathnameChange={handlePathnameChange}
                 />
                 <IconButton
-                  icon={<CloseIcon />}
+                  icon={<TrashIcon />}
                   aria-label="Remover domínio personalizado"
                   size="xs"
                   onClick={() => handleCustomDomainChange(null)}
                 />
+                {workspace?.id && (
+                  <DomainStatusIcon
+                    domain={typebot.customDomain.split('/')[0]}
+                    workspaceId={workspace.id}
+                  />
+                )}
               </HStack>
             )}
             {isNotDefined(typebot?.customDomain) &&
-            env('VERCEL_VIEWER_PROJECT_NAME') ? (
+            env.NEXT_PUBLIC_VERCEL_VIEWER_PROJECT_NAME ? (
               <>
-                {isProPlan(workspace) ? (
+                {hasProPerks(workspace) ? (
                   <CustomDomainsDropdown
                     onCustomDomainSelect={handleCustomDomainChange}
                   />
@@ -131,6 +139,8 @@ export const SharePage = () => {
                   <UpgradeButton
                     colorScheme="gray"
                     limitReachedType={t('billing.limitMessage.customDomain')}
+                    //@ts-ignore
+                    excludedPlans={[Plan.STARTER]}
                   >
                     <Text mr="2">Adicionar meu domínio</Text>{' '}
                     <LockTag plan={Plan.PRO} />

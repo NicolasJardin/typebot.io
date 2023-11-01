@@ -23,8 +23,10 @@ import React, { useState } from 'react'
 import { headerHeight } from '../constants'
 import { BlockCard } from './BlockCard'
 import { BlockCardOverlay } from './BlockCardOverlay'
+import { useScopedI18n } from '@/locales'
 
 export const BlocksSideBar = () => {
+  const scopedT = useScopedI18n('editor.sidebarBlocks')
   const { setDraggedBlockType, draggedBlockType } = useBlockDnd()
   const [position, setPosition] = useState({
     x: 0,
@@ -104,12 +106,18 @@ export const BlocksSideBar = () => {
         <Flex justifyContent="flex-end">
           <Tooltip
             label={
-              isLocked ? 'Desbloquear barra lateral' : 'Bloquear barra lateral'
+              isLocked
+                ? scopedT('sidebar.unlock.label')
+                : scopedT('sidebar.lock.label')
             }
           >
             <IconButton
               icon={isLocked ? <LockedIcon /> : <UnlockedIcon />}
-              aria-label={isLocked ? 'Desbloquear' : 'Bloquear'}
+              aria-label={
+                isLocked
+                  ? scopedT('sidebar.icon.unlock.label')
+                  : scopedT('sidebar.icon.lock.label')
+              }
               size="sm"
               onClick={handleLockClick}
             />
@@ -118,7 +126,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Enviar
+            {scopedT('blockType.bubbles.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -155,7 +163,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Receber
+            {scopedT('blockType.inputs.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -167,7 +175,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Lógica
+            {scopedT('blockType.logic.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard
@@ -239,7 +247,7 @@ export const BlocksSideBar = () => {
 
         <Stack>
           <Text fontSize="sm" fontWeight="semibold">
-            Integrações
+            {scopedT('blockType.integrations.heading')}
           </Text>
           <SimpleGrid columns={2} spacing="3">
             <BlockCard

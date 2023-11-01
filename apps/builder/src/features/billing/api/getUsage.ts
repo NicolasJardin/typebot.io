@@ -1,8 +1,10 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { isReadWorkspaceFobidden } from '@/features/workspace/helpers/isReadWorkspaceFobidden'
+import { env } from '@typebot.io/env'
+import Stripe from 'stripe'
 
 export const getUsage = authenticatedProcedure
   .meta({
@@ -19,15 +21,15 @@ export const getUsage = authenticatedProcedure
       workspaceId: z.string(),
     })
   )
-  .output(
-    z.object({ totalChatsUsed: z.number(), totalStorageUsed: z.number() })
-  )
+  .output(z.object({ totalChatsUsed: z.number(), resetsAt: z.date() }))
   .query(async ({ input: { workspaceId }, ctx: { user } }) => {
     const workspace = await prisma.workspace.findFirst({
       where: {
         id: workspaceId,
       },
       select: {
+        stripeId: true,
+        plan: true,
         members: {
           select: {
             userId: true,
@@ -44,31 +46,63 @@ export const getUsage = authenticatedProcedure
         message: 'Workspace not found',
       })
 
-    const now = new Date()
-    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    if (
+      !env.STRIPE_SECRET_KEY ||
+      !workspace.stripeId ||
+      (workspace.plan !== 'STARTER' && workspace.plan !== 'PRO')
+    ) {
+      const now = new Date()
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+
+      const totalChatsUsed = await prisma.result.count({
+        where: {
+          typebotId: { in: workspace.typebots.map((typebot) => typebot.id) },
+          hasStarted: true,
+          createdAt: {
+            gte: firstDayOfMonth,
+          },
+        },
+      })
+
+      const firstDayOfNextMonth = new Date(
+        firstDayOfMonth.getFullYear(),
+        firstDayOfMonth.getMonth() + 1,
+        1
+      )
+      return { totalChatsUsed, resetsAt: firstDayOfNextMonth }
+    }
+
+    const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+      apiVersion: '2022-11-15',
+    })
+
+    const subscriptions = await stripe.subscriptions.list({
+      customer: workspace.stripeId,
+    })
+
+    const currentSubscription = subscriptions.data
+      .filter((sub) => ['past_due', 'active'].includes(sub.status))
+      .sort((a, b) => a.created - b.created)
+      .shift()
+
+    if (!currentSubscription)
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `No subscription found on workspace: ${workspaceId}`,
+      })
+
     const totalChatsUsed = await prisma.result.count({
       where: {
         typebotId: { in: workspace.typebots.map((typebot) => typebot.id) },
         hasStarted: true,
         createdAt: {
-          gte: firstDayOfMonth,
+          gte: new Date(currentSubscription.current_period_start * 1000),
         },
       },
-    })
-    const {
-      _sum: { storageUsed: totalStorageUsed },
-    } = await prisma.answer.aggregate({
-      where: {
-        storageUsed: { gt: 0 },
-        result: {
-          typebotId: { in: workspace.typebots.map((typebot) => typebot.id) },
-        },
-      },
-      _sum: { storageUsed: true },
     })
 
     return {
       totalChatsUsed,
-      totalStorageUsed: totalStorageUsed ?? 0,
+      resetsAt: new Date(currentSubscription.current_period_end * 1000),
     }
   })

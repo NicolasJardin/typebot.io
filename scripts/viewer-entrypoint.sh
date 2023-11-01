@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ENVSH_ENV=./apps/viewer/.env.production ENVSH_OUTPUT=./apps/viewer/public/__env.js bash inject-runtime-env.sh
+cd apps/viewer;
+node  -e "const { configureRuntimeEnv } = require('next-runtime-env/build/configure'); configureRuntimeEnv();"
+cd ../..;
 
-./node_modules/.bin/prisma generate --schema=packages/prisma/postgresql/schema.prisma;
-
-node apps/viewer/server.js;
+HOSTNAME=0.0.0.0 PORT=3000 node apps/viewer/server.js;

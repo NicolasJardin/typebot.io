@@ -44,7 +44,7 @@ export const ApiPreviewInstructions = (props: StackProps) => {
       w="full"
       {...props}
     >
-      <OrderedList spacing={6}>
+      <OrderedList spacing={6} px="1">
         <ListItem>
           All your requests need to be authenticated with an API token.{' '}
           <TextLink href="https://docs.typebot.io/api/builder/authenticate">
@@ -62,7 +62,7 @@ export const ApiPreviewInstructions = (props: StackProps) => {
               lang={'shell'}
               value={`${parseApiHost(
                 typebot?.customDomain
-              )}/api/v1/sendMessage`}
+              )}/api/v2/sendMessage`}
             />
             <Text>with the following JSON body:</Text>
             <CodeEditor isReadOnly lang={'json'} value={startParamsBody} />
@@ -82,7 +82,7 @@ export const ApiPreviewInstructions = (props: StackProps) => {
               lang={'shell'}
               value={`${parseApiHost(
                 typebot?.customDomain
-              )}/api/v1/sendMessage`}
+              )}/api/v2/sendMessage`}
             />
             <Text>With the following JSON body:</Text>
             <CodeEditor isReadOnly lang={'json'} value={replyBody} />
@@ -93,7 +93,7 @@ export const ApiPreviewInstructions = (props: StackProps) => {
           </Stack>
         </ListItem>
       </OrderedList>
-      <Text fontSize="sm">
+      <Text fontSize="sm" pl="1">
         Check out the{' '}
         <TextLink href="https://docs.typebot.io/api/send-a-message" isExternal>
           API reference

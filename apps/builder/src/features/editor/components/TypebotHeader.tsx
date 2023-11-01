@@ -1,7 +1,13 @@
 import { EditableEmojiOrImageIcon } from '@/components/EditableEmojiOrImageIcon'
-import { ChevronLeftIcon, RedoIcon, UndoIcon } from '@/components/icons'
+import {
+  BuoyIcon,
+  ChevronLeftIcon,
+  RedoIcon,
+  UndoIcon,
+} from '@/components/icons'
 import { PublishButton } from '@/features/publish/components/PublishButton'
 import { useUndoShortcut } from '@/hooks/useUndoShortcut'
+import { useScopedI18n } from '@/locales'
 import {
   Button,
   Flex,
@@ -23,6 +29,7 @@ import { useTypebot } from '../providers/TypebotProvider'
 import { EditableTypebotName } from './EditableTypebotName'
 
 export const TypebotHeader = () => {
+  const scopedT = useScopedI18n('editor.headers')
   const router = useRouter()
   const {
     typebot,
@@ -62,6 +69,12 @@ export const TypebotHeader = () => {
     undo()
   })
 
+  // const handleHelpClick = () => {
+  //   isCloudProdInstance()
+  //     ? onOpen()
+  //     : window.open('https://docs.typebot.io', '_blank')
+  // }
+
   return (
     <Flex
       w="full"
@@ -87,7 +100,34 @@ export const TypebotHeader = () => {
           variant={router.pathname.includes('/edit') ? 'outline' : 'ghost'}
           size="sm"
         >
-          Fluxo
+          {scopedT('flowButton.label')}
+        </Button>
+        <Button
+          as={Link}
+          href={`/typebots/${typebot?.id}/theme`}
+          colorScheme={router.pathname.endsWith('theme') ? 'blue' : 'gray'}
+          variant={router.pathname.endsWith('theme') ? 'outline' : 'ghost'}
+          size="sm"
+        >
+          {scopedT('themeButton.label')}
+        </Button>
+        <Button
+          as={Link}
+          href={`/typebots/${typebot?.id}/settings`}
+          colorScheme={router.pathname.endsWith('settings') ? 'blue' : 'gray'}
+          variant={router.pathname.endsWith('settings') ? 'outline' : 'ghost'}
+          size="sm"
+        >
+          {scopedT('settingsButton.label')}
+        </Button>
+        <Button
+          as={Link}
+          href={`/typebots/${typebot?.id}/share`}
+          colorScheme={router.pathname.endsWith('share') ? 'blue' : 'gray'}
+          variant={router.pathname.endsWith('share') ? 'outline' : 'ghost'}
+          size="sm"
+        >
+          {scopedT('shareButton.label')}
         </Button>
 
         {isDefined(publishedTypebot) && (
@@ -98,7 +138,7 @@ export const TypebotHeader = () => {
             variant={router.pathname.includes('results') ? 'outline' : 'ghost'}
             size="sm"
           >
-            Resultados
+            {scopedT('resultsButton.label')}
           </Button>
         )}
       </HStack>
@@ -114,19 +154,32 @@ export const TypebotHeader = () => {
             as={Link}
             aria-label="Navigate back"
             icon={<ChevronLeftIcon fontSize={25} />}
-            href={
-              router.query.parentId
-                ? `/typebots/${router.query.parentId}/edit`
+            href={{
+              pathname: router.query.parentId
+                ? '/typebots/[typebotId]/edit'
                 : typebot?.folderId
-                ? `/typebots/folders/${typebot.folderId}`
-                : '/typebots'
-            }
+                ? '/typebots/folders/[folderId]'
+                : '/typebots',
+              query: {
+                folderId: typebot?.folderId ?? [],
+                parentId: Array.isArray(router.query.parentId)
+                  ? router.query.parentId.slice(0, -1)
+                  : [],
+                typebotId: Array.isArray(router.query.parentId)
+                  ? [...router.query.parentId].pop()
+                  : router.query.parentId ?? [],
+              },
+            }}
             size="sm"
           />
           <HStack spacing={1}>
             {typebot && (
               <EditableEmojiOrImageIcon
-                uploadFilePath={`typebots/${typebot.id}/icon`}
+                uploadFileProps={{
+                  workspaceId: typebot.workspaceId,
+                  typebotId: typebot.id,
+                  fileName: 'icon',
+                }}
                 icon={typebot?.icon}
                 onChangeIcon={handleChangeIcon}
               />
@@ -171,12 +224,15 @@ export const TypebotHeader = () => {
               />
             </Tooltip>
           </HStack>
+          <Button leftIcon={<BuoyIcon />} size="sm">
+            {scopedT('helpButton.label')}
+          </Button>
         </HStack>
         {isSavingLoading && (
           <HStack>
             <Spinner speed="0.7s" size="sm" color="gray.400" />
             <Text fontSize="sm" color="gray.400">
-              Salvando...
+              {scopedT('savingSpinner.label')}
             </Text>
           </HStack>
         )}
@@ -190,7 +246,7 @@ export const TypebotHeader = () => {
             isLoading={isNotDefined(typebot)}
             size="sm"
           >
-            Pŕe-visualização
+            {scopedT('previewButton.label')}
           </Button>
         )}
         <PublishButton size="sm" />

@@ -8,32 +8,33 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { createTransport, getTestMessageUrl } from 'nodemailer'
 import { isDefined, isEmpty, isNotDefined, omit } from '@typebot.io/lib'
 import { parseAnswers } from '@typebot.io/lib/results'
-import { methodNotAllowed, initMiddleware, decrypt } from '@typebot.io/lib/api'
+import { methodNotAllowed, initMiddleware } from '@typebot.io/lib/api'
+import { decrypt } from '@typebot.io/lib/api/encryption/decrypt'
 
 import Cors from 'cors'
 import Mail from 'nodemailer/lib/mailer'
 import { DefaultBotNotificationEmail } from '@typebot.io/emails'
 import { render } from '@faire/mjml-react/utils/render'
-import prisma from '@/lib/prisma'
-import { getPreviouslyLinkedTypebots } from '@/features/blocks/logic/typebotLink/getPreviouslyLinkedTypebots'
-import { saveErrorLog } from '@/features/logs/saveErrorLog'
-import { saveSuccessLog } from '@/features/logs/saveSuccessLog'
+import prisma from '@typebot.io/lib/prisma'
+import { env } from '@typebot.io/env'
+import { saveErrorLog } from '@typebot.io/bot-engine/logs/saveErrorLog'
+import { saveSuccessLog } from '@typebot.io/bot-engine/logs/saveSuccessLog'
 
 const cors = initMiddleware(Cors())
 
 const defaultTransportOptions = {
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : false,
+  host: env.SMTP_HOST,
+  port: env.SMTP_PORT,
+  secure: env.SMTP_SECURE,
   auth: {
-    user: process.env.SMTP_USERNAME,
-    pass: process.env.SMTP_PASSWORD,
+    user: env.SMTP_USERNAME,
+    pass: env.SMTP_PASSWORD,
   },
 }
 
 const defaultFrom = {
-  name: process.env.SMTP_FROM?.split(' <')[0].replace(/"/g, ''),
-  email: process.env.SMTP_FROM?.match(/<(.*)>/)?.pop(),
+  name: env.NEXT_PUBLIC_SMTP_FROM?.split(' <')[0].replace(/"/g, ''),
+  email: env.NEXT_PUBLIC_SMTP_FROM?.match(/<(.*)>/)?.pop(),
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -160,7 +161,7 @@ const getEmailInfo = async (
   if (credentialsId === 'default')
     return {
       host: defaultTransportOptions.host,
-      port: defaultTransportOptions.port,
+      port: defaultTransportOptions.port as number,
       username: defaultTransportOptions.auth.user,
       password: defaultTransportOptions.auth.pass,
       isTlsEnabled: undefined,
@@ -197,14 +198,24 @@ const getEmailBody = async ({
     where: { typebotId },
   })) as unknown as PublicTypebot
   if (!typebot) return
-  const linkedTypebots = await getPreviouslyLinkedTypebots({
-    typebots: [typebot],
-  })([])
-  const answers = parseAnswers(typebot, linkedTypebots)(resultValues)
+  const answers = parseAnswers({
+    answers: resultValues.answers.map((answer) => ({
+      key:
+        (answer.variableId
+          ? typebot.variables.find(
+              (variable) => variable.id === answer.variableId
+            )?.name
+          : typebot.groups.find((group) =>
+              group.blocks.find((block) => block.id === answer.blockId)
+            )?.title) ?? '',
+      value: answer.content,
+    })),
+    variables: resultValues.variables,
+  })
   return {
     html: render(
       <DefaultBotNotificationEmail
-        resultsUrl={`${process.env.NEXTAUTH_URL}/typebots/${typebot.id}/results`}
+        resultsUrl={`${env.NEXTAUTH_URL}/typebots/${typebot.id}/results`}
         answers={omit(answers, 'submittedAt')}
       />
     ).html,

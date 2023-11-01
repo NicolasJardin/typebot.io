@@ -2,6 +2,7 @@ import { Textarea, TextInput } from '@/components/inputs'
 import { CodeEditor } from '@/components/inputs/CodeEditor'
 import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
+import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
 import { CredentialsDropdown } from '@/features/credentials/components/CredentialsDropdown'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import {
@@ -13,10 +14,10 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { env, isNotEmpty } from '@typebot.io/lib'
+import { isNotEmpty } from '@typebot.io/lib'
 import { SendEmailOptions, Variable } from '@typebot.io/schemas'
 import { SmtpConfigModal } from './SmtpConfigModal'
-import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
+import { env } from '@typebot.io/env'
 
 type Props = {
   options: SendEmailOptions
@@ -116,9 +117,10 @@ export const SendEmailSettings = ({ options, onOptionsChange }: Props) => {
             currentCredentialsId={options.credentialsId}
             onCredentialsSelect={handleCredentialsSelect}
             onCreateNewClick={onOpen}
-            defaultCredentialLabel={env('SMTP_FROM')
-              ?.match(/<(.*)>/)
-              ?.pop()}
+            defaultCredentialLabel={env.NEXT_PUBLIC_SMTP_FROM?.match(
+              /<(.*)>/
+            )?.pop()}
+            credentialsName="SMTP account"
           />
         )}
       </Stack>

@@ -1,3 +1,4 @@
+import { useScopedI18n } from '@/locales'
 import {
   GridProps,
   SimpleGrid,
@@ -9,19 +10,20 @@ import {
 } from '@chakra-ui/react'
 import { Stats } from '@typebot.io/schemas'
 
-const computeCompletionRate = (
-  totalCompleted: number,
-  totalStarts: number
-): string => {
-  if (totalStarts === 0) return 'Não disponível'
-  return `${Math.round((totalCompleted / totalStarts) * 100)}%`
-}
+const computeCompletionRate =
+  (notAvailableLabel: string) =>
+  (totalCompleted: number, totalStarts: number): string => {
+    if (totalStarts === 0) return notAvailableLabel
+    return `${Math.round((totalCompleted / totalStarts) * 100)}%`
+  }
 
 export const StatsCards = ({
   stats,
   ...props
 }: { stats?: Stats } & GridProps) => {
   const bg = useColorModeValue('white', 'gray.900')
+
+  const scopedT = useScopedI18n('analytics')
 
   return (
     <SimpleGrid columns={{ base: 1, md: 3 }} spacing="6" {...props}>
@@ -45,7 +47,10 @@ export const StatsCards = ({
         <StatLabel>Taxa de realizaçao</StatLabel>
         {stats ? (
           <StatNumber>
-            {computeCompletionRate(stats.totalCompleted, stats.totalStarts)}
+            {computeCompletionRate(scopedT('notAvailableLabel'))(
+              stats.totalCompleted,
+              stats.totalStarts
+            )}
           </StatNumber>
         ) : (
           <Skeleton w="50%" h="10px" mt="2" />

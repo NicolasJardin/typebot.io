@@ -10,10 +10,11 @@ import { ParentModalProvider } from '@/features/graph/providers/ParentModalProvi
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { trpc } from '@/lib/trpc'
 import { Spinner, Stack, Text, VStack } from '@chakra-ui/react'
-import { guessIfUserIsEuropean } from '@typebot.io/lib/pricing'
+import { guessIfUserIsEuropean } from '@typebot.io/lib/billing/guessIfUserIsEuropean'
 import { Plan } from '@typebot.io/prisma'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+
 export const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -29,14 +30,11 @@ export const DashboardPage = () => {
     })
 
   useEffect(() => {
-    const { subscribePlan, chats, storage, isYearly, claimCustomPlan } =
-      router.query as {
-        subscribePlan: Plan | undefined
-        chats: string | undefined
-        storage: string | undefined
-        isYearly: string | undefined
-        claimCustomPlan: string | undefined
-      }
+    const { subscribePlan, claimCustomPlan } = router.query as {
+      subscribePlan: Plan | undefined
+      chats: string | undefined
+      claimCustomPlan: string | undefined
+    }
     if (claimCustomPlan && user?.email && workspace) {
       setIsLoading(true)
       createCustomCheckoutSession({
@@ -50,10 +48,7 @@ export const DashboardPage = () => {
       setPreCheckoutPlan({
         plan: subscribePlan as 'PRO' | 'STARTER',
         workspaceId: workspace.id,
-        additionalChats: chats ? parseInt(chats) : 0,
-        additionalStorage: storage ? parseInt(storage) : 0,
         currency: guessIfUserIsEuropean() ? 'eur' : 'usd',
-        isYearly: isYearly === 'false' ? false : true,
       })
     }
   }, [createCustomCheckoutSession, router.query, user, workspace])

@@ -1,26 +1,34 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { Plan } from '@typebot.io/prisma'
 import {
   Block,
   InputBlockType,
   IntegrationBlockType,
   Typebot,
-  Webhook,
-  WebhookBlock,
-  defaultWebhookAttributes,
 } from '@typebot.io/schemas'
-import { HttpMethod } from '@typebot.io/schemas/features/blocks/integrations/webhook/enums'
 
 export const sanitizeSettings = (
   settings: Typebot['settings'],
-  workspacePlan: Plan
+  workspacePlan: Plan,
+  mode: 'create' | 'update'
 ): Typebot['settings'] => ({
   ...settings,
   general: {
     ...settings.general,
     isBrandingEnabled:
-      workspacePlan === Plan.FREE ? false : settings.general.isBrandingEnabled,
+      workspacePlan === Plan.FREE ? true : settings.general.isBrandingEnabled,
   },
+  whatsApp: settings.whatsApp
+    ? {
+        ...settings.whatsApp,
+        isEnabled:
+          mode === 'create'
+            ? false
+            : workspacePlan === Plan.FREE
+            ? false
+            : settings.whatsApp.isEnabled,
+      }
+    : undefined,
 })
 
 export const sanitizeGroups =
@@ -47,8 +55,6 @@ const sanitizeBlock =
             ),
           },
         }
-      case IntegrationBlockType.WEBHOOK:
-        return await sanitizeWebhookBlock(block)
       case IntegrationBlockType.GOOGLE_SHEETS:
         return {
           ...block,
@@ -84,37 +90,6 @@ const sanitizeBlock =
         return block
     }
   }
-
-const sanitizeWebhookBlock = async (
-  block: WebhookBlock
-): Promise<WebhookBlock> => {
-  if (!block.webhookId) return block
-  const webhook = await prisma.webhook.findFirst({
-    where: {
-      id: block.webhookId,
-    },
-  })
-  return {
-    ...block,
-    webhookId: undefined,
-    options: {
-      ...block.options,
-      webhook: webhook
-        ? {
-            id: webhook.id,
-            url: webhook.url ?? undefined,
-            method: (webhook.method as Webhook['method']) ?? HttpMethod.POST,
-            headers: (webhook.headers as Webhook['headers']) ?? [],
-            queryParams: (webhook.queryParams as Webhook['headers']) ?? [],
-            body: webhook.body ?? undefined,
-          }
-        : {
-            ...defaultWebhookAttributes,
-            id: block.webhookId ?? '',
-          },
-    },
-  }
-}
 
 const sanitizeCredentialsId =
   (workspaceId: string) =>

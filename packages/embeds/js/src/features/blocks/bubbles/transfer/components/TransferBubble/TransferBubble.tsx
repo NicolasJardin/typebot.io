@@ -1,8 +1,8 @@
 import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
+import { computeTypingDuration } from '@typebot.io/bot-engine/computeTypingDuration'
 import { TransferOptions, TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
-import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
   options: TransferOptions
@@ -45,10 +45,10 @@ export default function TransferBubble(props: Props) {
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
-        : computeTypingDuration(
-            `🔀 Transferido para o ${getText()}`,
-            props.typingEmulation ?? defaultTypingEmulation
-          )
+        : computeTypingDuration({
+            bubbleContent: `🔀 Transferido para o ${getText()}`,
+            typingSettings: props.typingEmulation ?? defaultTypingEmulation,
+          })
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
   })
 

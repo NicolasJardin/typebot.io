@@ -2,7 +2,7 @@ import { TypingBubble } from '@/components'
 import { TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
 import ChatText from '../../../components/ChatText'
-import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
+import { computeTypingDuration } from '@typebot.io/bot-engine/computeTypingDuration'
 
 type Props = {
   url?: string
@@ -36,10 +36,10 @@ export default function FileBubble(props: Props) {
     const typingDuration =
       props.typingEmulation?.enabled === false
         ? 0
-        : computeTypingDuration(
-            'Enviado arquivo (clique aqui para ver)',
-            props.typingEmulation ?? defaultTypingEmulation
-          )
+        : computeTypingDuration({
+            typingSettings: props.typingEmulation ?? defaultTypingEmulation,
+            bubbleContent: 'Enviado arquivo (clique aqui para ver)',
+          })
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
   })
 

@@ -1,10 +1,11 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { customDomainSchema } from '@typebot.io/schemas/features/customDomains'
-import { isWriteWorkspaceForbidden } from '@/features/workspace/helpers/isWriteWorkspaceForbidden copy'
 import got, { HTTPError } from 'got'
+import { env } from '@typebot.io/env'
+import { isWriteWorkspaceForbidden } from '@/features/workspace/helpers/isWriteWorkspaceForbidden'
 
 export const createCustomDomain = authenticatedProcedure
   .meta({
@@ -79,7 +80,7 @@ export const createCustomDomain = authenticatedProcedure
 
 const createDomainOnVercel = (name: string) =>
   got.post({
-    url: `https://api.vercel.com/v10/projects/${process.env.NEXT_PUBLIC_VERCEL_VIEWER_PROJECT_NAME}/domains?teamId=${process.env.VERCEL_TEAM_ID}`,
-    headers: { Authorization: `Bearer ${process.env.VERCEL_TOKEN}` },
+    url: `https://api.vercel.com/v10/projects/${env.NEXT_PUBLIC_VERCEL_VIEWER_PROJECT_NAME}/domains?teamId=${env.VERCEL_TEAM_ID}`,
+    headers: { Authorization: `Bearer ${env.VERCEL_TOKEN}` },
     json: { name },
   })

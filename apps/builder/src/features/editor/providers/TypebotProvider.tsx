@@ -5,8 +5,9 @@ import { preventUserFromRefreshing } from '@/helpers/preventUserFromRefreshing'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/lib/trpc'
+import { useScopedI18n } from '@/locales'
 import { isDefined, omit } from '@typebot.io/lib'
-import { LogicBlockType, PublicTypebot, Typebot } from '@typebot.io/schemas'
+import { PublicTypebot, Typebot } from '@typebot.io/schemas'
 import { dequal } from 'dequal'
 import { Router, useRouter } from 'next/router'
 import {
@@ -38,6 +39,7 @@ type UpdateTypebotPayload = Partial<
     | 'customDomain'
     | 'resultsTablePreferences'
     | 'isClosed'
+    | 'whatsAppCredentialsId'
   >
 >
 
@@ -49,7 +51,6 @@ const typebotContext = createContext<
   {
     typebot?: Typebot
     publishedTypebot?: PublicTypebot
-    linkedTypebots?: Pick<Typebot, 'id' | 'groups' | 'variables' | 'name'>[]
     isReadOnly?: boolean
     isPublished: boolean
     isSavingLoading: boolean
@@ -79,6 +80,7 @@ export const TypebotProvider = ({
   children: ReactNode
   typebotId?: string
 }) => {
+  const scopedT = useScopedI18n('editor.provider')
   const { push } = useRouter()
   const { showToast } = useToast()
 
@@ -90,11 +92,20 @@ export const TypebotProvider = ({
     { typebotId: typebotId as string },
     {
       enabled: isDefined(typebotId),
-      onError: (error) =>
+      onError: (error) => {
+        if (error.data?.httpStatus === 404) {
+          showToast({
+            status: 'info',
+            description: scopedT('messages.getTypebotError.description'),
+          })
+          push('/typebots')
+          return
+        }
         showToast({
-          title: 'Error while fetching typebot. Refresh the page.',
+          title: scopedT('messages.getTypebotError.title'),
           description: error.message,
-        }),
+        })
+      },
     }
   )
 
@@ -103,11 +114,13 @@ export const TypebotProvider = ({
       { typebotId: typebotId as string },
       {
         enabled: isDefined(typebotId),
-        onError: (error) =>
+        onError: (error) => {
+          if (error.data?.httpStatus === 404) return
           showToast({
-            title: 'Error while fetching published typebot',
+            title: scopedT('messages.publishedTypebotError.title'),
             description: error.message,
-          }),
+          })
+        },
       }
     )
 
@@ -115,7 +128,7 @@ export const TypebotProvider = ({
     trpc.typebot.updateTypebot.useMutation({
       onError: (error) =>
         showToast({
-          title: 'Error while updating typebot',
+          title: scopedT('messages.updateTypebotError.title'),
           description: error.message,
         }),
       onSuccess: () => {
@@ -132,47 +145,9 @@ export const TypebotProvider = ({
     { redo, undo, flush, canRedo, canUndo, set: setLocalTypebot },
   ] = useUndo<Typebot>(undefined)
 
-  const linkedTypebotIds = useMemo(
-    () =>
-      typebot?.groups
-        .flatMap((group) => group.blocks)
-        .reduce<string[]>(
-          (typebotIds, block) =>
-            block.type === LogicBlockType.TYPEBOT_LINK &&
-            isDefined(block.options.typebotId) &&
-            !typebotIds.includes(block.options.typebotId)
-              ? [...typebotIds, block.options.typebotId]
-              : typebotIds,
-          []
-        ) ?? [],
-    [typebot?.groups]
-  )
-
-  const { data: linkedTypebotsData } = trpc.getLinkedTypebots.useQuery(
-    {
-      typebotId: typebot?.id as string,
-    },
-    {
-      enabled: isDefined(typebot?.id) && linkedTypebotIds.length > 0,
-      onError: (error) =>
-        showToast({
-          title: 'Erro ao buscar typebots conectados',
-          description: error.message,
-        }),
-    }
-  )
-
   useEffect(() => {
     if (!typebot && isDefined(localTypebot)) setLocalTypebot(undefined)
-    if (isFetchingTypebot) return
-    if (!typebot) {
-      showToast({
-        status: 'info',
-        description: 'Não foi possível encontrar o fluxo',
-      })
-      push('/typebots')
-      return
-    }
+    if (isFetchingTypebot || !typebot) return
     if (
       typebot.id !== localTypebot?.id ||
       new Date(typebot.updatedAt).getTime() >
@@ -193,7 +168,7 @@ export const TypebotProvider = ({
 
   const saveTypebot = useCallback(
     async (updates?: Partial<Typebot>) => {
-      if (!localTypebot || !typebot) return
+      if (!localTypebot || !typebot || typebotData?.isReadOnly) return
       const typebotToSave = { ...localTypebot, ...updates }
       if (dequal(omit(typebot, 'updatedAt'), omit(typebotToSave, 'updatedAt')))
         return
@@ -205,7 +180,13 @@ export const TypebotProvider = ({
       setLocalTypebot({ ...newTypebot })
       return newTypebot
     },
-    [localTypebot, setLocalTypebot, typebot, updateTypebot]
+    [
+      localTypebot,
+      setLocalTypebot,
+      typebot,
+      typebotData?.isReadOnly,
+      updateTypebot,
+    ]
   )
 
   useAutoSave(
@@ -237,7 +218,7 @@ export const TypebotProvider = ({
   )
 
   useEffect(() => {
-    if (!localTypebot || !typebot) return
+    if (!localTypebot || !typebot || typebotData?.isReadOnly) return
     if (!areTypebotsEqual(localTypebot, typebot)) {
       window.addEventListener('beforeunload', preventUserFromRefreshing)
     }
@@ -245,7 +226,7 @@ export const TypebotProvider = ({
     return () => {
       window.removeEventListener('beforeunload', preventUserFromRefreshing)
     }
-  }, [localTypebot, typebot])
+  }, [localTypebot, typebot, typebotData?.isReadOnly])
 
   const updateLocalTypebot = async ({
     updates,
@@ -273,7 +254,6 @@ export const TypebotProvider = ({
       value={{
         typebot: localTypebot,
         publishedTypebot,
-        linkedTypebots: linkedTypebotsData?.typebots ?? [],
         isReadOnly: typebotData?.isReadOnly,
         isSavingLoading: isSaving,
         save: saveTypebot,
@@ -284,7 +264,10 @@ export const TypebotProvider = ({
         isPublished,
         updateTypebot: updateLocalTypebot,
         restorePublishedTypebot,
-        ...groupsActions(setLocalTypebot as SetTypebot),
+        ...groupsActions(
+          setLocalTypebot as SetTypebot,
+          scopedT('groups.copy.title')
+        ),
         ...blocksAction(setLocalTypebot as SetTypebot),
         ...variablesAction(setLocalTypebot as SetTypebot),
         ...edgesAction(setLocalTypebot as SetTypebot),

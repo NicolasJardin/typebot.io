@@ -1,21 +1,24 @@
+import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
+import { TextInput } from '@/components/inputs'
+import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
+import { FilePathUploadProps } from '@/features/upload/api/generateUploadUrl'
+import { useScopedI18n } from '@/locales'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
-import { TextInput } from '@/components/inputs'
 import { useState } from 'react'
-import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
-import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 
 type Props = {
-  fileUploadPath: string
+  uploadFileProps: FilePathUploadProps
   content: AudioBubbleContent
   onContentChange: (content: AudioBubbleContent) => void
 }
 
 export const AudioBubbleForm = ({
-  fileUploadPath,
+  uploadFileProps,
   content,
   onContentChange,
 }: Props) => {
+  const scopedT = useScopedI18n('editor.blocks.bubbles.audio.settings')
   const [currentTab, setCurrentTab] = useState<'link' | 'upload'>('link')
 
   const updateUrl = (url: string) => onContentChange({ ...content, url })
@@ -31,14 +34,14 @@ export const AudioBubbleForm = ({
           onClick={() => setCurrentTab('upload')}
           size="sm"
         >
-          Carregar
+          {scopedT('upload.label')}
         </Button>
         <Button
           variant={currentTab === 'link' ? 'solid' : 'ghost'}
           onClick={() => setCurrentTab('link')}
           size="sm"
         >
-          Incorporar link
+          {scopedT('embedLink.label')}
         </Button>
       </HStack>
       <Stack p="2" spacing={4}>
@@ -47,29 +50,29 @@ export const AudioBubbleForm = ({
             <Flex justify="center" py="2">
               <UploadButton
                 fileType="audio"
-                filePath={fileUploadPath}
+                filePathProps={uploadFileProps}
                 onFileUploaded={updateUrl}
                 colorScheme="blue"
               >
-                Escolha um arquivo
+                {scopedT('chooseFile.label')}
               </UploadButton>
             </Flex>
           )}
           {currentTab === 'link' && (
             <>
               <TextInput
-                placeholder="Cole o link do arquivo de áudio..."
+                placeholder={scopedT('worksWith.placeholder')}
                 defaultValue={content.url ?? ''}
                 onChange={updateUrl}
               />
               <Text fontSize="sm" color="gray.400" textAlign="center">
-                Funciona com .MP3s and .WAVs
+                {scopedT('worksWith.text')}
               </Text>
             </>
           )}
         </Stack>
         <SwitchWithLabel
-          label={'Habilitar tocar sozinho'}
+          label={scopedT('autoplay.label')}
           initialValue={content.isAutoplayEnabled ?? true}
           onCheckChange={updateAutoPlay}
         />

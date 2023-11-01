@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { Prisma } from '@typebot.io/prisma'
 
 type Props<T extends Prisma.TypebotSelect> = {

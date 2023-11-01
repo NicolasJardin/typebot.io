@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { WorkspaceRole } from '@typebot.io/prisma'
@@ -21,7 +21,7 @@ export const listTypebots = authenticatedProcedure
   .output(
     z.object({
       typebots: z.array(
-        typebotSchema
+        typebotSchema._def.schema
           .pick({
             name: true,
             icon: true,

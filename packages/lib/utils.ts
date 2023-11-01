@@ -62,7 +62,9 @@ export const isNotDefined = <T>(
   value: T | undefined | null
 ): value is undefined | null => value === undefined || value === null
 
-export const isEmpty = (value: string | undefined | null): value is undefined =>
+export const isEmpty = (
+  value: string | undefined | null
+): value is undefined | null =>
   value === undefined || value === null || value === ''
 
 export const isNotEmpty = (value: string | undefined | null): value is string =>
@@ -197,69 +199,6 @@ export const generateId = (idDesiredLength: number): string => {
     .join('')
 }
 
-type UploadFileProps = {
-  basePath?: string
-  files: {
-    file: File
-    path: string
-  }[]
-  onUploadProgress?: (percent: number) => void
-}
-type UrlList = (string | null)[]
-
-export const uploadFiles = async ({
-  basePath = '/api',
-  files,
-  onUploadProgress,
-}: UploadFileProps): Promise<UrlList> => {
-  const urls = []
-  let i = 0
-  for (const { file, path } of files) {
-    onUploadProgress && onUploadProgress((i / files.length) * 100)
-    i += 1
-    const { data } = await sendRequest<{
-      presignedUrl: { url: string; fields: any }
-      hasReachedStorageLimit: boolean
-    }>(
-      `${basePath}/storage/upload-url?filePath=${encodeURIComponent(
-        path
-      )}&fileType=${file.type}`
-    )
-
-    if (!data?.presignedUrl) continue
-
-    const { url, fields } = data.presignedUrl
-    if (data.hasReachedStorageLimit) urls.push(null)
-    else {
-      const formData = new FormData()
-      Object.entries({ ...fields, file }).forEach(([key, value]) => {
-        formData.append(key, value as string | Blob)
-      })
-      const upload = await fetch(url, {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!upload.ok) continue
-
-      urls.push(`${url.split('?')[0]}/${path}`)
-    }
-  }
-  return urls
-}
-
-declare const window: any
-
-export const env = (key = ''): string | undefined => {
-  if (typeof window === 'undefined')
-    return isEmpty(process.env['NEXT_PUBLIC_' + key])
-      ? undefined
-      : (process.env['NEXT_PUBLIC_' + key] as string)
-
-  if (typeof window !== 'undefined' && window.__env)
-    return isEmpty(window.__env[key]) ? undefined : window.__env[key]
-}
-
 export const hasValue = (
   value: string | undefined | null
 ): value is NonNullable<string> =>
@@ -268,11 +207,6 @@ export const hasValue = (
   value !== '' &&
   value !== 'undefined' &&
   value !== 'null'
-
-export const getViewerUrl = (props?: {
-  returnAll?: boolean
-}): string | undefined =>
-  props?.returnAll ? env('VIEWER_URL') : env('VIEWER_URL')?.split(',')[0]
 
 export const parseNumberWithCommas = (num: number) =>
   num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')

@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import {
   CollaborationType,
   CollaboratorsOnTypebots,
@@ -11,7 +11,7 @@ export const isWriteTypebotForbidden = async (
   typebot: Pick<Typebot, 'workspaceId'> & {
     collaborators: Pick<CollaboratorsOnTypebots, 'userId' | 'type'>[]
   },
-  user: Pick<User, 'email' | 'id'>
+  user: Pick<User, 'id'>
 ) => {
   if (
     typebot.collaborators.find(

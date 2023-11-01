@@ -23,10 +23,11 @@ const localeHumanReadable = {
   fr: 'Français',
   de: 'Deutsch',
   pt: 'Português',
+  'pt-BR': 'Português (BR)',
 } as const
 
 export const UserPreferencesForm = () => {
-  const { colorMode, setColorMode } = useColorMode()
+  const { colorMode } = useColorMode()
   const { user, updateUser } = useUser()
   const changeLocale = useChangeLocale()
   const currentLocale = useCurrentLocale()
@@ -43,7 +44,6 @@ export const UserPreferencesForm = () => {
   }
 
   const changeAppearance = async (value: string) => {
-    setColorMode(value)
     updateUser({ preferredAppAppearance: value })
   }
 

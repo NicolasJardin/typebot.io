@@ -1,6 +1,6 @@
 import { getTypebot } from '@/helpers/getTypebot'
-import prisma from '@/lib/prisma'
 import { methodNotAllowed } from '@typebot.io/lib/api'
+import prisma from '@typebot.io/lib/prisma'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

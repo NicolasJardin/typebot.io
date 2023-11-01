@@ -39,6 +39,7 @@ import {
 } from './integrations'
 import { IntegrationBlockType } from './integrations/enums'
 import { openAIBlockSchema } from './integrations/openai'
+import { zemanticAiBlockSchema } from './integrations/zemanticAi'
 import {
   abTestBlockSchema,
   redirectBlockSchema,
@@ -146,6 +147,7 @@ export const blockSchema = z.discriminatedUnion('type', [
   endBlockSchema,
   buttonBlockSchema,
   pixelBlockSchema,
+  zemanticAiBlockSchema,
 ])
 
 export type Block = z.infer<typeof blockSchema>

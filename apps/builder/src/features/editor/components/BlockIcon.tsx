@@ -22,6 +22,7 @@ import { OpenAILogo } from '@/features/blocks/integrations/openai/components/Ope
 import { PabblyConnectLogo } from '@/features/blocks/integrations/pabbly/components/PabblyConnectLogo'
 import { PixelLogo } from '@/features/blocks/integrations/pixel/components/PixelLogo'
 import { ZapierLogo } from '@/features/blocks/integrations/zapier/components/ZapierLogo'
+import { ZemanticAiLogo } from '@/features/blocks/integrations/zemanticAi/ZemanticAiLogo'
 import { AbTestIcon } from '@/features/blocks/logic/abTest/components/AbTestIcon'
 import { ConditionIcon } from '@/features/blocks/logic/condition/components/ConditionIcon'
 import { JumpIcon } from '@/features/blocks/logic/jump/components/JumpIcon'
@@ -141,6 +142,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <OpenAILogo fill={openAIColor} {...props} />
     case IntegrationBlockType.PIXEL:
       return <PixelLogo {...props} />
+    case IntegrationBlockType.ZEMANTIC_AI:
+      return <ZemanticAiLogo {...props} />
     case 'start':
       return <FlagIcon {...props} />
   }

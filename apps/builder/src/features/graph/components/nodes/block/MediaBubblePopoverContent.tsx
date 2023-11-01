@@ -3,6 +3,7 @@ import { EmbedUploadContent } from '@/features/blocks/bubbles/embed/components/E
 import FileBubbleForm from '@/features/blocks/bubbles/file/components/FileBubbleForm'
 import { ImageBubbleSettings } from '@/features/blocks/bubbles/image/components/ImageBubbleSettings'
 import { VideoUploadContent } from '@/features/blocks/bubbles/video/components/VideoUploadContent'
+import { FilePathUploadProps } from '@/features/upload/api/generateUploadUrl'
 import {
   PopoverArrow,
   PopoverBody,
@@ -18,7 +19,7 @@ import {
 import { useRef } from 'react'
 
 type Props = {
-  typebotId: string
+  uploadFileProps: FilePathUploadProps
   block: Exclude<BubbleBlock, TextBubbleBlock>
   onContentChange: (content: BubbleBlockContent) => void
 }
@@ -43,7 +44,7 @@ export const MediaBubblePopoverContent = (props: Props) => {
 }
 
 export const MediaBubbleContent = ({
-  typebotId,
+  uploadFileProps,
   block,
   onContentChange,
 }: Props) => {
@@ -51,7 +52,7 @@ export const MediaBubbleContent = ({
     case BubbleBlockType.IMAGE: {
       return (
         <ImageBubbleSettings
-          typebotId={typebotId}
+          uploadFileProps={uploadFileProps}
           block={block}
           onContentChange={onContentChange}
         />
@@ -61,7 +62,7 @@ export const MediaBubbleContent = ({
       return (
         <VideoUploadContent
           content={block.content}
-          fileUploadPath={`typebots/${typebotId}/blocks/${block.id}`}
+          uploadFileProps={uploadFileProps}
           onSubmit={onContentChange}
         />
       )
@@ -78,7 +79,7 @@ export const MediaBubbleContent = ({
       return (
         <AudioBubbleForm
           content={block.content}
-          fileUploadPath={`typebots/${typebotId}/blocks/${block.id}`}
+          uploadFileProps={uploadFileProps}
           onContentChange={onContentChange}
         />
       )
@@ -88,7 +89,7 @@ export const MediaBubbleContent = ({
       return (
         <FileBubbleForm
           content={block.content}
-          fileUploadPath={`typebots/${typebotId}/blocks/${block.id}`}
+          uploadFileProps={uploadFileProps}
           onSubmit={onContentChange}
         />
       )

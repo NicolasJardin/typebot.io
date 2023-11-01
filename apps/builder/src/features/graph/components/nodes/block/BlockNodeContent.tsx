@@ -35,6 +35,8 @@ import { ScriptNodeContent } from '@/features/blocks/logic/script/components/Scr
 import { SetVariableContent } from '@/features/blocks/logic/setVariable/components/SetVariableContent'
 
 import { PictureChoiceNode } from '@/features/blocks/inputs/pictureChoice/components/PictureChoiceNode'
+import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
+import { ZemanticAiNodeBody } from '@/features/blocks/integrations/zemanticAi/ZemanticAiNodeBody'
 import { AbTestNodeBody } from '@/features/blocks/logic/abTest/components/AbTestNodeBody'
 import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
 import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
@@ -42,6 +44,7 @@ import TransferNodeContent from '@/features/blocks/logic/transfer/components/Tra
 import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink/components/TypebotLinkNode'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
 import WaitForNodeContent from '@/features/blocks/logic/waitFor/components/WaitForNodeContent'
+import { useScopedI18n } from '@/locales'
 import { Text } from '@chakra-ui/react'
 import {
   Block,
@@ -53,14 +56,13 @@ import {
   StartBlock,
 } from '@typebot.io/schemas'
 import { ItemNodesList } from '../item/ItemNodesList'
-import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
-// import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 
 type Props = {
   block: Block | StartBlock
   indices: BlockIndices
 }
 export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
+  const scopedT = useScopedI18n('editor.blocks.start')
   switch (block.type) {
     case BubbleBlockType.TEXT: {
       return <TextBubbleContent block={block} />
@@ -198,11 +200,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case LogicBlockType.CONDITION:
       return <ItemNodesList block={block} indices={indices} />
     case IntegrationBlockType.GOOGLE_SHEETS: {
-      return (
-        <GoogleSheetsNodeContent
-          action={'action' in block.options ? block.options.action : undefined}
-        />
-      )
+      return <GoogleSheetsNodeContent options={block.options} />
     }
     case IntegrationBlockType.GOOGLE_ANALYTICS: {
       return <GoogleAnalyticsNodeBody action={block.options?.action} />
@@ -240,8 +238,11 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
     case IntegrationBlockType.PIXEL: {
       return <PixelNodeBody options={block.options} />
     }
+    case IntegrationBlockType.ZEMANTIC_AI: {
+      return <ZemanticAiNodeBody options={block.options} />
+    }
     case 'start': {
-      return <Text>Início</Text>
+      return <Text>{scopedT('text')}</Text>
     }
   }
 }

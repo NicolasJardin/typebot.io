@@ -1,11 +1,11 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import Stripe from 'stripe'
 import { z } from 'zod'
 import { subscriptionSchema } from '@typebot.io/schemas/features/billing/subscription'
-import { priceIds } from '@typebot.io/lib/pricing'
 import { isReadWorkspaceFobidden } from '@/features/workspace/helpers/isReadWorkspaceFobidden'
+import { env } from '@typebot.io/env'
 
 export const getSubscription = authenticatedProcedure
   .meta({
@@ -28,7 +28,7 @@ export const getSubscription = authenticatedProcedure
     })
   )
   .query(async ({ input: { workspaceId }, ctx: { user } }) => {
-    if (!process.env.STRIPE_SECRET_KEY)
+    if (!env.STRIPE_SECRET_KEY)
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Stripe environment variables are missing',
@@ -55,46 +55,37 @@ export const getSubscription = authenticatedProcedure
       return {
         subscription: null,
       }
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
       apiVersion: '2022-11-15',
     })
     const subscriptions = await stripe.subscriptions.list({
       customer: workspace.stripeId,
-      limit: 1,
-      status: 'active',
     })
 
-    const subscription = subscriptions?.data.shift()
+    const currentSubscription = subscriptions.data
+      .filter((sub) => ['past_due', 'active'].includes(sub.status))
+      .sort((a, b) => a.created - b.created)
+      .shift()
 
-    if (!subscription)
+    if (!currentSubscription)
       return {
         subscription: null,
       }
 
     return {
       subscription: {
-        isYearly: subscription.items.data.some((item) => {
-          return (
-            priceIds.STARTER.chats.yearly === item.price.id ||
-            priceIds.STARTER.storage.yearly === item.price.id ||
-            priceIds.PRO.chats.yearly === item.price.id ||
-            priceIds.PRO.storage.yearly === item.price.id
-          )
-        }),
-        currency: subscription.currency as 'usd' | 'eur',
-        cancelDate: subscription.cancel_at
-          ? new Date(subscription.cancel_at * 1000)
+        currentBillingPeriod:
+          subscriptionSchema.shape.currentBillingPeriod.parse({
+            start: new Date(currentSubscription.current_period_start),
+            end: new Date(currentSubscription.current_period_end),
+          }),
+        status: subscriptionSchema.shape.status.parse(
+          currentSubscription.status
+        ),
+        currency: currentSubscription.currency as 'usd' | 'eur',
+        cancelDate: currentSubscription.cancel_at
+          ? new Date(currentSubscription.cancel_at * 1000)
           : undefined,
       },
     }
   })
-
-export const chatPriceIds = [priceIds.STARTER.chats.monthly]
-  .concat(priceIds.STARTER.chats.yearly)
-  .concat(priceIds.PRO.chats.monthly)
-  .concat(priceIds.PRO.chats.yearly)
-
-export const storagePriceIds = [priceIds.STARTER.storage.monthly]
-  .concat(priceIds.STARTER.storage.yearly)
-  .concat(priceIds.PRO.storage.monthly)
-  .concat(priceIds.PRO.storage.yearly)

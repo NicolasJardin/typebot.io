@@ -1,11 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Prisma } from '@typebot.io/prisma'
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { googleSheetsScopes } from './consent-url'
 import { stringify } from 'querystring'
-import { badRequest, encrypt, notAuthenticated } from '@typebot.io/lib/api'
+import { badRequest, notAuthenticated } from '@typebot.io/lib/api'
 import { oauth2Client } from '@/lib/googleSheets'
 import { getAuthenticatedUser } from '@/features/auth/helpers/getAuthenticatedUser'
+import { env } from '@typebot.io/env'
+import { encrypt } from '@typebot.io/lib/api/encryption/encrypt'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = await getAuthenticatedUser(req, res)
@@ -49,9 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data: credentials,
     })
     const queryParams = stringify({ blockId, credentialsId })
-    res.redirect(
-      `${redirectUrl}?${queryParams}` ?? `${process.env.NEXTAUTH_URL}`
-    )
+    res.redirect(`${redirectUrl}?${queryParams}` ?? `${env.NEXTAUTH_URL}`)
   }
 }
 

@@ -16,15 +16,28 @@ import { useTypebot } from '../../editor/providers/TypebotProvider'
 import { runtimes } from '../data'
 import { PreviewDrawerBody } from './PreviewDrawerBody'
 import { ResizeHandle } from './ResizeHandle'
+import { RuntimeMenu } from './RuntimeMenu'
+
+const preferredRuntimeKey = 'preferredRuntime'
+
+const getDefaultRuntime = (typebotId?: string) => {
+  if (!typebotId) return runtimes[0]
+  const preferredRuntime = localStorage.getItem(preferredRuntimeKey)
+  return (
+    runtimes.find((runtime) => runtime.name === preferredRuntime) ?? runtimes[0]
+  )
+}
 
 export const PreviewDrawer = () => {
-  const { save, isSavingLoading } = useTypebot()
+  const { typebot, save, isSavingLoading } = useTypebot()
   const { setRightPanel } = useEditor()
   const { setPreviewingBlock } = useGraph()
   const [width, setWidth] = useState(500)
   const [isResizeHandleVisible, setIsResizeHandleVisible] = useState(false)
   const [restartKey, setRestartKey] = useState(0)
-  const [selectedRuntime] = useState<(typeof runtimes)[number]>(runtimes[0])
+  const [selectedRuntime, setSelectedRuntime] = useState<
+    (typeof runtimes)[number]
+  >(getDefaultRuntime(typebot?.id))
 
   const handleRestartClick = async () => {
     await save()
@@ -44,6 +57,13 @@ export const PreviewDrawer = () => {
       from: () => [-width, 0],
     }
   )
+
+  const setPreviewRuntimeAndSaveIntoLocalStorage = (
+    runtime: (typeof runtimes)[number]
+  ) => {
+    setSelectedRuntime(runtime)
+    localStorage.setItem(preferredRuntimeKey, runtime.name)
+  }
 
   return (
     <Flex
@@ -73,6 +93,10 @@ export const PreviewDrawer = () => {
       <VStack w="full" spacing={4}>
         <HStack justifyContent={'space-between'} w="full">
           <HStack>
+            <RuntimeMenu
+              selectedRuntime={selectedRuntime}
+              onSelectRuntime={setPreviewRuntimeAndSaveIntoLocalStorage}
+            />
             {selectedRuntime.name === 'Web' ? (
               <Button
                 onClick={handleRestartClick}

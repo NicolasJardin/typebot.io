@@ -270,7 +270,8 @@ export const BlockNode = ({
                 )}
                 {(isConnectable ||
                   (pathname.endsWith('analytics') && isInputBlock(block))) &&
-                  hasDefaultConnector(block) && (
+                  hasDefaultConnector(block) &&
+                  block.type !== LogicBlockType.JUMP && (
                     <SourceEndpoint
                       source={{
                         groupId: block.groupId,
@@ -304,7 +305,11 @@ export const BlockNode = ({
           )}
           {typebot && isMediaBubbleBlock(block) && (
             <MediaBubblePopoverContent
-              typebotId={typebot.id}
+              uploadFileProps={{
+                workspaceId: typebot.workspaceId,
+                typebotId: typebot.id,
+                blockId: block.id,
+              }}
               block={block}
               onContentChange={handleContentChange}
             />

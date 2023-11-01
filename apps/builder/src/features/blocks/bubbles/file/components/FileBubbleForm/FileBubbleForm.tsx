@@ -1,18 +1,19 @@
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
+import { FilePathUploadProps } from '@/features/upload/api/generateUploadUrl'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
 import { useState } from 'react'
 
 type FileBubbleFormProps = {
-  fileUploadPath: string
   content: AudioBubbleContent
   onSubmit: (content: AudioBubbleContent) => void
+  uploadFileProps: FilePathUploadProps
 }
 
 export default function FileBubbleForm({
   content,
-  fileUploadPath,
+  uploadFileProps,
   onSubmit,
 }: FileBubbleFormProps) {
   const [currentTab, setCurrentTab] = useState<'link' | 'upload'>('link')
@@ -42,7 +43,7 @@ export default function FileBubbleForm({
           <Flex justify="center" py="2">
             <UploadButton
               fileType="file"
-              filePath={fileUploadPath}
+              filePathProps={uploadFileProps}
               onFileUploaded={submit}
               colorScheme="blue"
             >

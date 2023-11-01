@@ -3,8 +3,8 @@ import { InputBlockType } from '@typebot.io/schemas/features/blocks/inputs/enums
 import {
   createEffect,
   createSignal,
-  createUniqueId,
   For,
+  onCleanup,
   onMount,
   Show,
 } from 'solid-js'
@@ -108,12 +108,11 @@ export const ConversationContainer = (props: Props) => {
     })()
   })
 
-  const streamMessage = (content: string) => {
+  const streamMessage = ({ id, message }: { id: string; message: string }) => {
     setIsSending(false)
     const lastChunk = [...chatChunks()].pop()
     if (!lastChunk) return
-    const id = lastChunk.streamingMessageId ?? createUniqueId()
-    if (!lastChunk.streamingMessageId)
+    if (lastChunk.streamingMessageId !== id)
       setChatChunks((displayedChunks) => [
         ...displayedChunks,
         {
@@ -121,7 +120,7 @@ export const ConversationContainer = (props: Props) => {
           streamingMessageId: id,
         },
       ])
-    setStreamingMessage({ id, content })
+    setStreamingMessage({ id, content: message })
   }
 
   createEffect(() => {
@@ -215,15 +214,17 @@ export const ConversationContainer = (props: Props) => {
       ...displayedChunks,
       {
         input: data.input,
-        messages: [...chatChunks()].pop()?.streamingMessageId
-          ? data.messages.slice(1)
-          : data.messages,
+        messages: data.messages,
         clientSideActions: data.clientSideActions,
       },
     ])
   }
 
   const autoScrollToBottom = (offsetTop?: number) => {
+    const chunks = chatChunks()
+    const lastChunkWasStreaming =
+      chunks.length >= 2 && chunks[chunks.length - 2].streamingMessageId
+    if (lastChunkWasStreaming) return
     setTimeout(() => {
       chatContainer?.scrollTo(0, offsetTop ?? chatContainer.scrollHeight)
     }, 50)
@@ -268,6 +269,11 @@ export const ConversationContainer = (props: Props) => {
     }
   }
 
+  onCleanup(() => {
+    setStreamingMessage(undefined)
+    setFormattedMessages([])
+  })
+
   const handleSkip = () => sendMessage(undefined)
 
   return (
@@ -287,8 +293,9 @@ export const ConversationContainer = (props: Props) => {
             context={props.context}
             hideAvatar={
               !chatChunk.input &&
-              !chatChunk.streamingMessageId &&
-              index() < chatChunks().length - 1
+              ((chatChunks()[index() + 1]?.messages ?? 0).length > 0 ||
+                chatChunks()[index() + 1]?.streamingMessageId !== undefined ||
+                isSending())
             }
             hasError={hasError() && index() === chatChunks().length - 1}
             onNewBubbleDisplayed={handleNewBubbleDisplayed}

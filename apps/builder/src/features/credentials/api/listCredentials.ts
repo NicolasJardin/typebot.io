@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { stripeCredentialsSchema } from '@typebot.io/schemas/features/blocks/inputs/payment/schemas'
@@ -7,6 +7,8 @@ import { openAICredentialsSchema } from '@typebot.io/schemas/features/blocks/int
 import { smtpCredentialsSchema } from '@typebot.io/schemas/features/blocks/integrations/sendEmail'
 import { z } from 'zod'
 import { isReadWorkspaceFobidden } from '@/features/workspace/helpers/isReadWorkspaceFobidden'
+import { whatsAppCredentialsSchema } from '@typebot.io/schemas/features/whatsapp'
+import { zemanticAiCredentialsSchema } from '@typebot.io/schemas/features/blocks/integrations/zemanticAi'
 
 export const listCredentials = authenticatedProcedure
   .meta({
@@ -24,7 +26,9 @@ export const listCredentials = authenticatedProcedure
       type: stripeCredentialsSchema.shape.type
         .or(smtpCredentialsSchema.shape.type)
         .or(googleSheetsCredentialsSchema.shape.type)
-        .or(openAICredentialsSchema.shape.type),
+        .or(openAICredentialsSchema.shape.type)
+        .or(whatsAppCredentialsSchema.shape.type)
+        .or(zemanticAiCredentialsSchema.shape.type),
     })
   )
   .output(

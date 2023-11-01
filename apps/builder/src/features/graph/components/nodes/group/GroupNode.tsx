@@ -274,6 +274,7 @@ const NonMemoizedDraggableGroupNode = ({
               unmountOnExit
             >
               <GroupFocusToolbar
+                groupId={group.id}
                 onPlayClick={startPreviewAtThisGroup}
                 onDuplicateClick={() => {
                   setIsFocused(false)

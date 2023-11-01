@@ -94,7 +94,7 @@ export const ButtonsItemNode = ({ item, indices, isMouseOver }: Props) => {
               }
               cursor="pointer"
             />
-            <EditableInput />
+            <EditableInput onMouseDownCapture={(e) => e.stopPropagation()} />
           </Editable>
           <HitboxExtension />
           <SlideFade

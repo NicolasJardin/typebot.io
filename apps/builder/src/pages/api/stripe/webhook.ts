@@ -1,5 +1,6 @@
-import prisma from '@/lib/prisma'
+import { env } from '@typebot.io/env'
 import { methodNotAllowed } from '@typebot.io/lib/api'
+import prisma from '@typebot.io/lib/prisma'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 import { Plan, WorkspaceRole } from '@typebot.io/prisma'
 import { Settings } from '@typebot.io/schemas'
@@ -9,9 +10,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { RequestHandler } from 'next/dist/server/next'
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET)
+if (!env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET)
   throw new Error('STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET missing')
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: '2022-11-15',
 })
 
@@ -19,7 +20,7 @@ const cors = Cors({
   allowMethods: ['POST', 'HEAD'],
 })
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string
+const webhookSecret = env.STRIPE_WEBHOOK_SECRET as string
 
 export const config = {
   api: {
@@ -45,26 +46,22 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           const metadata = session.metadata as unknown as
             | {
                 plan: 'STARTER' | 'PRO'
-                additionalChats: string
-                additionalStorage: string
                 workspaceId: string
                 userId: string
               }
             | { claimableCustomPlanId: string; userId: string }
           if ('plan' in metadata) {
-            const { workspaceId, plan, additionalChats, additionalStorage } =
-              metadata
-            if (!workspaceId || !plan || !additionalChats || !additionalStorage)
+            const { workspaceId, plan } = metadata
+            if (!workspaceId || !plan)
               return res
                 .status(500)
                 .send({ message: `Couldn't retrieve valid metadata` })
+
             const workspace = await prisma.workspace.update({
               where: { id: workspaceId },
               data: {
                 plan,
                 stripeId: session.customer as string,
-                additionalChatsIndex: parseInt(additionalChats),
-                additionalStorageIndex: parseInt(additionalStorage),
                 isQuarantined: false,
               },
               include: {
@@ -86,8 +83,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                   userId: user.id,
                   data: {
                     plan,
-                    additionalChatsIndex: parseInt(additionalChats),
-                    additionalStorageIndex: parseInt(additionalStorage),
                   },
                 },
               ])
@@ -122,8 +117,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 userId,
                 data: {
                   plan: Plan.CUSTOM,
-                  additionalChatsIndex: 0,
-                  additionalStorageIndex: 0,
                 },
               },
             ])
@@ -152,8 +145,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
             data: {
               plan: Plan.FREE,
-              additionalChatsIndex: 0,
-              additionalStorageIndex: 0,
               customChatsLimit: null,
               customStorageLimit: null,
               customSeatsLimit: null,
@@ -177,8 +168,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 userId: user.id,
                 data: {
                   plan: Plan.FREE,
-                  additionalChatsIndex: 0,
-                  additionalStorageIndex: 0,
                 },
               },
             ])
@@ -203,6 +192,12 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                     ...settings.general,
                     isBrandingEnabled: true,
                   },
+                  whatsApp: settings.whatsApp
+                    ? {
+                        ...settings.whatsApp,
+                        isEnabled: false,
+                      }
+                    : undefined,
                 },
               },
             })

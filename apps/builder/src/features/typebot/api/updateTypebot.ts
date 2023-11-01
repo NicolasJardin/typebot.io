@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { typebotCreateSchema, typebotSchema } from '@typebot.io/schemas'
@@ -12,6 +12,7 @@ import {
 import { isWriteTypebotForbidden } from '../helpers/isWriteTypebotForbidden'
 import { isCloudProdInstance } from '@/helpers/isCloudProdInstance'
 import { Prisma } from '@typebot.io/prisma'
+import { hasProPerks } from '@/features/billing/helpers/hasProPerks'
 
 export const updateTypebot = authenticatedProcedure
   .meta({
@@ -27,9 +28,10 @@ export const updateTypebot = authenticatedProcedure
     z.object({
       typebotId: z.string(),
       typebot: typebotCreateSchema.merge(
-        typebotSchema
+        typebotSchema._def.schema
           .pick({
             isClosed: true,
+            whatsAppCredentialsId: true,
           })
           .partial()
       ),
@@ -101,7 +103,7 @@ export const updateTypebot = authenticatedProcedure
         })
 
       if (typebot.publicId) {
-        if (isCloudProdInstance && typebot.publicId.length < 4)
+        if (isCloudProdInstance() && typebot.publicId.length < 4)
           throw new TRPCError({
             code: 'BAD_REQUEST',
             message: 'Public id should be at least 4 characters long',
@@ -114,6 +116,16 @@ export const updateTypebot = authenticatedProcedure
             code: 'BAD_REQUEST',
             message: 'Public id not available',
           })
+      }
+
+      if (
+        typebot.settings?.whatsApp?.isEnabled &&
+        !hasProPerks(existingTypebot.workspace)
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'WhatsApp can be enabled only on a Pro workspaces',
+        })
       }
 
       const newTypebot = await prisma.typebot.update({
@@ -130,7 +142,11 @@ export const updateTypebot = authenticatedProcedure
             : undefined,
           theme: typebot.theme ? typebot.theme : undefined,
           settings: typebot.settings
-            ? sanitizeSettings(typebot.settings, existingTypebot.workspace.plan)
+            ? sanitizeSettings(
+                typebot.settings,
+                existingTypebot.workspace.plan,
+                'update'
+              )
             : undefined,
           folderId: typebot.folderId,
           variables: typebot.variables,
@@ -148,6 +164,7 @@ export const updateTypebot = authenticatedProcedure
           customDomain:
             typebot.customDomain === null ? null : typebot.customDomain,
           isClosed: typebot.isClosed,
+          whatsAppCredentialsId: typebot.whatsAppCredentialsId ?? undefined,
         },
       })
 

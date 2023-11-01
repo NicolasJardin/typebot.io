@@ -1,13 +1,16 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { stripeCredentialsSchema } from '@typebot.io/schemas/features/blocks/inputs/payment/schemas'
 import { googleSheetsCredentialsSchema } from '@typebot.io/schemas/features/blocks/integrations/googleSheets/schemas'
 import { openAICredentialsSchema } from '@typebot.io/schemas/features/blocks/integrations/openai'
 import { smtpCredentialsSchema } from '@typebot.io/schemas/features/blocks/integrations/sendEmail'
-import { encrypt } from '@typebot.io/lib/api/encryption'
+import { encrypt } from '@typebot.io/lib/api/encryption/encrypt'
 import { z } from 'zod'
-import { isWriteWorkspaceForbidden } from '@/features/workspace/helpers/isWriteWorkspaceForbidden copy'
+import { whatsAppCredentialsSchema } from '@typebot.io/schemas/features/whatsapp'
+import { Credentials, zemanticAiCredentialsSchema } from '@typebot.io/schemas'
+import { isDefined } from '@typebot.io/lib/utils'
+import { isWriteWorkspaceForbidden } from '@/features/workspace/helpers/isWriteWorkspaceForbidden'
 
 const inputShape = {
   data: true,
@@ -28,12 +31,16 @@ export const createCredentials = authenticatedProcedure
   })
   .input(
     z.object({
-      credentials: z.discriminatedUnion('type', [
-        stripeCredentialsSchema.pick(inputShape),
-        smtpCredentialsSchema.pick(inputShape),
-        googleSheetsCredentialsSchema.pick(inputShape),
-        openAICredentialsSchema.pick(inputShape),
-      ]),
+      credentials: z
+        .discriminatedUnion('type', [
+          stripeCredentialsSchema.pick(inputShape),
+          smtpCredentialsSchema.pick(inputShape),
+          googleSheetsCredentialsSchema.pick(inputShape),
+          openAICredentialsSchema.pick(inputShape),
+          whatsAppCredentialsSchema.pick(inputShape),
+          zemanticAiCredentialsSchema.pick(inputShape),
+        ])
+        .and(z.object({ id: z.string().cuid2().optional() })),
     })
   )
   .output(
@@ -42,6 +49,11 @@ export const createCredentials = authenticatedProcedure
     })
   )
   .mutation(async ({ input: { credentials }, ctx: { user } }) => {
+    if (await isNotAvailable(credentials.name, credentials.type))
+      throw new TRPCError({
+        code: 'CONFLICT',
+        message: 'Credentials already exist.',
+      })
     const workspace = await prisma.workspace.findFirst({
       where: {
         id: credentials.workspaceId,
@@ -64,3 +76,14 @@ export const createCredentials = authenticatedProcedure
     })
     return { credentialsId: createdCredentials.id }
   })
+
+const isNotAvailable = async (name: string, type: Credentials['type']) => {
+  if (type !== 'whatsApp') return
+  const existingCredentials = await prisma.credentials.findFirst({
+    where: {
+      type,
+      name,
+    },
+  })
+  return isDefined(existingCredentials)
+}

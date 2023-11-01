@@ -1,8 +1,9 @@
-import { DownloadIcon, ToolIcon } from '@/components/icons'
+import { DownloadIcon, TemplateIcon, ToolIcon } from '@/components/icons'
 import { useUser } from '@/features/account/hooks/useUser'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/lib/trpc'
+import { useScopedI18n } from '@/locales'
 import {
   Button,
   Heading,
@@ -18,10 +19,11 @@ import { ImportTypebotFromFileButton } from './ImportTypebotFromFileButton'
 import { TemplatesModal } from './TemplatesModal'
 
 export const CreateNewTypebotButtons = () => {
+  const scopedT = useScopedI18n('templates.buttons')
   const { workspace } = useWorkspace()
   const { user } = useUser()
   const router = useRouter()
-  const { isOpen, onClose } = useDisclosure()
+  const { isOpen, onClose, onOpen } = useDisclosure()
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -70,7 +72,7 @@ export const CreateNewTypebotButtons = () => {
 
   return (
     <VStack maxW="600px" w="full" flex="1" pt="20" spacing={10}>
-      <Heading>Criar um novo fluxo</Heading>
+      <Heading>{scopedT('heading')}</Heading>
       <Stack w="full" spacing={6}>
         <Button
           variant="outline"
@@ -87,7 +89,24 @@ export const CreateNewTypebotButtons = () => {
           onClick={() => handleCreateSubmit()}
           isLoading={isLoading}
         >
-          Começar do zero
+          {scopedT('fromScratchButton.label')}
+        </Button>
+        <Button
+          variant="outline"
+          w="full"
+          py="8"
+          fontSize="lg"
+          leftIcon={
+            <TemplateIcon
+              color={useColorModeValue('orange.500', 'orange.300')}
+              boxSize="25px"
+              mr="2"
+            />
+          }
+          onClick={onOpen}
+          isLoading={isLoading}
+        >
+          {scopedT('fromTemplateButton.label')}
         </Button>
 
         <ImportTypebotFromFileButton
@@ -105,7 +124,7 @@ export const CreateNewTypebotButtons = () => {
           isLoading={isLoading}
           onNewTypebot={handleCreateSubmit}
         >
-          Importar um arquivo
+          {scopedT('importFileButton.label')}
         </ImportTypebotFromFileButton>
       </Stack>
       <TemplatesModal

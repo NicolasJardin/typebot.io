@@ -25,10 +25,7 @@ export type PreCheckoutModalProps = {
     | {
         plan: 'STARTER' | 'PRO'
         workspaceId: string
-        additionalChats: number
-        additionalStorage: number
         currency: 'eur' | 'usd'
-        isYearly: boolean
       }
     | undefined
   existingCompany?: string

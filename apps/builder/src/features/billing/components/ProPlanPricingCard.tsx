@@ -1,306 +1,155 @@
 // @ts-nocheck
 
 import { MoreInfoTooltip } from '@/components/MoreInfoTooltip'
-import { ChevronLeftIcon } from '@/components/icons'
+import { useScopedI18n } from '@/locales'
 import {
   Button,
   Flex,
   HStack,
   Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Stack,
   Tag,
   Text,
   Tooltip,
   chakra,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { isDefined, parseNumberWithCommas } from '@typebot.io/lib'
-import {
-  chatsLimit,
-  computePrice,
-  formatPrice,
-  getChatsLimit,
-  getStorageLimit,
-  storageLimit,
-} from '@typebot.io/lib/pricing'
+import { prices } from '@typebot.io/lib/billing/constants'
+import { formatPrice } from '@typebot.io/lib/billing/formatPrice'
 import { Plan } from '@typebot.io/prisma'
-import { Workspace } from '@typebot.io/schemas'
-import { useEffect, useState } from 'react'
+import { ChatsProTiersModal } from './ChatsProTiersModal'
 import { FeaturesList } from './FeaturesList'
 
 type Props = {
-  workspace: Pick<
-    Workspace,
-    | 'additionalChatsIndex'
-    | 'additionalStorageIndex'
-    | 'plan'
-    | 'customChatsLimit'
-    | 'customStorageLimit'
-    | 'stripeId'
-  >
-  currentSubscription: {
-    isYearly?: boolean
-  }
+  currentPlan: Plan
   currency?: 'usd' | 'eur'
   isLoading: boolean
-  isYearly: boolean
-  onPayClick: (props: {
-    selectedChatsLimitIndex: number
-    selectedStorageLimitIndex: number
-  }) => void
+  onPayClick: () => void
 }
 
 export const ProPlanPricingCard = ({
-  workspace,
-  currentSubscription,
+  currentPlan,
   currency,
   isLoading,
-  isYearly,
   onPayClick,
 }: Props) => {
   const scopedT = useScopedI18n('billing.pricingCard')
-  const [selectedChatsLimitIndex, setSelectedChatsLimitIndex] =
-    useState<number>()
-  const [selectedStorageLimitIndex, setSelectedStorageLimitIndex] =
-    useState<number>()
-
-  useEffect(() => {
-    if (
-      isDefined(selectedChatsLimitIndex) ||
-      isDefined(selectedStorageLimitIndex)
-    )
-      return
-    if (workspace.plan !== Plan.PRO) {
-      setSelectedChatsLimitIndex(0)
-      setSelectedStorageLimitIndex(0)
-      return
-    }
-    setSelectedChatsLimitIndex(workspace.additionalChatsIndex ?? 0)
-    setSelectedStorageLimitIndex(workspace.additionalStorageIndex ?? 0)
-  }, [
-    selectedChatsLimitIndex,
-    selectedStorageLimitIndex,
-    workspace.additionalChatsIndex,
-    workspace.additionalStorageIndex,
-    workspace?.plan,
-  ])
-
-  const workspaceChatsLimit = workspace ? getChatsLimit(workspace) : undefined
-  const workspaceStorageLimit = workspace
-    ? getStorageLimit(workspace)
-    : undefined
-
-  const isCurrentPlan =
-    chatsLimit[Plan.PRO].graduatedPrice[selectedChatsLimitIndex ?? 0]
-      .totalIncluded === workspaceChatsLimit &&
-    storageLimit[Plan.PRO].graduatedPrice[selectedStorageLimitIndex ?? 0]
-      .totalIncluded === workspaceStorageLimit &&
-    isYearly === currentSubscription?.isYearly
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const getButtonLabel = () => {
-    if (
-      selectedChatsLimitIndex === undefined ||
-      selectedStorageLimitIndex === undefined
-    )
-      return ''
-    if (workspace?.plan === Plan.PRO) {
-      if (isCurrentPlan) return 'Seu plano atual'
-
-      if (
-        selectedChatsLimitIndex !== workspace.additionalChatsIndex ||
-        selectedStorageLimitIndex !== workspace.additionalStorageIndex
-      )
-        return 'Atualizar'
-    }
-    return 'Melhorar'
+    if (currentPlan === Plan.PRO) return scopedT('upgradeButton.current')
+    return t('upgrade')
   }
-
-  const handlePayClick = async () => {
-    if (
-      selectedChatsLimitIndex === undefined ||
-      selectedStorageLimitIndex === undefined
-    )
-      return
-    onPayClick({
-      selectedChatsLimitIndex,
-      selectedStorageLimitIndex,
-    })
-  }
-
-  const price =
-    computePrice(
-      Plan.PRO,
-      selectedChatsLimitIndex ?? 0,
-      selectedStorageLimitIndex ?? 0,
-      isYearly ? 'yearly' : 'monthly'
-    ) ?? NaN
 
   return (
-    <Flex
-      p="6"
-      pos="relative"
-      h="full"
-      flexDir="column"
-      flex="1"
-      flexShrink={0}
-      borderWidth="1px"
-      borderColor={useColorModeValue('blue.500', 'blue.300')}
-      rounded="lg"
-    >
-      <Flex justifyContent="center">
-        <Tag
-          pos="absolute"
-          top="-10px"
-          colorScheme="blue"
-          bg={useColorModeValue('blue.500', 'blue.400')}
-          variant="solid"
-          fontWeight="semibold"
-          style={{ marginTop: 0 }}
-        >
-          Mais popular
-        </Tag>
-      </Flex>
-      <Stack justifyContent="space-between" h="full">
-        <Stack spacing="4" mt={2}>
-          <Heading fontSize="2xl">
-            Melhorar para <chakra.span color="blue.400">Pro</chakra.span>
-          </Heading>
-          <Text>Para agências e startups em crescimento.</Text>
-        </Stack>
-        <Stack spacing="4">
-          <Heading>
-            {formatPrice(
-              computePrice(
-                Plan.PRO,
-                selectedChatsLimitIndex ?? 0,
-                selectedStorageLimitIndex ?? 0
-              ) ?? NaN,
-              currency
-            )}
-            <chakra.span fontSize="md">/ mês</chakra.span>
-          </Heading>
-          <Text fontWeight="bold">
-            <Tooltip
-              label={
-                <FeaturesList
-                  features={[
-                    'Marca removida',
-                    'Bloco de entrada de upload de arquivo',
-                    'Criar pastas',
-                  ]}
-                  spacing="0"
-                />
-              }
-              hasArrow
-              placement="top"
-            >
-              <chakra.span textDecoration="underline" cursor="pointer">
-                Tudo no Starter
-              </chakra.span>
-            </Tooltip>
-            , extra:
-          </Text>
-          <FeaturesList
-            features={[
-              '5 lugares incluídos',
-              <HStack key="test">
-                <Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronLeftIcon transform="rotate(-90deg)" />}
-                      size="sm"
-                      isLoading={selectedChatsLimitIndex === undefined}
-                    >
-                      {selectedChatsLimitIndex !== undefined
-                        ? parseNumberWithCommas(
-                            chatsLimit.PRO.graduatedPrice[
-                              selectedChatsLimitIndex
-                            ].totalIncluded
-                          )
-                        : undefined}
-                    </MenuButton>
-                    <MenuList>
-                      {chatsLimit.PRO.graduatedPrice.map((price, index) => (
-                        <MenuItem
-                          key={index}
-                          onClick={() => setSelectedChatsLimitIndex(index)}
-                        >
-                          {parseNumberWithCommas(price.totalIncluded)}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>{' '}
-                  {scopedT('chatsPerMonth')}
-                </Text>
-                <MoreInfoTooltip>
-                  Um bate-papo é contado sempre que um usuário inicia uma
-                  discussão. Isso é independente do número de mensagens que
-                  envia e recebe.
-                </MoreInfoTooltip>
-              </HStack>,
-              <HStack key="test">
-                <Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronLeftIcon transform="rotate(-90deg)" />}
-                      size="sm"
-                      isLoading={selectedStorageLimitIndex === undefined}
-                    >
-                      {selectedStorageLimitIndex !== undefined
-                        ? parseNumberWithCommas(
-                            storageLimit.PRO.graduatedPrice[
-                              selectedStorageLimitIndex
-                            ].totalIncluded
-                          )
-                        : undefined}
-                    </MenuButton>
-                    <MenuList>
-                      {storageLimit.PRO.graduatedPrice.map((price, index) => (
-                        <MenuItem
-                          key={index}
-                          onClick={() => setSelectedStorageLimitIndex(index)}
-                        >
-                          {parseNumberWithCommas(price.totalIncluded)}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>{' '}
-                  {scopedT('storageLimit')}
-                </Text>
-                <MoreInfoTooltip>
-                  Você acumula armazenamento para cada arquivo que seu usuário
-                  carrega em seu bot. Se você excluir o resultado, ele liberará
-                  o espaço.
-                </MoreInfoTooltip>
-              </HStack>,
-              'Domínios personalizados',
-              'Análise aprofundada',
-            ]}
-          />
-          <Stack spacing={3}>
-            {isYearly && workspace.stripeId && !isCurrentPlan && (
-              <Heading mt="0" fontSize="md">
-                You pay {formatPrice(price * 12, currency)} / year
+    <>
+      <ChatsProTiersModal isOpen={isOpen} onClose={onClose} />{' '}
+      <Flex
+        p="6"
+        pos="relative"
+        h="full"
+        flexDir="column"
+        flex="1"
+        flexShrink={0}
+        borderWidth="1px"
+        borderColor={useColorModeValue('blue.500', 'blue.300')}
+        rounded="lg"
+      >
+        <Flex justifyContent="center">
+          <Tag
+            pos="absolute"
+            top="-10px"
+            colorScheme="blue"
+            bg={useColorModeValue('blue.500', 'blue.400')}
+            variant="solid"
+            fontWeight="semibold"
+            style={{ marginTop: 0 }}
+          >
+            {scopedT('pro.mostPopularLabel')}
+          </Tag>
+        </Flex>
+        <Stack justifyContent="space-between" h="full">
+          <Stack spacing="4" mt={2}>
+            <Heading fontSize="2xl">
+              {scopedT('heading', {
+                plan: (
+                  <chakra.span
+                    color={useColorModeValue('blue.400', 'blue.300')}
+                  >
+                    Pro
+                  </chakra.span>
+                ),
+              })}
+            </Heading>
+            <Text>{scopedT('pro.description')}</Text>
+          </Stack>
+          <Stack spacing="8">
+            <Stack spacing="4">
+              <Heading>
+                {formatPrice(prices.PRO, { currency })}
+                <chakra.span fontSize="md">{scopedT('perMonth')}</chakra.span>
               </Heading>
-            )}
+              <Text fontWeight="bold">
+                <Tooltip
+                  label={
+                    <FeaturesList
+                      features={[
+                        scopedT('starter.brandingRemoved'),
+                        scopedT('starter.fileUploadBlock'),
+                        scopedT('starter.createFolders'),
+                      ]}
+                      spacing="0"
+                    />
+                  }
+                  hasArrow
+                  placement="top"
+                >
+                  <chakra.span textDecoration="underline" cursor="pointer">
+                    {scopedT('pro.everythingFromStarter')}
+                  </chakra.span>
+                </Tooltip>
+                {scopedT('plus')}
+              </Text>
+              <FeaturesList
+                features={[
+                  scopedT('pro.includedSeats'),
+                  <Stack key="starter-chats" spacing={1}>
+                    <HStack key="test">
+                      <Text>10,000 {scopedT('chatsPerMonth')}</Text>
+                      <MoreInfoTooltip>
+                        {scopedT('chatsTooltip')}
+                      </MoreInfoTooltip>
+                    </HStack>
+                    <Text
+                      fontSize="sm"
+                      color={useColorModeValue('gray.500', 'gray.400')}
+                    >
+                      Extra chats:{' '}
+                      <Button size="xs" variant="outline" onClick={onOpen}>
+                        See tiers
+                      </Button>
+                    </Text>
+                  </Stack>,
+                  scopedT('pro.whatsAppIntegration'),
+                  scopedT('pro.customDomains'),
+                  scopedT('pro.analytics'),
+                ]}
+              />
+            </Stack>
+
             <Button
               colorScheme="blue"
               variant="outline"
-              onClick={handlePayClick}
+              onClick={onPayClick}
               isLoading={isLoading}
-              isDisabled={isCurrentPlan}
+              isDisabled={currentPlan === Plan.PRO}
             >
               {getButtonLabel()}
             </Button>
           </Stack>
         </Stack>
-      </Stack>
-    </Flex>
+      </Flex>
+    </>
   )
 }

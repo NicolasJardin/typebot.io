@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { inferAsyncReturnType } from '@trpc/server'
 import * as trpcNext from '@trpc/server/adapters/next'
 import { User } from '@typebot.io/prisma'
@@ -21,12 +21,18 @@ const getAuthenticatedUser = async (
 }
 
 const authenticateByToken = async (
-  apiToken: string
+  token: string
 ): Promise<User | undefined> => {
   if (typeof window !== 'undefined') return
-  return (await prisma.user.findFirst({
-    where: { apiTokens: { some: { token: apiToken } } },
-  })) as User
+  const apiToken = await prisma.apiToken.findFirst({
+    where: {
+      token,
+    },
+    select: {
+      owner: true,
+    },
+  })
+  return apiToken?.owner
 }
 
 const extractBearerToken = (req: NextApiRequest) =>

@@ -146,7 +146,7 @@ export const TypebotButton = ({
           top="27px"
           size="sm"
         >
-          Ativo
+          {scopedT('live')}
         </Tag>
       )}
       {!isReadOnly && (

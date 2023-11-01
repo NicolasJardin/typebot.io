@@ -1,7 +1,8 @@
-import { TextInput, NumberInput } from '@/components/inputs'
-import { HStack, Stack, Text } from '@chakra-ui/react'
-import { EmbedBubbleContent } from '@typebot.io/schemas'
+import { NumberInput, TextInput } from '@/components/inputs'
+import { useScopedI18n } from '@/locales'
+import { Stack, Text } from '@chakra-ui/react'
 import { sanitizeUrl } from '@typebot.io/lib'
+import { EmbedBubbleContent } from '@typebot.io/schemas'
 
 type Props = {
   content: EmbedBubbleContent
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export const EmbedUploadContent = ({ content, onSubmit }: Props) => {
+  const scopedT = useScopedI18n('editor.blocks.bubbles.embed.settings')
   const handleUrlChange = (url: string) => {
     const iframeUrl = sanitizeUrl(
       url.trim().startsWith('<iframe') ? extractUrlFromIframe(url) : url
@@ -23,23 +25,22 @@ export const EmbedUploadContent = ({ content, onSubmit }: Props) => {
     <Stack p="2" spacing={6}>
       <Stack>
         <TextInput
-          placeholder="Cole o link ou código..."
+          placeholder={scopedT('worksWith.placeholder')}
           defaultValue={content?.url ?? ''}
           onChange={handleUrlChange}
         />
         <Text fontSize="sm" color="gray.400" textAlign="center">
-          Funciona com PDFs, iframes, sites...
+          {scopedT('worksWith.text')}
         </Text>
       </Stack>
 
-      <HStack>
-        <NumberInput
-          label="Altura:"
-          defaultValue={content?.height}
-          onValueChange={handleHeightChange}
-        />
-        <Text>px</Text>
-      </HStack>
+      <NumberInput
+        label="Height:"
+        defaultValue={content?.height}
+        onValueChange={handleHeightChange}
+        suffix={scopedT('numberInput.unit')}
+        width="150px"
+      />
     </Stack>
   )
 }

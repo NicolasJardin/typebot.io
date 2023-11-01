@@ -1,11 +1,11 @@
-import prisma from '@/lib/prisma'
+import prisma from '@typebot.io/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
 import { Plan } from '@typebot.io/prisma'
 import Stripe from 'stripe'
 import { z } from 'zod'
-import { parseSubscriptionItems } from '../helpers/parseSubscriptionItems'
 import { isAdminWriteWorkspaceForbidden } from '@/features/workspace/helpers/isAdminWriteWorkspaceForbidden'
+import { env } from '@typebot.io/env'
 
 export const createCheckoutSession = authenticatedProcedure
   .meta({
@@ -25,15 +25,12 @@ export const createCheckoutSession = authenticatedProcedure
       currency: z.enum(['usd', 'eur']),
       plan: z.enum([Plan.STARTER, Plan.PRO]),
       returnUrl: z.string(),
-      additionalChats: z.number(),
-      additionalStorage: z.number(),
       vat: z
         .object({
           type: z.string(),
           value: z.string(),
         })
         .optional(),
-      isYearly: z.boolean(),
     })
   )
   .output(
@@ -43,21 +40,10 @@ export const createCheckoutSession = authenticatedProcedure
   )
   .mutation(
     async ({
-      input: {
-        vat,
-        email,
-        company,
-        workspaceId,
-        currency,
-        plan,
-        returnUrl,
-        additionalChats,
-        additionalStorage,
-        isYearly,
-      },
+      input: { vat, email, company, workspaceId, currency, plan, returnUrl },
       ctx: { user },
     }) => {
-      if (!process.env.STRIPE_SECRET_KEY)
+      if (!env.STRIPE_SECRET_KEY)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Stripe environment variables are missing',
@@ -82,14 +68,13 @@ export const createCheckoutSession = authenticatedProcedure
           code: 'NOT_FOUND',
           message: 'Workspace not found',
         })
-
       if (workspace.stripeId)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Customer already exists, use updateSubscription endpoint.',
         })
 
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
         apiVersion: '2022-11-15',
       })
 
@@ -119,9 +104,6 @@ export const createCheckoutSession = authenticatedProcedure
         //@ts-ignore
         plan,
         returnUrl,
-        additionalChats,
-        additionalStorage,
-        isYearly,
       })
 
       if (!checkoutUrl)
@@ -142,24 +124,12 @@ type Props = {
   currency: 'usd' | 'eur'
   plan: 'STARTER' | 'PRO'
   returnUrl: string
-  additionalChats: number
-  additionalStorage: number
-  isYearly: boolean
   userId: string
 }
 
 export const createCheckoutSessionUrl =
   (stripe: Stripe) =>
-  async ({
-    customerId,
-    workspaceId,
-    currency,
-    plan,
-    returnUrl,
-    additionalChats,
-    additionalStorage,
-    isYearly,
-  }: Props) => {
+  async ({ customerId, workspaceId, currency, plan, returnUrl }: Props) => {
     const session = await stripe.checkout.sessions.create({
       success_url: `${returnUrl}?stripe=${plan}&success=true`,
       cancel_url: `${returnUrl}?stripe=cancel`,
@@ -173,18 +143,25 @@ export const createCheckoutSessionUrl =
       metadata: {
         workspaceId,
         plan,
-        additionalChats,
-        additionalStorage,
       },
       currency,
       billing_address_collection: 'required',
       automatic_tax: { enabled: true },
-      line_items: parseSubscriptionItems(
-        plan,
-        additionalChats,
-        additionalStorage,
-        isYearly
-      ),
+      line_items: [
+        {
+          price:
+            plan === 'STARTER'
+              ? env.STRIPE_STARTER_PRICE_ID
+              : env.STRIPE_PRO_PRICE_ID,
+          quantity: 1,
+        },
+        {
+          price:
+            plan === 'STARTER'
+              ? env.STRIPE_STARTER_CHATS_PRICE_ID
+              : env.STRIPE_PRO_CHATS_PRICE_ID,
+        },
+      ],
     })
 
     return session.url

@@ -6,18 +6,11 @@ import {
 } from '@typebot.io/lib'
 import {
   BlockOptions,
-  BlockWithItems,
   BlockWithOptionsType,
   BubbleBlockContent,
   BubbleBlockType,
   DraggableBlock,
   DraggableBlockType,
-  InputBlockType,
-  IntegrationBlockType,
-  Item,
-  ItemType,
-  LogicBlockType,
-  defaultAbTestOptions,
   defaultAudioBubbleContent,
   defaultButtonBubbleContent,
   defaultChatwootOptions,
@@ -49,6 +42,15 @@ import {
   defaultWaitForOptions,
   defaultWaitOptions,
   defaultWebhookOptions,
+  defaultTypebotLinkOptions,
+  zemanticAiDefaultOptions,
+  InputBlockType,
+  LogicBlockType,
+  BlockWithItems,
+  Item,
+  ItemType,
+  defaultAbTestOptions,
+  IntegrationBlockType,
 } from '@typebot.io/schemas'
 import { defaultFileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 import { defaultPictureChoiceOptions } from '@typebot.io/schemas/features/blocks/inputs/pictureChoice'
@@ -145,7 +147,7 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
     case LogicBlockType.JUMP:
       return {}
     case LogicBlockType.TYPEBOT_LINK:
-      return {}
+      return defaultTypebotLinkOptions
     case LogicBlockType.AB_TEST:
       return defaultAbTestOptions
     case IntegrationBlockType.GOOGLE_SHEETS:
@@ -165,6 +167,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return {}
     case IntegrationBlockType.PIXEL:
       return {}
+    case IntegrationBlockType.ZEMANTIC_AI:
+      return zemanticAiDefaultOptions
   }
 
   return {}

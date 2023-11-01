@@ -5,6 +5,7 @@ import { LogicBlockType } from './enums'
 export const valueTypes = [
   'Custom',
   'Empty',
+  'Environment name',
   'User ID',
   'Now',
   'Today',
@@ -13,6 +14,8 @@ export const valueTypes = [
   'Random ID',
   'Moment of the day',
   'Map item with same index',
+  'Phone number',
+  'Contact name',
 ] as const
 
 export const hiddenTypes = ['Today']
