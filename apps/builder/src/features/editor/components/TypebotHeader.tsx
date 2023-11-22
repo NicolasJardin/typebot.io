@@ -1,10 +1,5 @@
 import { EditableEmojiOrImageIcon } from '@/components/EditableEmojiOrImageIcon'
-import {
-  BuoyIcon,
-  ChevronLeftIcon,
-  RedoIcon,
-  UndoIcon,
-} from '@/components/icons'
+import { ChevronLeftIcon, RedoIcon, UndoIcon } from '@/components/icons'
 import { PublishButton } from '@/features/publish/components/PublishButton'
 import { useUndoShortcut } from '@/hooks/useUndoShortcut'
 import { useScopedI18n } from '@/locales'
@@ -224,9 +219,6 @@ export const TypebotHeader = () => {
               />
             </Tooltip>
           </HStack>
-          <Button leftIcon={<BuoyIcon />} size="sm">
-            {scopedT('helpButton.label')}
-          </Button>
         </HStack>
         {isSavingLoading && (
           <HStack>
