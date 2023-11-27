@@ -39,7 +39,8 @@ export const ComparisonItem = ({
         placeholder="Selecione um operador"
       />
       {item.comparisonOperator !== ComparisonOperators.IS_SET &&
-        item.comparisonOperator !== ComparisonOperators.IS_EMPTY && (
+        item.comparisonOperator !== ComparisonOperators.IS_EMPTY &&
+        item.comparisonOperator !== ComparisonOperators.WITHOUT_ANSWER && (
           <TextInput
             defaultValue={item.value ?? ''}
             onChange={handleChangeValue}
@@ -67,6 +68,7 @@ const parseValuePlaceholder = (
       return 'Digite um número...'
     case ComparisonOperators.IS_SET:
     case ComparisonOperators.IS_EMPTY:
+    case ComparisonOperators.WITHOUT_ANSWER:
       return ''
     case ComparisonOperators.MATCHES_REGEX:
     case ComparisonOperators.NOT_MATCH_REGEX:

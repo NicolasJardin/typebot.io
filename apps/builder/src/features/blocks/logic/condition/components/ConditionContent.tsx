@@ -72,6 +72,8 @@ const parseComparisonOperatorSymbol = (
       return 'inícia com'
     case ComparisonOperators.IS_EMPTY:
       return 'está vazio'
+    case ComparisonOperators.WITHOUT_ANSWER:
+      return 'está sem resposta'
     case ComparisonOperators.NOT_CONTAINS:
       return 'não contém'
     case ComparisonOperators.MATCHES_REGEX:
