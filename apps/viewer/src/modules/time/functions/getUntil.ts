@@ -33,5 +33,5 @@ export const getUntil = (options: WaitForOptions) => {
     })
   }
 
-  return date.toString()
+  return date
 }
