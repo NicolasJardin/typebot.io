@@ -42,7 +42,8 @@ export const RowsFilterComparisonItem = ({
         placeholder="Selecione um operador"
       />
       {item.comparisonOperator !== ComparisonOperators.IS_SET &&
-        item.comparisonOperator !== ComparisonOperators.IS_EMPTY && (
+        item.comparisonOperator !== ComparisonOperators.IS_EMPTY &&
+        item.comparisonOperator !== ComparisonOperators.WITHOUT_ANSWER && (
           <TextInput
             defaultValue={item.value ?? ''}
             onChange={handleChangeValue}

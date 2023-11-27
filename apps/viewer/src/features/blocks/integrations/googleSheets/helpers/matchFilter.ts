@@ -67,6 +67,9 @@ const matchComparison = (
     case ComparisonOperators.IS_EMPTY: {
       return !isDefined(inputValue) || inputValue.length === 0
     }
+    case ComparisonOperators.WITHOUT_ANSWER: {
+      return inputValue === 'sem resposta'
+    }
     case ComparisonOperators.STARTS_WITH: {
       if (!inputValue || !value) return false
       return inputValue

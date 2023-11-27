@@ -93,6 +93,9 @@ const executeComparison =
       case ComparisonOperators.IS_EMPTY: {
         return isNotDefined(inputValue) || inputValue.length === 0
       }
+      case ComparisonOperators.WITHOUT_ANSWER: {
+        return inputValue === 'sem resposta'
+      }
       case ComparisonOperators.STARTS_WITH: {
         const startsWith = (a: string | null, b: string | null) => {
           if (b === '' || !b || !a) return false
