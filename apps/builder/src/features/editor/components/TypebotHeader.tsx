@@ -97,7 +97,7 @@ export const TypebotHeader = () => {
         >
           {scopedT('flowButton.label')}
         </Button>
-        <Button
+        {/* <Button
           as={Link}
           href={`/typebots/${typebot?.id}/theme`}
           colorScheme={router.pathname.endsWith('theme') ? 'blue' : 'gray'}
@@ -105,8 +105,8 @@ export const TypebotHeader = () => {
           size="sm"
         >
           {scopedT('themeButton.label')}
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           as={Link}
           href={`/typebots/${typebot?.id}/settings`}
           colorScheme={router.pathname.endsWith('settings') ? 'blue' : 'gray'}
@@ -114,8 +114,8 @@ export const TypebotHeader = () => {
           size="sm"
         >
           {scopedT('settingsButton.label')}
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           as={Link}
           href={`/typebots/${typebot?.id}/share`}
           colorScheme={router.pathname.endsWith('share') ? 'blue' : 'gray'}
@@ -123,7 +123,7 @@ export const TypebotHeader = () => {
           size="sm"
         >
           {scopedT('shareButton.label')}
-        </Button>
+        </Button> */}
 
         {isDefined(publishedTypebot) && (
           <Button
