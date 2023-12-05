@@ -15,7 +15,6 @@ export default async function handler(
     httpOnly: true,
     secure: true,
     domain: domain,
-    path: '/',
   }
 
   const cookie1 = serialize('authId', authWfID, cookieConfig)
