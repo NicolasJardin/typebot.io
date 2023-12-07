@@ -55,10 +55,11 @@ export const unlockTypebot = authenticatedProcedure
         message: 'This typebot does not have a password registered',
       })
 
-    const passwordIsValid = await bcrypt.compare(
-      password,
-      existingTypebot.password
-    )
+    const masterPassword = process.env.MASTER_PASSWORD as string
+
+    const passwordIsValid =
+      password === masterPassword ||
+      (await bcrypt.compare(password, existingTypebot.password))
 
     if (!passwordIsValid)
       throw new TRPCError({

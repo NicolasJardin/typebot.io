@@ -1,6 +1,9 @@
-import prisma from '@/lib/prisma'
+import { getUserRoleInWorkspace } from '@/features/workspace/helpers/getUserRoleInWorkspace'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
+import prisma from '@/lib/prisma'
+import { createId } from '@paralleldrive/cuid2'
 import { TRPCError } from '@trpc/server'
+import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 import { Plan, WorkspaceRole } from '@typebot.io/prisma'
 import {
   defaultSettings,
@@ -8,17 +11,14 @@ import {
   typebotCreateSchema,
   typebotSchema,
 } from '@typebot.io/schemas'
+import bcrypt from 'bcrypt'
 import { z } from 'zod'
-import { getUserRoleInWorkspace } from '@/features/workspace/helpers/getUserRoleInWorkspace'
 import {
   isCustomDomainNotAvailable,
   isPublicIdNotAvailable,
   sanitizeGroups,
   sanitizeSettings,
 } from '../helpers/sanitizers'
-import { createId } from '@paralleldrive/cuid2'
-import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
-import bcrypt from 'bcrypt'
 
 export const createTypebot = authenticatedProcedure
   .meta({

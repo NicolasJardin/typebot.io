@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import { TRPCError } from '@trpc/server'
-import { Typebot, typebotSchema } from '@typebot.io/schemas'
+import { TypebotUpdate, typebotSchema } from '@typebot.io/schemas'
 import { z } from 'zod'
 import { isReadTypebotForbidden } from '../helpers/isReadTypebotForbidden'
 import { omit } from '@typebot.io/lib'
@@ -72,9 +72,11 @@ export const getTypebot = authenticatedProcedure
     }
   })
 
-const parseTypebot = async (typebot: TypebotFromDb): Promise<Typebot> => {
+const parseTypebot = async (typebot: TypebotFromDb): Promise<TypebotUpdate> => {
   const parsedTypebot = typebotSchema.parse(
-    typebot.version !== '5' ? parseInvalidTypebot(typebot as Typebot) : typebot
+    typebot.version !== '5'
+      ? parseInvalidTypebot(typebot as TypebotUpdate)
+      : typebot
   )
   if (['4', '5'].includes(parsedTypebot.version ?? '')) return parsedTypebot
   return migrateTypebotFromV3ToV4(prisma)(parsedTypebot)

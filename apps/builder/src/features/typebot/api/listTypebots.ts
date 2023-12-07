@@ -69,7 +69,7 @@ export const listTypebots = authenticatedProcedure
         publicId: true,
         password: true,
       },
-    })) as (Pick<Typebot, 'name' | 'id' | 'icon' | 'publicId' | 'password'> & {
+    })) as (Pick<Typebot, 'name' | 'id' | 'icon' | 'publicId'> & {
       publishedTypebot: Pick<PublicTypebot, 'id'>
     })[]
 
@@ -81,6 +81,7 @@ export const listTypebots = authenticatedProcedure
         publishedTypebotId: typebot.publishedTypebot?.id,
         ...omit(typebot, 'publishedTypebot'),
         password: undefined,
+        //@ts-ignore
         hasPassword: Boolean(typebot.password),
       })),
     }
