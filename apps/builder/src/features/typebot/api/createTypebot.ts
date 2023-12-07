@@ -18,6 +18,7 @@ import {
 } from '../helpers/sanitizers'
 import { createId } from '@paralleldrive/cuid2'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
+import bcrypt from 'bcrypt'
 
 export const createTypebot = authenticatedProcedure
   .meta({
@@ -68,11 +69,19 @@ export const createTypebot = authenticatedProcedure
         message: 'Public id not available',
       })
 
+    let hashedPassword: string | undefined
+
+    if (typebot.password) {
+      const saltRounds = 10
+
+      hashedPassword = await bcrypt.hash(typebot.password, saltRounds)
+    }
+
     const newTypebot = await prisma.typebot.create({
       data: {
         version: '5',
         workspaceId,
-        name: typebot.name ?? 'My typebot',
+        name: typebot.name ?? 'Meu fluxo',
         icon: typebot.icon,
         selectedThemeTemplateId: typebot.selectedThemeTemplateId,
         groups: typebot.groups
@@ -90,6 +99,7 @@ export const createTypebot = authenticatedProcedure
         resultsTablePreferences: typebot.resultsTablePreferences ?? undefined,
         publicId: typebot.publicId ?? undefined,
         customDomain: typebot.customDomain ?? undefined,
+        password: hashedPassword,
       },
     })
 

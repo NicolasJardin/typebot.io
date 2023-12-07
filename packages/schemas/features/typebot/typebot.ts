@@ -69,6 +69,7 @@ export const typebotSchema = z.object({
   resultsTablePreferences: resultsTablePreferencesSchema.nullable(),
   isArchived: z.boolean(),
   isClosed: z.boolean(),
+  password: z.string().nullable(),
 }) satisfies z.ZodType<TypebotPrisma>
 
 export const typebotCreateSchema = typebotSchema
@@ -85,10 +86,16 @@ export const typebotCreateSchema = typebotSchema
     resultsTablePreferences: true,
     publicId: true,
     customDomain: true,
+    password: true,
   })
   .partial()
 
-export type Typebot = z.infer<typeof typebotSchema>
+export const typebotGetSchema = typebotSchema
+  .omit({ password: true })
+  .merge(z.object({ hasPassword: z.boolean().optional() }))
+
+export type Typebot = z.infer<typeof typebotGetSchema>
+export type TypebotUpdate = z.infer<typeof typebotSchema>
 export type Target = z.infer<typeof targetSchema>
 export type Source = z.infer<typeof sourceSchema>
 export type Edge = z.infer<typeof edgeSchema>

@@ -7,6 +7,7 @@ import { isMobile } from '@/helpers/isMobile'
 import { useToast } from '@/hooks/useToast'
 import { trpc, trpcVanilla } from '@/lib/trpc'
 import { useScopedI18n } from '@/locales'
+import { EnterPasswordModal } from '@/modules/flow'
 import {
   Button,
   Flex,
@@ -14,12 +15,13 @@ import {
   MenuItem,
   Tag,
   Text,
-  useDisclosure,
   VStack,
   WrapItem,
+  useDisclosure,
 } from '@chakra-ui/react'
+import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDebounce } from 'use-debounce'
 import { useTypebotDnd } from '../TypebotDndProvider'
 import { MoreButton } from './MoreButton'
@@ -77,7 +79,30 @@ export const TypebotButton = ({
       },
     })
 
+  const {
+    isOpen: isOpenPasswordModal,
+    onClose: onClosePasswordModal,
+    onOpen: onOpenPasswordModal,
+  } = useDisclosure()
+
+  const currentTypebotToken = useMemo(
+    () => getCookie(`unlock-${typebot?.id}`) as string,
+    [typebot?.id]
+  )
+
+  const { data } = trpc.typebot.verifyIfTypebotIsUnlocked.useQuery(
+    {
+      typebotId: typebot?.id || '',
+      token: currentTypebotToken,
+    },
+    {
+      enabled: Boolean(typebot?.id) && Boolean(currentTypebotToken),
+    }
+  )
+
   const handleTypebotClick = () => {
+    if (typebot.hasPassword && !data?.unlocked) return onOpenPasswordModal()
+
     if (draggedTypebotDebounced) return
     router.push(
       isMobile
@@ -137,6 +162,11 @@ export const TypebotButton = ({
       onMouseDown={onMouseDown}
       cursor="pointer"
     >
+      <EnterPasswordModal
+        isOpen={isOpenPasswordModal}
+        onClose={onClosePasswordModal}
+        typebot={typebot}
+      />
       {typebot.publishedTypebotId && (
         <Tag
           colorScheme="blue"

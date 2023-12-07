@@ -26,7 +26,9 @@ export const getTypebot = authenticatedProcedure
   )
   .output(
     z.object({
-      typebot: typebotSchema,
+      typebot: typebotSchema
+        .omit({ password: true })
+        .merge(z.object({ hasPassword: z.boolean().optional() })),
       isReadOnly: z.boolean(),
     })
   )
@@ -51,7 +53,11 @@ export const getTypebot = authenticatedProcedure
       )
 
       return {
-        typebot: parsedTypebot,
+        typebot: {
+          ...parsedTypebot,
+          password: undefined,
+          hasPassword: Boolean(parsedTypebot.password),
+        },
         isReadOnly:
           existingTypebot.collaborators.find(
             (collaborator) => collaborator.userId === user.id

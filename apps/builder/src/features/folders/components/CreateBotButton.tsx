@@ -2,6 +2,7 @@ import { PlusIcon } from '@/components/icons'
 import { Button, ButtonProps, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { stringify } from 'qs'
+import { useCallback } from 'react'
 
 export const CreateBotButton = ({
   folderId,
@@ -10,13 +11,16 @@ export const CreateBotButton = ({
 }: { folderId?: string; isFirstBot: boolean } & ButtonProps) => {
   const router = useRouter()
 
-  const handleClick = () =>
-    router.push(
-      `/typebots/create?${stringify({
-        isFirstBot: !isFirstBot ? undefined : isFirstBot,
-        folderId,
-      })}`
-    )
+  const handleClick = useCallback(
+    () =>
+      router.push(
+        `/typebots/create?${stringify({
+          isFirstBot: !isFirstBot ? undefined : isFirstBot,
+          folderId,
+        })}`
+      ),
+    [router, folderId, isFirstBot]
+  )
 
   return (
     <Button

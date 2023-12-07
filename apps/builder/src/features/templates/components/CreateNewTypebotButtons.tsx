@@ -3,6 +3,7 @@ import { useUser } from '@/features/account/hooks/useUser'
 import { useWorkspace } from '@/features/workspace/WorkspaceProvider'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/lib/trpc'
+import { CreatePasswordModal } from '@/modules/flow'
 import {
   Button,
   Heading,
@@ -11,7 +12,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
-import { Typebot } from '@typebot.io/schemas'
+import { TypebotUpdate } from '@typebot.io/schemas'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { ImportTypebotFromFileButton } from './ImportTypebotFromFileButton'
@@ -23,6 +24,12 @@ export const CreateNewTypebotButtons = () => {
   const router = useRouter()
   const { isOpen, onClose } = useDisclosure()
 
+  const {
+    isOpen: isOpenPasswordModal,
+    onClose: onClosePasswordModal,
+    onOpen: onOpenPasswordModal,
+  } = useDisclosure()
+
   const [isLoading, setIsLoading] = useState(false)
 
   const { showToast } = useToast()
@@ -33,6 +40,7 @@ export const CreateNewTypebotButtons = () => {
     },
     onError: (error) => {
       showToast({ description: error.message })
+      setIsLoading(false)
     },
     onSuccess: (data) => {
       router.push({
@@ -45,12 +53,9 @@ export const CreateNewTypebotButtons = () => {
             : {},
       })
     },
-    onSettled: () => {
-      setIsLoading(false)
-    },
   })
 
-  const handleCreateSubmit = async (typebot?: Typebot) => {
+  const handleCreateSubmit = async (typebot?: Partial<TypebotUpdate>) => {
     if (!user || !workspace) return
     const folderId = router.query.folderId?.toString() ?? null
     mutate({
@@ -70,6 +75,12 @@ export const CreateNewTypebotButtons = () => {
 
   return (
     <VStack maxW="600px" w="full" flex="1" pt="20" spacing={10}>
+      <CreatePasswordModal
+        isOpen={isOpenPasswordModal}
+        onClose={onClosePasswordModal}
+        onSave={handleCreateSubmit}
+        isLoading={isLoading}
+      />
       <Heading>Criar um novo fluxo</Heading>
       <Stack w="full" spacing={6}>
         <Button
@@ -84,7 +95,7 @@ export const CreateNewTypebotButtons = () => {
               mr="2"
             />
           }
-          onClick={() => handleCreateSubmit()}
+          onClick={onOpenPasswordModal}
           isLoading={isLoading}
         >
           Começar do zero
