@@ -31,11 +31,16 @@
     }
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
+    "builder": "^5.0.0",
     "date-fns-tz": "^2.0.0",
     "mjml": "^4.13.0",
     "mjml-react": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-icons": "^4.7.1",
     "uglify-js": "^3.17.4"
   },

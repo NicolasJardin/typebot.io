@@ -1,6 +1,9 @@
-import prisma from '@/lib/prisma'
+import { getUserRoleInWorkspace } from '@/features/workspace/helpers/getUserRoleInWorkspace'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
+import prisma from '@/lib/prisma'
+import { createId } from '@paralleldrive/cuid2'
 import { TRPCError } from '@trpc/server'
+import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 import { Plan, WorkspaceRole } from '@typebot.io/prisma'
 import {
   defaultSettings,
@@ -8,16 +11,14 @@ import {
   typebotCreateSchema,
   typebotSchema,
 } from '@typebot.io/schemas'
+import bcrypt from 'bcrypt'
 import { z } from 'zod'
-import { getUserRoleInWorkspace } from '@/features/workspace/helpers/getUserRoleInWorkspace'
 import {
   isCustomDomainNotAvailable,
   isPublicIdNotAvailable,
   sanitizeGroups,
   sanitizeSettings,
 } from '../helpers/sanitizers'
-import { createId } from '@paralleldrive/cuid2'
-import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 
 export const createTypebot = authenticatedProcedure
   .meta({
@@ -68,11 +69,19 @@ export const createTypebot = authenticatedProcedure
         message: 'Public id not available',
       })
 
+    let hashedPassword: string | undefined
+
+    if (typebot.password) {
+      const saltRounds = 10
+
+      hashedPassword = await bcrypt.hash(typebot.password, saltRounds)
+    }
+
     const newTypebot = await prisma.typebot.create({
       data: {
         version: '5',
         workspaceId,
-        name: typebot.name ?? 'My typebot',
+        name: typebot.name ?? 'Meu fluxo',
         icon: typebot.icon,
         selectedThemeTemplateId: typebot.selectedThemeTemplateId,
         groups: typebot.groups
@@ -90,6 +99,7 @@ export const createTypebot = authenticatedProcedure
         resultsTablePreferences: typebot.resultsTablePreferences ?? undefined,
         publicId: typebot.publicId ?? undefined,
         customDomain: typebot.customDomain ?? undefined,
+        password: hashedPassword,
       },
     })
 

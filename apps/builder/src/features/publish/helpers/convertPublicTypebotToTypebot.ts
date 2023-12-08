@@ -23,4 +23,5 @@ export const convertPublicTypebotToTypebot = (
   isClosed: existingTypebot.isClosed,
   resultsTablePreferences: existingTypebot.resultsTablePreferences,
   selectedThemeTemplateId: existingTypebot.selectedThemeTemplateId,
+  hasPassword: existingTypebot.hasPassword,
 })

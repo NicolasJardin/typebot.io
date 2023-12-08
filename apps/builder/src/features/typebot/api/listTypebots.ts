@@ -28,7 +28,12 @@ export const listTypebots = authenticatedProcedure
             id: true,
             publicId: true,
           })
-          .merge(z.object({ publishedTypebotId: z.string().optional() }))
+          .merge(
+            z.object({
+              publishedTypebotId: z.string().optional(),
+              hasPassword: z.boolean(),
+            })
+          )
       ),
     })
   )
@@ -62,6 +67,7 @@ export const listTypebots = authenticatedProcedure
         id: true,
         icon: true,
         publicId: true,
+        password: true,
       },
     })) as (Pick<Typebot, 'name' | 'id' | 'icon' | 'publicId'> & {
       publishedTypebot: Pick<PublicTypebot, 'id'>
@@ -74,6 +80,9 @@ export const listTypebots = authenticatedProcedure
       typebots: typebots.map((typebot) => ({
         publishedTypebotId: typebot.publishedTypebot?.id,
         ...omit(typebot, 'publishedTypebot'),
+        password: undefined,
+        //@ts-ignore
+        hasPassword: Boolean(typebot.password),
       })),
     }
   })

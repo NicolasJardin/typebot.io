@@ -37,6 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       collaborators.find((c) => c.userId === user.id)?.type ===
       CollaborationType.READ
     return res.send({
+      //@ts-ignore
       typebot: await migrateTypebot(typebot as Typebot),
       publishedTypebot,
       isReadOnly,
@@ -174,6 +175,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 const migrateTypebot = async (typebot: Typebot): Promise<Typebot> => {
   if (typebot.version === '4') return typebot
+  //@ts-ignore
   return migrateTypebotFromV3ToV4(prisma)(typebot)
 }
 

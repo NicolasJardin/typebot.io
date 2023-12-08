@@ -1,7 +1,7 @@
 import { PrismaClient, Webhook as WebhookFromDb } from '@typebot.io/prisma'
 import {
   Block,
-  Typebot,
+  TypebotUpdate,
   Webhook,
   defaultWebhookAttributes,
 } from '@typebot.io/schemas'
@@ -11,10 +11,10 @@ import { HttpMethod } from '@typebot.io/schemas/features/blocks/integrations/web
 export const migrateTypebotFromV3ToV4 =
   (prisma: PrismaClient) =>
   async (
-    typebot: Typebot
-  ): Promise<Omit<Typebot, 'version'> & { version: '4' }> => {
+    typebot: TypebotUpdate
+  ): Promise<Omit<TypebotUpdate, 'version'> & { version: '4' }> => {
     if (typebot.version === '4')
-      return typebot as Omit<Typebot, 'version'> & { version: '4' }
+      return typebot as Omit<TypebotUpdate, 'version'> & { version: '4' }
     const webhookBlocks = typebot.groups
       .flatMap((group) => group.blocks)
       .filter(isWebhookBlock)
