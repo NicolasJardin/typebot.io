@@ -11,8 +11,8 @@ import {
   typebotCreateSchema,
   typebotSchema,
 } from '@typebot.io/schemas'
-import bcrypt from 'bcrypt'
 import { z } from 'zod'
+import { encryptPassword } from '../helpers/encryptPassword'
 import {
   isCustomDomainNotAvailable,
   isPublicIdNotAvailable,
@@ -71,11 +71,8 @@ export const createTypebot = authenticatedProcedure
 
     let hashedPassword: string | undefined
 
-    if (typebot.password) {
-      const saltRounds = 10
-
-      hashedPassword = await bcrypt.hash(typebot.password, saltRounds)
-    }
+    if (typebot.password)
+      hashedPassword = await encryptPassword(typebot.password)
 
     const newTypebot = await prisma.typebot.create({
       data: {

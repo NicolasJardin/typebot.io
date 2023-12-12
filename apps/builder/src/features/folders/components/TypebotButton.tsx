@@ -7,7 +7,11 @@ import { isMobile } from '@/helpers/isMobile'
 import { useToast } from '@/hooks/useToast'
 import { trpc, trpcVanilla } from '@/lib/trpc'
 import { useScopedI18n } from '@/locales'
-import { EnterPasswordModal } from '@/modules/flow'
+import {
+  ChangePasswordModal,
+  CreatePasswordModal,
+  EnterPasswordModal,
+} from '@/modules/flow'
 import {
   Button,
   Flex,
@@ -21,7 +25,7 @@ import {
 } from '@chakra-ui/react'
 import { getCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useDebounce } from 'use-debounce'
 import { useTypebotDnd } from '../TypebotDndProvider'
 import { MoreButton } from './MoreButton'
@@ -85,6 +89,18 @@ export const TypebotButton = ({
     onOpen: onOpenPasswordModal,
   } = useDisclosure()
 
+  const {
+    isOpen: isOpenCreatePasswordModal,
+    onClose: onCloseCreatePasswordModal,
+    onOpen: onOpenCreatePasswordModal,
+  } = useDisclosure()
+
+  const {
+    isOpen: isOpenChangePasswordModal,
+    onClose: onCloseChangePasswordModal,
+    onOpen: onOpenChangePasswordModal,
+  } = useDisclosure()
+
   const currentTypebotToken = useMemo(
     () => getCookie(`unlock-${typebot?.id}`) as string,
     [typebot?.id]
@@ -99,6 +115,21 @@ export const TypebotButton = ({
       enabled: Boolean(typebot?.id) && Boolean(currentTypebotToken),
     }
   )
+
+  const { mutate: updateTypebot, isLoading: isUpdatingTypebot } =
+    trpc.typebot.updateTypebot.useMutation({
+      onError: (error) => {
+        showToast({ description: error.message })
+      },
+      onSuccess: () => {
+        showToast({
+          description: 'Senha adicionada com sucesso!',
+          status: 'success',
+        })
+        onCloseCreatePasswordModal()
+        onTypebotUpdated()
+      },
+    })
 
   const handleTypebotClick = () => {
     if (typebot.hasPassword && !data?.unlocked) return onOpenPasswordModal()
@@ -147,6 +178,17 @@ export const TypebotButton = ({
     unpublishTypebot({ typebotId: typebot.id })
   }
 
+  const handleChangePasswordClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+
+      if (typebot.hasPassword) return onOpenChangePasswordModal()
+
+      return onOpenCreatePasswordModal()
+    },
+    [typebot.hasPassword, onOpenCreatePasswordModal, onOpenChangePasswordModal]
+  )
+
   return (
     <Button
       as={WrapItem}
@@ -165,6 +207,24 @@ export const TypebotButton = ({
       <EnterPasswordModal
         isOpen={isOpenPasswordModal}
         onClose={onClosePasswordModal}
+        typebot={typebot}
+      />
+
+      <CreatePasswordModal
+        isOpen={isOpenCreatePasswordModal}
+        onClose={onCloseCreatePasswordModal}
+        onSave={(data) =>
+          updateTypebot({
+            typebotId: typebot.id,
+            typebot: { password: data?.password },
+          })
+        }
+        isUpdatingTypebot
+        isLoading={isUpdatingTypebot}
+      />
+      <ChangePasswordModal
+        isOpen={isOpenChangePasswordModal}
+        onClose={onCloseChangePasswordModal}
         typebot={typebot}
       />
       {typebot.publishedTypebotId && (
@@ -203,6 +263,9 @@ export const TypebotButton = ({
                 Cancelar publicação
               </MenuItem>
             )}
+            <MenuItem onClick={handleChangePasswordClick}>
+              {typebot.hasPassword ? 'Editar senha' : 'Adicionar senha'}
+            </MenuItem>
             <MenuItem onClick={handleDuplicateClick}>Duplicar</MenuItem>
             <MenuItem color="red.400" onClick={handleDeleteClick}>
               Deletar

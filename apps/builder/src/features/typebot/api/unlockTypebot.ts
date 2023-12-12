@@ -64,7 +64,7 @@ export const unlockTypebot = authenticatedProcedure
     if (!passwordIsValid)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'Password is invalid',
+        message: 'Senha esta incorreta',
       })
 
     const secretKey = process.env.SECRET_KEY as string
