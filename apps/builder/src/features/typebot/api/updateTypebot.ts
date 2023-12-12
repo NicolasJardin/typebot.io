@@ -12,6 +12,7 @@ import {
 import { isWriteTypebotForbidden } from '../helpers/isWriteTypebotForbidden'
 import { isCloudProdInstance } from '@/helpers/isCloudProdInstance'
 import { Prisma } from '@typebot.io/prisma'
+import { encryptPassword } from '../helpers/encryptPassword'
 
 export const updateTypebot = authenticatedProcedure
   .meta({
@@ -148,6 +149,9 @@ export const updateTypebot = authenticatedProcedure
           customDomain:
             typebot.customDomain === null ? null : typebot.customDomain,
           isClosed: typebot.isClosed,
+          password: typebot.password
+            ? await encryptPassword(typebot.password)
+            : undefined,
         },
       })
 

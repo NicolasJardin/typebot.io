@@ -1,4 +1,7 @@
 import { TextInput } from '@/components/inputs'
+import { TypebotInDashboard } from '@/features/dashboard/types'
+import { useToast } from '@/hooks/useToast'
+import { trpc } from '@/lib/trpc'
 import {
   Button,
   Modal,
@@ -10,21 +13,21 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TypebotUpdate } from '@typebot.io/schemas'
 import { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-type CreatePasswordModalProps = {
+type ChangePasswordModalProps = {
   isOpen: boolean
   onClose: () => void
-  onSave: (typebot?: Partial<TypebotUpdate>) => void
-  isUpdatingTypebot?: boolean
-  isLoading?: boolean
+  typebot: TypebotInDashboard
 }
 
 const schema = z
   .object({
+    currentPassword: z
+      .string()
+      .min(1, { message: 'Campo de preenchimento obrigatório.' }),
     password: z
       .string()
       .min(1, { message: 'Campo de preenchimento obrigatório.' }),
@@ -37,31 +40,48 @@ const schema = z
     path: ['confirmPassword'],
   })
 
-type CreatePasswordModalForm = z.infer<typeof schema>
+type ChangePasswordModalForm = z.infer<typeof schema>
 
-export function CreatePasswordModal({
+export function ChangePasswordModal({
   isOpen,
   onClose,
-  onSave,
-  isLoading,
-  isUpdatingTypebot,
-}: CreatePasswordModalProps) {
-  const { control, handleSubmit } = useForm<CreatePasswordModalForm>({
+  typebot,
+}: ChangePasswordModalProps) {
+  const { control, handleSubmit } = useForm<ChangePasswordModalForm>({
     resolver: zodResolver(schema),
     defaultValues: {
       password: '',
       confirmPassword: '',
+      currentPassword: '',
     },
   })
 
+  const { showToast } = useToast()
+
+  const { mutate: changePassword, isLoading } =
+    trpc.typebot.changePassword.useMutation({
+      onError: (error) => {
+        showToast({ description: error.message })
+      },
+      onSuccess: () => {
+        showToast({
+          description: 'Senha atualizada com sucesso!',
+          status: 'success',
+        })
+        onClose()
+      },
+    })
+
   const onSubmit = useCallback(
     () =>
-      handleSubmit((data) =>
-        onSave({
+      handleSubmit(async (data) =>
+        changePassword({
+          typebotId: typebot.id,
+          currentPassword: data.currentPassword,
           password: data.password,
         })
       )(),
-    [handleSubmit, onSave]
+    [handleSubmit, changePassword, typebot.id]
   )
 
   return (
@@ -75,8 +95,29 @@ export function CreatePasswordModal({
             event.preventDefault()
           }}
         >
-          <ModalHeader>Adicionar uma senha para este fluxo?</ModalHeader>
+          <ModalHeader>Editar senha</ModalHeader>
           <ModalBody sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Controller
+              control={control}
+              name="currentPassword"
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInput
+                  onChange={onChange}
+                  defaultValue={value}
+                  isRequired
+                  helperText={<Text color="red.400">{error?.message}</Text>}
+                  type="password"
+                  label="Senha atual"
+                  placeholder="Digite a senha atual"
+                  withVariableButton={false}
+                  debounceTimeout={0}
+                />
+              )}
+            />
+
             <Controller
               control={control}
               name="password"
@@ -120,18 +161,13 @@ export function CreatePasswordModal({
             />
           </ModalBody>
           <ModalFooter>
-            {!isUpdatingTypebot && (
-              <Button isLoading={isLoading} onClick={() => onSave()}>
-                Pular
-              </Button>
-            )}
             <Button
               type="submit"
               isLoading={isLoading}
               sx={{ ml: 2 }}
               colorScheme="whatsapp"
             >
-              {isUpdatingTypebot ? 'Adicionar senha' : 'Cadastrar com senha'}
+              Alterar senha
             </Button>
           </ModalFooter>
         </form>
