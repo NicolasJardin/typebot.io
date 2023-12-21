@@ -116,6 +116,27 @@ export const executeGroup =
           continue
         }
 
+        case LogicBlockType.TEMPLATE: {
+          messages.push({
+            content: {
+              device: {
+                id: block.options.device?.id,
+                name: block.options.device?.name,
+              },
+              template: {
+                id: block.options.template?.id,
+                name: block.options.template?.name,
+              },
+            },
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+        }
+
         case LogicBlockType.WAIT:
           messages.push({
             content: block.options,

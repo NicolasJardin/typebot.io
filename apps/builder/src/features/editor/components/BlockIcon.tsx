@@ -47,6 +47,7 @@ import { BiShuffle } from 'react-icons/bi'
 import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
 import { TbFiles } from 'react-icons/tb'
+import { LuLayoutTemplate } from 'react-icons/lu'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
@@ -121,6 +122,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <Icon as={BsDoorClosed} color={purple} {...props} />
     case LogicBlockType.AB_TEST:
       return <AbTestIcon color={purple} {...props} />
+    case LogicBlockType.TEMPLATE:
+      return <Icon as={LuLayoutTemplate} color={purple} {...props} />
     case IntegrationBlockType.GOOGLE_SHEETS:
       return <GoogleSheetsLogo {...props} />
     case IntegrationBlockType.GOOGLE_ANALYTICS:

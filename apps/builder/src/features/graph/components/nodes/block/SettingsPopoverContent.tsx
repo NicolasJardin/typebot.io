@@ -31,6 +31,7 @@ import TransferSettings from '@/features/blocks/logic/transfer/components/Transf
 import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink/components/TypebotLinkForm'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
 import WaitForSettings from '@/features/blocks/logic/waitFor/components/WaitForSettings'
+import TemplateSettings from '@/features/blocks/logic/template/components/TemplateSettings'
 import {
   Flex,
   PopoverArrow,
@@ -306,6 +307,15 @@ export const BlockSettings = ({
           onOptionsChange={updateOptions}
         />
       )
+
+    case LogicBlockType.TEMPLATE:
+      return (
+        <TemplateSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+
     case InputBlockType.WAIT_FOR:
       return (
         <WaitForSettings

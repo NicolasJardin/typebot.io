@@ -12,4 +12,5 @@ export enum LogicBlockType {
   END = 'End',
   JUMP = 'Jump',
   AB_TEST = 'AB test',
+  TEMPLATE = 'TemplateWABA',
 }

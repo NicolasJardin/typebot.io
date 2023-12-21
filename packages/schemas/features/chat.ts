@@ -120,6 +120,20 @@ const spreadMessageSchema = z.object({
   content: spreadOptionsSchema,
 })
 
+const templateMessageSchema = z.object({
+  type: z.enum([LogicBlockType.TEMPLATE]),
+  content: z.object({
+    device: z.object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    }),
+    template: z.object({
+      id: z.string().optional(),
+      name: z.string().optional(),
+    }),
+  }),
+})
+
 const waitMessageSchema = z.object({
   type: z.enum([LogicBlockType.WAIT]),
   content: waitOptionsSchema,
@@ -176,6 +190,7 @@ const chatMessageSchema = z
       .or(buttonMessageSchema)
       .or(endMessageSchema)
       .or(spreadMessageSchema)
+      .or(templateMessageSchema)
   )
 
 const scriptToExecuteSchema = z.object({
