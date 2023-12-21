@@ -49,6 +49,7 @@ import {
   defaultWaitForOptions,
   defaultWaitOptions,
   defaultWebhookOptions,
+  defaultTemplateOptions,
 } from '@typebot.io/schemas'
 import { defaultFileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 import { defaultPictureChoiceOptions } from '@typebot.io/schemas/features/blocks/inputs/pictureChoice'
@@ -142,6 +143,8 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultTransferOptions
     case LogicBlockType.SPREAD:
       return defaultSpreadOptions
+    case LogicBlockType.TEMPLATE:
+      return defaultTemplateOptions
     case LogicBlockType.JUMP:
       return {}
     case LogicBlockType.TYPEBOT_LINK:

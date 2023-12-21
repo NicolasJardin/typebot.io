@@ -146,6 +146,11 @@ export const BlocksSideBar = () => {
               onMouseDown={handleMouseDown}
             />
 
+            <BlockCard
+              type={LogicBlockType.TEMPLATE}
+              onMouseDown={handleMouseDown}
+            />
+
             {/* <BlockCard
               type={BubbleBlockType.BUTTON}
               onMouseDown={handleMouseDown}

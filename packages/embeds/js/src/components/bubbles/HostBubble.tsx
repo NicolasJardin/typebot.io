@@ -8,6 +8,7 @@ import FileBubble from '@/features/blocks/bubbles/file/components/FileBubble'
 import { ImageBubble } from '@/features/blocks/bubbles/image'
 import SpreadBubble from '@/features/blocks/bubbles/spread/components/SpreadBubble'
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
+import TemplateBubble from '@/features/blocks/bubbles/template/components/TemplateBubble'
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
@@ -22,6 +23,7 @@ import {
   RemoveTagOptions,
   SpreadOptions,
   TagOptions,
+  TemplateOptions,
   TransferOptions,
   TypingEmulation,
   VideoBubbleContent,
@@ -76,7 +78,7 @@ export const HostBubble = (props: Props) => {
           <AudioBubble
             content={props.message.content as AudioBubbleContent}
             onTransitionEnd={onTransitionEnd}
-        />
+          />
         )
       case BubbleBlockType.FILE:
         return (
@@ -139,6 +141,15 @@ export const HostBubble = (props: Props) => {
         return (
           <SpreadBubble
             options={props.message.content as SpreadOptions}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.TEMPLATE:
+        return (
+          <TemplateBubble
+            options={props.message.content as TemplateOptions}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />

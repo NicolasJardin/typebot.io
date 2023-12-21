@@ -54,6 +54,7 @@ import {
 } from '@typebot.io/schemas'
 import { ItemNodesList } from '../item/ItemNodesList'
 import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
+import TemplateNodeContent from '@/features/blocks/logic/template/components/TemplateNodeContent'
 // import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 
 type Props = {
@@ -175,6 +176,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.SPREAD:
       return <SpreadNodeContent options={block.options} />
+
+    case LogicBlockType.TEMPLATE:
+      return <TemplateNodeContent options={block.options} />
 
     case LogicBlockType.TAG:
       return <TagNodeContent options={block.options} />
