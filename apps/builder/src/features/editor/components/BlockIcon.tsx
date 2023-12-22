@@ -123,7 +123,7 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
     case LogicBlockType.AB_TEST:
       return <AbTestIcon color={purple} {...props} />
     case LogicBlockType.TEMPLATE:
-      return <Icon as={LuLayoutTemplate} color={purple} {...props} />
+      return <Icon as={LuLayoutTemplate} color={blue} {...props} />
     case IntegrationBlockType.GOOGLE_SHEETS:
       return <GoogleSheetsLogo {...props} />
     case IntegrationBlockType.GOOGLE_ANALYTICS:
