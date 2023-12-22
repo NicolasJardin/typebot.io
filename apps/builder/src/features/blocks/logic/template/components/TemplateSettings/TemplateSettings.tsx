@@ -71,14 +71,14 @@ export default function TemplateSettings({ options, onOptionsChange }: Props) {
 
       {Boolean(options?.device) && (
         <FormControl>
-          <FormLabel>Templates:</FormLabel>
+          <FormLabel>Modelos:</FormLabel>
 
           <Select
             placeholder={
               (templatesData?.templates &&
                 templatesData?.templates.length > 0) ||
               isFetchingTemplates
-                ? 'Selecione o template'
+                ? 'Selecione o modelo'
                 : 'Sem resultados'
             }
             icon={isFetchingTemplates ? <Spinner /> : undefined}

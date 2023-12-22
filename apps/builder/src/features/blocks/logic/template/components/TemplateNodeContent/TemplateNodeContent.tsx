@@ -17,8 +17,8 @@ export default function TemplateNodeContent({
   return (
     <Text color={hasValues ? 'currentcolor' : 'gray.500'}>
       {hasValues
-        ? `Dispositivo ${device?.name} | Template ${template?.name}`
-        : 'Selecione um template'}
+        ? `Dispositivo ${device?.name} | Modelo ${template?.name}`
+        : 'Selecione um modelo'}
     </Text>
   )
 }
