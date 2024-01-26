@@ -30,7 +30,7 @@ import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 type Props = {
   defaultTagName?: string
   autoFocus?: boolean
-  onSelectTag: (tag: TagOptions) => void
+  onSelectTag: (tag: TagOptions & { id?: string }) => void
 } & InputProps
 
 export const TagSearchInput = ({
@@ -40,12 +40,6 @@ export const TagSearchInput = ({
   ...inputProps
 }: Props) => {
   const { data, refetch, isFetching } = useGetTags()
-  const { mutateAsync: createTag } = useCreateTag({
-    onSuccess: () => {
-      refetch()
-    },
-  })
-
   const tags = useMemo(() => data || [], [data])
 
   const bg = useColorModeValue('gray.200', 'gray.700')
@@ -60,6 +54,21 @@ export const TagSearchInput = ({
   const createTagItemRef = useRef<HTMLButtonElement | null>(null)
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([])
   const { ref: parentModalRef } = useParentModal()
+
+  const { mutateAsync: createTag } = useCreateTag({
+    onSuccess: async () => {
+      await refetch().then((response) => {
+        const newTag = response?.data?.find((tag) => tag.name === inputValue)
+
+        if (newTag)
+          onSelectTag({
+            id: newTag.id,
+            color: newTag.color,
+            name: newTag.name,
+          })
+      })
+    },
+  })
 
   useOutsideClick({
     ref: dropdownRef,
@@ -97,8 +106,9 @@ export const TagSearchInput = ({
 
   const handleCreateNewTagClick = () => {
     if (!inputValue || inputValue === '') return
-    onSelectTag({ name: inputValue, color: '#808080' })
+
     createTag({ name: inputValue, color: '#808080' })
+
     inputRef.current?.blur()
     onClose()
   }
