@@ -247,10 +247,10 @@ export const BlocksSideBar = () => {
             Integrações
           </Text>
           <SimpleGrid columns={2} spacing="3">
-            <BlockCard
+            {/* <BlockCard
               type={IntegrationBlockType.GOOGLE_SHEETS}
               onMouseDown={handleMouseDown}
-            />
+            /> */}
 
             <BlockCard
               type={IntegrationBlockType.GOOGLE_ANALYTICS}
