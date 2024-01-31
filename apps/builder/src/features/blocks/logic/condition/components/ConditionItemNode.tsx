@@ -163,5 +163,7 @@ export const parseComparisonOperatorSymbol = (
       return 'corresponde'
     case ComparisonOperators.NOT_MATCH_REGEX:
       return 'não corresponde'
+    case ComparisonOperators.CONTAINS_TAG:
+      return 'contém tag'
   }
 }

@@ -80,5 +80,7 @@ const parseComparisonOperatorSymbol = (
       return 'Corresponde'
     case ComparisonOperators.NOT_MATCH_REGEX:
       return 'Não corresponde'
+    case ComparisonOperators.CONTAINS_TAG:
+      return 'contém tag'
   }
 }

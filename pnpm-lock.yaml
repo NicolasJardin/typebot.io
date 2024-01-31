@@ -23,6 +23,9 @@ importers:
       date-fns-tz:
         specifier: ^2.0.0
         version: 2.0.0(date-fns@2.30.0)
+      jwt-decode:
+        specifier: ^3.1.2
+        version: 3.1.2
       mjml:
         specifier: ^4.13.0
         version: 4.14.1
@@ -44,6 +47,9 @@ importers:
       uglify-js:
         specifier: ^3.17.4
         version: 3.17.4
+      viewer:
+        specifier: ^0.10.11
+        version: 0.10.11
     devDependencies:
       cross-env:
         specifier: 7.0.3
@@ -23189,6 +23195,10 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
+    dev: false
+
+  /viewer@0.10.11:
+    resolution: {integrity: sha512-9LktU/+YqC/vlWZPklZIZnCLv7WZGEMczU0Gw2JnWO4j0iMmp3qQG34upYoSziTQ3gnfO6IqKAsVi3mA7zy12Q==}
     dev: false
 
   /vite-tsconfig-paths@4.2.1(typescript@5.1.6)(vite@4.5.1):

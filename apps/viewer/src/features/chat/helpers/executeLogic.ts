@@ -20,7 +20,7 @@ export const executeLogic =
       case LogicBlockType.SET_VARIABLE:
         return executeSetVariable(state, block)
       case LogicBlockType.CONDITION:
-        return executeConditionBlock(state, block)
+        return await executeConditionBlock(state, block)
       case LogicBlockType.REDIRECT:
         return executeRedirect(state, block)
       case LogicBlockType.SCRIPT:

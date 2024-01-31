@@ -1,6 +1,7 @@
 import { findUniqueVariableValue } from '@/features/variables/findUniqueVariableValue'
 import { parseVariables } from '@/features/variables/parseVariables'
-import { isNotDefined, isDefined } from '@typebot.io/lib'
+import { FindTagsInContactResponse } from '@/features/whatsflow/types'
+import { isNotDefined, isDefined, sendRequest } from '@typebot.io/lib'
 import {
   Comparison,
   ComparisonOperators,
@@ -11,10 +12,17 @@ import {
 
 export const executeCondition =
   (variables: Variable[]) =>
-  (condition: Condition): boolean =>
-    condition.logicalOperator === LogicalOperator.AND
-      ? condition.comparisons.every(executeComparison(variables))
-      : condition.comparisons.some(executeComparison(variables))
+  async (condition: Condition): Promise<boolean> => {
+    const results = await Promise.all(
+      condition.comparisons.map(
+        async (comparision) => await executeComparison(variables)(comparision)
+      )
+    )
+
+    return condition.logicalOperator === LogicalOperator.AND
+      ? results.every((value) => value)
+      : results.some((value) => value)
+  }
 
 const clear = (value: string | null) => {
   if (!value) return ''
@@ -33,7 +41,7 @@ const clear = (value: string | null) => {
 
 const executeComparison =
   (variables: Variable[]) =>
-  (comparison: Comparison): boolean => {
+  async (comparison: Comparison): Promise<boolean> => {
     if (!comparison?.variableId) return false
     const inputValue =
       variables.find((v) => v.id === comparison.variableId)?.value ?? null
@@ -43,6 +51,7 @@ const executeComparison =
         : findUniqueVariableValue(variables)(comparison.value) ??
           parseVariables(variables)(comparison.value)
     if (isNotDefined(comparison.comparisonOperator)) return false
+
     switch (comparison.comparisonOperator) {
       case ComparisonOperators.CONTAINS: {
         const contains = (a: string | null, b: string | null) => {
@@ -129,6 +138,20 @@ const executeComparison =
           return !new RegExp(b).test(a)
         }
         return compare(matchesRegex, inputValue, value)
+      }
+      case ComparisonOperators.CONTAINS_TAG: {
+        const chatId = variables.find(({ name }) => name === 'chatId')?.id
+
+        if (!chatId) return false
+
+        const response = await sendRequest<FindTagsInContactResponse>({
+          url: `${process.env.NEXT_PUBLIC_VIEWER_URL}/api/whatsflow/find-tags-in-contact/${chatId}`,
+          method: 'GET',
+        })
+
+        const tags = response.data?.tags || []
+
+        return tags.some((tag) => tag.tagUuid === value)
       }
     }
   }
