@@ -12,10 +12,11 @@ import {
 
 export const executeCondition =
   (variables: Variable[]) =>
-  async (condition: Condition): Promise<boolean> => {
+  async (condition: Condition, typebotId?: string): Promise<boolean> => {
     const results = await Promise.all(
       condition.comparisons.map(
-        async (comparision) => await executeComparison(variables)(comparision)
+        async (comparision) =>
+          await executeComparison(variables)(comparision, typebotId)
       )
     )
 
@@ -41,7 +42,7 @@ const clear = (value: string | null) => {
 
 const executeComparison =
   (variables: Variable[]) =>
-  async (comparison: Comparison): Promise<boolean> => {
+  async (comparison: Comparison, typebotId?: string): Promise<boolean> => {
     if (!comparison?.variableId) return false
     const inputValue =
       variables.find((v) => v.id === comparison.variableId)?.value ?? null
@@ -140,18 +141,18 @@ const executeComparison =
         return compare(matchesRegex, inputValue, value)
       }
       case ComparisonOperators.CONTAINS_TAG: {
-        const chatId = variables.find(({ name }) => name === 'chatId')?.id
+        const chatId = variables.find(({ name }) => name === 'chatId')?.value
 
-        if (!chatId) return false
+        if (!chatId || !typebotId) return false
 
         const response = await sendRequest<FindTagsInContactResponse>({
-          url: `${process.env.NEXT_PUBLIC_VIEWER_URL}/api/whatsflow/find-tags-in-contact/${chatId}`,
+          url: `${process.env.NEXT_PUBLIC_VIEWER_URL}/api/whatsflow/find-tags-in-contact/${typebotId}/${chatId}`,
           method: 'GET',
         })
 
         const tags = response.data?.tags || []
 
-        return tags.some((tag) => tag.tagUuid === value)
+        return tags.some((tag) => tag.title === value)
       }
     }
   }
