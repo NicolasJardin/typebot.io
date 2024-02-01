@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (isNotDefined(userId))
       return res.status(404).send({ message: 'User not found' })
 
-    const url = `https://api.whatsflow.com.br/v1/find-tags-in-contact/${userId}/${chatId}`
+    const url = `${process.env.WHATSFLOW_API_URL}/find-tags-in-contact/${userId}/${chatId}`
 
     const response = await fetch(url, {
       headers: {
@@ -18,7 +18,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     })
 
-    res.status(200).json(await response.json())
+    const data = await response.json()
+
+    return res.status(200).json(data)
   }
   return methodNotAllowed(res)
 }
