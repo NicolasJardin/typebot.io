@@ -39,11 +39,13 @@ export const ComparisonItem = ({
 
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
-      <VariableSearchInput
-        initialVariableId={item.variableId}
-        onSelectVariable={handleSelectVariable}
-        placeholder="Pesquisar uma variável"
-      />
+      {item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG && (
+        <VariableSearchInput
+          initialVariableId={item.variableId}
+          onSelectVariable={handleSelectVariable}
+          placeholder="Pesquisar uma variável"
+        />
+      )}
       <DropdownList
         currentItem={item.comparisonOperator}
         onItemSelect={handleSelectComparisonOperator}
@@ -63,7 +65,7 @@ export const ComparisonItem = ({
 
       {item.comparisonOperator === ComparisonOperators.CONTAINS_TAG && (
         <TagSearchInput
-          onSelectTag={(tag) => handleChangeValue(tag.id!)}
+          onSelectTag={(tag) => handleChangeValue(tag.name!)}
           defaultTagName={item.value ?? ''}
           id="tag-search"
         />
