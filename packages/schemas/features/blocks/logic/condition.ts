@@ -12,6 +12,7 @@ export enum LogicalOperator {
 export enum ComparisonOperators {
   EQUAL = 'Igual a',
   NOT_EQUAL = 'Não igual',
+  CONTAINS_TAG = 'Contém tag',
   CONTAINS = 'Contém',
   NOT_CONTAINS = 'Não Contém',
   GREATER = 'Maior que',
@@ -23,7 +24,6 @@ export enum ComparisonOperators {
   ENDS_WITH = 'Termina com',
   MATCHES_REGEX = 'Corresponde ao regex',
   NOT_MATCH_REGEX = 'Não corresponde ao regex',
-  CONTAINS_TAG = 'Contém tag',
 }
 
 const comparisonSchema = z.object({
