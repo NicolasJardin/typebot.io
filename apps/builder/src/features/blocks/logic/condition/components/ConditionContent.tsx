@@ -25,11 +25,13 @@ export const ConditionContent = ({
             {idx > 0 && (
               <Text fontSize={size}>{condition.logicalOperator ?? ''}</Text>
             )}
-            {variable?.name && (
-              <Tag bgColor="orange.400" color="white" size="sm">
-                {variable.name}
-              </Tag>
-            )}
+            {variable?.name &&
+              comparison.comparisonOperator !==
+                ComparisonOperators.CONTAINS_TAG && (
+                <Tag bgColor="orange.400" color="white" size="sm">
+                  {variable.name}
+                </Tag>
+              )}
             {comparison.comparisonOperator && (
               <Text fontSize={size}>
                 {parseComparisonOperatorSymbol(comparison.comparisonOperator)}
