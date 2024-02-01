@@ -1,10 +1,10 @@
 import { getUserRoleInWorkspace } from '@/features/workspace/helpers/getUserRoleInWorkspace'
 import { authenticatedProcedure } from '@/helpers/server/trpc'
 import prisma from '@/lib/prisma'
-import { createId } from '@paralleldrive/cuid2'
 import { TRPCError } from '@trpc/server'
 import { sendTelemetryEvents } from '@typebot.io/lib/telemetry/sendTelemetryEvent'
 import { Plan, WorkspaceRole } from '@typebot.io/prisma'
+import { createId } from '@paralleldrive/cuid2'
 import {
   defaultSettings,
   defaultTheme,
@@ -74,6 +74,10 @@ export const createTypebot = authenticatedProcedure
     if (typebot.password)
       hashedPassword = await encryptPassword(typebot.password)
 
+    const id = 'v' + createId()
+
+    const defaultVariables = [{ id, name: 'chatId' }]
+
     const newTypebot = await prisma.typebot.create({
       data: {
         version: '5',
@@ -91,7 +95,9 @@ export const createTypebot = authenticatedProcedure
               isBrandingEnabled: workspace.plan === Plan.FREE,
             }),
         folderId: typebot.folderId,
-        variables: typebot.variables ?? [],
+        variables: typebot.variables
+          ? typebot.variables.concat(defaultVariables)
+          : defaultVariables,
         edges: typebot.edges ?? [],
         resultsTablePreferences: typebot.resultsTablePreferences ?? undefined,
         publicId: typebot.publicId ?? undefined,
