@@ -1,19 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { isNotDefined } from '@typebot.io/lib'
 import { methodNotAllowed } from '@typebot.io/lib/api'
-import jwt_decode from 'jwt-decode'
 import { FindTagsInContactResponse } from '@/features/whatsflow/types'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
-    const user = jwt_decode<{ id: string }>(
-      process.env.TOKEN_WHATSFLOW as string
-    )
-
-    if (isNotDefined(user))
-      return res.status(404).send({ message: 'User not found' })
-
-    const url = `https://api.whatsflow.com.br/v1/find-tags-in-contact/${user.id}/${req.query.chatId}`
+    const url = `${process.env.WHATSFLOW_API_URL}/find-tags-in-contact/[ID DA CONTA DO TYPEBOT]/[VARIAVEL {{chatId}} DO FLUXO]`
 
     const response = await fetch(url, {
       headers: {
@@ -21,7 +12,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     })
 
-    res.status(200).json(response.json() as Promise<FindTagsInContactResponse>)
+    const data = await response.json()
+
+    return res.status(200).json(data as Promise<FindTagsInContactResponse>)
   }
   return methodNotAllowed(res)
 }
