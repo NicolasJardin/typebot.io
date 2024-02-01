@@ -1,3 +1,4 @@
+import { getUserByTypebotId } from '@/helpers/getUserByTypebotId'
 import { isNotDefined } from '@typebot.io/lib'
 import { methodNotAllowed } from '@typebot.io/lib/api'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -5,12 +6,14 @@ import { NextApiRequest, NextApiResponse } from 'next'
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const chatId = req.query.chatId
-    const userId = req.query.userId
+    const typebotId = req.query.typebotId as string
 
-    if (isNotDefined(userId))
+    const user = await getUserByTypebotId(typebotId)
+
+    if (isNotDefined(user))
       return res.status(404).send({ message: 'User not found' })
 
-    const url = `${process.env.WHATSFLOW_API_URL}/find-tags-in-contact/${userId}/${chatId}`
+    const url = `${process.env.WHATSFLOW_API_URL}/find-tags-in-contact/${user.id}/${chatId}`
 
     const response = await fetch(url, {
       headers: {
