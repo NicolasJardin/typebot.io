@@ -49,7 +49,11 @@ export const ComparisonItem = ({
       <DropdownList
         currentItem={item.comparisonOperator}
         onItemSelect={handleSelectComparisonOperator}
-        items={Object.values(ComparisonOperators)}
+        items={Object.values(ComparisonOperators).filter(
+          (comparision) =>
+            comparision !== ComparisonOperators.IS_EMPTY &&
+            comparision !== ComparisonOperators.IS_SET
+        )}
         placeholder="Selecione um operador"
       />
       {item.comparisonOperator !== ComparisonOperators.IS_SET &&
