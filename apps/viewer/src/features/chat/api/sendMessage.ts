@@ -22,7 +22,7 @@ import {
   Variable,
   VariableWithValue,
   chatReplySchema,
-  sendMessageInputSchema
+  sendMessageInputSchema,
 } from '@typebot.io/schemas'
 import { NodeType, parse } from 'node-html-parser'
 import { continueBotFlow } from '../helpers/continueBotFlow'
@@ -47,7 +47,13 @@ export const sendMessage = publicProcedure
   .output(chatReplySchema)
   .mutation(
     async ({
-      input: { sessionId, message, startParams, clientLogs },
+      input: {
+        sessionId,
+        message,
+        startParams,
+        clientLogs,
+        prefilledVariables,
+      },
       ctx: { user },
     }) => {
       const session = sessionId ? await getSession(sessionId) : null
@@ -80,6 +86,37 @@ export const sendMessage = publicProcedure
           clientSideActions,
         }
       } else {
+        let sessionState = session.state
+
+        if (prefilledVariables) {
+          const prefilledVariablesResult = prefillVariables(
+            sessionState.typebot.variables,
+            prefilledVariables
+          )
+
+          const result = await getResult({
+            typebotId: sessionState.typebot.id,
+            prefilledVariables: prefilledVariablesResult,
+            isRememberUserEnabled: true,
+          })
+
+          const variables =
+            result && result.variables.length > 0
+              ? injectVariablesFromExistingResult(
+                  prefilledVariablesResult,
+                  result.variables
+                )
+              : prefilledVariablesResult
+
+          sessionState = {
+            ...session.state,
+            typebot: {
+              ...session.state.typebot,
+              variables,
+            },
+          }
+        }
+
         const {
           messages,
           input,
@@ -87,7 +124,7 @@ export const sendMessage = publicProcedure
           newSessionState,
           logs,
           lastMessageNewFormat,
-        } = await continueBotFlow(session.state)(message)
+        } = await continueBotFlow(sessionState)(message)
 
         const allLogs = clientLogs ? [...(logs ?? []), ...clientLogs] : logs
 
