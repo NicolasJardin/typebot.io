@@ -47,7 +47,13 @@ export const sendMessage = publicProcedure
   .output(chatReplySchema)
   .mutation(
     async ({
-      input: { sessionId, message, startParams, clientLogs },
+      input: {
+        sessionId,
+        message,
+        startParams,
+        clientLogs,
+        prefilledVariables,
+      },
       ctx: { user },
     }) => {
       const session = sessionId ? await getSession(sessionId) : null
@@ -82,36 +88,25 @@ export const sendMessage = publicProcedure
       } else {
         let sessionState = session.state
 
-        if (startParams) {
-          const typebot = await getTypebot(startParams, user?.id)
-
-          const prefilledVariables = startParams.prefilledVariables
-            ? prefillVariables(
-                typebot.variables,
-                startParams.prefilledVariables
-              )
-            : typebot.variables
+        if (prefilledVariables) {
+          const prefilledVariablesResult = prefillVariables(
+            sessionState.typebot.variables,
+            prefilledVariables
+          )
 
           const result = await getResult({
-            ...startParams,
-            isPreview:
-              startParams.isPreview || typeof startParams.typebot !== 'string',
-            typebotId: typebot.id,
-            prefilledVariables,
-            isRememberUserEnabled:
-              typebot.settings.general.rememberUser?.isEnabled ??
-              (isDefined(typebot.settings.general.isNewResultOnRefreshEnabled)
-                ? !typebot.settings.general.isNewResultOnRefreshEnabled
-                : false),
+            typebotId: sessionState.typebot.id,
+            prefilledVariables: prefilledVariablesResult,
+            isRememberUserEnabled: true,
           })
 
           const variables =
             result && result.variables.length > 0
               ? injectVariablesFromExistingResult(
-                  prefilledVariables,
+                  prefilledVariablesResult,
                   result.variables
                 )
-              : prefilledVariables
+              : prefilledVariablesResult
 
           sessionState = {
             ...session.state,
