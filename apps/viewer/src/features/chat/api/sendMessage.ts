@@ -22,7 +22,7 @@ import {
   Variable,
   VariableWithValue,
   chatReplySchema,
-  sendMessageInputSchema
+  sendMessageInputSchema,
 } from '@typebot.io/schemas'
 import { NodeType, parse } from 'node-html-parser'
 import { continueBotFlow } from '../helpers/continueBotFlow'
@@ -80,6 +80,48 @@ export const sendMessage = publicProcedure
           clientSideActions,
         }
       } else {
+        let sessionState = session.state
+
+        if (startParams) {
+          const typebot = await getTypebot(startParams, user?.id)
+
+          const prefilledVariables = startParams.prefilledVariables
+            ? prefillVariables(
+                typebot.variables,
+                startParams.prefilledVariables
+              )
+            : typebot.variables
+
+          const result = await getResult({
+            ...startParams,
+            isPreview:
+              startParams.isPreview || typeof startParams.typebot !== 'string',
+            typebotId: typebot.id,
+            prefilledVariables,
+            isRememberUserEnabled:
+              typebot.settings.general.rememberUser?.isEnabled ??
+              (isDefined(typebot.settings.general.isNewResultOnRefreshEnabled)
+                ? !typebot.settings.general.isNewResultOnRefreshEnabled
+                : false),
+          })
+
+          const variables =
+            result && result.variables.length > 0
+              ? injectVariablesFromExistingResult(
+                  prefilledVariables,
+                  result.variables
+                )
+              : prefilledVariables
+
+          sessionState = {
+            ...session.state,
+            typebot: {
+              ...session.state.typebot,
+              variables,
+            },
+          }
+        }
+
         const {
           messages,
           input,
@@ -87,7 +129,7 @@ export const sendMessage = publicProcedure
           newSessionState,
           logs,
           lastMessageNewFormat,
-        } = await continueBotFlow(session.state)(message)
+        } = await continueBotFlow(sessionState)(message)
 
         const allLogs = clientLogs ? [...(logs ?? []), ...clientLogs] : logs
 
