@@ -1,16 +1,29 @@
 import useGetDevices from '@/whatsflow/api/template/queries/useGetDevices'
 import useGetTemplates from '@/whatsflow/api/template/queries/useGetTemplates'
-import { FormControl, FormLabel, Stack } from '@chakra-ui/react'
-import { Device, Template, TemplateOptions } from '@typebot.io/schemas'
+import {
+  FormControl,
+  FormLabel,
+  Select,
+  Spinner,
+  Stack,
+} from '@chakra-ui/react'
+import { Device, Template, TemplateOptions, Typebot } from '@typebot.io/schemas'
 import { useCallback } from 'react'
-import { Select, Spinner } from '@chakra-ui/react'
+import { TemplateSettingsInput } from './TemplateSettingsInput'
 
 type Props = {
   options: TemplateOptions
   onOptionsChange: (options: TemplateOptions) => void
+  typebot: Typebot
+  blockId: string
 }
 
-export default function TemplateSettings({ options, onOptionsChange }: Props) {
+export default function TemplateSettings({
+  options,
+  onOptionsChange,
+  typebot,
+  blockId,
+}: Props) {
   const { data: devicesData, isFetching: isFetchingDevices } = useGetDevices()
   const { data: templatesData, isFetching: isFetchingTemplates } =
     useGetTemplates(options.device?.id, {
@@ -22,6 +35,7 @@ export default function TemplateSettings({ options, onOptionsChange }: Props) {
       onOptionsChange({
         device,
         template: null,
+        placeholders: [],
       }),
     [onOptionsChange]
   )
@@ -31,9 +45,30 @@ export default function TemplateSettings({ options, onOptionsChange }: Props) {
       onOptionsChange({
         ...options,
         template,
+        placeholders: [],
       }),
     [onOptionsChange, options]
   )
+
+  const data = [
+    {
+      type: 'image',
+      placeholder: 'Imagem kkkk',
+    },
+    { type: 'video', placeholder: 'Videozinho' },
+    { type: 'document', placeholder: 'Docs' },
+    {
+      placeholder: 'Variavel 2',
+    },
+    {
+      placeholder: 'Variavel 3',
+    },
+  ]
+
+  console.log({
+    data,
+    teste: options?.placeholders,
+  })
 
   return (
     <Stack spacing={4}>
@@ -105,6 +140,22 @@ export default function TemplateSettings({ options, onOptionsChange }: Props) {
           </Select>
         </FormControl>
       )}
+
+      {Boolean(options?.template) &&
+        data.map(({ placeholder, type }, index) => (
+          <FormControl key={placeholder}>
+            <FormLabel>{placeholder}</FormLabel>
+            <TemplateSettingsInput
+              index={index}
+              options={options}
+              onOptionsChange={onOptionsChange}
+              placeholder={placeholder}
+              typebot={typebot}
+              blockId={blockId}
+              type={type}
+            />
+          </FormControl>
+        ))}
     </Stack>
   )
 }

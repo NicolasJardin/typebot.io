@@ -288,6 +288,7 @@ export const BlockNode = ({
           {hasSettingsPopover(block) && (
             <>
               <SettingsPopoverContent
+                typebot={typebot}
                 block={block}
                 onExpandClick={handleExpandClick}
                 onBlockChange={handleBlockUpdate}

@@ -7,13 +7,6 @@ export type TemplatesGetResponse = {
       status: string
       category: string
       id: string
-    },
-    {
-      name: string
-      language: string
-      status: string
-      category: string
-      id: string
     }
   ]
 }
