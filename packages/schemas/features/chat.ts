@@ -276,6 +276,12 @@ export const sendMessageInputSchema = z.object({
     .array(replyLogSchema)
     .optional()
     .describe('Logs while executing client side actions'),
+  prefilledVariables: z
+    .record(z.unknown())
+    .optional()
+    .describe(
+      '[More info about prefilled variables.](https://docs.typebot.io/editor/variables#prefilled-variables)'
+    ),
 })
 
 const runtimeOptionsSchema = paymentInputRuntimeOptionsSchema.optional()
