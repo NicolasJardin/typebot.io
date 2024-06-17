@@ -14,11 +14,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCallback, useState } from 'react'
-import { trpc } from '@/lib/trpc'
+import { trpc, trpcVanilla } from '@/lib/trpc'
 import { setCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
+import { duplicateName } from '@/features/typebot/helpers/duplicateName'
 
-type EnterPasswordModalProps = {
+type DuplicatePasswordModalProps = {
   isOpen: boolean
   onClose: () => void
   typebot: TypebotInDashboard
@@ -30,39 +31,79 @@ const schema = z.object({
     .min(1, { message: 'Campo de preenchimento obrigatório.' }),
 })
 
-type EnterPasswordModalForm = z.infer<typeof schema>
+type DuplicatePasswordModalForm = z.infer<typeof schema>
 
-export function EnterPasswordModal({
+export function DuplicatePasswordModal({
   isOpen,
   onClose,
   typebot,
-}: EnterPasswordModalProps) {
+}: DuplicatePasswordModalProps) {
+  const { mutateAsync: createTypebot } = trpc.typebot.createTypebot.useMutation(
+    {
+      onError: (error) => {
+        showToast({ description: error.message })
+      },
+    }
+  )
+
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const { mutateAsync: unlockTypebot } =
     trpc.typebot.unlockTypebot.useMutation()
 
-  const { control, handleSubmit, setError } = useForm<EnterPasswordModalForm>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      password: '',
-    },
-  })
+  const { control, handleSubmit, setError } =
+    useForm<DuplicatePasswordModalForm>({
+      resolver: zodResolver(schema),
+      defaultValues: {
+        password: '',
+      },
+    })
 
   const onSubmit = useCallback(
     () =>
       handleSubmit(async (data) => {
         try {
           setIsLoading(true)
-          const { token } = await unlockTypebot({
-            typebotId: typebot.id,
-            password: data.password,
-          })
+          await unlockTypebot(
+            {
+              typebotId: typebot.id,
+              password: data.password,
+            },
+            {}
+          )
 
-          setCookie(`unlock-${typebot.id}`, token)
+          const { typebot: typebotToDuplicate } =
+            await trpcVanilla.typebot.getTypebot.query({
+              typebotId: typebot.id,
+            })
 
-          router.push(`/typebots/${typebot.id}/edit`)
+          if (!typebotToDuplicate) return
+
+          await createTypebot(
+            {
+              workspaceId: typebotToDuplicate.workspaceId,
+              typebot: {
+                ...typebotToDuplicate,
+                customDomain: undefined,
+                publicId: undefined,
+                name: duplicateName(typebotToDuplicate.name),
+                password: data.password,
+              },
+            },
+            {
+              onSuccess: async ({ typebot }) => {
+                const { token } = await unlockTypebot({
+                  typebotId: typebot.id,
+                  password: data.password,
+                })
+
+                setCookie(`unlock-${typebot.id}`, token)
+
+                router.push(`/typebots/${typebot.id}/edit`)
+              },
+            }
+          )
         } catch (e) {
           setIsLoading(false)
 
@@ -73,7 +114,7 @@ export function EnterPasswordModal({
             setError('password', { message: 'Senha invalida!' })
         }
       })(),
-    [handleSubmit, unlockTypebot, typebot.id, router, setError]
+    [handleSubmit, unlockTypebot, typebot.id, router, setError, createTypebot]
   )
 
   return (
@@ -87,7 +128,7 @@ export function EnterPasswordModal({
             event.preventDefault()
           }}
         >
-          <ModalHeader>Fluxo {typebot.name}</ModalHeader>
+          <ModalHeader>Duplicar Fluxo {typebot.name}</ModalHeader>
           <ModalBody>
             <Controller
               control={control}
@@ -102,7 +143,7 @@ export function EnterPasswordModal({
                   isRequired
                   helperText={<Text color="red.400">{error?.message}</Text>}
                   type="password"
-                  label="Digite a senha para entrar no fluxo"
+                  label="Digite a senha para duplicar o fluxo"
                   placeholder="Digite a senha"
                   withVariableButton={false}
                   debounceTimeout={0}
@@ -112,7 +153,7 @@ export function EnterPasswordModal({
           </ModalBody>
           <ModalFooter>
             <Button type="submit" isLoading={isLoading}>
-              Entrar
+              Duplicar
             </Button>
           </ModalFooter>
         </form>
