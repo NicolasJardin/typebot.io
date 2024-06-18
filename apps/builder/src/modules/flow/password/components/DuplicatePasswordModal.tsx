@@ -18,6 +18,7 @@ import { trpc, trpcVanilla } from '@/lib/trpc'
 import { setCookie } from 'cookies-next'
 import { useRouter } from 'next/router'
 import { duplicateName } from '@/features/typebot/helpers/duplicateName'
+import { useToast } from '@/hooks/useToast'
 
 type DuplicatePasswordModalProps = {
   isOpen: boolean
@@ -38,6 +39,8 @@ export function DuplicatePasswordModal({
   onClose,
   typebot,
 }: DuplicatePasswordModalProps) {
+  const { showToast } = useToast()
+
   const { mutateAsync: createTypebot } = trpc.typebot.createTypebot.useMutation(
     {
       onError: (error) => {
