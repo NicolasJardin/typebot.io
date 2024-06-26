@@ -10,6 +10,15 @@ const deviceSchema = z
   })
   .nullable()
 
+const variablesSchema = z.array(
+  z.object({
+    example: z.string().optional().or(z.array(z.string()).optional()),
+    format: z.enum(['image', 'video', 'audio', 'document']).optional(),
+    type: z.string(),
+    value: z.string().optional(),
+  })
+)
+
 const templateSchema = z
   .object({
     name: z.string(),
@@ -23,6 +32,7 @@ const templateSchema = z
 export const templateOptionsSchema = z.object({
   device: deviceSchema,
   template: templateSchema,
+  variables: variablesSchema,
 })
 
 export const templateBlockSchema = blockBaseSchema.merge(
@@ -35,6 +45,7 @@ export const templateBlockSchema = blockBaseSchema.merge(
 export const defaultTemplateOptions: TemplateOptions = {
   device: null,
   template: null,
+  variables: [],
 }
 
 export type TemplateBlock = z.infer<typeof templateBlockSchema>

@@ -13,9 +13,9 @@ export default async function handler(
   const deviceId = req.query.deviceId as string
   const jwtDecoded = authJwt ? jwt_decode<AuthJwt>(authJwt) : undefined
 
-  const getTemplates = async () =>
-    (
-      await instance.get<TemplatesGetResponse>(
+  const getTemplates = async () => {
+    try {
+      const response = await instance.get<TemplatesGetResponse>(
         `find-all-template-in-device-waba/${deviceId}`,
         {
           headers: jwtDecoded
@@ -26,7 +26,12 @@ export default async function handler(
             : undefined,
         }
       )
-    ).data
+
+      return response.data
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   res.status(200).json(await getTemplates())
 }
