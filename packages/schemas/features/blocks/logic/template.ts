@@ -10,14 +10,16 @@ const deviceSchema = z
   })
   .nullable()
 
-const variablesSchema = z.array(
-  z.object({
-    example: z.string().optional().or(z.array(z.string()).optional()),
-    format: z.enum(['image', 'video', 'audio', 'document']).optional(),
-    type: z.string(),
-    value: z.string().optional(),
-  })
-)
+const variablesSchema = z
+  .array(
+    z.object({
+      example: z.string().optional().or(z.array(z.string()).optional()),
+      format: z.enum(['image', 'video', 'audio', 'document']).optional(),
+      type: z.string(),
+      value: z.string().optional(),
+    })
+  )
+  .optional()
 
 const templateSchema = z
   .object({
