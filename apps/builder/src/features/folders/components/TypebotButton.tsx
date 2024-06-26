@@ -11,6 +11,7 @@ import {
   ChangePasswordModal,
   CreatePasswordModal,
   EnterPasswordModal,
+  DuplicatePasswordModal,
 } from '@/modules/flow'
 import {
   Button,
@@ -101,6 +102,12 @@ export const TypebotButton = ({
     onOpen: onOpenChangePasswordModal,
   } = useDisclosure()
 
+  const {
+    isOpen: isOpenDuplicatePasswordModal,
+    onClose: onCloseDuplicatePasswordModal,
+    onOpen: onOpenDuplicatePasswordModal,
+  } = useDisclosure()
+
   const currentTypebotToken = useMemo(
     () => getCookie(`unlock-${typebot?.id}`) as string,
     [typebot?.id]
@@ -151,11 +158,16 @@ export const TypebotButton = ({
 
   const handleDuplicateClick = async (e: React.MouseEvent) => {
     e.stopPropagation()
+
+    if (typebot.hasPassword) return onOpenDuplicatePasswordModal()
+
     const { typebot: typebotToDuplicate } =
       await trpcVanilla.typebot.getTypebot.query({
         typebotId: typebot.id,
       })
+
     if (!typebotToDuplicate) return
+
     createTypebot({
       workspaceId: typebotToDuplicate.workspaceId,
       typebot: {
@@ -225,6 +237,12 @@ export const TypebotButton = ({
       <ChangePasswordModal
         isOpen={isOpenChangePasswordModal}
         onClose={onCloseChangePasswordModal}
+        typebot={typebot}
+      />
+
+      <DuplicatePasswordModal
+        isOpen={isOpenDuplicatePasswordModal}
+        onClose={onCloseDuplicatePasswordModal}
         typebot={typebot}
       />
       {typebot.publishedTypebotId && (
