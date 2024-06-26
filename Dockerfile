@@ -2,7 +2,7 @@ FROM node:18-bullseye-slim AS base
 WORKDIR /app
 ARG SCOPE
 ENV SCOPE=${SCOPE}
-RUN npm --global install pnpm
+RUN npm --global install pnpm@8.6.12
 
 FROM base AS pruner
 RUN npm --global install turbo@1.11.3

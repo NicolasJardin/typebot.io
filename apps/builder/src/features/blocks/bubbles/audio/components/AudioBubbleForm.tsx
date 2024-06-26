@@ -1,9 +1,8 @@
+import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
+import { TextInput } from '@/components/inputs'
 import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
-import { TextInput } from '@/components/inputs'
 import { useState } from 'react'
-import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
-import { SwitchWithLabel } from '@/components/inputs/SwitchWithLabel'
 
 type Props = {
   fileUploadPath: string
@@ -19,9 +18,6 @@ export const AudioBubbleForm = ({
   const [currentTab, setCurrentTab] = useState<'link' | 'upload'>('link')
 
   const updateUrl = (url: string) => onContentChange({ ...content, url })
-
-  const updateAutoPlay = (isAutoplayEnabled: boolean) =>
-    onContentChange({ ...content, isAutoplayEnabled })
 
   return (
     <Stack>
@@ -68,11 +64,11 @@ export const AudioBubbleForm = ({
             </>
           )}
         </Stack>
-        <SwitchWithLabel
+        {/* <SwitchWithLabel
           label={'Habilitar tocar sozinho'}
           initialValue={content.isAutoplayEnabled ?? true}
           onCheckChange={updateAutoPlay}
-        />
+        /> */}
       </Stack>
     </Stack>
   )

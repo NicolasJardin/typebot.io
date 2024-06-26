@@ -51,6 +51,7 @@ import {
   InputBlockType,
   IntegrationBlockType,
   LogicBlockType,
+  Typebot,
 } from '@typebot.io/schemas'
 import { Fragment, useRef, useState } from 'react'
 import { SettingsHoverBar } from './SettingsHoverBar'
@@ -60,9 +61,14 @@ type Props = {
   block: BlockWithOptions
   onExpandClick: () => void
   onBlockChange: (updates: Partial<Block>) => void
+  typebot: Typebot
 }
 
-export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
+export const SettingsPopoverContent = ({
+  onExpandClick,
+  typebot,
+  ...props
+}: Props) => {
   const [isHovering, setIsHovering] = useState(false)
   const arrowColor = useColorModeValue('white', 'gray.800')
   const ref = useRef<HTMLDivElement | null>(null)
@@ -103,7 +109,7 @@ export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
                 />
               </SlideFade>
             </Flex>
-            <BlockSettings {...props} />
+            <BlockSettings {...props} typebot={typebot} />
           </Stack>
         </PopoverBody>
       </PopoverContent>
@@ -114,9 +120,11 @@ export const SettingsPopoverContent = ({ onExpandClick, ...props }: Props) => {
 export const BlockSettings = ({
   block,
   onBlockChange,
+  typebot,
 }: {
   block: BlockWithOptions
   onBlockChange: (block: Partial<Block>) => void
+  typebot: Typebot
 }): JSX.Element => {
   const updateOptions = (options: BlockOptions) => {
     onBlockChange({ options } as Partial<Block>)
@@ -313,6 +321,8 @@ export const BlockSettings = ({
         <TemplateSettings
           options={block.options}
           onOptionsChange={updateOptions}
+          typebot={typebot}
+          blockId={block.id}
         />
       )
 

@@ -30,9 +30,9 @@ const defaultDisplayedTabs: Tabs[] = [
   'link',
   'upload',
   'giphy',
-  'emoji',
-  'unsplash',
-  'icon',
+  // 'emoji',
+  // 'unsplash',
+  // 'icon',
 ]
 
 export const ImageUploadContent = ({
@@ -81,7 +81,7 @@ export const ImageUploadContent = ({
             onClick={() => setCurrentTab('upload')}
             size="sm"
           >
-            Upload
+            Carregar
           </Button>
         )}
         {displayedTabs.includes('emoji') && (

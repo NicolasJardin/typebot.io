@@ -8,6 +8,7 @@ export const prefillVariables = (
   variables.map((variable) => {
     const prefilledVariable = prefilledVariables[variable.name]
     if (!prefilledVariable) return variable
+
     return {
       ...variable,
       value: safeStringify(prefilledVariable),

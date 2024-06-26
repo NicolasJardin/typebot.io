@@ -5,7 +5,7 @@ import { uploadFiles } from '@typebot.io/lib'
 import { ChangeEvent, useMemo, useState } from 'react'
 
 type UploadButtonProps = {
-  fileType: 'image' | 'audio' | 'file' | 'video'
+  fileType: 'image' | 'audio' | 'file' | 'video' | 'document'
   filePath: string
   includeFileName?: boolean
   onFileUploaded: (url: string) => void
@@ -42,6 +42,8 @@ export const UploadButton = ({
   }
 
   const filesToAccept = useMemo(() => {
+    if (fileType === 'document') return undefined
+
     if (fileType === 'image') return '.jpg, .jpeg, .png, .gif'
 
     if (fileType === 'audio') return '.mp3, .wav'

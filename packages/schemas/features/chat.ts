@@ -131,6 +131,14 @@ const templateMessageSchema = z.object({
       id: z.string().optional(),
       name: z.string().optional(),
     }),
+    variables: z.array(
+      z.object({
+        example: z.string().optional().or(z.array(z.string()).optional()),
+        format: z.enum(['image', 'video', 'audio', 'document']).optional(),
+        type: z.string(),
+        value: z.string().optional(),
+      })
+    ),
   }),
 })
 
