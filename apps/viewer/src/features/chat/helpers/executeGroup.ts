@@ -127,7 +127,16 @@ export const executeGroup =
                 id: block.options.template?.id,
                 name: block.options.template?.name,
               },
-              variables: block.options.variables || [],
+              variables:
+                block.options.variables?.map((variable) => ({
+                  ...variable,
+                  value: variable.value?.includes('{{')
+                    ? (state.typebot.variables.find(
+                        ({ name }) =>
+                          name === variable.value?.replace(/{{|}}/g, '')
+                      )?.value as string)
+                    : variable.value,
+                })) || [],
             },
             id: block.id,
             type: block.type,
@@ -299,6 +308,7 @@ const getPrefilledInputValue =
         variable.id === block.options.variableId && isDefined(variable.value)
     )?.value
     if (!variableValue || Array.isArray(variableValue)) return
+
     return variableValue
   }
 
