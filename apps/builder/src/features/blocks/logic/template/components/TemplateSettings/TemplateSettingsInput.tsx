@@ -29,10 +29,11 @@ export function TemplateSettingsInput({
 }: Props) {
   const handleVariableChange = (newValue: string | undefined) => {
     if (options) {
-      const updatedVariables = variables.map((variable, index) => ({
-        ...variable,
-        value: options.variables[index]?.value,
-      }))
+      const updatedVariables =
+        variables?.map((variable, index) => ({
+          ...variable,
+          value: options.variables?.[index]?.value,
+        })) || []
 
       updatedVariables[index] = {
         format,
@@ -50,10 +51,12 @@ export function TemplateSettingsInput({
 
   const handleFileChange = (format: PlaceholderType, value: string) => {
     if (options) {
-      const updatedVariables = variables.map((variable, index) => ({
-        ...variable,
-        value: options.variables[index]?.value,
-      }))
+      const updatedVariables =
+        variables?.map((variable, index) => ({
+          ...variable,
+          value: options.variables?.[index]?.value,
+        })) || []
+
       updatedVariables[index] = {
         type,
         example,
@@ -73,7 +76,7 @@ export function TemplateSettingsInput({
       return (
         <FileBubbleForm
           content={{
-            url: options.variables[index]?.value,
+            url: options.variables?.[index]?.value,
           }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
           onSubmit={(audio) => handleFileChange('audio', audio.url || '')}
@@ -84,7 +87,7 @@ export function TemplateSettingsInput({
       return (
         <FileBubbleForm
           content={{
-            url: options.variables[index]?.value,
+            url: options.variables?.[index]?.value,
           }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
           onSubmit={(image) => handleFileChange('image', image.url || '')}
@@ -95,7 +98,7 @@ export function TemplateSettingsInput({
       return (
         <FileBubbleForm
           content={{
-            url: options.variables[index]?.value,
+            url: options.variables?.[index]?.value,
           }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
           onSubmit={(video) => handleFileChange('video', video.url || '')}
@@ -106,7 +109,7 @@ export function TemplateSettingsInput({
       return (
         <FileBubbleForm
           content={{
-            url: options.variables[index]?.value,
+            url: options.variables?.[index]?.value,
           }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
           onSubmit={(document) =>
