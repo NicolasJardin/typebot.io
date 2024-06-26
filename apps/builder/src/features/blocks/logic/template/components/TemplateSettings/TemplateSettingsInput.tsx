@@ -1,101 +1,127 @@
-import { ImageUploadContent } from '@/components/ImageUploadContent'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
-import { TemplateOptions, Typebot, Variable } from '@typebot.io/schemas'
-import { VideoUploadContent } from '@/features/blocks/bubbles/video/components/VideoUploadContent'
 import FileBubbleForm from '@/features/blocks/bubbles/file/components/FileBubbleForm'
+import { TemplateOptions, Typebot, Variable } from '@typebot.io/schemas'
 
-type PlaceholderType = 'image' | 'video' | 'document'
+type PlaceholderType = 'image' | 'video' | 'audio' | 'document'
 
 type Props = {
   index: number
   options: TemplateOptions
   onOptionsChange: (options: TemplateOptions) => void
-  placeholder: string
-  type: PlaceholderType
+  example: string
+  format: PlaceholderType | undefined
+  type: string
   typebot: Typebot
   blockId: string
+  variables: TemplateOptions['variables']
 }
 
 export function TemplateSettingsInput({
   options,
   onOptionsChange,
   index,
-  placeholder,
-  type,
+  example,
+  format,
   typebot,
   blockId,
+  type,
+  variables,
 }: Props) {
   const handleVariableChange = (variable: Variable | undefined) => {
     if (options && variable) {
-      const updatedPlaceholders = [...options.placeholders]
-      updatedPlaceholders[index] = {
-        placeholder,
+      const updatedVariables = variables.map((variable, index) => ({
+        ...variable,
+        value: options.variables[index]?.value,
+      }))
+
+      updatedVariables[index] = {
+        format,
+        type,
+        example,
         value: variable.id,
       }
 
       return onOptionsChange({
         ...options,
-        placeholders: updatedPlaceholders,
+        variables: updatedVariables,
       })
     }
   }
 
-  const handleFileChange = (type: PlaceholderType, value: string) => {
+  const handleFileChange = (format: PlaceholderType, value: string) => {
     if (options) {
-      const updatedPlaceholders = [...options.placeholders]
-      updatedPlaceholders[index] = {
-        placeholder,
-        value,
+      const updatedVariables = variables.map((variable, index) => ({
+        ...variable,
+        value: options.variables[index]?.value,
+      }))
+      updatedVariables[index] = {
         type,
+        example,
+        value,
+        format,
       }
 
       return onOptionsChange({
         ...options,
-        placeholders: updatedPlaceholders,
+        variables: updatedVariables,
       })
     }
   }
 
-  switch (type) {
+  switch (format) {
+    case 'audio':
+      return (
+        <FileBubbleForm
+          content={{
+            url: options.variables[index]?.value,
+          }}
+          fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
+          onSubmit={(audio) => handleFileChange('audio', audio.url || '')}
+          fileType="audio"
+        />
+      )
     case 'image':
       return (
-        <ImageUploadContent
-          filePath={`typebots/${typebot.id}/blocks/${blockId}`}
-          defaultUrl={options.placeholders[index]?.value}
-          onSubmit={(url) => handleFileChange('image', url)}
+        <FileBubbleForm
+          content={{
+            url: options.variables[index]?.value,
+          }}
+          fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
+          onSubmit={(image) => handleFileChange('image', image.url || '')}
+          fileType="image"
         />
       )
     case 'video':
       return (
-        <VideoUploadContent
-          content={
-            options.placeholders[index]?.value
-              ? {
-                  url: options.placeholders[index]?.value,
-                }
-              : undefined
-          }
+        <FileBubbleForm
+          content={{
+            url: options.variables[index]?.value,
+          }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
-          onSubmit={(video) => handleFileChange('video', video.url)}
+          onSubmit={(video) => handleFileChange('video', video.url || '')}
+          fileType="video"
         />
       )
     case 'document':
       return (
         <FileBubbleForm
           content={{
-            url: options.placeholders[index]?.value,
+            url: options.variables[index]?.value,
           }}
           fileUploadPath={`typebots/${typebot.id}/blocks/${blockId}`}
-          onSubmit={(document) => handleFileChange('document', document.url)}
+          onSubmit={(document) =>
+            handleFileChange('document', document.url || '')
+          }
+          fileType="document"
         />
       )
   }
 
   return (
     <VariableSearchInput
-      initialVariableId={options?.placeholders[index]?.value}
+      initialVariableId={options?.variables[index]?.value}
       onSelectVariable={(variable) => handleVariableChange(variable)}
-      placeholder={placeholder}
+      placeholder={example}
     />
   )
 }

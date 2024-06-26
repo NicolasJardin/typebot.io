@@ -127,7 +127,7 @@ export const executeGroup =
                 id: block.options.template?.id,
                 name: block.options.template?.name,
               },
-              placeholders: block.options.placeholders || [],
+              variables: block.options.variables || [],
             },
             id: block.id,
             type: block.type,

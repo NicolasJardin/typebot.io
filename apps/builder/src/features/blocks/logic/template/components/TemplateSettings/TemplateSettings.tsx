@@ -1,5 +1,7 @@
 import useGetDevices from '@/whatsflow/api/template/queries/useGetDevices'
 import useGetTemplates from '@/whatsflow/api/template/queries/useGetTemplates'
+import useGetVariables from '@/whatsflow/api/template/queries/useGetVariables'
+
 import {
   FormControl,
   FormLabel,
@@ -29,13 +31,20 @@ export default function TemplateSettings({
     useGetTemplates(options.device?.id, {
       enabled: Boolean(options.device?.id),
     })
+  const { data: variablesData } = useGetVariables(
+    options.device?.id,
+    options.template?.id,
+    {
+      enabled: Boolean(options.template?.id) && Boolean(options.device?.id),
+    }
+  )
 
   const handleDeviceChange = useCallback(
     (device: Device) =>
       onOptionsChange({
         device,
         template: null,
-        placeholders: [],
+        variables: [],
       }),
     [onOptionsChange]
   )
@@ -45,30 +54,10 @@ export default function TemplateSettings({
       onOptionsChange({
         ...options,
         template,
-        placeholders: [],
+        variables: [],
       }),
     [onOptionsChange, options]
   )
-
-  const data = [
-    {
-      type: 'image',
-      placeholder: 'Imagem kkkk',
-    },
-    { type: 'video', placeholder: 'Videozinho' },
-    { type: 'document', placeholder: 'Docs' },
-    {
-      placeholder: 'Variavel 2',
-    },
-    {
-      placeholder: 'Variavel 3',
-    },
-  ]
-
-  console.log({
-    data,
-    teste: options?.placeholders,
-  })
 
   return (
     <Stack spacing={4}>
@@ -142,20 +131,32 @@ export default function TemplateSettings({
       )}
 
       {Boolean(options?.template) &&
-        data.map(({ placeholder, type }, index) => (
-          <FormControl key={placeholder}>
-            <FormLabel>{placeholder}</FormLabel>
-            <TemplateSettingsInput
-              index={index}
-              options={options}
-              onOptionsChange={onOptionsChange}
-              placeholder={placeholder}
-              typebot={typebot}
-              blockId={blockId}
-              type={type}
-            />
-          </FormControl>
-        ))}
+        variablesData?.variables?.map(({ example, format, type }, index) => {
+          const variableOrder = index + 1
+
+          const variableExample = Array.isArray(example)
+            ? example?.[0]
+            : example
+
+          return (
+            <FormControl key={example}>
+              <FormLabel>
+                Variável: {variableOrder} - {format || 'texto'}
+              </FormLabel>
+              <TemplateSettingsInput
+                variables={variablesData?.variables}
+                index={index}
+                options={options}
+                onOptionsChange={onOptionsChange}
+                example={variableExample}
+                typebot={typebot}
+                blockId={blockId}
+                format={format}
+                type={type}
+              />
+            </FormControl>
+          )
+        })}
     </Stack>
   )
 }

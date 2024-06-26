@@ -10,11 +10,12 @@ const deviceSchema = z
   })
   .nullable()
 
-const placeholdersSchema = z.array(
+const variablesSchema = z.array(
   z.object({
-    placeholder: z.string(),
-    type: z.enum(['image', 'video', 'document']).optional(),
-    value: z.string(),
+    example: z.string().optional().or(z.array(z.string()).optional()),
+    format: z.enum(['image', 'video', 'audio', 'document']).optional(),
+    type: z.string(),
+    value: z.string().optional(),
   })
 )
 
@@ -31,7 +32,7 @@ const templateSchema = z
 export const templateOptionsSchema = z.object({
   device: deviceSchema,
   template: templateSchema,
-  placeholders: placeholdersSchema,
+  variables: variablesSchema,
 })
 
 export const templateBlockSchema = blockBaseSchema.merge(
@@ -44,7 +45,7 @@ export const templateBlockSchema = blockBaseSchema.merge(
 export const defaultTemplateOptions: TemplateOptions = {
   device: null,
   template: null,
-  placeholders: [],
+  variables: [],
 }
 
 export type TemplateBlock = z.infer<typeof templateBlockSchema>

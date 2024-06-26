@@ -124,6 +124,7 @@ export const BlockSettings = ({
 }: {
   block: BlockWithOptions
   onBlockChange: (block: Partial<Block>) => void
+  typebot: Typebot
 }): JSX.Element => {
   const updateOptions = (options: BlockOptions) => {
     onBlockChange({ options } as Partial<Block>)

@@ -8,11 +8,13 @@ type FileBubbleFormProps = {
   fileUploadPath: string
   content: AudioBubbleContent
   onSubmit: (content: AudioBubbleContent) => void
+  fileType?: 'audio' | 'video' | 'image' | 'file' | 'document'
 }
 
 export default function FileBubbleForm({
   content,
   fileUploadPath,
+  fileType,
   onSubmit,
 }: FileBubbleFormProps) {
   const [currentTab, setCurrentTab] = useState<'link' | 'upload'>('link')
@@ -41,7 +43,7 @@ export default function FileBubbleForm({
         {currentTab === 'upload' && (
           <Flex justify="center" py="2">
             <UploadButton
-              fileType="file"
+              fileType={fileType || 'file'}
               filePath={fileUploadPath}
               onFileUploaded={submit}
               colorScheme="blue"

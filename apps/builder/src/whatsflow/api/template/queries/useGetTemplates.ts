@@ -23,21 +23,7 @@ export default function useGetTemplates(
 
   const queryKey = ['whatsflow', 'templates', deviceId]
 
-  const queryFn = useCallback(
-    async () => ({
-      status: 'success',
-      templates: [
-        {
-          name: 'name',
-          language: 'pt-br',
-          status: 'sla',
-          category: 'aham',
-          id: '123123',
-        },
-      ],
-    }),
-    [getTemplates]
-  )
+  const queryFn = useCallback(async () => getTemplates(), [getTemplates])
 
   return useQuery<Data>(queryKey, queryFn, options)
 }

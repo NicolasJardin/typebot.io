@@ -20,19 +20,7 @@ export default function useGetDevices(options?: UseGetDecivesOptions) {
 
   const queryKey = ['whatsflow', 'devices']
 
-  const queryFn = useCallback(
-    async () => ({
-      status: 'success',
-      devices: [
-        {
-          name: 'sla',
-          chatId: '123',
-          id: '123321',
-        },
-      ],
-    }),
-    [getDevices]
-  )
+  const queryFn = useCallback(async () => getDevices(), [getDevices])
 
   return useQuery<Data>(queryKey, queryFn, options)
 }

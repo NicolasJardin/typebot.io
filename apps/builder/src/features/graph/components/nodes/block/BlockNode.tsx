@@ -36,6 +36,7 @@ import {
   DraggableBlock,
   LogicBlockType,
   TextBubbleBlock,
+  Typebot,
 } from '@typebot.io/schemas'
 import { TElement } from '@udecode/plate-common'
 import { useRouter } from 'next/router'
@@ -288,7 +289,7 @@ export const BlockNode = ({
           {hasSettingsPopover(block) && (
             <>
               <SettingsPopoverContent
-                typebot={typebot}
+                typebot={typebot as Typebot}
                 block={block}
                 onExpandClick={handleExpandClick}
                 onBlockChange={handleBlockUpdate}
@@ -296,6 +297,7 @@ export const BlockNode = ({
               <ParentModalProvider>
                 <SettingsModal isOpen={isModalOpen} onClose={handleModalClose}>
                   <BlockSettings
+                    typebot={typebot as Typebot}
                     block={block}
                     onBlockChange={handleBlockUpdate}
                   />
