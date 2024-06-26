@@ -1,6 +1,6 @@
-import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
+import { TextInput } from '@/components/inputs'
 import FileBubbleForm from '@/features/blocks/bubbles/file/components/FileBubbleForm'
-import { TemplateOptions, Typebot, Variable } from '@typebot.io/schemas'
+import { TemplateOptions, Typebot } from '@typebot.io/schemas'
 
 type PlaceholderType = 'image' | 'video' | 'audio' | 'document'
 
@@ -27,8 +27,8 @@ export function TemplateSettingsInput({
   type,
   variables,
 }: Props) {
-  const handleVariableChange = (variable: Variable | undefined) => {
-    if (options && variable) {
+  const handleVariableChange = (newValue: string | undefined) => {
+    if (options) {
       const updatedVariables = variables.map((variable, index) => ({
         ...variable,
         value: options.variables[index]?.value,
@@ -38,7 +38,7 @@ export function TemplateSettingsInput({
         format,
         type,
         example,
-        value: variable.id,
+        value: newValue,
       }
 
       return onOptionsChange({
@@ -118,9 +118,9 @@ export function TemplateSettingsInput({
   }
 
   return (
-    <VariableSearchInput
-      initialVariableId={options?.variables[index]?.value}
-      onSelectVariable={(variable) => handleVariableChange(variable)}
+    <TextInput
+      defaultValue={options?.variables?.[index]?.value || ''}
+      onChange={handleVariableChange}
       placeholder={example}
     />
   )
