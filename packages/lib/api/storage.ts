@@ -6,7 +6,7 @@ type GeneratePresignedUrlProps = {
   sizeLimit?: number
 }
 
-const tenMB = 10 * 1024 * 1024
+const tenMB = 16 * 1024 * 1024
 const tenMinutes = 10 * 60
 
 export const generatePresignedUrl = ({
