@@ -11,6 +11,23 @@ export const textInputOptionsBaseSchema = z.object({
   }),
 })
 
+const textWaitSchema = z
+  .object({
+    number: z
+      .number()
+      .min(1, {
+        message: 'Tempo de espera não permitido, digite um valor acima de 0',
+      })
+      .optional(),
+    type: z
+      .enum([WaitForTypeEnum.DAY, WaitForTypeEnum.HOUR, WaitForTypeEnum.MINUTE])
+      .default(WaitForTypeEnum.HOUR),
+    until: z.string().optional(),
+    time: z.string().optional(),
+  })
+  .optional()
+  .nullable()
+
 export const textInputOptionsSchema = textInputOptionsBaseSchema
   .merge(optionBaseSchema)
   .merge(
@@ -20,23 +37,11 @@ export const textInputOptionsSchema = textInputOptionsBaseSchema
   )
   .merge(
     z.object({
-      wait: z
-        .object({
-          number: z.number().optional(),
-          type: z
-            .enum([
-              WaitForTypeEnum.DAY,
-              WaitForTypeEnum.HOUR,
-              WaitForTypeEnum.MINUTE,
-            ])
-            .default(WaitForTypeEnum.HOUR),
-          until: z.string().optional(),
-          time: z.string().optional(),
-        })
-        .optional()
-        .nullable(),
+      wait: textWaitSchema,
     })
   )
+
+export type TextWaitType = z.infer<typeof textWaitSchema>
 
 export const defaultTextInputOptions: TextInputOptions = {
   isLong: false,

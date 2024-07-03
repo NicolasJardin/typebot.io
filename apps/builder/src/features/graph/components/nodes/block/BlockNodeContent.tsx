@@ -93,6 +93,7 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
           variableId={block.options.variableId}
           placeholder={block.options.labels.placeholder}
           isLong={block.options.isLong}
+          wait={block.options.wait}
         />
       )
     }

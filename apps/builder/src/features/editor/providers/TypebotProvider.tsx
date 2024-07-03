@@ -115,7 +115,7 @@ export const TypebotProvider = ({
     trpc.typebot.updateTypebot.useMutation({
       onError: (error) =>
         showToast({
-          title: 'Error while updating typebot',
+          title: 'Erro ao atualizar o typebot',
           description: error.message,
         }),
       onSuccess: () => {

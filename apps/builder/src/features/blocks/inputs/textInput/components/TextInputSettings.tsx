@@ -121,6 +121,12 @@ export const TextInputSettings = ({ options, onOptionsChange }: Props) => {
             defaultValue={options.wait?.number?.toString()}
             onChange={(value) => handleNumberChange(Number(value))}
             placeholder="0"
+            helperText={
+              typeof options?.wait?.number === 'number' &&
+              options?.wait?.number < 1 ? (
+                <Text color={'red.500'}>Digite um valor maior que 0</Text>
+              ) : null
+            }
           />
 
           {options.wait?.type === WaitForTypeEnum.DAY && (
