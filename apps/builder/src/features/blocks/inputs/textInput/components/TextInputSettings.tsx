@@ -1,3 +1,4 @@
+import { TbClockX } from 'react-icons/tb'
 import { TextInput } from '@/components/inputs'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { TimeMeasurementSelect, useTime } from '@/modules/time'
@@ -136,6 +137,25 @@ export const TextInputSettings = ({ options, onOptionsChange }: Props) => {
               onChange={handleTimeChange}
               type="time"
             />
+          )}
+
+          {Boolean(options.wait) && (
+            <Button
+              leftIcon={<TbClockX size={25} />}
+              onClick={() => {
+                onOptionsChange({
+                  ...options,
+                  wait: null,
+                })
+                setShowMaximumWait(false)
+              }}
+              variant="link"
+              alignSelf="flex-start"
+            >
+              <Text fontSize={14} color="red.400">
+                REMOVER ESPERA MÁXIMA
+              </Text>
+            </Button>
           )}
         </Stack>
       ) : (
