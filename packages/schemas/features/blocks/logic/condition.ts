@@ -24,6 +24,8 @@ export enum ComparisonOperators {
   ENDS_WITH = 'Termina com',
   MATCHES_REGEX = 'Corresponde ao regex',
   NOT_MATCH_REGEX = 'Não corresponde ao regex',
+  LATER_THAN = 'Mais tarde que',
+  SOONER_THAN = 'Mais cedo que',
 }
 
 const comparisonSchema = z.object({

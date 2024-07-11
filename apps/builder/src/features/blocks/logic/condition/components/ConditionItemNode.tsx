@@ -165,5 +165,9 @@ export const parseComparisonOperatorSymbol = (
       return 'não corresponde'
     case ComparisonOperators.CONTAINS_TAG:
       return 'contém tag'
+    case ComparisonOperators.LATER_THAN:
+      return 'horário mais tarde que'
+    case ComparisonOperators.SOONER_THAN:
+      return 'horário mais cedo que'
   }
 }

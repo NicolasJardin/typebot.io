@@ -1,7 +1,7 @@
 import { findUniqueVariableValue } from '@/features/variables/findUniqueVariableValue'
 import { parseVariables } from '@/features/variables/parseVariables'
 import { FindTagsInContactResponse } from '@/features/whatsflow/types'
-import { isNotDefined, isDefined, sendRequest } from '@typebot.io/lib'
+import { isDefined, isNotDefined, sendRequest } from '@typebot.io/lib'
 import {
   Comparison,
   ComparisonOperators,
@@ -9,6 +9,7 @@ import {
   LogicalOperator,
   Variable,
 } from '@typebot.io/schemas'
+import { format, isAfter, isBefore, set } from 'date-fns'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -43,14 +44,22 @@ const clear = (value: string | null) => {
 const executeComparison =
   (variables: Variable[]) =>
   async (comparison: Comparison, typebotId?: string): Promise<boolean> => {
-    if (!comparison?.variableId) return false
+    if (
+      !comparison?.variableId &&
+      comparison.comparisonOperator !== ComparisonOperators.LATER_THAN &&
+      comparison.comparisonOperator !== ComparisonOperators.SOONER_THAN
+    )
+      return false
+
     const inputValue =
       variables.find((v) => v.id === comparison.variableId)?.value ?? null
+
     const value =
       comparison.value === 'undefined' || comparison.value === 'null'
         ? null
         : findUniqueVariableValue(variables)(comparison.value) ??
           parseVariables(variables)(comparison.value)
+
     if (isNotDefined(comparison.comparisonOperator)) return false
 
     switch (comparison.comparisonOperator) {
@@ -154,6 +163,22 @@ const executeComparison =
 
         return tags.some((tag) => tag.title === value)
       }
+      case ComparisonOperators.LATER_THAN: {
+        if (!value || typeof value !== 'string') return false
+
+        const inputTime = getTimeFromString(value)
+        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+
+        return isAfter(currentTime, inputTime)
+      }
+      case ComparisonOperators.SOONER_THAN: {
+        if (!value || typeof value !== 'string') return false
+
+        const inputTime = getTimeFromString(value)
+        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+
+        return isBefore(currentTime, inputTime)
+      }
     }
   }
 
@@ -186,4 +211,9 @@ const parseDateOrNumber = (value: string): number => {
     return time
   }
   return parsed
+}
+
+function getTimeFromString(time: string): Date {
+  const [hours, minutes] = time.split(':').map(Number)
+  return set(new Date(0), { hours, minutes })
 }

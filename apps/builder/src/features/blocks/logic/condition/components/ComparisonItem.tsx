@@ -32,20 +32,45 @@ export const ComparisonItem = ({
             item.variableId,
     })
   }
+
+  function formatTime(time: string): string {
+    const cleanedTime = time.replace(/\D/g, '')
+
+    const limitedTime = cleanedTime.slice(0, 4)
+
+    if (limitedTime.length <= 2) {
+      return limitedTime
+    }
+
+    return limitedTime.slice(0, 2) + ':' + limitedTime.slice(2)
+  }
+
   const handleChangeValue = (value: string) => {
     if (value === item.value) return
+
+    if (
+      item.comparisonOperator === ComparisonOperators.SOONER_THAN ||
+      ComparisonOperators.LATER_THAN
+    ) {
+      const formattedValue = formatTime(value)
+
+      return onItemChange({ ...item, value: formattedValue })
+    }
+
     onItemChange({ ...item, value })
   }
 
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
-      {item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG && (
-        <VariableSearchInput
-          initialVariableId={item.variableId}
-          onSelectVariable={handleSelectVariable}
-          placeholder="Pesquisar uma variável"
-        />
-      )}
+      {item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG &&
+        item.comparisonOperator !== ComparisonOperators.LATER_THAN &&
+        item.comparisonOperator !== ComparisonOperators.SOONER_THAN && (
+          <VariableSearchInput
+            initialVariableId={item.variableId}
+            onSelectVariable={handleSelectVariable}
+            placeholder="Pesquisar uma variável"
+          />
+        )}
       <DropdownList
         currentItem={item.comparisonOperator}
         onItemSelect={handleSelectComparisonOperator}
@@ -101,5 +126,8 @@ const parseValuePlaceholder = (
     case ComparisonOperators.MATCHES_REGEX:
     case ComparisonOperators.NOT_MATCH_REGEX:
       return '^[0-9]+$'
+    case ComparisonOperators.LATER_THAN:
+    case ComparisonOperators.SOONER_THAN:
+      return 'Digite um horário (HH:mm)'
   }
 }
