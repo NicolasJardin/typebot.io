@@ -9,7 +9,7 @@ import {
   LogicalOperator,
   Variable,
 } from '@typebot.io/schemas'
-import { format, isAfter, isBefore, set } from 'date-fns'
+import { format, getDay, isAfter, isBefore, set, setDay } from 'date-fns'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -47,7 +47,8 @@ const executeComparison =
     if (
       !comparison?.variableId &&
       comparison.comparisonOperator !== ComparisonOperators.LATER_THAN &&
-      comparison.comparisonOperator !== ComparisonOperators.SOONER_THAN
+      comparison.comparisonOperator !== ComparisonOperators.SOONER_THAN &&
+      comparison.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK
     )
       return false
 
@@ -179,6 +180,16 @@ const executeComparison =
 
         return isBefore(currentTime, inputTime)
       }
+      case ComparisonOperators.DAY_OF_THE_WEEK: {
+        if (!value || typeof value !== 'string') return false
+
+        const actualDayOfTheWeek = getDay(new Date())
+        const selectedDayOfTheWeek = getDay(getWeekDayDateByWeekDayName(value))
+
+        if (actualDayOfTheWeek === selectedDayOfTheWeek) return true
+
+        return false
+      }
     }
   }
 
@@ -216,4 +227,30 @@ const parseDateOrNumber = (value: string): number => {
 function getTimeFromString(time: string): Date {
   const [hours, minutes] = time.split(':').map(Number)
   return set(new Date(0), { hours, minutes })
+}
+
+const getWeekDayIndex = (weekDay: string) => {
+  const weekDays = [
+    'domingo',
+    'segunda-feira',
+    'terça-feira',
+    'quarta-feira',
+    'quinta-feira',
+    'sexta-feira',
+    'sábado',
+  ]
+
+  return weekDays.indexOf(weekDay.toLowerCase())
+}
+
+// Função para obter a próxima ocorrência do dia da semana fornecido
+const getWeekDayDateByWeekDayName = (weekDay: string) => {
+  const today = new Date()
+  const dayOfWeekIndex = getWeekDayIndex(weekDay)
+
+  if (dayOfWeekIndex === -1) {
+    throw new Error('Dia da semana inválido')
+  }
+
+  return setDay(today, dayOfWeekIndex, { weekStartsOn: 0 })
 }
