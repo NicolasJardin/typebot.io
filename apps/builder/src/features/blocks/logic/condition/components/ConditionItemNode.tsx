@@ -168,6 +168,8 @@ export const parseComparisonOperatorSymbol = (
     case ComparisonOperators.LATER_THAN:
       return 'horário mais tarde que'
     case ComparisonOperators.SOONER_THAN:
+      return 'horário mais cedo que'
+    case ComparisonOperators.DAY_OF_THE_WEEK:
       return 'no dia da semana'
   }
 }
