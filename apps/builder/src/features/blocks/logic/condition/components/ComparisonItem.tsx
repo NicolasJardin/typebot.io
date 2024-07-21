@@ -1,11 +1,13 @@
-import { Stack } from '@chakra-ui/react'
 import { DropdownList } from '@/components/DropdownList'
-import { Comparison, Variable, ComparisonOperators } from '@typebot.io/schemas'
-import { TableListItemProps } from '@/components/TableList'
-import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
 import { TextInput } from '@/components/inputs'
+import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
+import { TableListItemProps } from '@/components/TableList'
 import { TagSearchInput } from '@/components/TagSearchInput'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
+import { Select, Stack } from '@chakra-ui/react'
+import { Comparison, ComparisonOperators, Variable } from '@typebot.io/schemas'
+import { addDays, format, startOfWeek } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export const ComparisonItem = ({
   item,
@@ -32,20 +34,53 @@ export const ComparisonItem = ({
             item.variableId,
     })
   }
+
+  function formatTime(time: string): string {
+    const cleanedTime = time.replace(/\D/g, '')
+
+    const limitedTime = cleanedTime.slice(0, 4)
+
+    if (limitedTime.length <= 2) {
+      return limitedTime
+    }
+
+    return limitedTime.slice(0, 2) + ':' + limitedTime.slice(2)
+  }
+
   const handleChangeValue = (value: string) => {
     if (value === item.value) return
+
+    if (
+      item.comparisonOperator === ComparisonOperators.SOONER_THAN ||
+      item.comparisonOperator === ComparisonOperators.LATER_THAN
+    ) {
+      const formattedValue = formatTime(value)
+
+      return onItemChange({ ...item, value: formattedValue })
+    }
+
     onItemChange({ ...item, value })
   }
 
+  const startOfWeekDate = startOfWeek(new Date(), { weekStartsOn: 1 })
+
+  const weekDates = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(startOfWeekDate, i)
+    return format(date, 'EEEE', { locale: ptBR })
+  })
+
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
-      {item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG && (
-        <VariableSearchInput
-          initialVariableId={item.variableId}
-          onSelectVariable={handleSelectVariable}
-          placeholder="Pesquisar uma variável"
-        />
-      )}
+      {item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG &&
+        item.comparisonOperator !== ComparisonOperators.LATER_THAN &&
+        item.comparisonOperator !== ComparisonOperators.SOONER_THAN &&
+        item.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK && (
+          <VariableSearchInput
+            initialVariableId={item.variableId}
+            onSelectVariable={handleSelectVariable}
+            placeholder="Pesquisar uma variável"
+          />
+        )}
       <DropdownList
         currentItem={item.comparisonOperator}
         onItemSelect={handleSelectComparisonOperator}
@@ -59,7 +94,8 @@ export const ComparisonItem = ({
       {item.comparisonOperator !== ComparisonOperators.IS_SET &&
         item.comparisonOperator !== ComparisonOperators.IS_EMPTY &&
         item.comparisonOperator !== ComparisonOperators.WITHOUT_ANSWER &&
-        item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG && (
+        item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG &&
+        item.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK && (
           <TextInput
             defaultValue={item.value ?? ''}
             onChange={handleChangeValue}
@@ -73,6 +109,24 @@ export const ComparisonItem = ({
           defaultTagName={item.value ?? ''}
           id="tag-search"
         />
+      )}
+
+      {item.comparisonOperator === ComparisonOperators.DAY_OF_THE_WEEK && (
+        <Select
+          placeholder="Selecione o dia da semana"
+          value={item.value}
+          onChange={(event) => {
+            const newValue = event.target.value
+
+            handleChangeValue(newValue)
+          }}
+        >
+          {weekDates.map((value) => (
+            <option value={value} key={value}>
+              {value}
+            </option>
+          ))}
+        </Select>
       )}
     </Stack>
   )
@@ -101,5 +155,10 @@ const parseValuePlaceholder = (
     case ComparisonOperators.MATCHES_REGEX:
     case ComparisonOperators.NOT_MATCH_REGEX:
       return '^[0-9]+$'
+    case ComparisonOperators.LATER_THAN:
+    case ComparisonOperators.SOONER_THAN:
+      return 'Digite um horário (HH:mm)'
+    case ComparisonOperators.DAY_OF_THE_WEEK:
+      return 'Escolha um dia da semana'
   }
 }

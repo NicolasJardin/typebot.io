@@ -85,8 +85,8 @@ export const SettingsPopoverContent = ({
         <PopoverBody
           pt="3"
           pb="6"
-          overflowY="scroll"
-          maxH="400px"
+          overflowY="auto"
+          maxH="600px"
           ref={ref}
           shadow="lg"
           onMouseEnter={() => setIsHovering(true)}
@@ -97,7 +97,7 @@ export const SettingsPopoverContent = ({
               w="full"
               pos="absolute"
               top="-56px"
-              height="64px"
+              height="300px"
               right={0}
               justifyContent="flex-end"
               align="center"

@@ -1,7 +1,7 @@
 import { findUniqueVariableValue } from '@/features/variables/findUniqueVariableValue'
 import { parseVariables } from '@/features/variables/parseVariables'
 import { FindTagsInContactResponse } from '@/features/whatsflow/types'
-import { isNotDefined, isDefined, sendRequest } from '@typebot.io/lib'
+import { isDefined, isNotDefined, sendRequest } from '@typebot.io/lib'
 import {
   Comparison,
   ComparisonOperators,
@@ -9,6 +9,7 @@ import {
   LogicalOperator,
   Variable,
 } from '@typebot.io/schemas'
+import { format, getDay, isAfter, isBefore, set, setDay } from 'date-fns'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -43,14 +44,23 @@ const clear = (value: string | null) => {
 const executeComparison =
   (variables: Variable[]) =>
   async (comparison: Comparison, typebotId?: string): Promise<boolean> => {
-    if (!comparison?.variableId) return false
+    if (
+      !comparison?.variableId &&
+      comparison.comparisonOperator !== ComparisonOperators.LATER_THAN &&
+      comparison.comparisonOperator !== ComparisonOperators.SOONER_THAN &&
+      comparison.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK
+    )
+      return false
+
     const inputValue =
       variables.find((v) => v.id === comparison.variableId)?.value ?? null
+
     const value =
       comparison.value === 'undefined' || comparison.value === 'null'
         ? null
         : findUniqueVariableValue(variables)(comparison.value) ??
           parseVariables(variables)(comparison.value)
+
     if (isNotDefined(comparison.comparisonOperator)) return false
 
     switch (comparison.comparisonOperator) {
@@ -154,6 +164,32 @@ const executeComparison =
 
         return tags.some((tag) => tag.title === value)
       }
+      case ComparisonOperators.LATER_THAN: {
+        if (!value || typeof value !== 'string') return false
+
+        const inputTime = getTimeFromString(value)
+        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+
+        return isAfter(currentTime, inputTime)
+      }
+      case ComparisonOperators.SOONER_THAN: {
+        if (!value || typeof value !== 'string') return false
+
+        const inputTime = getTimeFromString(value)
+        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+
+        return isBefore(currentTime, inputTime)
+      }
+      case ComparisonOperators.DAY_OF_THE_WEEK: {
+        if (!value || typeof value !== 'string') return false
+
+        const actualDayOfTheWeek = getDay(new Date())
+        const selectedDayOfTheWeek = getDay(getWeekDayDateByWeekDayName(value))
+
+        if (actualDayOfTheWeek === selectedDayOfTheWeek) return true
+
+        return false
+      }
     }
   }
 
@@ -186,4 +222,35 @@ const parseDateOrNumber = (value: string): number => {
     return time
   }
   return parsed
+}
+
+function getTimeFromString(time: string): Date {
+  const [hours, minutes] = time.split(':').map(Number)
+  return set(new Date(0), { hours, minutes })
+}
+
+const getWeekDayIndex = (weekDay: string) => {
+  const weekDays = [
+    'domingo',
+    'segunda-feira',
+    'terça-feira',
+    'quarta-feira',
+    'quinta-feira',
+    'sexta-feira',
+    'sábado',
+  ]
+
+  return weekDays.indexOf(weekDay.toLowerCase())
+}
+
+// Função para obter a próxima ocorrência do dia da semana fornecido
+const getWeekDayDateByWeekDayName = (weekDay: string) => {
+  const today = new Date()
+  const dayOfWeekIndex = getWeekDayIndex(weekDay)
+
+  if (dayOfWeekIndex === -1) {
+    throw new Error('Dia da semana inválido')
+  }
+
+  return setDay(today, dayOfWeekIndex, { weekStartsOn: 0 })
 }
