@@ -10,6 +10,7 @@ import {
   Variable,
 } from '@typebot.io/schemas'
 import { format, getDay, isAfter, isBefore, set, setDay } from 'date-fns'
+import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -168,7 +169,11 @@ const executeComparison =
         if (!value || typeof value !== 'string') return false
 
         const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+        const currentTime = getTimeFromString(
+          format(utcToZonedTime(new Date(), 'America/Sao_Paulo'), 'HH:mm', {
+            timeZone: 'America/Sao_Paulo',
+          })
+        )
 
         return isAfter(currentTime, inputTime)
       }
@@ -176,14 +181,20 @@ const executeComparison =
         if (!value || typeof value !== 'string') return false
 
         const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+        const currentTime = getTimeFromString(
+          format(utcToZonedTime(new Date(), 'America/Sao_Paulo'), 'HH:mm', {
+            timeZone: 'America/Sao_Paulo',
+          })
+        )
 
         return isBefore(currentTime, inputTime)
       }
       case ComparisonOperators.DAY_OF_THE_WEEK: {
         if (!value || typeof value !== 'string') return false
 
-        const actualDayOfTheWeek = getDay(new Date())
+        const actualDayOfTheWeek = getDay(
+          zonedTimeToUtc(new Date(), 'America/Sao_Paulo')
+        )
         const selectedDayOfTheWeek = getDay(getWeekDayDateByWeekDayName(value))
 
         if (actualDayOfTheWeek === selectedDayOfTheWeek) return true
@@ -226,7 +237,10 @@ const parseDateOrNumber = (value: string): number => {
 
 function getTimeFromString(time: string): Date {
   const [hours, minutes] = time.split(':').map(Number)
-  return set(new Date(0), { hours, minutes })
+  return zonedTimeToUtc(
+    set(new Date(0), { hours, minutes }),
+    'America/Sao_Paulo'
+  )
 }
 
 const getWeekDayIndex = (weekDay: string) => {
@@ -245,7 +259,7 @@ const getWeekDayIndex = (weekDay: string) => {
 
 // Função para obter a próxima ocorrência do dia da semana fornecido
 const getWeekDayDateByWeekDayName = (weekDay: string) => {
-  const today = new Date()
+  const today = zonedTimeToUtc(new Date(), 'America/Sao_Paulo')
   const dayOfWeekIndex = getWeekDayIndex(weekDay)
 
   if (dayOfWeekIndex === -1) {
