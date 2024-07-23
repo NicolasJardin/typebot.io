@@ -108,11 +108,12 @@ export const ComparisonItem = ({
         item.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK && (
           <TextInput
             defaultValue={
-              item.comparisonOperator === ComparisonOperators.LATER_THAN ||
-              item.comparisonOperator === ComparisonOperators.SOONER_THAN
+              (item.comparisonOperator === ComparisonOperators.LATER_THAN ||
+                item.comparisonOperator === ComparisonOperators.SOONER_THAN) &&
+              item.value
                 ? format(parseISO(item.value), 'HH:mm', {
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                  }) ?? ''
+                  })
                 : item.value ?? ''
             }
             onChange={handleChangeValue}
