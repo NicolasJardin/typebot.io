@@ -6,7 +6,8 @@ import { TagSearchInput } from '@/components/TagSearchInput'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { Select, Stack } from '@chakra-ui/react'
 import { Comparison, ComparisonOperators, Variable } from '@typebot.io/schemas'
-import { addDays, format, startOfWeek } from 'date-fns'
+import { addDays, set, startOfWeek, parseISO } from 'date-fns'
+import { fromZonedTime, format } from 'date-fns-tz'
 import { ptBR } from 'date-fns/locale'
 
 export const ComparisonItem = ({
@@ -56,7 +57,16 @@ export const ComparisonItem = ({
     ) {
       const formattedValue = formatTime(value)
 
-      return onItemChange({ ...item, value: formattedValue })
+      if (formattedValue.length >= 5) {
+        const systemTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        const [hours, minutes] = formattedValue.split(':').map(Number)
+        const utcDateTime = fromZonedTime(
+          set(new Date(), { hours, minutes }),
+          systemTimeZone
+        )
+
+        return onItemChange({ ...item, value: utcDateTime.toISOString() })
+      }
     }
 
     onItemChange({ ...item, value })
@@ -97,7 +107,14 @@ export const ComparisonItem = ({
         item.comparisonOperator !== ComparisonOperators.CONTAINS_TAG &&
         item.comparisonOperator !== ComparisonOperators.DAY_OF_THE_WEEK && (
           <TextInput
-            defaultValue={item.value ?? ''}
+            defaultValue={
+              item.comparisonOperator === ComparisonOperators.LATER_THAN ||
+              item.comparisonOperator === ComparisonOperators.SOONER_THAN
+                ? format(parseISO(item.value), 'HH:mm', {
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                  }) ?? ''
+                : item.value ?? ''
+            }
             onChange={handleChangeValue}
             placeholder={parseValuePlaceholder(item.comparisonOperator)}
           />

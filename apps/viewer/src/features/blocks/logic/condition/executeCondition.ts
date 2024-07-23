@@ -9,8 +9,7 @@ import {
   LogicalOperator,
   Variable,
 } from '@typebot.io/schemas'
-import { format, getDay, isAfter, isBefore, set, setDay } from 'date-fns'
-import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz'
+import { getDay, isBefore, parseISO, setDay, set, isAfter } from 'date-fns'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -168,33 +167,45 @@ const executeComparison =
       case ComparisonOperators.LATER_THAN: {
         if (!value || typeof value !== 'string') return false
 
-        const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(
-          format(utcToZonedTime(new Date(), 'America/Sao_Paulo'), 'HH:mm', {
-            timeZone: 'America/Sao_Paulo',
-          })
-        )
+        const currentDateTime = set(new Date(), {
+          hours: new Date().getHours(),
+          minutes: new Date().getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
 
-        return isAfter(currentTime, inputTime)
+        const valueDateTime = set(new Date(), {
+          hours: parseISO(value).getHours(),
+          minutes: parseISO(value).getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
+
+        return isAfter(currentDateTime, valueDateTime)
       }
       case ComparisonOperators.SOONER_THAN: {
         if (!value || typeof value !== 'string') return false
 
-        const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(
-          format(utcToZonedTime(new Date(), 'America/Sao_Paulo'), 'HH:mm', {
-            timeZone: 'America/Sao_Paulo',
-          })
-        )
+        const currentDateTime = set(new Date(), {
+          hours: new Date().getHours(),
+          minutes: new Date().getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
 
-        return isBefore(currentTime, inputTime)
+        const valueDateTime = set(new Date(), {
+          hours: parseISO(value).getHours(),
+          minutes: parseISO(value).getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
+
+        return isBefore(currentDateTime, valueDateTime)
       }
       case ComparisonOperators.DAY_OF_THE_WEEK: {
         if (!value || typeof value !== 'string') return false
 
-        const actualDayOfTheWeek = getDay(
-          zonedTimeToUtc(new Date(), 'America/Sao_Paulo')
-        )
+        const actualDayOfTheWeek = getDay(new Date())
         const selectedDayOfTheWeek = getDay(getWeekDayDateByWeekDayName(value))
 
         if (actualDayOfTheWeek === selectedDayOfTheWeek) return true
@@ -235,14 +246,6 @@ const parseDateOrNumber = (value: string): number => {
   return parsed
 }
 
-function getTimeFromString(time: string): Date {
-  const [hours, minutes] = time.split(':').map(Number)
-  return zonedTimeToUtc(
-    set(new Date(0), { hours, minutes }),
-    'America/Sao_Paulo'
-  )
-}
-
 const getWeekDayIndex = (weekDay: string) => {
   const weekDays = [
     'domingo',
@@ -259,7 +262,7 @@ const getWeekDayIndex = (weekDay: string) => {
 
 // Função para obter a próxima ocorrência do dia da semana fornecido
 const getWeekDayDateByWeekDayName = (weekDay: string) => {
-  const today = zonedTimeToUtc(new Date(), 'America/Sao_Paulo')
+  const today = new Date()
   const dayOfWeekIndex = getWeekDayIndex(weekDay)
 
   if (dayOfWeekIndex === -1) {

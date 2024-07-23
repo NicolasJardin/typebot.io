@@ -28,7 +28,7 @@ import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
 import { getUntil } from '@/modules/time'
-import { utcToZonedTime } from 'date-fns-tz'
+import { fromZonedTime } from 'date-fns-tz'
 
 export const executeGroup =
   (
@@ -351,7 +351,10 @@ const parseInput =
             ...block.options,
             until: block.options.until
               ? format(
-                  utcToZonedTime(getUntil(block.options), 'UTC'),
+                  fromZonedTime(
+                    getUntil(block.options),
+                    Intl.DateTimeFormat().resolvedOptions().timeZone
+                  ),
                   'yyyy-MM-dd HH:mm:ss'
                 )
               : '',
@@ -375,7 +378,10 @@ const parseInput =
                     ...block.options.wait,
                     until: block.options.wait.until
                       ? format(
-                          utcToZonedTime(getUntil(block.options.wait), 'UTC'),
+                          fromZonedTime(
+                            getUntil(block.options.wait),
+                            Intl.DateTimeFormat().resolvedOptions().timeZone
+                          ),
                           'yyyy-MM-dd HH:mm:ss'
                         )
                       : undefined,
