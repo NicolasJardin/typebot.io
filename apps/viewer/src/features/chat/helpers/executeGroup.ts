@@ -158,6 +158,22 @@ export const executeGroup =
 
           continue
 
+        case LogicBlockType.UPDATE_SYSTEM_NAME:
+          messages.push({
+            content: {
+              value:
+                (state.typebot.variables.find(
+                  ({ name }) => name === block.options.variable?.name
+                )?.value as string) || null,
+            },
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
         case LogicBlockType.TAG:
           messages.push({
             content: block.options,

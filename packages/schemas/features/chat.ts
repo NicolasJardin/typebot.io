@@ -152,6 +152,13 @@ const tagMessageSchema = z.object({
   content: tagOptionsSchema,
 })
 
+const updateNameMessageSchema = z.object({
+  type: z.enum([LogicBlockType.UPDATE_SYSTEM_NAME]),
+  content: z.object({
+    value: z.string().nullable(),
+  }),
+})
+
 const waitForMessageSchema = z.object({
   type: z.enum([InputBlockType.WAIT_FOR]),
   content: waitForOptionsSchema,
@@ -193,6 +200,7 @@ const chatMessageSchema = z
       .or(transferMessageSchema)
       .or(waitMessageSchema)
       .or(tagMessageSchema)
+      .or(updateNameMessageSchema)
       .or(removeTagMessageSchema)
       .or(waitForMessageSchema)
       .or(buttonMessageSchema)

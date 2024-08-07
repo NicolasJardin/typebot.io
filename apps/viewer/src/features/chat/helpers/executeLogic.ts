@@ -31,6 +31,9 @@ export const executeLogic =
         return executeWait(state, block)
       case LogicBlockType.TRANSFER:
         return executeTransfer(state, block)
+      case LogicBlockType.UPDATE_SYSTEM_NAME:
+        //@ts-ignore
+        return null
       case LogicBlockType.TAG:
         return executeCreateTag(block)
       case LogicBlockType.REMOVE_TAG:

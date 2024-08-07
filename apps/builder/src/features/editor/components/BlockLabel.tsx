@@ -76,6 +76,8 @@ export const BlockLabel = ({ type }: Props): JSX.Element => {
       return <Text>Distribuir</Text>
     case LogicBlockType.TAG:
       return <Text>Criar tag</Text>
+    case LogicBlockType.UPDATE_SYSTEM_NAME:
+      return <Text style={{ whiteSpace: 'nowrap' }}>Alterar nome</Text>
     case LogicBlockType.REMOVE_TAG:
       return <Text>Remover tag</Text>
     case LogicBlockType.END:
