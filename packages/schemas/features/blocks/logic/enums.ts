@@ -13,4 +13,5 @@ export enum LogicBlockType {
   JUMP = 'Jump',
   AB_TEST = 'AB test',
   TEMPLATE = 'TemplateWABA',
+  UPDATE_SYSTEM_NAME = 'Update system name',
 }

@@ -9,7 +9,7 @@ import {
   LogicalOperator,
   Variable,
 } from '@typebot.io/schemas'
-import { format, getDay, isAfter, isBefore, set, setDay } from 'date-fns'
+import { getDay, isBefore, parseISO, setDay, set, isAfter } from 'date-fns'
 
 export const executeCondition =
   (variables: Variable[]) =>
@@ -167,18 +167,40 @@ const executeComparison =
       case ComparisonOperators.LATER_THAN: {
         if (!value || typeof value !== 'string') return false
 
-        const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+        const currentDateTime = set(new Date(), {
+          hours: new Date().getHours(),
+          minutes: new Date().getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
 
-        return isAfter(currentTime, inputTime)
+        const valueDateTime = set(new Date(), {
+          hours: parseISO(value).getHours(),
+          minutes: parseISO(value).getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
+
+        return isAfter(currentDateTime, valueDateTime)
       }
       case ComparisonOperators.SOONER_THAN: {
         if (!value || typeof value !== 'string') return false
 
-        const inputTime = getTimeFromString(value)
-        const currentTime = getTimeFromString(format(new Date(), 'HH:mm'))
+        const currentDateTime = set(new Date(), {
+          hours: new Date().getHours(),
+          minutes: new Date().getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
 
-        return isBefore(currentTime, inputTime)
+        const valueDateTime = set(new Date(), {
+          hours: parseISO(value).getHours(),
+          minutes: parseISO(value).getMinutes(),
+          seconds: 0,
+          milliseconds: 0,
+        })
+
+        return isBefore(currentDateTime, valueDateTime)
       }
       case ComparisonOperators.DAY_OF_THE_WEEK: {
         if (!value || typeof value !== 'string') return false
@@ -222,11 +244,6 @@ const parseDateOrNumber = (value: string): number => {
     return time
   }
   return parsed
-}
-
-function getTimeFromString(time: string): Date {
-  const [hours, minutes] = time.split(':').map(Number)
-  return set(new Date(0), { hours, minutes })
 }
 
 const getWeekDayIndex = (weekDay: string) => {

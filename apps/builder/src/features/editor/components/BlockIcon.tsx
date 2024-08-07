@@ -30,6 +30,7 @@ import { ScriptIcon } from '@/features/blocks/logic/script/components/ScriptIcon
 import { SetVariableIcon } from '@/features/blocks/logic/setVariable/components/SetVariableIcon'
 import { TypebotLinkIcon } from '@/features/blocks/logic/typebotLink/components/TypebotLinkIcon'
 import { WaitIcon } from '@/features/blocks/logic/wait/components/WaitIcon'
+import { FaUserEdit } from 'react-icons/fa'
 import { Icon, IconProps, useColorModeValue } from '@chakra-ui/react'
 import {
   BlockType,
@@ -106,6 +107,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <WaitIcon color={purple} {...props} />
     case LogicBlockType.TAG:
       return <Icon as={AiOutlineTag} color={purple} {...props} />
+    case LogicBlockType.UPDATE_SYSTEM_NAME:
+      return <Icon as={FaUserEdit} color={purple} {...props} />
     case LogicBlockType.REMOVE_TAG:
       return <Icon as={AiOutlineDelete} color={purple} {...props} />
     case InputBlockType.WAIT_FOR:

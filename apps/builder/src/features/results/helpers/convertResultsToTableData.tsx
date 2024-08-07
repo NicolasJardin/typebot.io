@@ -10,8 +10,7 @@ import {
 import { FileLinks } from '../components/FileLinks'
 import { TableData } from '../types'
 import { parseAccessor } from './parseAccessor'
-import { format } from 'date-fns'
-import { utcToZonedTime } from 'date-fns-tz'
+import { format } from 'date-fns-tz'
 
 export const convertResultsToTableData = (
   results: ResultWithAnswers[] | undefined,
@@ -20,7 +19,9 @@ export const convertResultsToTableData = (
   (results ?? []).map((result) => ({
     id: { plainText: result.id },
     'Enviado em': {
-      plainText: format(utcToZonedTime(result.createdAt, 'UTC'), 'dd/MM/yyyy'),
+      plainText: format(result.createdAt, 'dd/MM/yyyy', {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
     },
     ...[...result.answers, ...result.variables].reduce<{
       [key: string]: { element?: JSX.Element; plainText: string }

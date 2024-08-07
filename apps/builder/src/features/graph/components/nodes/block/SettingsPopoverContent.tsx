@@ -27,6 +27,7 @@ import { ScriptSettings } from '@/features/blocks/logic/script/components/Script
 import { SetVariableSettings } from '@/features/blocks/logic/setVariable/components/SetVariableSettings'
 import SpreadSettings from '@/features/blocks/logic/spread/components/SpreadSettings/SpreadSettings'
 import TagSettings from '@/features/blocks/logic/tag/components/TagSettings'
+import UpdateNameSettings from '@/features/blocks/logic/updateName/components/UpdateNameSettings'
 import TransferSettings from '@/features/blocks/logic/transfer/components/TransferSettings'
 import { TypebotLinkForm } from '@/features/blocks/logic/typebotLink/components/TypebotLinkForm'
 import { WaitSettings } from '@/features/blocks/logic/wait/components/WaitSettings'
@@ -285,6 +286,14 @@ export const BlockSettings = ({
         <WaitSettings options={block.options} onOptionsChange={updateOptions} />
       )
     }
+
+    case LogicBlockType.UPDATE_SYSTEM_NAME:
+      return (
+        <UpdateNameSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
 
     case LogicBlockType.TAG:
       return (
