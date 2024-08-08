@@ -6,7 +6,7 @@ import { TagSearchInput } from '@/components/TagSearchInput'
 import { useTypebot } from '@/features/editor/providers/TypebotProvider'
 import { Select, Stack } from '@chakra-ui/react'
 import { Comparison, ComparisonOperators, Variable } from '@typebot.io/schemas'
-import { addDays, set, startOfWeek, parseISO } from 'date-fns'
+import { addDays, set, startOfWeek, parseISO, isValid } from 'date-fns'
 import { fromZonedTime, format } from 'date-fns-tz'
 import { ptBR } from 'date-fns/locale'
 
@@ -110,7 +110,8 @@ export const ComparisonItem = ({
             defaultValue={
               (item.comparisonOperator === ComparisonOperators.LATER_THAN ||
                 item.comparisonOperator === ComparisonOperators.SOONER_THAN) &&
-              item.value
+              item.value &&
+              isValid(parseISO(item.value))
                 ? format(parseISO(item.value), 'HH:mm', {
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                   })
