@@ -41,11 +41,11 @@ export const ConditionContent = ({
             )}
             {comparison?.value && (
               <Tag bgColor={comparisonValueBg} size="sm">
-                {comparison.comparisonOperator ===
+                {(comparison.comparisonOperator ===
                   ComparisonOperators.LATER_THAN ||
-                (comparison.comparisonOperator ===
-                  ComparisonOperators.SOONER_THAN &&
-                  isValid(parseISO(comparison.value)))
+                  comparison.comparisonOperator ===
+                    ComparisonOperators.SOONER_THAN) &&
+                isValid(parseISO(comparison.value))
                   ? format(parseISO(comparison.value), 'HH:mm', {
                       timeZone:
                         Intl.DateTimeFormat().resolvedOptions().timeZone,
