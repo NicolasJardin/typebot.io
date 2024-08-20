@@ -59,15 +59,16 @@ export default function FileBubbleForm({
 
   return (
     <Stack>
-      <HStack>
-        <Button
-          variant={currentTab === 'upload' ? 'solid' : 'ghost'}
-          onClick={() => setCurrentTab('upload')}
-          size="sm"
-        >
-          Carregar
-        </Button>
-        {!disableEmbedLink && (
+      {!disableEmbedLink && (
+        <HStack>
+          <Button
+            variant={currentTab === 'upload' ? 'solid' : 'ghost'}
+            onClick={() => setCurrentTab('upload')}
+            size="sm"
+          >
+            Carregar
+          </Button>
+
           <Button
             variant={currentTab === 'link' ? 'solid' : 'ghost'}
             onClick={() => setCurrentTab('link')}
@@ -75,8 +76,8 @@ export default function FileBubbleForm({
           >
             Incorporar link
           </Button>
-        )}
-      </HStack>
+        </HStack>
+      )}
       <Stack p="2">
         {currentTab === 'upload' && (
           <Stack justify="center" py="2" spacing={8}>
