@@ -2,7 +2,6 @@ import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
 import { Button, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
-import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
 type FileBubbleFormProps = {
@@ -32,7 +31,7 @@ export default function FileBubbleForm({
     switch (fileType) {
       case 'image':
         return (
-          <Image
+          <img
             src={content.url}
             alt=""
             width={250}
