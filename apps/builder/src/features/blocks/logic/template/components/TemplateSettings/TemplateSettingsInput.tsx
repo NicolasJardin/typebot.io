@@ -75,6 +75,7 @@ export function TemplateSettingsInput({
     case 'audio':
       return (
         <FileBubbleForm
+          disableEmbedLink
           content={{
             url: options.variables?.[index]?.value,
           }}
@@ -86,6 +87,7 @@ export function TemplateSettingsInput({
     case 'image':
       return (
         <FileBubbleForm
+          disableEmbedLink
           content={{
             url: options.variables?.[index]?.value,
           }}
@@ -97,6 +99,7 @@ export function TemplateSettingsInput({
     case 'video':
       return (
         <FileBubbleForm
+          disableEmbedLink
           content={{
             url: options.variables?.[index]?.value,
           }}
@@ -108,6 +111,7 @@ export function TemplateSettingsInput({
     case 'document':
       return (
         <FileBubbleForm
+          disableEmbedLink
           content={{
             url: options.variables?.[index]?.value,
           }}

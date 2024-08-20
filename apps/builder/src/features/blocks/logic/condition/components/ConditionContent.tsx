@@ -1,7 +1,7 @@
 import { Stack, Wrap, Tag, Text, useColorModeValue } from '@chakra-ui/react'
 import { byId } from '@typebot.io/lib'
 import { ComparisonOperators, Condition, Variable } from '@typebot.io/schemas'
-import { parseISO } from 'date-fns'
+import { parseISO, isValid } from 'date-fns'
 import { format } from 'date-fns-tz'
 
 type Props = {
@@ -41,10 +41,11 @@ export const ConditionContent = ({
             )}
             {comparison?.value && (
               <Tag bgColor={comparisonValueBg} size="sm">
-                {comparison.comparisonOperator ===
+                {(comparison.comparisonOperator ===
                   ComparisonOperators.LATER_THAN ||
-                comparison.comparisonOperator ===
-                  ComparisonOperators.SOONER_THAN
+                  comparison.comparisonOperator ===
+                    ComparisonOperators.SOONER_THAN) &&
+                isValid(parseISO(comparison.value))
                   ? format(parseISO(comparison.value), 'HH:mm', {
                       timeZone:
                         Intl.DateTimeFormat().resolvedOptions().timeZone,

@@ -1,14 +1,16 @@
 import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
-import { Button, Flex, HStack, Stack, Text } from '@chakra-ui/react'
+import { Button, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
-import { useState } from 'react'
+import Image from 'next/image'
+import { useMemo, useState } from 'react'
 
 type FileBubbleFormProps = {
   fileUploadPath: string
   content: AudioBubbleContent
   onSubmit: (content: AudioBubbleContent) => void
   fileType?: 'audio' | 'video' | 'image' | 'file' | 'document'
+  disableEmbedLink?: boolean
 }
 
 export default function FileBubbleForm({
@@ -16,10 +18,44 @@ export default function FileBubbleForm({
   fileUploadPath,
   fileType,
   onSubmit,
+  disableEmbedLink = false,
 }: FileBubbleFormProps) {
-  const [currentTab, setCurrentTab] = useState<'link' | 'upload'>('link')
+  const [currentTab, setCurrentTab] = useState<'link' | 'upload'>(
+    disableEmbedLink ? 'upload' : 'link'
+  )
 
   const submit = (url: string) => onSubmit({ url })
+
+  const contentUploaded = useMemo(() => {
+    if (!content.url) return null
+
+    switch (fileType) {
+      case 'image':
+        return (
+          <Image
+            src={content.url}
+            alt=""
+            width={250}
+            height={250}
+            style={{ borderRadius: '6px' }}
+          />
+        )
+      case 'video':
+        return (
+          <iframe
+            src={content.url}
+            style={{
+              width: '100%',
+              height: 250,
+              borderRadius: '6px',
+            }}
+            allowFullScreen
+          />
+        )
+    }
+
+    return <Text>{content?.url}</Text>
+  }, [content.url, fileType])
 
   return (
     <Stack>
@@ -31,17 +67,21 @@ export default function FileBubbleForm({
         >
           Carregar
         </Button>
-        <Button
-          variant={currentTab === 'link' ? 'solid' : 'ghost'}
-          onClick={() => setCurrentTab('link')}
-          size="sm"
-        >
-          Incorporar link
-        </Button>
+        {!disableEmbedLink && (
+          <Button
+            variant={currentTab === 'link' ? 'solid' : 'ghost'}
+            onClick={() => setCurrentTab('link')}
+            size="sm"
+          >
+            Incorporar link
+          </Button>
+        )}
       </HStack>
       <Stack p="2">
         {currentTab === 'upload' && (
-          <Flex justify="center" py="2">
+          <Stack justify="center" py="2" spacing={8}>
+            {contentUploaded}
+
             <UploadButton
               fileType={fileType || 'file'}
               filePath={fileUploadPath}
@@ -50,7 +90,7 @@ export default function FileBubbleForm({
             >
               Escolha um arquivo
             </UploadButton>
-          </Flex>
+          </Stack>
         )}
         {currentTab === 'link' && (
           <>
