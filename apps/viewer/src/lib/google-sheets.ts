@@ -3,7 +3,6 @@ import { OAuth2Client, Credentials } from 'google-auth-library'
 import { GoogleSheetsCredentials } from '@typebot.io/schemas'
 import { isDefined } from '@typebot.io/lib'
 import { decrypt, encrypt } from '@typebot.io/lib/api'
-
 import prisma from './prisma'
 
 export const getAuthenticatedGoogleClient = async (
