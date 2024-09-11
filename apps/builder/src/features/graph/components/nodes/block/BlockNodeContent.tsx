@@ -56,6 +56,7 @@ import {
 import { ItemNodesList } from '../item/ItemNodesList'
 import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 import TemplateNodeContent from '@/features/blocks/logic/template/components/TemplateNodeContent'
+import SendFromNodeContent from '@/features/blocks/logic/sendFrom/components/SendFromNodeContent'
 // import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 
 type Props = {
@@ -184,6 +185,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return <UpdateNameNodeContent options={block.options} />
+
+    case LogicBlockType.SEND_FROM:
+      return <SendFromNodeContent options={block.options} />
 
     case LogicBlockType.TAG:
       return <TagNodeContent options={block.options} />

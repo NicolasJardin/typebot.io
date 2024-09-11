@@ -12,6 +12,7 @@ import TemplateBubble from '@/features/blocks/bubbles/template/components/Templa
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import UpdateNameBubble from '@/features/blocks/bubbles/updateName/components/UpdateNameBubble/UpdateNameBubble'
+import SendFromBubble from '@/features/blocks/bubbles/sendFrom/components/SendFromBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
 import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
 import {
@@ -105,6 +106,16 @@ export const HostBubble = (props: Props) => {
         return (
           <UpdateNameBubble
             value={props.message.content?.value}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.SEND_FROM:
+        return (
+          <SendFromBubble
+            device={props.message.content?.device?.name}
+            contact={props.message.content?.contact}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />

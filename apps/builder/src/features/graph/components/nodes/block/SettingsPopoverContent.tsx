@@ -57,6 +57,7 @@ import {
 import { Fragment, useRef, useState } from 'react'
 import { SettingsHoverBar } from './SettingsHoverBar'
 import { PixelSettings } from '@/features/blocks/integrations/pixel/components/PixelSettings'
+import SendFromSettings from '@/features/blocks/logic/sendFrom/components/SendFromSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -290,6 +291,14 @@ export const BlockSettings = ({
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return (
         <UpdateNameSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+
+    case LogicBlockType.SEND_FROM:
+      return (
+        <SendFromSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />

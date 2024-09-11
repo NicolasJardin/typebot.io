@@ -53,6 +53,7 @@ import {
   waitBlockSchema,
   waitForBlockSchema,
   updateNameBlockSchema,
+  sendFromBlockSchema,
 } from './logic'
 import { conditionBlockSchema } from './logic/condition'
 import { endBlockSchema } from './logic/end'
@@ -143,6 +144,7 @@ export const blockSchema = z.discriminatedUnion('type', [
   transferBlockSchema,
   tagBlockSchema,
   updateNameBlockSchema,
+  sendFromBlockSchema,
   spreadBlockSchema,
   templateBlockSchema,
   fileBubbleBlockSchema,

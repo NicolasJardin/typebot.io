@@ -34,6 +34,9 @@ export const executeLogic =
       case LogicBlockType.UPDATE_SYSTEM_NAME:
         //@ts-ignore
         return null
+      case LogicBlockType.SEND_FROM:
+        //@ts-ignore
+        return null
       case LogicBlockType.TAG:
         return executeCreateTag(block)
       case LogicBlockType.REMOVE_TAG:

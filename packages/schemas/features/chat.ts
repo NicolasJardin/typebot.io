@@ -159,6 +159,20 @@ const updateNameMessageSchema = z.object({
   }),
 })
 
+const sendFromMessageSchema = z.object({
+  type: z.enum([LogicBlockType.SEND_FROM]),
+  content: z.object({
+    device: z
+      .object({
+        id: z.string(),
+        name: z.string(),
+      })
+      .nullable(),
+    message: z.string(),
+    contact: z.string(),
+  }),
+})
+
 const waitForMessageSchema = z.object({
   type: z.enum([InputBlockType.WAIT_FOR]),
   content: waitForOptionsSchema,
@@ -201,6 +215,7 @@ const chatMessageSchema = z
       .or(waitMessageSchema)
       .or(tagMessageSchema)
       .or(updateNameMessageSchema)
+      .or(sendFromMessageSchema)
       .or(removeTagMessageSchema)
       .or(waitForMessageSchema)
       .or(buttonMessageSchema)
