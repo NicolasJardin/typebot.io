@@ -1,8 +1,7 @@
 export interface DepartmentGetResponse {
   sectors: {
-    sector: string
-    uuid: string
-    total: number
+    name: string
+    id: string
   }[]
   status: string
 }
