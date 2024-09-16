@@ -1,5 +1,5 @@
 import { TextInput, Textarea } from '@/components/inputs'
-import useGetDevices from '@/whatsflow/api/template/queries/useGetDevices'
+import useGetIntegrations from '@/whatsflow/api/template/queries/useGetIntegrations'
 import {
   FormControl,
   FormLabel,
@@ -19,7 +19,8 @@ export default function SendFromSettings({
   options,
   onOptionsChange,
 }: SendFromSettingsProps) {
-  const { data: devicesData, isFetching: isFetchingDevices } = useGetDevices()
+  const { data: devicesData, isFetching: isFetchingDevices } =
+    useGetIntegrations()
 
   const handleDeviceChange = useCallback(
     (device: Device) =>
