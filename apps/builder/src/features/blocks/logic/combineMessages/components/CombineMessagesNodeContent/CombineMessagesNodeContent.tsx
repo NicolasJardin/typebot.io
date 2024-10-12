@@ -8,7 +8,7 @@ export default function CombineMessagesNodeContent({
 }: CombineMessagesNodeContentProps) {
   return (
     <Text>
-      Juntar mensagens{' '}
+      Combinar mensagens{' '}
       {options.waitSeconds ? `(${options.waitSeconds} segundos)` : ''}
     </Text>
   )
