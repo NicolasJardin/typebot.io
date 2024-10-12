@@ -139,7 +139,7 @@ export default function TemplateSettings({
             : example
 
           return (
-            <FormControl key={example}>
+            <FormControl key={index}>
               <FormLabel>
                 Variável: {variableOrder} - {format || 'texto'}
               </FormLabel>

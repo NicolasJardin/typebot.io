@@ -10,8 +10,8 @@ export default function useTransferFormatter() {
   >(
     (response) =>
       response?.sectors.map((data) => ({
-        id: data.uuid,
-        name: data.sector,
+        id: data.id,
+        name: data.name,
       })) || [],
     []
   )

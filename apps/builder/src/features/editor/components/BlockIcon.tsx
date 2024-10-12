@@ -30,6 +30,7 @@ import { ScriptIcon } from '@/features/blocks/logic/script/components/ScriptIcon
 import { SetVariableIcon } from '@/features/blocks/logic/setVariable/components/SetVariableIcon'
 import { TypebotLinkIcon } from '@/features/blocks/logic/typebotLink/components/TypebotLinkIcon'
 import { WaitIcon } from '@/features/blocks/logic/wait/components/WaitIcon'
+import { IoMdSend } from 'react-icons/io'
 import { FaUserEdit } from 'react-icons/fa'
 import { Icon, IconProps, useColorModeValue } from '@chakra-ui/react'
 import {
@@ -49,6 +50,7 @@ import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
 import { TbFiles } from 'react-icons/tb'
 import { LuLayoutTemplate } from 'react-icons/lu'
+import { TiMessages } from 'react-icons/ti'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
@@ -109,6 +111,10 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <Icon as={AiOutlineTag} color={purple} {...props} />
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return <Icon as={FaUserEdit} color={purple} {...props} />
+    case LogicBlockType.COMBINE_MESSAGES:
+      return <Icon as={TiMessages} color={purple} {...props} />
+    case LogicBlockType.SEND_FROM:
+      return <Icon as={IoMdSend} color={purple} {...props} />
     case LogicBlockType.REMOVE_TAG:
       return <Icon as={AiOutlineDelete} color={purple} {...props} />
     case InputBlockType.WAIT_FOR:

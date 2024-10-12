@@ -3,6 +3,7 @@ import { computePaymentInputRuntimeOptions } from '@/features/blocks/inputs/paym
 import { injectVariableValuesInPictureChoiceBlock } from '@/features/blocks/inputs/pictureChoice/injectVariableValuesInPictureChoiceBlock'
 import { deepParseVariables } from '@/features/variables/deepParseVariable'
 import { parseVariables } from '@/features/variables/parseVariables'
+import { getUntil } from '@/modules/time'
 import {
   isBubbleBlock,
   isDefined,
@@ -24,11 +25,10 @@ import {
   SessionState,
 } from '@typebot.io/schemas'
 import { format, isValid } from 'date-fns'
+import { fromZonedTime } from 'date-fns-tz'
 import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
-import { getUntil } from '@/modules/time'
-import { fromZonedTime } from 'date-fns-tz'
 
 export const executeGroup =
   (
@@ -47,6 +47,17 @@ export const executeGroup =
     let lastBubbleBlockId: string | undefined = currentLastBubbleId
 
     let newSessionState = state
+
+    function replaceVariablesInString(str: string) {
+      return str.replace(/\{\{(.*?)\}\}/g, (_, variableName: string) => {
+        const foundVariable = state.typebot.variables.find(
+          ({ name }) => name === variableName
+        )?.value as string | undefined
+        return foundVariable !== undefined
+          ? foundVariable
+          : `{{${variableName}}}`
+      })
+    }
 
     for (const block of group.blocks) {
       nextEdgeId = block.outgoingEdgeId
@@ -165,6 +176,32 @@ export const executeGroup =
                 (state.typebot.variables.find(
                   ({ name }) => name === block.options.variable?.name
                 )?.value as string) || null,
+            },
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
+        case LogicBlockType.COMBINE_MESSAGES:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
+        case LogicBlockType.SEND_FROM:
+          messages.push({
+            content: {
+              device: block.options.device,
+              contact: replaceVariablesInString(block.options.contact),
+              message: replaceVariablesInString(block.options.content),
             },
             id: block.id,
             type: block.type,

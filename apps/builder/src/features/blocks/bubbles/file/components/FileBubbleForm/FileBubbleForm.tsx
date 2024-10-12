@@ -2,7 +2,6 @@ import { UploadButton } from '@/components/ImageUploadContent/UploadButton'
 import { TextInput } from '@/components/inputs'
 import { Button, HStack, Stack, Text } from '@chakra-ui/react'
 import { AudioBubbleContent } from '@typebot.io/schemas'
-import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
 type FileBubbleFormProps = {
@@ -32,7 +31,7 @@ export default function FileBubbleForm({
     switch (fileType) {
       case 'image':
         return (
-          <Image
+          <img
             src={content.url}
             alt=""
             width={250}
@@ -59,15 +58,16 @@ export default function FileBubbleForm({
 
   return (
     <Stack>
-      <HStack>
-        <Button
-          variant={currentTab === 'upload' ? 'solid' : 'ghost'}
-          onClick={() => setCurrentTab('upload')}
-          size="sm"
-        >
-          Carregar
-        </Button>
-        {!disableEmbedLink && (
+      {!disableEmbedLink && (
+        <HStack>
+          <Button
+            variant={currentTab === 'upload' ? 'solid' : 'ghost'}
+            onClick={() => setCurrentTab('upload')}
+            size="sm"
+          >
+            Carregar
+          </Button>
+
           <Button
             variant={currentTab === 'link' ? 'solid' : 'ghost'}
             onClick={() => setCurrentTab('link')}
@@ -75,8 +75,8 @@ export default function FileBubbleForm({
           >
             Incorporar link
           </Button>
-        )}
-      </HStack>
+        </HStack>
+      )}
       <Stack p="2">
         {currentTab === 'upload' && (
           <Stack justify="center" py="2" spacing={8}>

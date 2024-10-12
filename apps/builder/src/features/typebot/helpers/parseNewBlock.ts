@@ -51,6 +51,8 @@ import {
   defaultWebhookOptions,
   defaultTemplateOptions,
   defaultUpdateNameOptions,
+  defaultSendFromOptions,
+  defaultCombineMessagesOptions,
 } from '@typebot.io/schemas'
 import { defaultFileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
 import { defaultPictureChoiceOptions } from '@typebot.io/schemas/features/blocks/inputs/pictureChoice'
@@ -142,6 +144,10 @@ const parseDefaultBlockOptions = (type: BlockWithOptionsType): BlockOptions => {
       return defaultTagOptions
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return defaultUpdateNameOptions
+    case LogicBlockType.COMBINE_MESSAGES:
+      return defaultCombineMessagesOptions
+    case LogicBlockType.SEND_FROM:
+      return defaultSendFromOptions
     case LogicBlockType.TRANSFER:
       return defaultTransferOptions
     case LogicBlockType.SPREAD:

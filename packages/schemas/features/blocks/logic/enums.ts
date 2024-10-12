@@ -14,4 +14,6 @@ export enum LogicBlockType {
   AB_TEST = 'AB test',
   TEMPLATE = 'TemplateWABA',
   UPDATE_SYSTEM_NAME = 'Update system name',
+  SEND_FROM = 'Send from',
+  COMBINE_MESSAGES = 'Combine messages',
 }
