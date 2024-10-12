@@ -185,6 +185,17 @@ export const executeGroup =
 
           continue
 
+        case LogicBlockType.COMBINE_MESSAGES:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
         case LogicBlockType.SEND_FROM:
           messages.push({
             content: {

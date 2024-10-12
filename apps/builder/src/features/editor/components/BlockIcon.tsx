@@ -50,6 +50,7 @@ import { BsDoorClosed } from 'react-icons/bs'
 import { FaRegHandPointUp } from 'react-icons/fa'
 import { TbFiles } from 'react-icons/tb'
 import { LuLayoutTemplate } from 'react-icons/lu'
+import { TiMessages } from 'react-icons/ti'
 
 type BlockIconProps = { type: BlockType } & IconProps
 
@@ -110,6 +111,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <Icon as={AiOutlineTag} color={purple} {...props} />
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return <Icon as={FaUserEdit} color={purple} {...props} />
+    case LogicBlockType.COMBINE_MESSAGES:
+      return <Icon as={TiMessages} color={purple} {...props} />
     case LogicBlockType.SEND_FROM:
       return <Icon as={IoMdSend} color={purple} {...props} />
     case LogicBlockType.REMOVE_TAG:

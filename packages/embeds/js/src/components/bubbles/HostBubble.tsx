@@ -32,6 +32,7 @@ import {
   WaitOptions,
 } from '@typebot.io/schemas'
 import { FileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
+import CombineMessagesBubble from '@/features/blocks/bubbles/combineMessages/components/CombineMessagesBubble'
 
 type Props = {
   message: ChatMessage
@@ -105,6 +106,15 @@ export const HostBubble = (props: Props) => {
       case LogicBlockType.UPDATE_SYSTEM_NAME:
         return (
           <UpdateNameBubble
+            value={props.message.content?.value}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.COMBINE_MESSAGES:
+        return (
+          <CombineMessagesBubble
             value={props.message.content?.value}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
