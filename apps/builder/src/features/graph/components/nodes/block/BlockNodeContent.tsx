@@ -39,6 +39,7 @@ import { AbTestNodeBody } from '@/features/blocks/logic/abTest/components/AbTest
 import SpreadNodeContent from '@/features/blocks/logic/spread/components/SpreadNodeContent/SpreadNodeContent'
 import TagNodeContent from '@/features/blocks/logic/tag/components/TagNodeContent'
 import UpdateNameNodeContent from '@/features/blocks/logic/updateName/components/UpdateNameNodeContent'
+import CombineMessagesNodeContent from '@/features/blocks/logic/combineMessages/components/CombineMessagesNodeContent'
 import TransferNodeContent from '@/features/blocks/logic/transfer/components/TransferNodeContent'
 import { TypebotLinkNode } from '@/features/blocks/logic/typebotLink/components/TypebotLinkNode'
 import { WaitNodeContent } from '@/features/blocks/logic/wait/components/WaitNodeContent'
@@ -185,6 +186,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.UPDATE_SYSTEM_NAME:
       return <UpdateNameNodeContent options={block.options} />
+
+    case LogicBlockType.COMBINE_MESSAGES:
+      return <CombineMessagesNodeContent options={block.options} />
 
     case LogicBlockType.SEND_FROM:
       return <SendFromNodeContent options={block.options} />

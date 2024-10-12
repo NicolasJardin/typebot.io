@@ -206,6 +206,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={LogicBlockType.COMBINE_MESSAGES}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={LogicBlockType.TAG}
               onMouseDown={handleMouseDown}
             />

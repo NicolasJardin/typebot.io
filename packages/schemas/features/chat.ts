@@ -3,6 +3,7 @@ import { answerSchema } from './answer'
 import {
   InputBlockType,
   LogicBlockType,
+  combineMessagesOptionsSchema,
   executableWebhookSchema,
   googleAnalyticsOptionsSchema,
   paymentInputRuntimeOptionsSchema,
@@ -173,6 +174,11 @@ const sendFromMessageSchema = z.object({
   }),
 })
 
+const combineMessagesSchema = z.object({
+  type: z.enum([LogicBlockType.COMBINE_MESSAGES]),
+  content: combineMessagesOptionsSchema,
+})
+
 const waitForMessageSchema = z.object({
   type: z.enum([InputBlockType.WAIT_FOR]),
   content: waitForOptionsSchema,
@@ -215,6 +221,7 @@ const chatMessageSchema = z
       .or(waitMessageSchema)
       .or(tagMessageSchema)
       .or(updateNameMessageSchema)
+      .or(combineMessagesSchema)
       .or(sendFromMessageSchema)
       .or(removeTagMessageSchema)
       .or(waitForMessageSchema)
