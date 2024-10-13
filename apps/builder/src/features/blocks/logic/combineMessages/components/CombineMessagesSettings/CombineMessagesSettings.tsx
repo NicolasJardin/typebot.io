@@ -40,7 +40,7 @@ export default function CombineMessagesSettings({
         type="number"
         helperText={
           options.waitSeconds < 10 || options.waitSeconds > 900 ? (
-            <Text color={options?.waitSeconds > 0 ? 'red.500' : ''}>
+            <Text color={'red.500'}>
               {options?.waitSeconds < 10
                 ? 'O valor mínimo permitido é 10.'
                 : 'O valor máximo permitido é 900.'}
