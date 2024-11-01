@@ -37,6 +37,9 @@ export const executeLogic =
       case LogicBlockType.COMBINE_MESSAGES:
         //@ts-ignore
         return null
+      case LogicBlockType.AI_ASSISTANT:
+        //@ts-ignore
+        return null
       case LogicBlockType.SEND_FROM:
         //@ts-ignore
         return null

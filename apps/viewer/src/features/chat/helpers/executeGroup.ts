@@ -196,6 +196,17 @@ export const executeGroup =
 
           continue
 
+        case LogicBlockType.AI_ASSISTANT:
+          messages.push({
+            content: block.options,
+            id: block.id,
+            type: block.type,
+          })
+
+          lastBubbleBlockId = block.id
+
+          continue
+
         case LogicBlockType.SEND_FROM:
           messages.push({
             content: {

@@ -58,6 +58,7 @@ import { ItemNodesList } from '../item/ItemNodesList'
 import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 import TemplateNodeContent from '@/features/blocks/logic/template/components/TemplateNodeContent'
 import SendFromNodeContent from '@/features/blocks/logic/sendFrom/components/SendFromNodeContent'
+import AiAssistantNodeContent from '@/features/blocks/logic/aiAssistant/components/AiAssistantNodeContent'
 // import { PixelNodeBody } from '@/features/blocks/integrations/pixel/components/PixelNodeBody'
 
 type Props = {
@@ -189,6 +190,9 @@ export const BlockNodeContent = ({ block, indices }: Props): JSX.Element => {
 
     case LogicBlockType.COMBINE_MESSAGES:
       return <CombineMessagesNodeContent options={block.options} />
+
+    case LogicBlockType.AI_ASSISTANT:
+      return <AiAssistantNodeContent options={block.options} />
 
     case LogicBlockType.SEND_FROM:
       return <SendFromNodeContent options={block.options} />

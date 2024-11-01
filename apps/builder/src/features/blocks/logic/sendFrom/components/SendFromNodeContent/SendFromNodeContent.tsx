@@ -6,7 +6,6 @@ type SendFromNodeContentProps = { options: SendFromOptions }
 export default function SendFromNodeContent({
   options,
 }: SendFromNodeContentProps) {
-  //@TODO
   return (
     <Text>
       Enviar de{' '}
