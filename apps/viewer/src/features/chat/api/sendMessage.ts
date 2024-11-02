@@ -124,7 +124,9 @@ export const sendMessage = publicProcedure
           newSessionState,
           logs,
           lastMessageNewFormat,
-        } = await continueBotFlow(sessionState)(message)
+        } = await continueBotFlow({ ...sessionState, sessionId: session.id })(
+          message
+        )
 
         const allLogs = clientLogs ? [...(logs ?? []), ...clientLogs] : logs
 

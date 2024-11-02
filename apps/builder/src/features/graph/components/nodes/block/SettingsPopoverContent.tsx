@@ -59,6 +59,7 @@ import { SettingsHoverBar } from './SettingsHoverBar'
 import { PixelSettings } from '@/features/blocks/integrations/pixel/components/PixelSettings'
 import SendFromSettings from '@/features/blocks/logic/sendFrom/components/SendFromSettings'
 import CombineMessagesSettings from '@/features/blocks/logic/combineMessages/components/CombineMessagesSettings'
+import AiAssistantSettings from '@/features/blocks/logic/aiAssistant/components/AiAssistantSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -299,6 +300,14 @@ export const BlockSettings = ({
     case LogicBlockType.COMBINE_MESSAGES:
       return (
         <CombineMessagesSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+
+    case LogicBlockType.AI_ASSISTANT:
+      return (
+        <AiAssistantSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />

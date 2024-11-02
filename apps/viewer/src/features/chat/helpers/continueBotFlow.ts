@@ -35,6 +35,7 @@ export const continueBotFlow =
     reply?: string
   ): Promise<ChatReply & { newSessionState: SessionState }> => {
     let newSessionState = { ...state }
+
     const group = state.typebot.groups.find(
       (group) => group.id === state.currentBlock?.groupId
     )
