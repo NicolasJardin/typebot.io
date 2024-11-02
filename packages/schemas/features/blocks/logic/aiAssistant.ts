@@ -13,6 +13,8 @@ export const aiAssistantOptionsSchema = z.object({
   message: z.string(),
   aiResponseVariableId: z.string(),
   instructions: z.string(),
+  companyId: z.string(),
+  token: z.string(),
 })
 
 export const aiAssistantBlockSchema = blockBaseSchema.merge(
@@ -27,6 +29,8 @@ export const defaultAiAssistantOptions: AiAssistantOptions = {
   message: '',
   aiResponseVariableId: '',
   instructions: '',
+  companyId: '',
+  token: '',
 }
 
 export type AiAssistantBlock = z.infer<typeof aiAssistantBlockSchema>

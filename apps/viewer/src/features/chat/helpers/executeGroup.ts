@@ -11,6 +11,7 @@ import {
   isIntegrationBlock,
   isLogicBlock,
   isNotEmpty,
+  sendRequest,
 } from '@typebot.io/lib'
 import {
   BubbleBlock,
@@ -29,6 +30,7 @@ import { fromZonedTime } from 'date-fns-tz'
 import { executeIntegration } from './executeIntegration'
 import { executeLogic } from './executeLogic'
 import { getNextGroup } from './getNextGroup'
+import { AssistantExecuteResponse } from '@/features/whatsflow/types/AssistantExecuteResponse'
 
 export const executeGroup =
   (
@@ -196,9 +198,41 @@ export const executeGroup =
 
           continue
 
-        case LogicBlockType.AI_ASSISTANT:
+        case LogicBlockType.AI_ASSISTANT: {
+          const instructions = replaceVariablesInString(
+            block.options.instructions
+          )
+
+          const message = replaceVariablesInString(block.options.message)
+
+          const response = await sendRequest<AssistantExecuteResponse>({
+            url: `${process.env.NEXT_PUBLIC_VIEWER_URL}/api/whatsflow/execute-assistant-ai`,
+            method: 'POST',
+            body: {
+              ...block.options,
+              instructions,
+              message,
+              sessionId: newSessionState.sessionId,
+              typebotId: newSessionState.typebot.id,
+            },
+          })
+
+          const aiResponseVariableIndex = state.typebot.variables.findIndex(
+            (variable) => variable.id === block.options.aiResponseVariableId
+          )
+
+          if (aiResponseVariableIndex !== -1)
+            state.typebot.variables[aiResponseVariableIndex]!.value =
+              response?.data?.message
+
           messages.push({
-            content: block.options,
+            content: {
+              aiResponse: response?.data?.message || null,
+              assistant: block.options.assistant,
+              aiResponseVariableId: block.options.aiResponseVariableId,
+              instructions,
+              message,
+            },
             id: block.id,
             type: block.type,
           })
@@ -206,6 +240,7 @@ export const executeGroup =
           lastBubbleBlockId = block.id
 
           continue
+        }
 
         case LogicBlockType.SEND_FROM:
           messages.push({

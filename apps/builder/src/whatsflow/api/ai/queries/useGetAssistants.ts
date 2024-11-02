@@ -18,7 +18,7 @@ export default function useGetAssistants(options?: UseGetDecivesOptions) {
     []
   )
 
-  const queryKey = ['whatsflow', 'devices']
+  const queryKey = ['whatsflow', 'assistants']
 
   const queryFn = useCallback(async () => getAssistants(), [getAssistants])
 

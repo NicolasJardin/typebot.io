@@ -9,7 +9,10 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import { AiAssistantOptions, Assistant, Variable } from '@typebot.io/schemas'
+import { getCookie } from 'cookies-next'
 import { useCallback } from 'react'
+import jwt_decode from 'jwt-decode'
+import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
 
 type AiAssistantSettingsProps = {
   options: AiAssistantOptions
@@ -20,6 +23,13 @@ export default function AiAssistantSettings({
   options,
   onOptionsChange,
 }: AiAssistantSettingsProps) {
+  const jwt = getCookie('authJwt')
+
+  const companyId =
+    typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt).companyUuid : ''
+
+  const token = typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt).token : ''
+
   const { data: assistantsData, isFetching: isFetchingAssistants } =
     useGetAssistants()
 
@@ -28,8 +38,10 @@ export default function AiAssistantSettings({
       onOptionsChange({
         ...options,
         assistant,
+        companyId,
+        token,
       }),
-    [onOptionsChange, options]
+    [onOptionsChange, options, companyId, token]
   )
 
   const handleChangeMessage = useCallback(
