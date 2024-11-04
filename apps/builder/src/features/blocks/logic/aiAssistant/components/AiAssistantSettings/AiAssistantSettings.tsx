@@ -33,6 +33,8 @@ export default function AiAssistantSettings({
   const { data: assistantsData, isFetching: isFetchingAssistants } =
     useGetAssistants()
 
+  console.log({ companyId, token, options })
+
   const handleChangeAssistant = useCallback(
     (assistant: Assistant) =>
       onOptionsChange({
