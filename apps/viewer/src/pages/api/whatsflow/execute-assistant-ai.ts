@@ -12,7 +12,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       instructions,
       companyId,
       typebotId,
-      token,
     } = req.body
 
     const user = await getUserByTypebotId(typebotId)
@@ -26,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${process.env.TOKEN_WHATSFLOW}`,
         companyId,
         'Content-Type': 'application/json',
       },
