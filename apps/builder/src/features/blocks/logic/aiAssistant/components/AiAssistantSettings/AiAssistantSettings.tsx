@@ -1,6 +1,8 @@
 import { Textarea, TextInput } from '@/components/inputs'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
+import { jwt, useCookies } from '@/features/cookies/hooks/useCookies'
 import useGetAssistants from '@/whatsflow/api/ai/queries/useGetAssistants'
+import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
 import {
   FormControl,
   FormLabel,
@@ -9,10 +11,8 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import { AiAssistantOptions, Assistant, Variable } from '@typebot.io/schemas'
-import { getCookie } from 'cookies-next'
-import { useCallback } from 'react'
 import jwt_decode from 'jwt-decode'
-import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
+import { useCallback } from 'react'
 
 type AiAssistantSettingsProps = {
   options: AiAssistantOptions
@@ -23,17 +23,39 @@ export default function AiAssistantSettings({
   options,
   onOptionsChange,
 }: AiAssistantSettingsProps) {
-  const jwt = getCookie('authJwt')
+  const { companyId, token } = useCookies()
 
-  const companyId =
-    typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt).companyUuid : ''
-
-  const token = typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt).token : ''
+  const decodedJwt =
+    typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt) : undefined
 
   const { data: assistantsData, isFetching: isFetchingAssistants } =
     useGetAssistants()
 
-  console.log({ companyId, token, options })
+  function getAuthJwtCookie() {
+    const cookieString = document.cookie
+    const cookies = cookieString.split('; ')
+
+    for (const cookie of cookies) {
+      const [name, value] = cookie.split('=')
+      if (name === 'authJwt') {
+        return decodeURIComponent(value) // decodifica o valor caso tenha caracteres especiais
+      }
+    }
+
+    return null // retorna null caso o cookie não exista
+  }
+
+  // Exemplo de uso:
+  const authJwt = getAuthJwtCookie()
+  console.log(authJwt)
+
+  console.log({
+    companyId,
+    token,
+    decodedJwt,
+    options,
+    teste: getAuthJwtCookie(),
+  })
 
   const handleChangeAssistant = useCallback(
     (assistant: Assistant) =>
@@ -96,7 +118,7 @@ export default function AiAssistantSettings({
             handleChangeAssistant(newAssistant!)
           }}
         >
-          {assistantsData?.assistants.map((assistant) => (
+          {assistantsData?.assistants?.map((assistant) => (
             <option key={assistant.id} value={assistant.id}>
               {assistant.name}
             </option>
