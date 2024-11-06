@@ -45,16 +45,13 @@ export default function AiAssistantSettings({
     return null // retorna null caso o cookie não exista
   }
 
-  // Exemplo de uso:
-  const authJwt = getAuthJwtCookie()
-  console.log(authJwt)
-
   console.log({
     companyId,
     token,
     decodedJwt,
     options,
     teste: getAuthJwtCookie(),
+    testeDecoded: jwt_decode(getAuthJwtCookie()),
   })
 
   const handleChangeAssistant = useCallback(
