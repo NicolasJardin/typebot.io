@@ -12,8 +12,6 @@ export default async function handler(
 
   const jwtDecoded = authJwt ? jwt_decode<AuthJwt>(authJwt) : undefined
 
-  console.log('Get de assistants', { jwtDecoded })
-
   const getAssistants = async () => {
     try {
       const data = (
