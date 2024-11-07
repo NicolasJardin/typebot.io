@@ -5,14 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
-    const {
-      assistant,
-      sessionId,
-      message,
-      instructions,
-      companyId,
-      typebotId,
-    } = req.body
+    const { assistant, sessionId, message, instructions, typebotId } = req.body
 
     const user = await getUserByTypebotId(typebotId)
 
@@ -26,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.TOKEN_WHATSFLOW}`,
-        companyId,
+        typebotId: user.id,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

@@ -1,8 +1,6 @@
 import { Textarea, TextInput } from '@/components/inputs'
 import { VariableSearchInput } from '@/components/inputs/VariableSearchInput'
-import { jwt, useCookies } from '@/features/cookies/hooks/useCookies'
 import useGetAssistants from '@/whatsflow/api/ai/queries/useGetAssistants'
-import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
 import {
   FormControl,
   FormLabel,
@@ -11,7 +9,6 @@ import {
   Stack,
 } from '@chakra-ui/react'
 import { AiAssistantOptions, Assistant, Variable } from '@typebot.io/schemas'
-import jwt_decode from 'jwt-decode'
 import { useCallback } from 'react'
 
 type AiAssistantSettingsProps = {
@@ -23,46 +20,16 @@ export default function AiAssistantSettings({
   options,
   onOptionsChange,
 }: AiAssistantSettingsProps) {
-  const { companyId, token } = useCookies()
-
-  const decodedJwt =
-    typeof jwt === 'string' ? jwt_decode<AuthJwt>(jwt) : undefined
-
   const { data: assistantsData, isFetching: isFetchingAssistants } =
     useGetAssistants()
-
-  function getAuthJwtCookie() {
-    const cookieString = document.cookie
-    const cookies = cookieString.split('; ')
-
-    for (const cookie of cookies) {
-      const [name, value] = cookie.split('=')
-      if (name === 'authJwt') {
-        return decodeURIComponent(value) // decodifica o valor caso tenha caracteres especiais
-      }
-    }
-
-    return null // retorna null caso o cookie não exista
-  }
-
-  console.log({
-    companyId,
-    token,
-    decodedJwt,
-    options,
-    teste: getAuthJwtCookie(),
-    testeDecoded: jwt_decode(getAuthJwtCookie()),
-  })
 
   const handleChangeAssistant = useCallback(
     (assistant: Assistant) =>
       onOptionsChange({
         ...options,
         assistant,
-        companyId,
-        token,
       }),
-    [onOptionsChange, options, companyId, token]
+    [onOptionsChange, options]
   )
 
   const handleChangeMessage = useCallback(

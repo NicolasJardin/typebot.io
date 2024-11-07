@@ -184,12 +184,9 @@ const combineMessagesSchema = z.object({
 //@TODO 15/10 Revisar se vai se manter o mesmo retorno das options
 const aiAssistantSchema = z.object({
   type: z.enum([LogicBlockType.AI_ASSISTANT]),
-  content: aiAssistantOptionsSchema
-    .extend({
-      companyId: z.string().optional(),
-      token: z.string().optional(),
-    })
-    .and(z.object({ aiResponse: z.string().nullable() })),
+  content: aiAssistantOptionsSchema.and(
+    z.object({ aiResponse: z.string().nullable() })
+  ),
 })
 
 const waitForMessageSchema = z.object({
