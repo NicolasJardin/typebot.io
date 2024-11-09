@@ -4,6 +4,8 @@ import { TagCreateRequest } from '@/whatsflow/api/tag/interfaces/TagCreateReques
 import { TagGetResponse } from '@/whatsflow/api/tag/interfaces/TagGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getAuthenticatedUser } from '@/features/auth/helpers/getAuthenticatedUser'
+import { notAuthenticated } from '@typebot.io/lib/api'
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,12 +13,16 @@ export default async function handler(
 ) {
   const authJwt = req.cookies['authJwt']
 
+  const user = await getAuthenticatedUser(req, res)
+  if (!user) return notAuthenticated(res)
+
   const jwtDecoded = authJwt ? jwt_decode<AuthJwt>(authJwt) : undefined
 
   const companyUuid = jwtDecoded?.companyUuid
 
   const headers = {
     Authorization: `Bearer ${jwtDecoded?.token}`,
+    typebotId: user.id,
   }
 
   if (req.method === 'GET') {
