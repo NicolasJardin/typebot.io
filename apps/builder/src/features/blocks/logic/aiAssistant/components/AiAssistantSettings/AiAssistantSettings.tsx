@@ -69,7 +69,7 @@ export default function AiAssistantSettings({
             (assistantsData?.assistants &&
               assistantsData?.assistants.length > 0) ||
             isFetchingAssistants
-              ? 'Selecione um dispositivo'
+              ? 'Selecione um assistente'
               : 'Sem resultados'
           }
           icon={isFetchingAssistants ? <Spinner /> : undefined}
