@@ -18,6 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${process.env.TOKEN_WHATSFLOW}`,
+        typebotId: user.id,
       },
     })
 

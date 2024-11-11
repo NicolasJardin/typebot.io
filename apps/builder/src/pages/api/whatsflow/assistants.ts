@@ -1,8 +1,8 @@
-import { instance } from '@/whatsflow/api/base/instance'
 import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
-import { DevicesGetResponse } from '@/whatsflow/api/template/types/DevicesGetResponse'
+import { AssistantsGetResponse } from '@/whatsflow/api/ai/types/AssistantsGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { instanceV2 } from '@/whatsflow/api/base/instance-v2'
 import { getAuthenticatedUser } from '@/features/auth/helpers/getAuthenticatedUser'
 import { notAuthenticated } from '@typebot.io/lib/api'
 
@@ -17,10 +17,10 @@ export default async function handler(
 
   const jwtDecoded = authJwt ? jwt_decode<AuthJwt>(authJwt) : undefined
 
-  const getDevices = async () => {
+  const getAssistants = async () => {
     try {
       const data = (
-        await instance.get<DevicesGetResponse>('find-all-devices-waba', {
+        await instanceV2.get<AssistantsGetResponse>('find-all-assistant-ai', {
           headers: jwtDecoded
             ? {
                 companyId: jwtDecoded.companyUuid,
@@ -37,5 +37,5 @@ export default async function handler(
     }
   }
 
-  res.status(200).json(await getDevices())
+  res.status(200).json(await getAssistants())
 }

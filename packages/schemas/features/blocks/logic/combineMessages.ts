@@ -16,7 +16,7 @@ export const combineMessagesBlockSchema = blockBaseSchema.merge(
 
 export const defaultCombineMessagesOptions: CombineMessagesOptions = {
   transcribeAudio: false,
-  waitSeconds: 0,
+  waitSeconds: 10,
 }
 
 export type CombineMessagesBlock = z.infer<typeof combineMessagesBlockSchema>

@@ -3,12 +3,17 @@ import { AuthJwt } from '@/whatsflow/api/base/interfaces/AuthJwt'
 import { TemplatesGetResponse } from '@/whatsflow/api/template/types/TemplatesGetResponse'
 import jwt_decode from 'jwt-decode'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getAuthenticatedUser } from '@/features/auth/helpers/getAuthenticatedUser'
+import { notAuthenticated } from '@typebot.io/lib/api'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const authJwt = req.cookies['authJwt']
+
+  const user = await getAuthenticatedUser(req, res)
+  if (!user) return notAuthenticated(res)
 
   const [deviceId, templateId] = (
     req.query.deviceAndTemplateId as string
@@ -25,6 +30,7 @@ export default async function handler(
             ? {
                 companyId: jwtDecoded.companyUuid,
                 Authorization: `Bearer ${jwtDecoded.token}`,
+                typebotId: user.id,
               }
             : undefined,
         }

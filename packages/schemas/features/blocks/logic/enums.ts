@@ -16,4 +16,5 @@ export enum LogicBlockType {
   UPDATE_SYSTEM_NAME = 'Update system name',
   SEND_FROM = 'Send from',
   COMBINE_MESSAGES = 'Combine messages',
+  AI_ASSISTANT = 'Ai assistant',
 }

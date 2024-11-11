@@ -33,6 +33,7 @@ import { WaitIcon } from '@/features/blocks/logic/wait/components/WaitIcon'
 import { IoMdSend } from 'react-icons/io'
 import { FaUserEdit } from 'react-icons/fa'
 import { Icon, IconProps, useColorModeValue } from '@chakra-ui/react'
+import { GiArtificialIntelligence } from 'react-icons/gi'
 import {
   BlockType,
   InputBlockType,
@@ -113,6 +114,8 @@ export const BlockIcon = ({ type, ...props }: BlockIconProps): JSX.Element => {
       return <Icon as={FaUserEdit} color={purple} {...props} />
     case LogicBlockType.COMBINE_MESSAGES:
       return <Icon as={TiMessages} color={purple} {...props} />
+    case LogicBlockType.AI_ASSISTANT:
+      return <Icon as={GiArtificialIntelligence} color={purple} {...props} />
     case LogicBlockType.SEND_FROM:
       return <Icon as={IoMdSend} color={purple} {...props} />
     case LogicBlockType.REMOVE_TAG:

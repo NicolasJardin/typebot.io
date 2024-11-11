@@ -59,6 +59,7 @@ import { SettingsHoverBar } from './SettingsHoverBar'
 import { PixelSettings } from '@/features/blocks/integrations/pixel/components/PixelSettings'
 import SendFromSettings from '@/features/blocks/logic/sendFrom/components/SendFromSettings'
 import CombineMessagesSettings from '@/features/blocks/logic/combineMessages/components/CombineMessagesSettings'
+import AiAssistantSettings from '@/features/blocks/logic/aiAssistant/components/AiAssistantSettings'
 
 type Props = {
   block: BlockWithOptions
@@ -83,7 +84,7 @@ export const SettingsPopoverContent = ({
   useEventListener('wheel', handleMouseWheel, ref.current)
   return (
     <Portal>
-      <PopoverContent onMouseDown={handleMouseDown} pos="relative">
+      <PopoverContent onMouseDown={handleMouseDown}>
         <PopoverArrow bgColor={arrowColor} />
         <PopoverBody
           pt="3"
@@ -99,11 +100,10 @@ export const SettingsPopoverContent = ({
             <Flex
               w="full"
               pos="absolute"
-              top="-56px"
+              top="-25px"
               height="300px"
               right={0}
               justifyContent="flex-end"
-              align="center"
             >
               <SlideFade in={isHovering} unmountOnExit>
                 <SettingsHoverBar
@@ -300,6 +300,14 @@ export const BlockSettings = ({
     case LogicBlockType.COMBINE_MESSAGES:
       return (
         <CombineMessagesSettings
+          options={block.options}
+          onOptionsChange={updateOptions}
+        />
+      )
+
+    case LogicBlockType.AI_ASSISTANT:
+      return (
+        <AiAssistantSettings
           options={block.options}
           onOptionsChange={updateOptions}
         />

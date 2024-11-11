@@ -1,10 +1,11 @@
 import { TypingBubble } from '@/components'
 import ChatText from '@/features/blocks/bubbles/components/ChatText'
-import { TypingEmulation } from '@typebot.io/schemas'
+import { Assistant, TypingEmulation } from '@typebot.io/schemas'
 import { createSignal, onCleanup, onMount } from 'solid-js'
 import { computeTypingDuration } from '../../../textBubble/helpers/computeTypingDuration'
 
 type Props = {
+  assistant: Assistant | null
   typingEmulation: TypingEmulation
   onTransitionEnd: () => void
 }
@@ -19,7 +20,7 @@ const defaultTypingEmulation = {
 
 let typingTimeout: NodeJS.Timeout
 
-export default function CombineMessagesBubble(props: Props) {
+export default function AiAssistantBubble(props: Props) {
   const [isTyping, setIsTyping] = createSignal(true)
 
   const onTypingEnd = () => {
@@ -36,7 +37,7 @@ export default function CombineMessagesBubble(props: Props) {
       props.typingEmulation?.enabled === false
         ? 0
         : computeTypingDuration(
-            `Combinar mensagens`,
+            `Assistente IA - ${props.assistant ? `` : ''}`,
             props.typingEmulation ?? defaultTypingEmulation
           )
     typingTimeout = setTimeout(onTypingEnd, typingDuration)
@@ -61,7 +62,12 @@ export default function CombineMessagesBubble(props: Props) {
             {isTyping() && <TypingBubble />}
           </div>
 
-          <ChatText isTyping={!!isTyping()} text={`Combinar mensagens`} />
+          <ChatText
+            isTyping={!!isTyping()}
+            text={`Assistente IA ${
+              props.assistant ? `- ${props.assistant.name}` : ''
+            }`}
+          />
         </div>
       </div>
     </div>

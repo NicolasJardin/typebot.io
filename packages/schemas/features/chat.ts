@@ -15,6 +15,7 @@ import {
   transferOptionsSchema,
   waitForOptionsSchema,
   waitOptionsSchema,
+  aiAssistantOptionsSchema,
 } from './blocks'
 import {
   audioBubbleContentSchema,
@@ -62,6 +63,7 @@ const resultInSessionStateSchema = resultSchema
   )
 
 export const sessionStateSchema = z.object({
+  sessionId: z.string().optional(),
   typebot: typebotInSessionStateSchema,
   dynamicTheme: dynamicThemeSchema.optional(),
   linkedTypebots: z.object({
@@ -179,6 +181,14 @@ const combineMessagesSchema = z.object({
   content: combineMessagesOptionsSchema,
 })
 
+//@TODO 15/10 Revisar se vai se manter o mesmo retorno das options
+const aiAssistantSchema = z.object({
+  type: z.enum([LogicBlockType.AI_ASSISTANT]),
+  content: aiAssistantOptionsSchema.and(
+    z.object({ aiResponse: z.string().nullable() })
+  ),
+})
+
 const waitForMessageSchema = z.object({
   type: z.enum([InputBlockType.WAIT_FOR]),
   content: waitForOptionsSchema,
@@ -222,6 +232,7 @@ const chatMessageSchema = z
       .or(tagMessageSchema)
       .or(updateNameMessageSchema)
       .or(combineMessagesSchema)
+      .or(aiAssistantSchema)
       .or(sendFromMessageSchema)
       .or(removeTagMessageSchema)
       .or(waitForMessageSchema)

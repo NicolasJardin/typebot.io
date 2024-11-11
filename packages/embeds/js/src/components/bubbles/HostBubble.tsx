@@ -1,18 +1,20 @@
 /* eslint-disable solid/components-return-once */
 
+import AiAssistantBubble from '@/features/blocks/bubbles/aiAssistant/components/AiAssistantBubble'
 import { AudioBubble } from '@/features/blocks/bubbles/audio'
 import ButtonBubble from '@/features/blocks/bubbles/button/components/ButtonBubble'
+import CombineMessagesBubble from '@/features/blocks/bubbles/combineMessages/components/CombineMessagesBubble'
 import { EmbedBubble } from '@/features/blocks/bubbles/embed'
 import EndBubble from '@/features/blocks/bubbles/end/components/EndBubble'
 import FileBubble from '@/features/blocks/bubbles/file/components/FileBubble'
 import { ImageBubble } from '@/features/blocks/bubbles/image'
+import SendFromBubble from '@/features/blocks/bubbles/sendFrom/components/SendFromBubble'
 import SpreadBubble from '@/features/blocks/bubbles/spread/components/SpreadBubble'
 import TagBubble from '@/features/blocks/bubbles/tag/components/TagBubble'
 import TemplateBubble from '@/features/blocks/bubbles/template/components/TemplateBubble'
 import { TextBubble } from '@/features/blocks/bubbles/textBubble'
 import TransferBubble from '@/features/blocks/bubbles/transfer/components/TransferBubble'
 import UpdateNameBubble from '@/features/blocks/bubbles/updateName/components/UpdateNameBubble/UpdateNameBubble'
-import SendFromBubble from '@/features/blocks/bubbles/sendFrom/components/SendFromBubble'
 import { VideoBubble } from '@/features/blocks/bubbles/video'
 import WaitBubble from '@/features/blocks/bubbles/wait/components/WaitBubble'
 import {
@@ -32,7 +34,6 @@ import {
   WaitOptions,
 } from '@typebot.io/schemas'
 import { FileBubbleContent } from '@typebot.io/schemas/features/blocks/bubbles/file'
-import CombineMessagesBubble from '@/features/blocks/bubbles/combineMessages/components/CombineMessagesBubble'
 
 type Props = {
   message: ChatMessage
@@ -115,7 +116,15 @@ export const HostBubble = (props: Props) => {
       case LogicBlockType.COMBINE_MESSAGES:
         return (
           <CombineMessagesBubble
-            value={props.message.content?.value}
+            typingEmulation={props.typingEmulation}
+            onTransitionEnd={onTransitionEnd}
+          />
+        )
+
+      case LogicBlockType.AI_ASSISTANT:
+        return (
+          <AiAssistantBubble
+            assistant={props.message.content?.assistant}
             typingEmulation={props.typingEmulation}
             onTransitionEnd={onTransitionEnd}
           />

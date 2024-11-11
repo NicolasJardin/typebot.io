@@ -211,6 +211,11 @@ export const BlocksSideBar = () => {
             />
 
             <BlockCard
+              type={LogicBlockType.AI_ASSISTANT}
+              onMouseDown={handleMouseDown}
+            />
+
+            <BlockCard
               type={LogicBlockType.TAG}
               onMouseDown={handleMouseDown}
             />
