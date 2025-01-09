@@ -2,11 +2,11 @@
     "functions": {
         "apps/viewer/src/pages/api/v1/[...trpc].ts": {
             "memory": 1024,
-            "maxDuration": 60
+            "maxDuration": 300
         },
         "apps/viewer/src/pages/api/typebots/[typebotId]/blocks/[blockId]/executeWebhook.ts": {
             "memory": 1024,
-            "maxDuration": 60
+            "maxDuration": 300
         }
     }
 }
