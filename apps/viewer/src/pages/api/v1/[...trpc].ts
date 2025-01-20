@@ -7,7 +7,7 @@ import { createContext } from '@/helpers/server/context'
 
 // This function can run for a maximum of 60 seconds
 export const config = {
-  maxDuration: 60,
+  maxDuration: 300,
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
